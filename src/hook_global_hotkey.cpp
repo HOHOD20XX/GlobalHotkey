@@ -1,5 +1,5 @@
-#include <global_hotkey/hook_global_hotkey.h>
-#include <global_hotkey/keyboard_hook.h>
+#include <global_hotkey/hook_global_hotkey.hpp>
+#include <global_hotkey/keyboard_hook.hpp>
 
 // Only usable in windows platform.
 #ifdef GBHK_WIN

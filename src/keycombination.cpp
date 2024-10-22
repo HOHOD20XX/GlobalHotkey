@@ -1,4 +1,4 @@
-#include <global_hotkey/keycombination.h>
+#include <global_hotkey/keycombination.hpp>
 
 #if defined(GBHK_WIN)
 #include <Windows.h>

@@ -1,4 +1,4 @@
-#include <global_hotkey/keyboard_hook.h>
+#include <global_hotkey/keyboard_hook.hpp>
 
 // Only usable in windows platform.
 #ifdef GBHK_WIN

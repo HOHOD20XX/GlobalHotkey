@@ -1,4 +1,4 @@
-#include <global_hotkey/global_hotkey_base.h>
+#include <global_hotkey/global_hotkey_base.hpp>
 
 #include <chrono>
 
