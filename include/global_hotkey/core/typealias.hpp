@@ -8,8 +8,8 @@
 namespace gbhk
 {
 
-typedef unsigned char uchar;
-typedef unsigned int uint;
+using uchar = unsigned char;
+using uint = unsigned int;
 
 using Arg = void *;
 using VoidFunc = void (*)();
