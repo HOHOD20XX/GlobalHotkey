@@ -3,8 +3,8 @@
 // Only usable in windows platform.
 #ifdef GBHK_WIN
 
-#include <mutex>
 #include <atomic>
+#include <mutex>
 #include <unordered_map>
 
 #include <Windows.h>

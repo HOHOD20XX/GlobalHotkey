@@ -1,9 +1,9 @@
 #ifndef TYPEALIAS_HPP
 #define TYPEALIAS_HPP
 
+#include <string>
 #include <utility>  // std::pair
 #include <vector>
-#include <string>
 
 namespace gbhk
 {
