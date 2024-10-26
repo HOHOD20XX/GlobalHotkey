@@ -281,7 +281,7 @@ GBHK_NODISCARD uint RegGlobalHotkey::end_()
 GBHK_NODISCARD uint RegGlobalHotkey::add_(const KeyCombination& keycomb)
 {
     if (::RegisterHotKey(NULL, keyId_, keycomb.nativeModifier(), keycomb.nativeKey())) {
-        keyIdKeycombs_.insert({keyId_, keycomb});
+        keyIdKeycombs_.insert({ keyId_, keycomb });
         ++keyId_;
         return GBHK_RSLT_SUCCESS;
     }
@@ -314,7 +314,7 @@ GBHK_NODISCARD uint RegGlobalHotkey::replace_(const KeyCombination& oldKeycomb,
 
                 if (::RegisterHotKey(NULL, keyid,
                                      newKeycomb.nativeModifier(), newKeycomb.nativeKey())) {
-                    keyIdKeycombs_.insert({keyid, newKeycomb});
+                    keyIdKeycombs_.insert({ keyid, newKeycomb });
                     return GBHK_RSLT_SUCCESS;
                 }
                 return ::GetLastError();
@@ -376,7 +376,7 @@ VoidFunc RegGlobalHotkey::getVoidFunc_(const KeyCombination& keycomb)
 
 ArgFuncArg RegGlobalHotkey::getArgFuncArg_(const KeyCombination& keycomb)
 {
-    ArgFuncArg rslt = {nullptr, nullptr};
+    ArgFuncArg rslt = { nullptr, nullptr };
 
     mtx_.lock();
 
@@ -391,14 +391,14 @@ ArgFuncArg RegGlobalHotkey::getArgFuncArg_(const KeyCombination& keycomb)
 void RegGlobalHotkey::addFunc_(const KeyCombination& keycomb, VoidFunc func)
 {
     mtx_.lock();
-    voidFuncs_.insert({keycomb, func});
+    voidFuncs_.insert({ keycomb, func });
     mtx_.unlock();
 }
 
 void RegGlobalHotkey::addFunc_(const KeyCombination& keycomb, ArgFunc func, Arg arg)
 {
     mtx_.lock();
-    argFuncArgs_.insert({keycomb, {func, arg}});
+    argFuncArgs_.insert({ keycomb, { func, arg } });
     mtx_.unlock();
 }
 
