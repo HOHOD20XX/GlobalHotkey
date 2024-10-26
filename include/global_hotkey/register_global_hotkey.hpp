@@ -12,15 +12,15 @@ namespace gbhk
 class RegGlobalHotkey final : public GlobalHotkeyBase
 {
 public:
-    static RegGlobalHotkey &getInstance();
+    static RegGlobalHotkey& getInstance();
 
     GBHK_NODISCARD uint start();
     GBHK_NODISCARD uint end();
-    GBHK_NODISCARD uint add(const KeyCombination &keycomb, VoidFunc func);
-    GBHK_NODISCARD uint add(const KeyCombination &keycomb, ArgFunc func, Arg arg);
-    GBHK_NODISCARD uint remove(const KeyCombination &keycomb);
-    GBHK_NODISCARD uint replace(const KeyCombination &oldKeycomb,
-                                const KeyCombination &newKeycomb);
+    GBHK_NODISCARD uint add(const KeyCombination& keycomb, VoidFunc func);
+    GBHK_NODISCARD uint add(const KeyCombination& keycomb, ArgFunc func, Arg arg);
+    GBHK_NODISCARD uint remove(const KeyCombination& keycomb);
+    GBHK_NODISCARD uint replace(const KeyCombination& oldKeycomb,
+                                const KeyCombination& newKeycomb);
 
 private:
     struct Task
@@ -58,25 +58,25 @@ private:
     RegGlobalHotkey();
     ~RegGlobalHotkey();
     RegGlobalHotkey(const RegGlobalHotkey &other) = delete;
-    RegGlobalHotkey &operator=(const RegGlobalHotkey &other) = delete;
+    RegGlobalHotkey &operator=(const RegGlobalHotkey& other) = delete;
 
     void work_();
     GBHK_NODISCARD uint end_();
-    GBHK_NODISCARD uint add_(const KeyCombination &keycomb);
-    GBHK_NODISCARD uint remove_(const KeyCombination &keycomb);
-    GBHK_NODISCARD uint replace_(const KeyCombination &oldKeycomb,
-                                 const KeyCombination &newKeycomb);
+    GBHK_NODISCARD uint add_(const KeyCombination& keycomb);
+    GBHK_NODISCARD uint remove_(const KeyCombination& keycomb);
+    GBHK_NODISCARD uint replace_(const KeyCombination& oldKeycomb,
+                                 const KeyCombination& newKeycomb);
 
-    void setTask_(const Task &task);
+    void setTask_(const Task& task);
     GBHK_NODISCARD Task getTask_();
-    GBHK_NODISCARD uint waitTaskFinished_();
+    GBHK_NODISCARD uint waitTaskFinished_() const;
 
-    VoidFunc getVoidFunc_(const KeyCombination &keycomb);
-    ArgFuncArg getArgFuncArg_(const KeyCombination &keycomb);
+    VoidFunc getVoidFunc_(const KeyCombination& keycomb);
+    ArgFuncArg getArgFuncArg_(const KeyCombination& keycomb);
 
-    void addFunc_(const KeyCombination &keycomb, VoidFunc func);
-    void addFunc_(const KeyCombination &keycomb, ArgFunc func, Arg arg);
-    void removeFunc_(const KeyCombination &keycomb);
+    void addFunc_(const KeyCombination& keycomb, VoidFunc func);
+    void addFunc_(const KeyCombination& keycomb, ArgFunc func, Arg arg);
+    void removeFunc_(const KeyCombination& keycomb);
 
     Task task_;
     std::atomic<bool> hasTask_;

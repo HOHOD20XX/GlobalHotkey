@@ -16,12 +16,12 @@ KeyCombination::KeyCombination(uint modifier, uint key, bool isAutoRepeat) :
     mod_(modifier), key_(key), isAutoRepeat_(isAutoRepeat)
 {}
 
-size_t KeyCombination::Hash::operator()(const KeyCombination &obj) const
+size_t KeyCombination::Hash::operator()(const KeyCombination& obj) const
 {
     auto h1 = std::hash<uint>()(obj.mod_);
     auto h2 = std::hash<uint>()(obj.key_);
 
-    return h1 ^ (h2 << 1);
+    return h1 ^ (h2 << 8);
 }
 
 uint KeyCombination::nativeModifier() const
@@ -144,17 +144,17 @@ String KeyCombination::getString(bool hasKeyId, bool hasIsAutoRepeat) const
     return rslt;
 }
 
-bool KeyCombination::equal(const KeyCombination &other) const
+bool KeyCombination::equal(const KeyCombination& other) const
 {
     return mod_ == other.mod_ && key_ == other.key_ && isAutoRepeat_ == other.isAutoRepeat_;
 }
 
-bool KeyCombination::operator==(const KeyCombination &other) const
+bool KeyCombination::operator==(const KeyCombination& other) const
 {
     return mod_ == other.mod_ && key_ == other.key_;
 }
 
-bool KeyCombination::operator!=(const KeyCombination &other) const
+bool KeyCombination::operator!=(const KeyCombination& other) const
 {
     return !(*this == other);
 }

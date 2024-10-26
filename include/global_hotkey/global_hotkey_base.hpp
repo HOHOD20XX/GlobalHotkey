@@ -18,20 +18,21 @@ public:
 
     GBHK_NODISCARD virtual uint start() = 0;
     GBHK_NODISCARD virtual uint end() = 0;
-    GBHK_NODISCARD virtual uint add(const KeyCombination &keycomb, VoidFunc func) = 0;
-    GBHK_NODISCARD virtual uint add(const KeyCombination &keycomb, ArgFunc func, Arg arg) = 0;
-    GBHK_NODISCARD virtual uint remove(const KeyCombination &keycomb) = 0;
-    GBHK_NODISCARD virtual uint replace(const KeyCombination &oldKeycomb,
-                                        const KeyCombination &newKeycomb) = 0;
+    GBHK_NODISCARD virtual uint add(const KeyCombination& keycomb, VoidFunc func) = 0;
+    GBHK_NODISCARD virtual uint add(const KeyCombination& keycomb, ArgFunc func, Arg arg) = 0;
+    GBHK_NODISCARD virtual uint remove(const KeyCombination& keycomb) = 0;
+    GBHK_NODISCARD virtual uint replace(const KeyCombination& oldKeycomb,
+                                        const KeyCombination& newKeycomb) = 0;
+    GBHK_NODISCARD bool isRunning() const;
 
 protected:
     GlobalHotkeyBase();
     ~GlobalHotkeyBase();
-    GlobalHotkeyBase(const GlobalHotkeyBase &other) = delete;
-    GlobalHotkeyBase &operator=(const GlobalHotkeyBase &other) = delete;
+    GlobalHotkeyBase(const GlobalHotkeyBase& other) = delete;
+    GlobalHotkeyBase &operator=(const GlobalHotkeyBase& other) = delete;
 
-    void sleep_(uint ms);
-    void setWorkThreadId_(const std::thread::id &id);
+    void sleep_(uint ms) const;
+    void setWorkThreadId_(const std::thread::id& id);
     std::thread::id getWorkThreadId_();
 
     std::atomic<bool> isRunning_;

@@ -20,7 +20,7 @@ RegGlobalHotkey::~RegGlobalHotkey()
     uint rslt = end();
 }
 
-RegGlobalHotkey &RegGlobalHotkey::getInstance()
+RegGlobalHotkey& RegGlobalHotkey::getInstance()
 {
     static RegGlobalHotkey instance;
     return instance;
@@ -28,7 +28,7 @@ RegGlobalHotkey &RegGlobalHotkey::getInstance()
 
 GBHK_NODISCARD uint RegGlobalHotkey::start()
 {
-// If the thread is running do nothing.
+    // If the thread is running do nothing.
     if (isRunning_)
         return GBHK_RSLT_UNTIMELY_CALL;
 
@@ -80,7 +80,7 @@ GBHK_NODISCARD uint RegGlobalHotkey::start()
 
 GBHK_NODISCARD uint RegGlobalHotkey::end()
 {
-// If the thread is not running do nothing.
+    // If the thread is not running do nothing.
     if (!isRunning_)
         return GBHK_RSLT_UNTIMELY_CALL;
 
@@ -109,9 +109,9 @@ GBHK_NODISCARD uint RegGlobalHotkey::end()
     return rslt;
 }
 
-GBHK_NODISCARD uint RegGlobalHotkey::add(const KeyCombination &keycomb, VoidFunc func)
+GBHK_NODISCARD uint RegGlobalHotkey::add(const KeyCombination& keycomb, VoidFunc func)
 {
-// If the thread is not running do nothing.
+    // If the thread is not running do nothing.
     if (!isRunning_)
         return GBHK_RSLT_UNTIMELY_CALL;
 
@@ -136,9 +136,9 @@ GBHK_NODISCARD uint RegGlobalHotkey::add(const KeyCombination &keycomb, VoidFunc
     return rslt;
 }
 
-GBHK_NODISCARD uint RegGlobalHotkey::add(const KeyCombination &keycomb, ArgFunc func, Arg arg)
+GBHK_NODISCARD uint RegGlobalHotkey::add(const KeyCombination& keycomb, ArgFunc func, Arg arg)
 {
-// If the thread is not running do nothing.
+    // If the thread is not running do nothing.
     if (!isRunning_)
         return GBHK_RSLT_UNTIMELY_CALL;
 
@@ -163,9 +163,9 @@ GBHK_NODISCARD uint RegGlobalHotkey::add(const KeyCombination &keycomb, ArgFunc 
     return rslt;
 }
 
-GBHK_NODISCARD uint RegGlobalHotkey::remove(const KeyCombination &keycomb)
+GBHK_NODISCARD uint RegGlobalHotkey::remove(const KeyCombination& keycomb)
 {
-// If the thread is not running do nothing.
+    // If the thread is not running do nothing.
     if (!isRunning_)
         return GBHK_RSLT_UNTIMELY_CALL;
 
@@ -190,10 +190,10 @@ GBHK_NODISCARD uint RegGlobalHotkey::remove(const KeyCombination &keycomb)
     return rslt;
 }
 
-GBHK_NODISCARD uint RegGlobalHotkey::replace(const KeyCombination &oldKeycomb,
-                                             const KeyCombination &newKeycomb)
+GBHK_NODISCARD uint RegGlobalHotkey::replace(const KeyCombination& oldKeycomb,
+                                             const KeyCombination& newKeycomb)
 {
-// If the thread is not running do nothing.
+    // If the thread is not running do nothing.
     if (!isRunning_)
         return GBHK_RSLT_UNTIMELY_CALL;
 
@@ -266,7 +266,7 @@ GBHK_NODISCARD uint RegGlobalHotkey::end_()
     uint rslt = GBHK_RSLT_SUCCESS;
 
     // Unregister all hotkey.
-    for (auto &var : keyIdKeycombs_) {
+    for (const auto& var : keyIdKeycombs_) {
         if (::UnregisterHotKey(NULL, var.first))
             rslt = ::GetLastError();
     }
@@ -278,7 +278,7 @@ GBHK_NODISCARD uint RegGlobalHotkey::end_()
     return rslt;
 }
 
-GBHK_NODISCARD uint RegGlobalHotkey::add_(const KeyCombination &keycomb)
+GBHK_NODISCARD uint RegGlobalHotkey::add_(const KeyCombination& keycomb)
 {
     if (::RegisterHotKey(NULL, keyId_, keycomb.nativeModifier(), keycomb.nativeKey())) {
         keyIdKeycombs_.insert({keyId_, keycomb});
@@ -288,9 +288,9 @@ GBHK_NODISCARD uint RegGlobalHotkey::add_(const KeyCombination &keycomb)
     return ::GetLastError();
 }
 
-GBHK_NODISCARD uint RegGlobalHotkey::remove_(const KeyCombination &keycomb)
+GBHK_NODISCARD uint RegGlobalHotkey::remove_(const KeyCombination& keycomb)
 {
-    for (auto &var : keyIdKeycombs_) {
+    for (const auto& var : keyIdKeycombs_) {
         if (var.second == keycomb) {
             if (::UnregisterHotKey(NULL, var.first)) {
                 keyIdKeycombs_.erase(var.first);
@@ -303,10 +303,10 @@ GBHK_NODISCARD uint RegGlobalHotkey::remove_(const KeyCombination &keycomb)
     return GBHK_RSLT_NOT_FIND;
 }
 
-GBHK_NODISCARD uint RegGlobalHotkey::replace_(const KeyCombination &oldKeycomb,
-                                              const KeyCombination &newKeycomb)
+GBHK_NODISCARD uint RegGlobalHotkey::replace_(const KeyCombination& oldKeycomb,
+                                              const KeyCombination& newKeycomb)
 {
-    for (auto &var : keyIdKeycombs_) {
+    for (const auto& var : keyIdKeycombs_) {
         if (var.second == oldKeycomb) {
             if (::UnregisterHotKey(NULL, var.first)) {
                 uint keyid = var.first;
@@ -327,7 +327,7 @@ GBHK_NODISCARD uint RegGlobalHotkey::replace_(const KeyCombination &oldKeycomb,
     return GBHK_RSLT_NOT_FIND;
 }
 
-void RegGlobalHotkey::setTask_(const Task &task)
+void RegGlobalHotkey::setTask_(const Task& task)
 {
     mtx_.lock();
     task_ = task;
@@ -352,7 +352,7 @@ GBHK_NODISCARD RegGlobalHotkey::Task RegGlobalHotkey::getTask_()
     return tsk;
 }
 
-GBHK_NODISCARD uint RegGlobalHotkey::waitTaskFinished_()
+GBHK_NODISCARD uint RegGlobalHotkey::waitTaskFinished_() const
 {
     while (!taskIsFinished_)
         sleep_(1);
@@ -360,7 +360,7 @@ GBHK_NODISCARD uint RegGlobalHotkey::waitTaskFinished_()
     return taskResult_;
 }
 
-VoidFunc RegGlobalHotkey::getVoidFunc_(const KeyCombination &keycomb)
+VoidFunc RegGlobalHotkey::getVoidFunc_(const KeyCombination& keycomb)
 {
     VoidFunc rslt = nullptr;
 
@@ -374,7 +374,7 @@ VoidFunc RegGlobalHotkey::getVoidFunc_(const KeyCombination &keycomb)
     return rslt;
 }
 
-ArgFuncArg RegGlobalHotkey::getArgFuncArg_(const KeyCombination &keycomb)
+ArgFuncArg RegGlobalHotkey::getArgFuncArg_(const KeyCombination& keycomb)
 {
     ArgFuncArg rslt = {nullptr, nullptr};
 
@@ -388,21 +388,21 @@ ArgFuncArg RegGlobalHotkey::getArgFuncArg_(const KeyCombination &keycomb)
     return rslt;
 }
 
-void RegGlobalHotkey::addFunc_(const KeyCombination &keycomb, VoidFunc func)
+void RegGlobalHotkey::addFunc_(const KeyCombination& keycomb, VoidFunc func)
 {
     mtx_.lock();
     voidFuncs_.insert({keycomb, func});
     mtx_.unlock();
 }
 
-void RegGlobalHotkey::addFunc_(const KeyCombination &keycomb, ArgFunc func, Arg arg)
+void RegGlobalHotkey::addFunc_(const KeyCombination& keycomb, ArgFunc func, Arg arg)
 {
     mtx_.lock();
     argFuncArgs_.insert({keycomb, {func, arg}});
     mtx_.unlock();
 }
 
-void RegGlobalHotkey::removeFunc_(const KeyCombination &keycomb)
+void RegGlobalHotkey::removeFunc_(const KeyCombination& keycomb)
 {
     mtx_.lock();
     voidFuncs_.erase(keycomb);

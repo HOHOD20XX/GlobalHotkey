@@ -34,7 +34,7 @@ static std::unordered_map<uint, std::pair<State, ArgFuncArg>> kArgFuncArgs;
 static LRESULT WINAPI LowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
 {
     if (nCode == HC_ACTION) {
-        KBDLLHOOKSTRUCT *p = (KBDLLHOOKSTRUCT *) lParam;
+        KBDLLHOOKSTRUCT* p = (KBDLLHOOKSTRUCT *) lParam;
         auto key = p->vkCode;
 
         kMtx.lock();
@@ -66,8 +66,8 @@ static LRESULT WINAPI LowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lPar
                 kVoidFuncs[key].first == RELEASED &&
                 (wParam == WM_KEYUP || wParam == WM_SYSKEYUP);
             if (keydownExe || keyupExe) {
-                auto &fn = kArgFuncArgs[key].second.first;
-                auto &arg = kArgFuncArgs[key].second.second;
+                auto& fn = kArgFuncArgs[key].second.first;
+                auto& arg = kArgFuncArgs[key].second.second;
                 fn(arg);
             }
         }

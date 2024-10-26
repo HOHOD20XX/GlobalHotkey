@@ -16,14 +16,14 @@ namespace gbhk
 class HookGlobalHotkey final : public GlobalHotkeyBase
 {
 public:
-    static HookGlobalHotkey &getInstance();
+    static HookGlobalHotkey& getInstance();
 
     GBHK_NODISCARD uint start();
     GBHK_NODISCARD uint end();
-    GBHK_NODISCARD uint add(const KeyCombination &keycomb, VoidFunc func);
-    GBHK_NODISCARD uint add(const KeyCombination &keycomb, ArgFunc func, Arg arg);
-    GBHK_NODISCARD uint remove(const KeyCombination &keycomb);
-    GBHK_NODISCARD uint replace(const KeyCombination &oldKeycomb, const KeyCombination &newKeycomb);
+    GBHK_NODISCARD uint add(const KeyCombination& keycomb, VoidFunc func);
+    GBHK_NODISCARD uint add(const KeyCombination& keycomb, ArgFunc func, Arg arg);
+    GBHK_NODISCARD uint remove(const KeyCombination& keycomb);
+    GBHK_NODISCARD uint replace(const KeyCombination& oldKeycomb, const KeyCombination& newKeycomb);
 
 private:
     HookGlobalHotkey();

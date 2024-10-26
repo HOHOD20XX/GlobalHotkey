@@ -19,7 +19,7 @@ HookGlobalHotkey::~HookGlobalHotkey()
     uint rslt = end();
 }
 
-HookGlobalHotkey &HookGlobalHotkey::getInstance()
+HookGlobalHotkey& HookGlobalHotkey::getInstance()
 {
     static HookGlobalHotkey instance;
     return instance;
@@ -27,7 +27,7 @@ HookGlobalHotkey &HookGlobalHotkey::getInstance()
 
 GBHK_NODISCARD uint HookGlobalHotkey::start()
 {
-// If is running do nothing.
+    // If is running do nothing.
     if (isRunning_)
         return GBHK_RSLT_UNTIMELY_CALL;
 
@@ -58,7 +58,7 @@ GBHK_NODISCARD uint HookGlobalHotkey::start()
                 if ((prevKeycomb != keycomb) || voidFuncs_[keycomb].first)
                     voidFuncs_[keycomb].second();
             } else if (argFuncArgs_.find(keycomb) != argFuncArgs_.end()) {
-                auto &fnArg = argFuncArgs_[keycomb].second;
+                auto& fnArg = argFuncArgs_[keycomb].second;
                 // Ditto.
                 if ((prevKeycomb != keycomb) || argFuncArgs_[keycomb].first)
                     fnArg.first(fnArg.second);
@@ -80,7 +80,7 @@ GBHK_NODISCARD uint HookGlobalHotkey::start()
 
 GBHK_NODISCARD uint HookGlobalHotkey::end()
 {
-// If is not running do nothing.
+    // If is not running do nothing.
     if (!isRunning_)
         return GBHK_RSLT_UNTIMELY_CALL;
 
@@ -100,7 +100,7 @@ GBHK_NODISCARD uint HookGlobalHotkey::end()
     return keyboard_hook::end();
 }
 
-GBHK_NODISCARD uint HookGlobalHotkey::add(const KeyCombination &keycomb, VoidFunc func)
+GBHK_NODISCARD uint HookGlobalHotkey::add(const KeyCombination& keycomb, VoidFunc func)
 {
     uint rslt = GBHK_RSLT_SUCCESS;
 
@@ -116,7 +116,7 @@ GBHK_NODISCARD uint HookGlobalHotkey::add(const KeyCombination &keycomb, VoidFun
     return rslt;
 }
 
-GBHK_NODISCARD uint HookGlobalHotkey::add(const KeyCombination &keycomb, ArgFunc func, Arg arg)
+GBHK_NODISCARD uint HookGlobalHotkey::add(const KeyCombination& keycomb, ArgFunc func, Arg arg)
 {
     uint rslt = GBHK_RSLT_SUCCESS;
 
@@ -132,7 +132,7 @@ GBHK_NODISCARD uint HookGlobalHotkey::add(const KeyCombination &keycomb, ArgFunc
     return rslt;
 }
 
-GBHK_NODISCARD uint HookGlobalHotkey::remove(const KeyCombination &keycomb)
+GBHK_NODISCARD uint HookGlobalHotkey::remove(const KeyCombination& keycomb)
 {
     uint rslt = GBHK_RSLT_SUCCESS;
 
@@ -151,10 +151,10 @@ GBHK_NODISCARD uint HookGlobalHotkey::remove(const KeyCombination &keycomb)
     return rslt;
 }
 
-GBHK_NODISCARD uint HookGlobalHotkey::replace(const KeyCombination &oldKeycomb,
-                                              const KeyCombination &newKeycomb)
+GBHK_NODISCARD uint HookGlobalHotkey::replace(const KeyCombination& oldKeycomb,
+                                              const KeyCombination& newKeycomb)
 {
-// If the old key combination equal to new key combination do nothing.
+    // If the old key combination equal to new key combination do nothing.
     if (oldKeycomb.equal(newKeycomb))
         return GBHK_RSLT_OLD_EQUAL_NEW;
 
@@ -166,11 +166,11 @@ GBHK_NODISCARD uint HookGlobalHotkey::replace(const KeyCombination &oldKeycomb,
         argFuncArgs_.find(oldKeycomb) == argFuncArgs_.end()) {
         rslt = GBHK_RSLT_NOT_FIND;
     } else if (voidFuncs_.find(oldKeycomb) != voidFuncs_.end()) {
-        auto &func = voidFuncs_[oldKeycomb].second;
+        auto& func = voidFuncs_[oldKeycomb].second;
         voidFuncs_.erase(oldKeycomb);
         voidFuncs_.insert({newKeycomb, {newKeycomb.isAutoRepeat(), func}});
     } else {
-        auto &funcArg = argFuncArgs_[oldKeycomb].second;
+        auto& funcArg = argFuncArgs_[oldKeycomb].second;
         argFuncArgs_.erase(oldKeycomb);
         argFuncArgs_.insert({newKeycomb, {newKeycomb.isAutoRepeat(), funcArg}});
     }
@@ -186,7 +186,7 @@ KeyCombination HookGlobalHotkey::getKeyCombination_()
 
     mtx_.lock();
 
-    for (auto &var : pressedKeys_) {
+    for (const auto& var : pressedKeys_) {
         if (var == VK_LWIN || var == VK_RWIN) {
             keycomb.addModifier(META);
         } else if (var == VK_MENU || var == VK_LMENU || var == VK_RMENU) {

@@ -11,17 +11,22 @@ GlobalHotkeyBase::GlobalHotkeyBase() :
 
 GlobalHotkeyBase::~GlobalHotkeyBase() {}
 
+bool GlobalHotkeyBase::isRunning() const
+{
+    return isRunning_;
+}
+
 void GlobalHotkeyBase::setDelay(uint ms)
 {
     delay_ = ms;
 }
 
-void GlobalHotkeyBase::sleep_(uint ms)
+void GlobalHotkeyBase::sleep_(uint ms) const
 {
     std::this_thread::sleep_for(std::chrono::microseconds(ms));
 }
 
-void GlobalHotkeyBase::setWorkThreadId_(const std::thread::id &id)
+void GlobalHotkeyBase::setWorkThreadId_(const std::thread::id& id)
 {
     mtx_.lock();
     workThreadId_ = id;

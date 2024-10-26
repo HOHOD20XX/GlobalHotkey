@@ -15,7 +15,7 @@ class KeyCombination
 public:
     struct Hash
     {
-        size_t operator()(const KeyCombination &obj) const;
+        size_t operator()(const KeyCombination& obj) const;
     };
 
     KeyCombination() = default;
@@ -50,13 +50,13 @@ public:
     String getString(bool hasKeyId = true, bool hasIsAutoRepeat = true) const;
 
     // @attention Compare the #isAutoRepeat.
-    bool equal(const KeyCombination &other) const;
+    bool equal(const KeyCombination& other) const;
 
     // @attention Not compare the #isAutoRepeat.
-    bool operator==(const KeyCombination &other) const;
+    bool operator==(const KeyCombination& other) const;
 
     // @attention Not compare the #isAutoRepeat.
-    bool operator!=(const KeyCombination &other) const;
+    bool operator!=(const KeyCombination& other) const;
 
 private:
     uint mod_ = 0;
