@@ -11,7 +11,7 @@ namespace gbhk
 using uchar = unsigned char;
 using uint = unsigned int;
 
-using Arg = void *;
+using Arg = void*;
 using VoidFunc = void (*)();
 using ArgFunc = void (*)(Arg);
 using ArgFuncArg = std::pair<ArgFunc, Arg>;

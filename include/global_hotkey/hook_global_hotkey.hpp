@@ -28,8 +28,8 @@ public:
 private:
     HookGlobalHotkey();
     ~HookGlobalHotkey();
-    HookGlobalHotkey(const HookGlobalHotkey &other) = delete;
-    HookGlobalHotkey &operator=(const HookGlobalHotkey &other) = delete;
+    HookGlobalHotkey(const HookGlobalHotkey& other) = delete;
+    HookGlobalHotkey& operator=(const HookGlobalHotkey& other) = delete;
 
     KeyCombination getKeyCombination_();
 

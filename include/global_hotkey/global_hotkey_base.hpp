@@ -29,7 +29,7 @@ protected:
     GlobalHotkeyBase();
     ~GlobalHotkeyBase();
     GlobalHotkeyBase(const GlobalHotkeyBase& other) = delete;
-    GlobalHotkeyBase &operator=(const GlobalHotkeyBase& other) = delete;
+    GlobalHotkeyBase& operator=(const GlobalHotkeyBase& other) = delete;
 
     void sleep_(uint ms) const;
     void setWorkThreadId_(const std::thread::id& id);

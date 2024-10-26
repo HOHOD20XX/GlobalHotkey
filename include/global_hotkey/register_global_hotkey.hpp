@@ -57,8 +57,8 @@ private:
 
     RegGlobalHotkey();
     ~RegGlobalHotkey();
-    RegGlobalHotkey(const RegGlobalHotkey &other) = delete;
-    RegGlobalHotkey &operator=(const RegGlobalHotkey& other) = delete;
+    RegGlobalHotkey(const RegGlobalHotkey& other) = delete;
+    RegGlobalHotkey& operator=(const RegGlobalHotkey& other) = delete;
 
     void work_();
     GBHK_NODISCARD uint end_();
