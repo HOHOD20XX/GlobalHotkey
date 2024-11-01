@@ -3,7 +3,7 @@
 
 #include <stddef.h>     // size_t
 
-#include "macros.hpp"
+#include "constants.hpp"
 #include "typealias.hpp"
 
 #ifdef _MSVC_LANG
@@ -24,17 +24,27 @@
 
 #if defined(_WIN32)
 #define GBHK_WIN
-#elif __APPLE__
+#elif defined(__APPLE__)
 #include <TargetConditionals.h>
 #if TARGET_OS_MAC
 #define GBHK_MAC
 #else
 #error "Unsupported apple platform"
 #endif // TARGET_OS_MAC
-#elif __linux__
+#elif defined(__linux__)
 #define GBHK_LINUX
 #else 
 #error "Unsupported platform"
 #endif // _WIN32
+
+#if defined(GBHK_WIN)
+#define GBHK_MODKEY_TEXT_META GBHK_MODKEY_TEXT_WIN
+#elif defined(GBHK_MAC)
+#define GBHK_MODKEY_TEXT_META GBHK_MODKEY_TEXT_CMD
+#elif defined(GBHK_LINUX)
+#define GBHK_MODKEY_TEXT_META GBHK_MODKEY_TEXT_SUPER
+#else
+#define GBHK_MODKEY_TEXT_MEAT ""
+#endif // GBHK_WIN
 
 #endif // !CORE_HPP

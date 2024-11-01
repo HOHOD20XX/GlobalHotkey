@@ -12,6 +12,247 @@
 namespace gbhk
 {
 
+std::string getModifierString(Modifier modifier)
+{
+    switch (modifier) {
+        case META:
+            return GBHK_MODKEY_TEXT_META;
+        case ALT:
+            return GBHK_MODKEY_TEXT_ALT;
+        case CTRL:
+            return GBHK_MODKEY_TEXT_CTRL;
+        case SHIFT:
+            return GBHK_MODKEY_TEXT_SHIFT;
+        default:
+            return "";
+    }
+}
+
+std::string getModifierString(uint modifier)
+{
+    std::string rslt;
+
+    if (modifier & META)
+        rslt += getModifierString(META);
+
+    if (modifier & ALT) {
+        rslt += rslt.empty() ? "" : " + ";
+        rslt += getModifierString(ALT);
+    }
+
+    if (modifier & CTRL) {
+        rslt += rslt.empty() ? "" : " + ";
+        rslt += getModifierString(CTRL);
+    }
+
+    if (modifier & SHIFT) {
+        rslt += rslt.empty() ? "" : " + ";
+        rslt += getModifierString(SHIFT);
+    }
+
+    return rslt;
+}
+
+std::string getKeyString(uint key)
+{
+    switch (key) {
+        case KY_MOUSEBUTTON_LEFT:
+            return "MouseButton-Left";
+        case KY_MOUSEBUTTON_RIGHT:
+            return "MouseButton-Right";
+        case KY_MOUSEBUTTON_MID:
+            return "MouseButton-Middle";
+        case KY_CANCEL:
+            return "Cancel";
+        case KY_BACKSPACE:
+            return "Backspace";
+        case KY_TAB:
+            return "Tab";
+        case KY_CLEAR:
+            return "Clear";
+        case KY_ENTER:
+            return "Enter";
+        case KY_PAUSE:
+            return "Pause";
+        case KY_CAPSLOCK:
+            return "CapsLock";
+        case KY_ESCAPE:
+            return "Escape";
+        case KY_SPACE:
+            return "Space";
+        case KY_PAGE_UP:
+            return "PageUp";
+        case KY_PAGE_DOWN:
+            return "PageDown";
+        case KY_END:
+            return "End";
+        case KY_HOME:
+            return "Home";
+        case KY_ARROW_LEFT:
+            return "Left";
+        case KY_ARROW_UP:
+            return "Up";
+        case KY_ARROW_RIGHT:
+            return "Right";
+        case KY_ARROW_DOWN:
+            return "Down";
+        case KY_SELECT:
+            return "Select";
+        case KY_PRINT:
+            return "Print";
+        case KY_EXECUTE:
+            return "Execute";
+        case KY_PRINTSCREEN:
+            return "PrintScreen";
+        case KY_INSERT:
+            return "Insert";
+        case KY_DELETE:
+            return "Delete";
+        case KY_HELP:
+            return "Help";
+        case KY_APPS:
+            return "Apps";
+        case KY_SLEEP:
+            return "Sleep";
+        case KY_NUMPAD0:
+            return "Numpad-0";
+        case KY_NUMPAD1:
+            return "Numpad-1";
+        case KY_NUMPAD2:
+            return "Numpad-2";
+        case KY_NUMPAD3:
+            return "Numpad-3";
+        case KY_NUMPAD4:
+            return "Numpad-4";
+        case KY_NUMPAD5:
+            return "Numpad-5";
+        case KY_NUMPAD6:
+            return "Numpad-6";
+        case KY_NUMPAD7:
+            return "Numpad-7";
+        case KY_NUMPAD8:
+            return "Numpad-8";
+        case KY_NUMPAD9:
+            return "Numpad-9";
+        case KY_MULTIPLY:
+            return "Multiply";
+        case KY_ADD:
+            return "Add";
+        case KY_SEPARATOR:
+            return "Separator";
+        case KY_SUBTRACT:
+            return "Subtract";
+        case KY_DECIMAL:
+            return "Decimal";
+        case KY_DIVIDE:
+            return "Divide";
+        case KY_F1:
+            return "F1";
+        case KY_F2:
+            return "F2";
+        case KY_F3:
+            return "F3";
+        case KY_F4:
+            return "F4";
+        case KY_F5:
+            return "F5";
+        case KY_F6:
+            return "F6";
+        case KY_F7:
+            return "F7";
+        case KY_F8:
+            return "F8";
+        case KY_F9:
+            return "F9";
+        case KY_F10:
+            return "F10";
+        case KY_F11:
+            return "F11";
+        case KY_F12:
+            return "F12";
+        case KY_F13:
+            return "F13";
+        case KY_F14:
+            return "F14";
+        case KY_F15:
+            return "F15";
+        case KY_F16:
+            return "F16";
+        case KY_F17:
+            return "F17";
+        case KY_F18:
+            return "F18";
+        case KY_F19:
+            return "F19";
+        case KY_F20:
+            return "F20";
+        case KY_F21:
+            return "F21";
+        case KY_F22:
+            return "F22";
+        case KY_F23:
+            return "F23";
+        case KY_F24:
+            return "F24";
+        case KY_NUMLOCK:
+            return "NumLock";
+        case KY_SCROLL_LOCK:
+            return "ScrollLock";
+        case KY_BROWSER_BACK:
+            return "Browser-Back";
+        case KY_BROWSER_FORWARD:
+            return "Browser-Forward";
+        case KY_BROWSER_REFRESH:
+            return "Browser-Refresh";
+        case KY_BROWSER_STOP:
+            return "Browser-Stop";
+        case KY_BROWSER_SEARCH:
+            return "Browser-Search";
+        case KY_BROWSER_FAVORITES:
+            return "Browser-Favorites";
+        case KY_BROWSER_HOME:
+            return "Browser-Home";
+        case KY_VOLUME_MUTE:
+            return "Volume-Mute";
+        case KY_VOLUME_UP:
+            return "Volume-Up";
+        case KY_VOLUME_DOWN:
+            return "Volume-Down";
+        case KY_MEDIA_NEXT_TRACK:
+            return "Media-Next";
+        case KY_MEDIA_PREV_TRACK:
+            return "Media-Prev";
+        case KY_MEDIA_STOP:
+            return "Media-Stop";
+        case KY_MEDIA_PLAY_PAUSE:
+            return "Media-Pause";
+        case KY_LAUNCH_MAIL:
+            return "Launch-Mail";
+        case KY_LAUNCH_MEDIA_SELECT:
+            return "Launch-MediaSelect";
+        case KY_LAUNCH_APP1:
+            return "Launch-App1";
+        case KY_LAUNCH_APP2:
+            return "Launch-App2";
+        case KY_ATTN:
+            return "ATTN";
+        case KY_CRSEL:
+            return "CRSEL";
+        case KY_EXSEL:
+            return "EXSEL";
+        case KY_ERASEEOF:
+            return "ERASEEOF";
+        case KY_PLAY:
+            return "Play";
+        case KY_ZOOM:
+            return "Zoom";
+        case KY_PA1:
+            return "Pa1";
+        default:
+            return std::string(1, static_cast<char>(key));
+    }
+}
+
 uint getNativeModifier(Modifier modifier)
 {
     switch (modifier) {
@@ -56,21 +297,17 @@ uint getNativeModifier(uint modifier)
 {
     uint mod = 0;
 
-    if (modifier & META) {
+    if (modifier & META)
         mod |= getNativeModifier(META);
-    }
 
-    if (modifier & ALT) {
+    if (modifier & ALT)
         mod |= getNativeModifier(ALT);
-    }
 
-    if (modifier & CTRL) {
+    if (modifier & CTRL)
         mod |= getNativeModifier(CTRL);
-    }
 
-    if (modifier & SHIFT) {
+    if (modifier & SHIFT)
         mod |= getNativeModifier(SHIFT);
-    }
 
     return mod;
 }
@@ -137,94 +374,6 @@ uint getNativeKey(uint key)
         case KY_ENTER:
         #if defined(GBHK_WIN)
             return VK_RETURN;
-        #elif defined(GBHK_MAC)
-
-        #elif defined(GBHK_LINUX)
-
-        #endif
-        case KY_META_LEFT:
-        #if defined(GBHK_WIN)
-            return VK_LWIN;
-        #elif defined(GBHK_MAC)
-
-        #elif defined(GBHK_LINUX)
-
-        #endif
-        case KY_META_RIGHT:
-        #if defined(GBHK_WIN)
-            return VK_RWIN;
-        #elif defined(GBHK_MAC)
-
-        #elif defined(GBHK_LINUX)
-
-        #endif
-        case KY_ALT:
-        #if defined(GBHK_WIN)
-            return VK_MENU;
-        #elif defined(GBHK_MAC)
-
-        #elif defined(GBHK_LINUX)
-
-        #endif
-        case KY_ALT_LEFT:
-        #if defined(GBHK_WIN)
-            return VK_LMENU;
-        #elif defined(GBHK_MAC)
-
-        #elif defined(GBHK_LINUX)
-
-        #endif
-        case KY_ALT_RIGHT:
-        #if defined(GBHK_WIN)
-            return VK_RMENU;
-        #elif defined(GBHK_MAC)
-
-        #elif defined(GBHK_LINUX)
-
-        #endif
-        case KY_CTRL:
-        #if defined(GBHK_WIN)
-            return VK_CONTROL;
-        #elif defined(GBHK_MAC)
-
-        #elif defined(GBHK_LINUX)
-
-        #endif
-        case KY_CTRL_LEFT:
-        #if defined(GBHK_WIN)
-            return VK_LCONTROL;
-        #elif defined(GBHK_MAC)
-
-        #elif defined(GBHK_LINUX)
-
-        #endif
-        case KY_CTRL_RIGHT:
-        #if defined(GBHK_WIN)
-            return VK_RCONTROL;
-        #elif defined(GBHK_MAC)
-
-        #elif defined(GBHK_LINUX)
-
-        #endif
-        case KY_SHIFT:
-        #if defined(GBHK_WIN)
-            return VK_SHIFT;
-        #elif defined(GBHK_MAC)
-
-        #elif defined(GBHK_LINUX)
-
-        #endif
-        case KY_SHIFT_LEFT:
-        #if defined(GBHK_WIN)
-            return VK_LSHIFT;
-        #elif defined(GBHK_MAC)
-
-        #elif defined(GBHK_LINUX)
-
-        #endif
-        case KY_SHIFT_RIGHT:
-        #if defined(GBHK_WIN)
-            return VK_RSHIFT;
         #elif defined(GBHK_MAC)
 
         #elif defined(GBHK_LINUX)

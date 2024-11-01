@@ -4,6 +4,8 @@
 #include "global_hotkey_base.hpp"
 
 #include <atomic>
+#include <mutex>
+#include <thread>
 #include <unordered_map>
 
 namespace gbhk
@@ -16,11 +18,10 @@ public:
 
     GBHK_NODISCARD uint start();
     GBHK_NODISCARD uint end();
-    GBHK_NODISCARD uint add(const KeyCombination& keycomb, VoidFunc func);
-    GBHK_NODISCARD uint add(const KeyCombination& keycomb, ArgFunc func, Arg arg);
+    GBHK_NODISCARD uint add(const KeyCombination& keycomb, VoidFunc callbackFunc);
+    GBHK_NODISCARD uint add(const KeyCombination& keycomb, ArgFunc callbackFunc, Arg arg);
     GBHK_NODISCARD uint remove(const KeyCombination& keycomb);
-    GBHK_NODISCARD uint replace(const KeyCombination& oldKeycomb,
-                                const KeyCombination& newKeycomb);
+    GBHK_NODISCARD uint replace(const KeyCombination& oldKeycomb, const KeyCombination& newKeycomb);
 
 private:
     struct Task
@@ -64,8 +65,7 @@ private:
     GBHK_NODISCARD uint end_();
     GBHK_NODISCARD uint add_(const KeyCombination& keycomb);
     GBHK_NODISCARD uint remove_(const KeyCombination& keycomb);
-    GBHK_NODISCARD uint replace_(const KeyCombination& oldKeycomb,
-                                 const KeyCombination& newKeycomb);
+    GBHK_NODISCARD uint replace_(const KeyCombination& oldKeycomb, const KeyCombination& newKeycomb);
 
     void setTask_(const Task& task);
     GBHK_NODISCARD Task getTask_();
@@ -74,8 +74,8 @@ private:
     VoidFunc getVoidFunc_(const KeyCombination& keycomb);
     ArgFuncArg getArgFuncArg_(const KeyCombination& keycomb);
 
-    void addFunc_(const KeyCombination& keycomb, VoidFunc func);
-    void addFunc_(const KeyCombination& keycomb, ArgFunc func, Arg arg);
+    void addFunc_(const KeyCombination& keycomb, VoidFunc callbackFunc);
+    void addFunc_(const KeyCombination& keycomb, ArgFunc callbackFunc, Arg arg);
     void removeFunc_(const KeyCombination& keycomb);
 
     Task task_;
@@ -84,7 +84,7 @@ private:
     std::atomic<uint> taskResult_;
     std::atomic<uint> keyId_;
     std::mutex mtx_;
-    // Mapping of the key combination and func.
+    // Mapping of the key combination and callback functions.
     std::unordered_map<KeyCombination, VoidFunc, KeyCombination::Hash> voidFuncs_;
     std::unordered_map<KeyCombination, ArgFuncArg, KeyCombination::Hash> argFuncArgs_;
     std::unordered_map<uint, KeyCombination> keyIdKeycombs_;

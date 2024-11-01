@@ -6,8 +6,8 @@
 // Only usable in windows platform.
 #ifdef GBHK_WIN
 
+#include <atomic>
 #include <mutex>
-#include <unordered_set>
 #include <unordered_map>
 
 namespace gbhk
@@ -20,10 +20,11 @@ public:
 
     GBHK_NODISCARD uint start();
     GBHK_NODISCARD uint end();
-    GBHK_NODISCARD uint add(const KeyCombination& keycomb, VoidFunc func);
-    GBHK_NODISCARD uint add(const KeyCombination& keycomb, ArgFunc func, Arg arg);
+    GBHK_NODISCARD uint add(const KeyCombination& keycomb, VoidFunc callbackFunc);
+    GBHK_NODISCARD uint add(const KeyCombination& keycomb, ArgFunc callbackFunc, Arg arg);
     GBHK_NODISCARD uint remove(const KeyCombination& keycomb);
     GBHK_NODISCARD uint replace(const KeyCombination& oldKeycomb, const KeyCombination& newKeycomb);
+    void setDebouncedTime(ullong millisecond);
 
 private:
     HookGlobalHotkey();
@@ -31,18 +32,16 @@ private:
     HookGlobalHotkey(const HookGlobalHotkey& other) = delete;
     HookGlobalHotkey& operator=(const HookGlobalHotkey& other) = delete;
 
-    KeyCombination getKeyCombination_();
-
     static void addPressedKey_(uint key);
     static void removePressedKey_(uint key);
 
-    static std::mutex mtx_;
-    static std::unordered_set<uint> pressedKeys_;
+    static std::mutex mtxListenKeyChanged_;
+    static KeyCombination pressed_;
 
-    std::unordered_map<KeyCombination, std::pair<bool, VoidFunc>,
-        KeyCombination::Hash> voidFuncs_;
-    std::unordered_map<KeyCombination, std::pair<bool, ArgFuncArg>,
-        KeyCombination::Hash> argFuncArgs_;
+    std::atomic<ullong> debouncedTime_;
+    std::mutex mtxFuncsOperate_;
+    std::unordered_map<KeyCombination, std::pair<bool, VoidFunc>, KeyCombination::Hash> voidFuncs_;
+    std::unordered_map<KeyCombination, std::pair<bool, ArgFuncArg>, KeyCombination::Hash> argFuncArgs_;
 };
 
 }

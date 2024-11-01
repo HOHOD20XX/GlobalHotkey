@@ -18,10 +18,10 @@ enum State : uchar
     RELEASED
 };
 
-void addKeyEventCallback(uint key, State state, VoidFunc func);
-void addKeyEventCallback(uint key, State state, ArgFunc func, Arg arg);
-void setKeyPressedCallback(void (*func)(uint key));
-void setKeyReleaseddCallback(void (*func)(uint key));
+void addKeyEventCallback(uint key, State state, VoidFunc callbackFunc);
+void addKeyEventCallback(uint key, State state, ArgFunc callbackFunc, Arg arg);
+void setKeyPressedCallback(void (*callbackFunc)(uint key));
+void setKeyReleaseddCallback(void (*callbackFunc)(uint key));
 // If success return 0, else return error code.
 uint run();
 // If success return 0, else return error code.

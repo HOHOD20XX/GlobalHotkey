@@ -1,6 +1,7 @@
 #ifndef GLOBAL_HOTKEY_BASE_HPP
 #define GLOBAL_HOTKEY_BASE_HPP
 
+#include <chrono>
 #include <atomic>
 #include <mutex>
 #include <thread>
@@ -11,19 +12,20 @@
 namespace gbhk
 {
 
+void sleep(ullong millisecond);
+
 class GlobalHotkeyBase
 {
 public:
-    void setDelay(uint ms);
+    bool isRunning() const;
+    void setIntervalTime(ullong millisecond);
 
     GBHK_NODISCARD virtual uint start() = 0;
     GBHK_NODISCARD virtual uint end() = 0;
-    GBHK_NODISCARD virtual uint add(const KeyCombination& keycomb, VoidFunc func) = 0;
-    GBHK_NODISCARD virtual uint add(const KeyCombination& keycomb, ArgFunc func, Arg arg) = 0;
+    GBHK_NODISCARD virtual uint add(const KeyCombination& keycomb, VoidFunc callbackFunc) = 0;
+    GBHK_NODISCARD virtual uint add(const KeyCombination& keycomb, ArgFunc callbackFunc, Arg arg) = 0;
     GBHK_NODISCARD virtual uint remove(const KeyCombination& keycomb) = 0;
-    GBHK_NODISCARD virtual uint replace(const KeyCombination& oldKeycomb,
-                                        const KeyCombination& newKeycomb) = 0;
-    GBHK_NODISCARD bool isRunning() const;
+    GBHK_NODISCARD virtual uint replace(const KeyCombination& oldKeycomb, const KeyCombination& newKeycomb) = 0;
 
 protected:
     GlobalHotkeyBase();
@@ -31,18 +33,21 @@ protected:
     GlobalHotkeyBase(const GlobalHotkeyBase& other) = delete;
     GlobalHotkeyBase& operator=(const GlobalHotkeyBase& other) = delete;
 
-    void sleep_(uint ms) const;
+    void setTimePoint_();
+    void waitInterval_();
+
     void setWorkThreadId_(const std::thread::id& id);
     std::thread::id getWorkThreadId_();
 
     std::atomic<bool> isRunning_;
     std::atomic<bool> shouldClose_;
-    std::atomic<uint> delay_;
     std::thread workThread_;
 
 private:
-    std::thread::id workThreadId_;
+    std::atomic<ullong> intervalTime_;
+    std::chrono::steady_clock::time_point timePoint_;
     std::mutex mtx_;
+    std::thread::id workThreadId_;
 };
 
 }

@@ -1,6 +1,8 @@
 #ifndef KEY_HPP
 #define KEY_HPP
 
+#include <string>
+
 #include "core/core.hpp"
 
 namespace gbhk
@@ -24,17 +26,17 @@ enum Key : uint
     KY_TAB,
     KY_CLEAR,
     KY_ENTER,
-    KY_META_LEFT,
-    KY_META_RIGHT,
-    KY_ALT,
-    KY_ALT_LEFT,
-    KY_ALT_RIGHT,
-    KY_CTRL,
-    KY_CTRL_LEFT,
-    KY_CTRL_RIGHT,
-    KY_SHIFT,
-    KY_SHIFT_LEFT,
-    KY_SHIFT_RIGHT,
+    //KY_META_LEFT,
+    //KY_META_RIGHT,
+    //KY_ALT,
+    //KY_ALT_LEFT,
+    //KY_ALT_RIGHT,
+    //KY_CTRL,
+    //KY_CTRL_LEFT,
+    //KY_CTRL_RIGHT,
+    //KY_SHIFT,
+    //KY_SHIFT_LEFT,
+    //KY_SHIFT_RIGHT,
     KY_PAUSE,
     KY_CAPSLOCK,
     KY_ESCAPE,
@@ -124,6 +126,12 @@ enum Key : uint
     KY_ZOOM,
     KY_PA1
 };
+
+std::string getModifierString(Modifier modifier);
+
+std::string getModifierString(uint modifier);
+
+std::string getKeyString(uint key);
 
 uint getNativeModifier(Modifier modifier);
 

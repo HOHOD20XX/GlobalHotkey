@@ -39,6 +39,8 @@ GBHK_NODISCARD uint RegGlobalHotkey::start()
 
         // The loop of the work thread.
         while (!shouldClose_) {
+            setTimePoint_();
+
             // Process possible task first in each loop.
             Task tsk = getTask_();
             // If get a valid task, process this task.
@@ -65,7 +67,7 @@ GBHK_NODISCARD uint RegGlobalHotkey::start()
 
             work_();
 
-            sleep_(delay_);
+            waitInterval_();
         }
 
         // Reset the work thread id.
@@ -97,7 +99,7 @@ GBHK_NODISCARD uint RegGlobalHotkey::end()
     shouldClose_ = true;
     // Wait the thread exits.
     while (isRunning_)
-        sleep_(1);
+        sleep(1);
     // Reset this flag to default state.
     shouldClose_ = false;
 
@@ -109,7 +111,7 @@ GBHK_NODISCARD uint RegGlobalHotkey::end()
     return rslt;
 }
 
-GBHK_NODISCARD uint RegGlobalHotkey::add(const KeyCombination& keycomb, VoidFunc func)
+GBHK_NODISCARD uint RegGlobalHotkey::add(const KeyCombination& keycomb, VoidFunc callbackFunc)
 {
     // If the thread is not running do nothing.
     if (!isRunning_)
@@ -131,12 +133,12 @@ GBHK_NODISCARD uint RegGlobalHotkey::add(const KeyCombination& keycomb, VoidFunc
     uint rslt = waitTaskFinished_();
 
     if (rslt == GBHK_RSLT_SUCCESS)
-        addFunc_(keycomb, func);
+        addFunc_(keycomb, callbackFunc);
 
     return rslt;
 }
 
-GBHK_NODISCARD uint RegGlobalHotkey::add(const KeyCombination& keycomb, ArgFunc func, Arg arg)
+GBHK_NODISCARD uint RegGlobalHotkey::add(const KeyCombination& keycomb, ArgFunc callbackFunc, Arg arg)
 {
     // If the thread is not running do nothing.
     if (!isRunning_)
@@ -158,7 +160,7 @@ GBHK_NODISCARD uint RegGlobalHotkey::add(const KeyCombination& keycomb, ArgFunc 
     uint rslt = waitTaskFinished_();
 
     if (rslt == GBHK_RSLT_SUCCESS)
-        addFunc_(keycomb, func, arg);
+        addFunc_(keycomb, callbackFunc, arg);
 
     return rslt;
 }
@@ -355,7 +357,7 @@ GBHK_NODISCARD RegGlobalHotkey::Task RegGlobalHotkey::getTask_()
 GBHK_NODISCARD uint RegGlobalHotkey::waitTaskFinished_() const
 {
     while (!taskIsFinished_)
-        sleep_(1);
+        sleep(1);
 
     return taskResult_;
 }
@@ -388,17 +390,17 @@ ArgFuncArg RegGlobalHotkey::getArgFuncArg_(const KeyCombination& keycomb)
     return rslt;
 }
 
-void RegGlobalHotkey::addFunc_(const KeyCombination& keycomb, VoidFunc func)
+void RegGlobalHotkey::addFunc_(const KeyCombination& keycomb, VoidFunc callbackFunc)
 {
     mtx_.lock();
-    voidFuncs_.insert({ keycomb, func });
+    voidFuncs_.insert({ keycomb, callbackFunc });
     mtx_.unlock();
 }
 
-void RegGlobalHotkey::addFunc_(const KeyCombination& keycomb, ArgFunc func, Arg arg)
+void RegGlobalHotkey::addFunc_(const KeyCombination& keycomb, ArgFunc callbackFunc, Arg arg)
 {
     mtx_.lock();
-    argFuncArgs_.insert({ keycomb, { func, arg } });
+    argFuncArgs_.insert({ keycomb, { callbackFunc, arg } });
     mtx_.unlock();
 }
 

@@ -102,38 +102,12 @@ String KeyCombination::getString(bool hasKeyId, bool hasIsAutoRepeat) const
 {
     String rslt;
 
-    if (mod_ & META) {
-    #if defined(GBHK_WIN)
-        rslt += GBHK_MODKEY_TEXT_WIN;
-    #elif defined(GBHK_MAC)
-        rslt += GBHK_MODKEY_TEXT_CMD;
-    #elif defined(GBHK_LINUX)
-        rslt += GBHK_MODKEY_TEXT_SUPER;
-    #endif
-    }
-
-    if (mod_ & ALT) {
-        if (!rslt.empty())
-            rslt += " + ";
-        rslt += GBHK_MODKEY_TEXT_ALT;
-    }
-
-    if (mod_ & CTRL) {
-        if (!rslt.empty())
-            rslt += " + ";
-        rslt += GBHK_MODKEY_TEXT_CTRL;
-    }
-
-    if (mod_ & SHIFT) {
-        if (!rslt.empty())
-            rslt += " + ";
-        rslt += GBHK_MODKEY_TEXT_SHIFT;
-    }
+    rslt += getModifierString(mod_);
 
     if (!rslt.empty())
         rslt += " + ";
 
-    rslt += (char) key_;
+    rslt += getKeyString(key_);
 
     if (hasKeyId)
         rslt += " (" + std::to_string(key_) + ")";

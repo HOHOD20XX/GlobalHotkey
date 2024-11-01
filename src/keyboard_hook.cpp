@@ -78,41 +78,41 @@ static LRESULT WINAPI LowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lPar
     return CallNextHookEx(NULL, nCode, wParam, lParam);
 }
 
-void addKeyEventCallback(uint key, State state, VoidFunc func)
+void addKeyEventCallback(uint key, State state, VoidFunc callbackFunc)
 {
     kMtx.lock();
 
     if (kArgFuncArgs.find(key) != kArgFuncArgs.end() && kArgFuncArgs[key].first == state) {
         kArgFuncArgs.erase(key);
     }
-    kVoidFuncs.insert({ key, { state, func } });
+    kVoidFuncs.insert({ key, { state, callbackFunc } });
 
     kMtx.unlock();
 }
 
-void addKeyEventCallback(uint key, State state, ArgFunc func, Arg arg)
+void addKeyEventCallback(uint key, State state, ArgFunc callbackFunc, Arg arg)
 {
     kMtx.lock();
 
     if (kVoidFuncs.find(key) != kVoidFuncs.end() && kVoidFuncs[key].first == state) {
         kVoidFuncs.erase(key);
     }
-    kArgFuncArgs.insert({ key, { state, { func, arg } } });
+    kArgFuncArgs.insert({ key, { state, { callbackFunc, arg } } });
 
     kMtx.unlock();
 }
 
-void setKeyPressedCallback(void (*func)(uint key))
+void setKeyPressedCallback(void (*callbackFunc)(uint key))
 {
     kMtx.lock();
-    kKeyPressedCallback = func;
+    kKeyPressedCallback = callbackFunc;
     kMtx.unlock();
 }
 
-void setKeyReleaseddCallback(void (*func)(uint key))
+void setKeyReleaseddCallback(void (*callbackFunc)(uint key))
 {
     kMtx.lock();
-    kKeyReleasedCallback = func;
+    kKeyReleasedCallback = callbackFunc;
     kMtx.unlock();
 }
 
