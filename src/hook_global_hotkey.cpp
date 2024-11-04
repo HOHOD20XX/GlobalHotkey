@@ -1,7 +1,7 @@
 #include <global_hotkey/hook_global_hotkey.hpp>
 
 // Only usable in windows platform.
-#ifdef GBHK_WIN
+#ifdef _GLOBAL_HOTKEY_WIN
 
 #include <chrono>
 
@@ -36,7 +36,7 @@ GBHK_NODISCARD uint HookGlobalHotkey::start()
 
     // If is running do nothing.
     if (isRunning_)
-        return GBHK_RSLT_UNTIMELY_CALL;
+        return _RC_UNTIMELY_CALL;
 
     // Set the callback function of key pressed and key released.
     keyboard_hook::setKeyPressedCallback(&addPressedKey_);
@@ -44,7 +44,7 @@ GBHK_NODISCARD uint HookGlobalHotkey::start()
     // Start hook the #LowKeyboardEvent.
     uint rslt = keyboard_hook::run();
     // If failed to hook return error code.
-    if (rslt != GBHK_RSLT_SUCCESS)
+    if (rslt != _RC_SUCCESS)
         return rslt;
 
     isRunning_ = true;
@@ -105,18 +105,18 @@ GBHK_NODISCARD uint HookGlobalHotkey::start()
     });
     workThread_.detach();
 
-    return GBHK_RSLT_SUCCESS;
+    return _RC_SUCCESS;
 }
 
 GBHK_NODISCARD uint HookGlobalHotkey::end()
 {
     // If is not running do nothing.
     if (!isRunning_)
-        return GBHK_RSLT_UNTIMELY_CALL;
+        return _RC_UNTIMELY_CALL;
 
     // This function can't called in the work thread, else program get stuck in a loop.
     if (std::this_thread::get_id() == getWorkThreadId_())
-        return GBHK_RSLT_CALL_IN_WRONG_THREAD;
+        return _RC_CALL_IN_WRONG_THREAD;
 
     // Set this flag to true to exit thread.
     shouldClose_ = true;
@@ -136,12 +136,12 @@ GBHK_NODISCARD uint HookGlobalHotkey::end()
 
 GBHK_NODISCARD uint HookGlobalHotkey::add(const KeyCombination& keycomb, VoidFunc callbackFunc)
 {
-    uint rslt = GBHK_RSLT_SUCCESS;
+    uint rslt = _RC_SUCCESS;
 
     mtxFuncsOperate_.lock();
 
     if (voidFuncs_.find(keycomb) != voidFuncs_.end())
-        rslt = GBHK_RSLT_ALREADY_EXISTED;
+        rslt = _RC_ALREADY_EXISTED;
     else
         voidFuncs_.insert({ keycomb, { keycomb.isAutoRepeat(), callbackFunc } });
 
@@ -152,12 +152,12 @@ GBHK_NODISCARD uint HookGlobalHotkey::add(const KeyCombination& keycomb, VoidFun
 
 GBHK_NODISCARD uint HookGlobalHotkey::add(const KeyCombination& keycomb, ArgFunc callbackFunc, Arg arg)
 {
-    uint rslt = GBHK_RSLT_SUCCESS;
+    uint rslt = _RC_SUCCESS;
 
     mtxFuncsOperate_.lock();
 
     if (argFuncArgs_.find(keycomb) != argFuncArgs_.end())
-        rslt = GBHK_RSLT_ALREADY_EXISTED;
+        rslt = _RC_ALREADY_EXISTED;
     else
         argFuncArgs_.insert({ keycomb, { keycomb.isAutoRepeat(), { callbackFunc, arg } } });
 
@@ -168,13 +168,13 @@ GBHK_NODISCARD uint HookGlobalHotkey::add(const KeyCombination& keycomb, ArgFunc
 
 GBHK_NODISCARD uint HookGlobalHotkey::remove(const KeyCombination& keycomb)
 {
-    uint rslt = GBHK_RSLT_SUCCESS;
+    uint rslt = _RC_SUCCESS;
 
     mtxFuncsOperate_.lock();
 
     if (voidFuncs_.find(keycomb) == voidFuncs_.end() ||
         argFuncArgs_.find(keycomb) == argFuncArgs_.end()) {
-        rslt = GBHK_RSLT_NOT_FIND;
+        rslt = _RC_NOT_FIND;
     } else {
         voidFuncs_.erase(keycomb);
         argFuncArgs_.erase(keycomb);
@@ -190,15 +190,15 @@ GBHK_NODISCARD uint HookGlobalHotkey::replace(const KeyCombination& oldKeycomb,
 {
     // If the old key combination equal to new key combination do nothing.
     if (oldKeycomb.equal(newKeycomb))
-        return GBHK_RSLT_OLD_EQUAL_NEW;
+        return _RC_OLD_EQUAL_NEW;
 
-    uint rslt = GBHK_RSLT_SUCCESS;
+    uint rslt = _RC_SUCCESS;
 
     mtxFuncsOperate_.lock();
 
     if (voidFuncs_.find(oldKeycomb) == voidFuncs_.end() &&
         argFuncArgs_.find(oldKeycomb) == argFuncArgs_.end()) {
-        rslt = GBHK_RSLT_NOT_FIND;
+        rslt = _RC_NOT_FIND;
     } else if (voidFuncs_.find(oldKeycomb) != voidFuncs_.end()) {
         auto& func = voidFuncs_[oldKeycomb].second;
         voidFuncs_.erase(oldKeycomb);
@@ -259,4 +259,4 @@ void HookGlobalHotkey::removePressedKey_(uint key)
 
 }
 
-#endif // GBHK_WIN
+#endif // _GLOBAL_HOTKEY_WIN

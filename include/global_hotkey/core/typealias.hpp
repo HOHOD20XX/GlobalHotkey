@@ -1,5 +1,5 @@
-#ifndef TYPEALIAS_HPP
-#define TYPEALIAS_HPP
+#ifndef GLOBAL_HOTKEY_TYPEALIAS_HPP
+#define GLOBAL_HOTKEY_TYPEALIAS_HPP
 
 #include <string>
 #include <utility>  // std::pair
@@ -23,4 +23,4 @@ using Strings = std::vector<std::string>;
 
 }
 
-#endif // !TYPEALIAS_HPP
+#endif // !GLOBAL_HOTKEY_TYPEALIAS_HPP

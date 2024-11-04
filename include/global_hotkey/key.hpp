@@ -1,5 +1,5 @@
-#ifndef KEY_HPP
-#define KEY_HPP
+#ifndef GLOBAL_HOTKEY_KEY_HPP
+#define GLOBAL_HOTKEY_KEY_HPP
 
 #include <string>
 
@@ -141,4 +141,4 @@ uint getNativeKey(uint key);
 
 }
 
-#endif // !KEY_HPP
+#endif // !GLOBAL_HOTKEY_KEY_HPP

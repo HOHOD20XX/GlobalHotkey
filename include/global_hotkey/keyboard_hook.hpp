@@ -1,10 +1,10 @@
-#ifndef KEYBOARD_HOOK_HPP
-#define KEYBOARD_HOOK_HPP
+#ifndef GLOBAL_HOTKEY_KEYBOARD_HOOK_HPP
+#define GLOBAL_HOTKEY_KEYBOARD_HOOK_HPP
 
 #include "core/core.hpp"
 
 // Only usable in windows platform.
-#ifdef GBHK_WIN
+#ifdef _GLOBAL_HOTKEY_WIN
 
 namespace gbhk
 {
@@ -31,6 +31,6 @@ uint end();
 
 }
 
-#endif // GBHK_WIN
+#endif // _GLOBAL_HOTKEY_WIN
 
-#endif // !KEYBOARD_HOOK_HPP
+#endif // !GLOBAL_HOTKEY_KEYBOARD_HOOK_HPP

@@ -1,5 +1,5 @@
-#ifndef KEYCOMBINATION_HPP
-#define KEYCOMBINATION_HPP
+#ifndef GLOBAL_HOTKEY_KEYCOMBINATION_HPP
+#define GLOBAL_HOTKEY_KEYCOMBINATION_HPP
 
 #include <string>
 #include <functional>   // hash
@@ -66,4 +66,4 @@ private:
 
 }
 
-#endif // !KEYCOMBINATION_HPP
+#endif // !GLOBAL_HOTKEY_KEYCOMBINATION_HPP

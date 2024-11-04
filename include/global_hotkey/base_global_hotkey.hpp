@@ -1,5 +1,5 @@
-#ifndef GLOBAL_HOTKEY_BASE_HPP
-#define GLOBAL_HOTKEY_BASE_HPP
+#ifndef GLOBAL_HOTKEY_BASE_GLOBAL_HOTKEY_HPP
+#define GLOBAL_HOTKEY_BASE_GLOBAL_HOTKEY_HPP
 
 #include <chrono>
 #include <atomic>
@@ -52,4 +52,4 @@ private:
 
 }
 
-#endif // !GLOBAL_HOTKEY_BASE_HPP
+#endif // !GLOBAL_HOTKEY_BASE_GLOBAL_HOTKEY_HPP

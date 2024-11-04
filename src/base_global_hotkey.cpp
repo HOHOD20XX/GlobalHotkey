@@ -1,4 +1,4 @@
-#include <global_hotkey/global_hotkey_base.hpp>
+#include <global_hotkey/base_global_hotkey.hpp>
 
 namespace gbhk
 {

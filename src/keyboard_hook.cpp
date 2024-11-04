@@ -1,7 +1,7 @@
 #include <global_hotkey/keyboard_hook.hpp>
 
 // Only usable in windows platform.
-#ifdef GBHK_WIN
+#ifdef _GLOBAL_HOTKEY_WIN
 
 #include <atomic>
 #include <mutex>
@@ -15,7 +15,7 @@ namespace gbhk
 namespace keyboard_hook
 {
 
-#ifdef GBHK_CPP17
+#ifdef _GLOBAL_HOTKEY_CPP17
 inline std::mutex kMtx;
 inline HHOOK kHhook = nullptr;
 inline void (*kKeyPressedCallback)(uint key) = nullptr;
@@ -29,7 +29,7 @@ static void (*kKeyPressedCallback)(uint key) = nullptr;
 static void (*kKeyReleasedCallback)(uint key) = nullptr;
 static std::unordered_map<uint, std::pair<State, VoidFunc>> kVoidFuncs;
 static std::unordered_map<uint, std::pair<State, ArgFuncArg>> kArgFuncArgs;
-#endif // GBHK_CPP17
+#endif // _GLOBAL_HOTKEY_CPP17
 
 static LRESULT WINAPI LowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
 {
@@ -121,7 +121,7 @@ uint run()
     kHhook = ::SetWindowsHookExA(WH_KEYBOARD_LL, LowLevelKeyboardProc, NULL, 0);
 
     if (kHhook)
-        return GBHK_RSLT_SUCCESS;
+        return _RC_SUCCESS;
     return ::GetLastError();
 }
 
@@ -133,7 +133,7 @@ uint end()
         kKeyReleasedCallback = nullptr;
         kVoidFuncs.clear();
         kArgFuncArgs.clear();
-        return GBHK_RSLT_SUCCESS;
+        return _RC_SUCCESS;
     }
     return ::GetLastError();
 }
@@ -142,4 +142,4 @@ uint end()
 
 }
 
-#endif // GBHK_WIN
+#endif // _GLOBAL_HOTKEY_WIN

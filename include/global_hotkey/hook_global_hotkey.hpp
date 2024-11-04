@@ -1,10 +1,10 @@
-#ifndef HOOK_GLOBAL_HOTKEY_HPP
-#define HOOK_GLOBAL_HOTKEY_HPP
+#ifndef GLOBAL_HOTKEY_HOOK_GLOBAL_HOTKEY_HPP
+#define GLOBAL_HOTKEY_HOOK_GLOBAL_HOTKEY_HPP
 
-#include "global_hotkey_base.hpp"
+#include "base_global_hotkey.hpp"
 
 // Only usable in windows platform.
-#ifdef GBHK_WIN
+#ifdef _GLOBAL_HOTKEY_WIN
 
 #include <atomic>
 #include <mutex>
@@ -46,6 +46,6 @@ private:
 
 }
 
-#endif // GBHK_WIN
+#endif // _GLOBAL_HOTKEY_WIN
 
-#endif // !HOOK_GLOBAL_HOTKEY_HPP
+#endif // !GLOBAL_HOTKEY_HOOK_GLOBAL_HOTKEY_HPP

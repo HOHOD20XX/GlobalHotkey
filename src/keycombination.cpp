@@ -1,13 +1,13 @@
 #include <global_hotkey/keycombination.hpp>
 
-#if defined(GBHK_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
 #include <Windows.h>
-#elif defined(GBHK_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 #include <Carbon/Carbon.h>
-#elif defined(GBHK_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 #include <X11/Xlib.h>
 #include <xcb/xcb.h>
-#endif // GBHK_WIN
+#endif // _GLOBAL_HOTKEY_WIN
 
 namespace gbhk
 {
@@ -28,14 +28,14 @@ uint KeyCombination::nativeModifier() const
 {
     uint mod = getNativeModifier(mod_);
 
-#if defined(GBHK_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
     if (isAutoRepeat_ && mod & MOD_NOREPEAT)
         mod ^= MOD_NOREPEAT;
     else
         mod |= MOD_NOREPEAT;
-#elif defined(GBHK_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 // TODO
-#elif defined(GBHK_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 // TODO
 #endif
     return mod;
