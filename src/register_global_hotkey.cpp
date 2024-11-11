@@ -284,7 +284,7 @@ GBHK_NODISCARD uint RegGlobalHotkey::add_(const KeyCombination& keycomb)
 {
     if (::RegisterHotKey(NULL, keyId_, keycomb.nativeModifier(), keycomb.nativeKey())) {
         keyIdKeycombs_.insert({ keyId_, keycomb });
-        ++keyId_;
+        keyId_++;
         return _RC_SUCCESS;
     }
     return ::GetLastError();

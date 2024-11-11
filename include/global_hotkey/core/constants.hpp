@@ -31,7 +31,6 @@ constexpr const char* _MODKEY_TEXT_ALT = "Alt";
 constexpr const char* _MODKEY_TEXT_CTRL = "Ctrl";
 constexpr const char* _MODKEY_TEXT_SHIFT = "Shift";
 
-
 }
 
 #endif // !GLOBAL_HOTKEY_CONSTANTS_HPP
