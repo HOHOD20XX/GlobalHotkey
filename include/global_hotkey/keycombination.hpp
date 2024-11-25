@@ -69,7 +69,8 @@ public:
 
     // @param hasKeyId Whether the result should be attach the key number value.
     // @param hasIsAutoRepeat Whether the result should be attach info about if the key combination auto repeat.
-    String toString(char connector = '+', bool hasKeyId = false, bool hasIsAutoRepeat = false) const;
+    String toString(char connector = '+', bool hasSpace = true,
+                    bool hasKeyId = false, bool hasIsAutoRepeat = false) const;
 
     // @attention Not compare the #isAutoRepeat.
     bool operator==(const KeyCombination& other) const;

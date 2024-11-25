@@ -137,7 +137,7 @@ bool isValidKey(uint key);
 
 String getModifierString(Modifier modifier);
 
-String getModifiersString(uint modifiers, char connector = '+');
+String getModifiersString(uint modifiers, char connector = '+', bool hasSpace = true);
 
 String getKeyString(uint key);
 

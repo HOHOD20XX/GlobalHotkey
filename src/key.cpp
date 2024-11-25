@@ -134,14 +134,21 @@ constexpr const char* _KEY_TEXT_PA1 = "PA1";
 namespace gbhk
 {
 
-static String toUpper(const String& str)
+static bool isBlankChar(char ch)
 {
-    String s = str;
+    return ch == 0x09 || ch == 0x0A || ch == 0x0B || ch == 0x0C || ch == 0x0D || ch == 0x20;
+}
 
-    for (auto& ch : s)
-        ch = std::toupper(ch);
+// @brief Convert string to upper case and remove the blank character.
+static String uniform(const String& str)
+{
+    String rslt;
 
-    return s;
+    for (const auto& ch : str)
+        if (!isBlankChar(ch))
+            rslt += std::toupper(ch);
+
+    return rslt;
 }
 
 bool isValidModifers(uint modifiers)
@@ -172,8 +179,10 @@ String getModifierString(Modifier modifier)
     }
 }
 
-String getModifiersString(uint modifiers, char connector)
+String getModifiersString(uint modifiers, char connector, bool hasSpace)
 {
+    String _connector = hasSpace ? (' ' + std::string(1, connector) + ' ') : std::string(1, connector);
+
     String rslt;
 
     if (modifiers & META)
@@ -181,19 +190,19 @@ String getModifiersString(uint modifiers, char connector)
 
     if (modifiers & ALT) {
         if (!rslt.empty())
-            rslt += connector;
+            rslt += _connector;
         rslt += getModifierString(ALT);
     }
 
     if (modifiers & CTRL) {
         if (!rslt.empty())
-            rslt += connector;
+            rslt += _connector;
         rslt += getModifierString(CTRL);
     }
 
     if (modifiers & SHIFT) {
         if (!rslt.empty())
-            rslt += connector;
+            rslt += _connector;
         rslt += getModifierString(SHIFT);
     }
 
@@ -402,15 +411,15 @@ String getKeyString(uint key)
 
 Modifier getModifierFromString(const String& str)
 {
-    static const String win = toUpper(_MOD_TEXT_WIN);
-    static const String super = toUpper(_MOD_TEXT_SUPER);
-    static const String cmd1 = toUpper(_MOD_TEXT_CMD_1);
-    static const String cmd2 = toUpper(_MOD_TEXT_CMD_2);
-    static const String alt = toUpper(_MOD_TEXT_ALT);
-    static const String ctrl = toUpper(_MOD_TEXT_CTRL);
-    static const String shift = toUpper(_MOD_TEXT_SHIFT);
+    static const String win = uniform(_MOD_TEXT_WIN);
+    static const String super = uniform(_MOD_TEXT_SUPER);
+    static const String cmd1 = uniform(_MOD_TEXT_CMD_1);
+    static const String cmd2 = uniform(_MOD_TEXT_CMD_2);
+    static const String alt = uniform(_MOD_TEXT_ALT);
+    static const String ctrl = uniform(_MOD_TEXT_CTRL);
+    static const String shift = uniform(_MOD_TEXT_SHIFT);
 
-    String s = toUpper(str);
+    String s = uniform(str);
 
     if (s == win || s == super || s == cmd1 || s == cmd2)
         return META;
@@ -447,105 +456,105 @@ uint getModifiersFromString(const String& str, char connector)
 uint getKeyFromString(const String& str)
 {
     static const Strings keyTextTable = {
-        toUpper(_KEY_TEXT_MOUSEBUTTON_LEFT),
-        toUpper(_KEY_TEXT_MOUSEBUTTON_RIGHT),
-        toUpper(_KEY_TEXT_MOUSEBUTTON_MIDDLE),
-        toUpper(_KEY_TEXT_CANCEL),
-        toUpper(_KEY_TEXT_BACKSPACE),
-        toUpper(_KEY_TEXT_TAB),
-        toUpper(_KEY_TEXT_CLEAR),
-        toUpper(_KEY_TEXT_ENTER),
-        toUpper(_KEY_TEXT_PAUSE),
-        toUpper(_KEY_TEXT_CAPSLOCK),
-        toUpper(_KEY_TEXT_ESCAPE),
-        toUpper(_KEY_TEXT_SPACE),
-        toUpper(_KEY_TEXT_PAGE_UP),
-        toUpper(_KEY_TEXT_PAGE_DOWN),
-        toUpper(_KEY_TEXT_END),
-        toUpper(_KEY_TEXT_HOME),
-        toUpper(_KEY_TEXT_ARROW_LEFT),
-        toUpper(_KEY_TEXT_ARROW_UP),
-        toUpper(_KEY_TEXT_ARROW_RIGHT),
-        toUpper(_KEY_TEXT_ARROW_DOWN),
-        toUpper(_KEY_TEXT_SELECT),
-        toUpper(_KEY_TEXT_PRINT),
-        toUpper(_KEY_TEXT_EXECUTE),
-        toUpper(_KEY_TEXT_PRINTSCREEN),
-        toUpper(_KEY_TEXT_INSERT),
-        toUpper(_KEY_TEXT_DELETE),
-        toUpper(_KEY_TEXT_HELP),
-        toUpper(_KEY_TEXT_APPS),
-        toUpper(_KEY_TEXT_SLEEP),
-        toUpper(_KEY_TEXT_NUMPAD0),
-        toUpper(_KEY_TEXT_NUMPAD1),
-        toUpper(_KEY_TEXT_NUMPAD2),
-        toUpper(_KEY_TEXT_NUMPAD3),
-        toUpper(_KEY_TEXT_NUMPAD4),
-        toUpper(_KEY_TEXT_NUMPAD5),
-        toUpper(_KEY_TEXT_NUMPAD6),
-        toUpper(_KEY_TEXT_NUMPAD7),
-        toUpper(_KEY_TEXT_NUMPAD8),
-        toUpper(_KEY_TEXT_NUMPAD9),
-        toUpper(_KEY_TEXT_MULTIPLY),
-        toUpper(_KEY_TEXT_ADD),
-        toUpper(_KEY_TEXT_SEPARATOR),
-        toUpper(_KEY_TEXT_SUBTRACT),
-        toUpper(_KEY_TEXT_DECIMAL),
-        toUpper(_KEY_TEXT_DIVIDE),
-        toUpper(_KEY_TEXT_F1),
-        toUpper(_KEY_TEXT_F2),
-        toUpper(_KEY_TEXT_F3),
-        toUpper(_KEY_TEXT_F4),
-        toUpper(_KEY_TEXT_F5),
-        toUpper(_KEY_TEXT_F6),
-        toUpper(_KEY_TEXT_F7),
-        toUpper(_KEY_TEXT_F8),
-        toUpper(_KEY_TEXT_F9),
-        toUpper(_KEY_TEXT_F10),
-        toUpper(_KEY_TEXT_F11),
-        toUpper(_KEY_TEXT_F12),
-        toUpper(_KEY_TEXT_F13),
-        toUpper(_KEY_TEXT_F14),
-        toUpper(_KEY_TEXT_F15),
-        toUpper(_KEY_TEXT_F16),
-        toUpper(_KEY_TEXT_F17),
-        toUpper(_KEY_TEXT_F18),
-        toUpper(_KEY_TEXT_F19),
-        toUpper(_KEY_TEXT_F20),
-        toUpper(_KEY_TEXT_F21),
-        toUpper(_KEY_TEXT_F22),
-        toUpper(_KEY_TEXT_F23),
-        toUpper(_KEY_TEXT_F24),
-        toUpper(_KEY_TEXT_NUMLOCK),
-        toUpper(_KEY_TEXT_SCROLL_LOCK),
-        toUpper(_KEY_TEXT_BROWSER_BACK),
-        toUpper(_KEY_TEXT_BROWSER_FORWARD),
-        toUpper(_KEY_TEXT_BROWSER_REFRESH),
-        toUpper(_KEY_TEXT_BROWSER_STOP),
-        toUpper(_KEY_TEXT_BROWSER_SEARCH),
-        toUpper(_KEY_TEXT_BROWSER_FAVORITES),
-        toUpper(_KEY_TEXT_BROWSER_HOME),
-        toUpper(_KEY_TEXT_VOLUME_MUTE),
-        toUpper(_KEY_TEXT_VOLUME_UP),
-        toUpper(_KEY_TEXT_VOLUME_DOWN),
-        toUpper(_KEY_TEXT_MEDIA_NEXT_TRACK),
-        toUpper(_KEY_TEXT_MEDIA_PREV_TRACK),
-        toUpper(_KEY_TEXT_MEDIA_STOP),
-        toUpper(_KEY_TEXT_MEDIA_PLAY_PAUSE),
-        toUpper(_KEY_TEXT_LAUNCH_MAIL),
-        toUpper(_KEY_TEXT_LAUNCH_MEDIA_SELECT),
-        toUpper(_KEY_TEXT_LAUNCH_APP1),
-        toUpper(_KEY_TEXT_LAUNCH_APP2),
-        toUpper(_KEY_TEXT_ATTN),
-        toUpper(_KEY_TEXT_CRSEL),
-        toUpper(_KEY_TEXT_EXSEL),
-        toUpper(_KEY_TEXT_ERASEEOF),
-        toUpper(_KEY_TEXT_PLAY),
-        toUpper(_KEY_TEXT_ZOOM),
-        toUpper(_KEY_TEXT_PA1)
+        uniform(_KEY_TEXT_MOUSEBUTTON_LEFT),
+        uniform(_KEY_TEXT_MOUSEBUTTON_RIGHT),
+        uniform(_KEY_TEXT_MOUSEBUTTON_MIDDLE),
+        uniform(_KEY_TEXT_CANCEL),
+        uniform(_KEY_TEXT_BACKSPACE),
+        uniform(_KEY_TEXT_TAB),
+        uniform(_KEY_TEXT_CLEAR),
+        uniform(_KEY_TEXT_ENTER),
+        uniform(_KEY_TEXT_PAUSE),
+        uniform(_KEY_TEXT_CAPSLOCK),
+        uniform(_KEY_TEXT_ESCAPE),
+        uniform(_KEY_TEXT_SPACE),
+        uniform(_KEY_TEXT_PAGE_UP),
+        uniform(_KEY_TEXT_PAGE_DOWN),
+        uniform(_KEY_TEXT_END),
+        uniform(_KEY_TEXT_HOME),
+        uniform(_KEY_TEXT_ARROW_LEFT),
+        uniform(_KEY_TEXT_ARROW_UP),
+        uniform(_KEY_TEXT_ARROW_RIGHT),
+        uniform(_KEY_TEXT_ARROW_DOWN),
+        uniform(_KEY_TEXT_SELECT),
+        uniform(_KEY_TEXT_PRINT),
+        uniform(_KEY_TEXT_EXECUTE),
+        uniform(_KEY_TEXT_PRINTSCREEN),
+        uniform(_KEY_TEXT_INSERT),
+        uniform(_KEY_TEXT_DELETE),
+        uniform(_KEY_TEXT_HELP),
+        uniform(_KEY_TEXT_APPS),
+        uniform(_KEY_TEXT_SLEEP),
+        uniform(_KEY_TEXT_NUMPAD0),
+        uniform(_KEY_TEXT_NUMPAD1),
+        uniform(_KEY_TEXT_NUMPAD2),
+        uniform(_KEY_TEXT_NUMPAD3),
+        uniform(_KEY_TEXT_NUMPAD4),
+        uniform(_KEY_TEXT_NUMPAD5),
+        uniform(_KEY_TEXT_NUMPAD6),
+        uniform(_KEY_TEXT_NUMPAD7),
+        uniform(_KEY_TEXT_NUMPAD8),
+        uniform(_KEY_TEXT_NUMPAD9),
+        uniform(_KEY_TEXT_MULTIPLY),
+        uniform(_KEY_TEXT_ADD),
+        uniform(_KEY_TEXT_SEPARATOR),
+        uniform(_KEY_TEXT_SUBTRACT),
+        uniform(_KEY_TEXT_DECIMAL),
+        uniform(_KEY_TEXT_DIVIDE),
+        uniform(_KEY_TEXT_F1),
+        uniform(_KEY_TEXT_F2),
+        uniform(_KEY_TEXT_F3),
+        uniform(_KEY_TEXT_F4),
+        uniform(_KEY_TEXT_F5),
+        uniform(_KEY_TEXT_F6),
+        uniform(_KEY_TEXT_F7),
+        uniform(_KEY_TEXT_F8),
+        uniform(_KEY_TEXT_F9),
+        uniform(_KEY_TEXT_F10),
+        uniform(_KEY_TEXT_F11),
+        uniform(_KEY_TEXT_F12),
+        uniform(_KEY_TEXT_F13),
+        uniform(_KEY_TEXT_F14),
+        uniform(_KEY_TEXT_F15),
+        uniform(_KEY_TEXT_F16),
+        uniform(_KEY_TEXT_F17),
+        uniform(_KEY_TEXT_F18),
+        uniform(_KEY_TEXT_F19),
+        uniform(_KEY_TEXT_F20),
+        uniform(_KEY_TEXT_F21),
+        uniform(_KEY_TEXT_F22),
+        uniform(_KEY_TEXT_F23),
+        uniform(_KEY_TEXT_F24),
+        uniform(_KEY_TEXT_NUMLOCK),
+        uniform(_KEY_TEXT_SCROLL_LOCK),
+        uniform(_KEY_TEXT_BROWSER_BACK),
+        uniform(_KEY_TEXT_BROWSER_FORWARD),
+        uniform(_KEY_TEXT_BROWSER_REFRESH),
+        uniform(_KEY_TEXT_BROWSER_STOP),
+        uniform(_KEY_TEXT_BROWSER_SEARCH),
+        uniform(_KEY_TEXT_BROWSER_FAVORITES),
+        uniform(_KEY_TEXT_BROWSER_HOME),
+        uniform(_KEY_TEXT_VOLUME_MUTE),
+        uniform(_KEY_TEXT_VOLUME_UP),
+        uniform(_KEY_TEXT_VOLUME_DOWN),
+        uniform(_KEY_TEXT_MEDIA_NEXT_TRACK),
+        uniform(_KEY_TEXT_MEDIA_PREV_TRACK),
+        uniform(_KEY_TEXT_MEDIA_STOP),
+        uniform(_KEY_TEXT_MEDIA_PLAY_PAUSE),
+        uniform(_KEY_TEXT_LAUNCH_MAIL),
+        uniform(_KEY_TEXT_LAUNCH_MEDIA_SELECT),
+        uniform(_KEY_TEXT_LAUNCH_APP1),
+        uniform(_KEY_TEXT_LAUNCH_APP2),
+        uniform(_KEY_TEXT_ATTN),
+        uniform(_KEY_TEXT_CRSEL),
+        uniform(_KEY_TEXT_EXSEL),
+        uniform(_KEY_TEXT_ERASEEOF),
+        uniform(_KEY_TEXT_PLAY),
+        uniform(_KEY_TEXT_ZOOM),
+        uniform(_KEY_TEXT_PA1)
     };
 
-    String s = toUpper(str);
+    String s = uniform(str);
 
     if (s.size() == 1) {
         char ch = s[0];

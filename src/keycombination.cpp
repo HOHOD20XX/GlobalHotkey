@@ -91,14 +91,16 @@ bool KeyCombination::equal(const KeyCombination& other) const
     return mods_ == other.mods_ && key_ == other.key_ && isAutoRepeat_ == other.isAutoRepeat_;
 }
 
-String KeyCombination::toString(char connector, bool hasKeyId, bool hasIsAutoRepeat) const
+String KeyCombination::toString(char connector, bool hasSpace, bool hasKeyId, bool hasIsAutoRepeat) const
 {
+    String _connector = hasSpace ? (' ' + std::string(1, connector) + ' ') : std::string(1, connector);
+
     String rslt;
 
-    rslt += getModifiersString(mods_, connector);
+    rslt += getModifiersString(mods_, connector, hasSpace);
 
     if (!rslt.empty())
-        rslt += connector;
+        rslt += _connector;
 
     rslt += getKeyString(key_);
 
