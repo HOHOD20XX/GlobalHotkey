@@ -26,17 +26,6 @@ enum Key : uint
     KY_TAB,
     KY_CLEAR,
     KY_ENTER,
-    //KY_META_LEFT,
-    //KY_META_RIGHT,
-    //KY_ALT,
-    //KY_ALT_LEFT,
-    //KY_ALT_RIGHT,
-    //KY_CTRL,
-    //KY_CTRL_LEFT,
-    //KY_CTRL_RIGHT,
-    //KY_SHIFT,
-    //KY_SHIFT_LEFT,
-    //KY_SHIFT_RIGHT,
     KY_PAUSE,
     KY_CAPSLOCK,
     KY_ESCAPE,
@@ -127,15 +116,43 @@ enum Key : uint
     KY_PA1
 };
 
-std::string getModifierString(Modifier modifier);
+constexpr uint KY_FIRST = KY_MOUSEBUTTON_LEFT;
+constexpr uint KY_LAST = KY_PA1;
 
-std::string getModifierString(uint modifier);
+}
 
-std::string getKeyString(uint key);
+namespace gbhk
+{
+
+// @brief Check if the modifiers is valid.
+// @return True if the modifiers not equal 0, else False.
+// @note Check if the modifiers contain at least one modifier.
+bool isValidModifers(uint modifiers);
+
+// @brief Check if the key is valid.
+// @return True if the key is valid keyboard value
+// (can be directly input by keyboard, except modifier (Alt, Ctrl...))
+// else False.
+bool isValidKey(uint key);
+
+String getModifierString(Modifier modifier);
+
+String getModifiersString(uint modifiers, char connector = '+');
+
+String getKeyString(uint key);
+
+// @return Return 0 if the string is invalid.
+Modifier getModifierFromString(const String& str);
+
+// @return Return 0 if the string is invalid.
+uint getModifiersFromString(const String& str, char connector = '+');
+
+// @return Return 0 if the string is invalid.
+uint getKeyFromString(const String& str);
 
 uint getNativeModifier(Modifier modifier);
 
-uint getNativeModifier(uint modifier);
+uint getNativeModifiers(uint modifiers);
 
 uint getNativeKey(uint key);
 

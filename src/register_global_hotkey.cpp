@@ -282,7 +282,7 @@ GBHK_NODISCARD uint RegGlobalHotkey::end_()
 
 GBHK_NODISCARD uint RegGlobalHotkey::add_(const KeyCombination& keycomb)
 {
-    if (::RegisterHotKey(NULL, keyId_, keycomb.nativeModifier(), keycomb.nativeKey())) {
+    if (::RegisterHotKey(NULL, keyId_, keycomb.nativeModifiers(), keycomb.nativeKey())) {
         keyIdKeycombs_.insert({ keyId_, keycomb });
         keyId_++;
         return _RC_SUCCESS;
@@ -315,7 +315,7 @@ GBHK_NODISCARD uint RegGlobalHotkey::replace_(const KeyCombination& oldKeycomb,
                 keyIdKeycombs_.erase(keyid);
 
                 if (::RegisterHotKey(NULL, keyid,
-                                     newKeycomb.nativeModifier(), newKeycomb.nativeKey())) {
+                                     newKeycomb.nativeModifiers(), newKeycomb.nativeKey())) {
                     keyIdKeycombs_.insert({ keyid, newKeycomb });
                     return _RC_SUCCESS;
                 }

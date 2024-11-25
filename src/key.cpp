@@ -1,5 +1,7 @@
 #include <global_hotkey/key.hpp>
 
+#include <sstream>  // std::stringstream
+
 #if defined(_GLOBAL_HOTKEY_WIN)
 #include <Windows.h>
 #elif defined(_GLOBAL_HOTKEY_MAC)
@@ -12,245 +14,559 @@
 namespace gbhk
 {
 
-std::string getModifierString(Modifier modifier)
+constexpr const char* _MOD_TEXT_WIN = "Win";
+constexpr const char* _MOD_TEXT_CMD_1 = "Command";
+constexpr const char* _MOD_TEXT_CMD_2 = "Cmd";
+constexpr const char* _MOD_TEXT_SUPER = "Super";
+constexpr const char* _MOD_TEXT_ALT = "Alt";
+constexpr const char* _MOD_TEXT_CTRL = "Ctrl";
+constexpr const char* _MOD_TEXT_SHIFT = "Shift";
+
+#if defined(_GLOBAL_HOTKEY_WIN)
+constexpr const char* _MOD_TEXT_META = _MOD_TEXT_WIN;
+#elif defined(_GLOBAL_HOTKEY_MAC)
+constexpr const char* _MOD_TEXT_META = _MOD_TEXT_CMD_1;
+#elif defined(_GLOBAL_HOTKEY_LINUX)
+constexpr const char* _MOD_TEXT_META = _MOD_TEXT_SUPER;
+#else
+constexpr const char* _MOD_TEXT_META = "";
+#endif // _GLOBAL_HOTKEY_WIN
+
+constexpr const char* _KEY_TEXT_MOUSEBUTTON_LEFT = "MouseButtonLeft";
+constexpr const char* _KEY_TEXT_MOUSEBUTTON_RIGHT = "MouseButtonRight";
+constexpr const char* _KEY_TEXT_MOUSEBUTTON_MIDDLE = "MouseButtonMiddle";
+constexpr const char* _KEY_TEXT_CANCEL = "Cancel";
+constexpr const char* _KEY_TEXT_BACKSPACE = "Backspace";
+constexpr const char* _KEY_TEXT_TAB = "Tab";
+constexpr const char* _KEY_TEXT_CLEAR = "Clear";
+constexpr const char* _KEY_TEXT_ENTER = "Enter";
+constexpr const char* _KEY_TEXT_PAUSE = "Pause";
+constexpr const char* _KEY_TEXT_CAPSLOCK = "CapsLock";
+constexpr const char* _KEY_TEXT_ESCAPE = "Escape";
+constexpr const char* _KEY_TEXT_SPACE = "Space";
+constexpr const char* _KEY_TEXT_PAGE_UP = "PageUp";
+constexpr const char* _KEY_TEXT_PAGE_DOWN = "PageDown";
+constexpr const char* _KEY_TEXT_END = "End";
+constexpr const char* _KEY_TEXT_HOME = "Home";
+constexpr const char* _KEY_TEXT_ARROW_LEFT = "Left";
+constexpr const char* _KEY_TEXT_ARROW_UP = "Up";
+constexpr const char* _KEY_TEXT_ARROW_RIGHT = "Right";
+constexpr const char* _KEY_TEXT_ARROW_DOWN = "Down";
+constexpr const char* _KEY_TEXT_SELECT = "Select";
+constexpr const char* _KEY_TEXT_PRINT = "Print";
+constexpr const char* _KEY_TEXT_EXECUTE = "Execute";
+constexpr const char* _KEY_TEXT_PRINTSCREEN = "PrintScreen";
+constexpr const char* _KEY_TEXT_INSERT = "Insert";
+constexpr const char* _KEY_TEXT_DELETE = "Delete";
+constexpr const char* _KEY_TEXT_HELP = "Help";
+constexpr const char* _KEY_TEXT_APPS = "Apps";
+constexpr const char* _KEY_TEXT_SLEEP = "Sleep";
+constexpr const char* _KEY_TEXT_NUMPAD0 = "Numpad0";
+constexpr const char* _KEY_TEXT_NUMPAD1 = "Numpad1";
+constexpr const char* _KEY_TEXT_NUMPAD2 = "Numpad2";
+constexpr const char* _KEY_TEXT_NUMPAD3 = "Numpad3";
+constexpr const char* _KEY_TEXT_NUMPAD4 = "Numpad4";
+constexpr const char* _KEY_TEXT_NUMPAD5 = "Numpad5";
+constexpr const char* _KEY_TEXT_NUMPAD6 = "Numpad6";
+constexpr const char* _KEY_TEXT_NUMPAD7 = "Numpad7";
+constexpr const char* _KEY_TEXT_NUMPAD8 = "Numpad8";
+constexpr const char* _KEY_TEXT_NUMPAD9 = "Numpad9";
+constexpr const char* _KEY_TEXT_MULTIPLY = "Multiply";
+constexpr const char* _KEY_TEXT_ADD = "Add";
+constexpr const char* _KEY_TEXT_SEPARATOR = "Separator";
+constexpr const char* _KEY_TEXT_SUBTRACT = "Subtract";
+constexpr const char* _KEY_TEXT_DECIMAL = "Decimal";
+constexpr const char* _KEY_TEXT_DIVIDE = "Divide";
+constexpr const char* _KEY_TEXT_F1 = "F1";
+constexpr const char* _KEY_TEXT_F2 = "F2";
+constexpr const char* _KEY_TEXT_F3 = "F3";
+constexpr const char* _KEY_TEXT_F4 = "F4";
+constexpr const char* _KEY_TEXT_F5 = "F5";
+constexpr const char* _KEY_TEXT_F6 = "F6";
+constexpr const char* _KEY_TEXT_F7 = "F7";
+constexpr const char* _KEY_TEXT_F8 = "F8";
+constexpr const char* _KEY_TEXT_F9 = "F9";
+constexpr const char* _KEY_TEXT_F10 = "F10";
+constexpr const char* _KEY_TEXT_F11 = "F11";
+constexpr const char* _KEY_TEXT_F12 = "F12";
+constexpr const char* _KEY_TEXT_F13 = "F13";
+constexpr const char* _KEY_TEXT_F14 = "F14";
+constexpr const char* _KEY_TEXT_F15 = "F15";
+constexpr const char* _KEY_TEXT_F16 = "F16";
+constexpr const char* _KEY_TEXT_F17 = "F17";
+constexpr const char* _KEY_TEXT_F18 = "F18";
+constexpr const char* _KEY_TEXT_F19 = "F19";
+constexpr const char* _KEY_TEXT_F20 = "F20";
+constexpr const char* _KEY_TEXT_F21 = "F21";
+constexpr const char* _KEY_TEXT_F22 = "F22";
+constexpr const char* _KEY_TEXT_F23 = "F23";
+constexpr const char* _KEY_TEXT_F24 = "F24";
+constexpr const char* _KEY_TEXT_NUMLOCK = "NumLock";
+constexpr const char* _KEY_TEXT_SCROLL_LOCK = "ScrollLock";
+constexpr const char* _KEY_TEXT_BROWSER_BACK = "BrowserBack";
+constexpr const char* _KEY_TEXT_BROWSER_FORWARD = "BrowserForward";
+constexpr const char* _KEY_TEXT_BROWSER_REFRESH = "BrowserRefresh";
+constexpr const char* _KEY_TEXT_BROWSER_STOP = "BrowserStop";
+constexpr const char* _KEY_TEXT_BROWSER_SEARCH = "BrowserSearch";
+constexpr const char* _KEY_TEXT_BROWSER_FAVORITES = "BrowserFavorites";
+constexpr const char* _KEY_TEXT_BROWSER_HOME = "BrowserHome";
+constexpr const char* _KEY_TEXT_VOLUME_MUTE = "VolumeMute";
+constexpr const char* _KEY_TEXT_VOLUME_UP = "VolumeUp";
+constexpr const char* _KEY_TEXT_VOLUME_DOWN = "VolumeDown";
+constexpr const char* _KEY_TEXT_MEDIA_NEXT_TRACK = "MediaNextTrack";
+constexpr const char* _KEY_TEXT_MEDIA_PREV_TRACK = "MediaPrevTrack";
+constexpr const char* _KEY_TEXT_MEDIA_STOP = "MediaStop";
+constexpr const char* _KEY_TEXT_MEDIA_PLAY_PAUSE = "MediaPlayPause";
+constexpr const char* _KEY_TEXT_LAUNCH_MAIL = "LaunchMail";
+constexpr const char* _KEY_TEXT_LAUNCH_MEDIA_SELECT = "LaunchMediaSelect";
+constexpr const char* _KEY_TEXT_LAUNCH_APP1 = "LaunchApp1";
+constexpr const char* _KEY_TEXT_LAUNCH_APP2 = "LaunchApp2";
+constexpr const char* _KEY_TEXT_ATTN = "ATTN";
+constexpr const char* _KEY_TEXT_CRSEL = "CRSEL";
+constexpr const char* _KEY_TEXT_EXSEL = "EXSEL";
+constexpr const char* _KEY_TEXT_ERASEEOF = "ERASEEOF";
+constexpr const char* _KEY_TEXT_PLAY = "Play";
+constexpr const char* _KEY_TEXT_ZOOM = "Zoom";
+constexpr const char* _KEY_TEXT_PA1 = "PA1";
+
+}
+
+namespace gbhk
+{
+
+static String toUpper(const String& str)
+{
+    String s = str;
+
+    for (auto& ch : s)
+        ch = std::toupper(ch);
+
+    return s;
+}
+
+bool isValidModifers(uint modifiers)
+{
+    return modifiers != 0;
+}
+
+bool isValidKey(uint key)
+{
+    return (key >= '0' && key <= '9') ||
+        (key >= 'A' && key <= 'Z') ||
+        (key >= KY_FIRST && key <= KY_LAST);
+}
+
+String getModifierString(Modifier modifier)
 {
     switch (modifier) {
         case META:
-            return _MODKEY_TEXT_META;
+            return _MOD_TEXT_META;
         case ALT:
-            return _MODKEY_TEXT_ALT;
+            return _MOD_TEXT_ALT;
         case CTRL:
-            return _MODKEY_TEXT_CTRL;
+            return _MOD_TEXT_CTRL;
         case SHIFT:
-            return _MODKEY_TEXT_SHIFT;
+            return _MOD_TEXT_SHIFT;
         default:
             return "";
     }
 }
 
-std::string getModifierString(uint modifier)
+String getModifiersString(uint modifiers, char connector)
 {
-    std::string rslt;
+    String rslt;
 
-    if (modifier & META)
+    if (modifiers & META)
         rslt += getModifierString(META);
 
-    if (modifier & ALT) {
-        rslt += rslt.empty() ? "" : " + ";
+    if (modifiers & ALT) {
+        if (!rslt.empty())
+            rslt += connector;
         rslt += getModifierString(ALT);
     }
 
-    if (modifier & CTRL) {
-        rslt += rslt.empty() ? "" : " + ";
+    if (modifiers & CTRL) {
+        if (!rslt.empty())
+            rslt += connector;
         rslt += getModifierString(CTRL);
     }
 
-    if (modifier & SHIFT) {
-        rslt += rslt.empty() ? "" : " + ";
+    if (modifiers & SHIFT) {
+        if (!rslt.empty())
+            rslt += connector;
         rslt += getModifierString(SHIFT);
     }
 
     return rslt;
 }
 
-std::string getKeyString(uint key)
+String getKeyString(uint key)
 {
     switch (key) {
         case KY_MOUSEBUTTON_LEFT:
-            return "MouseButton-Left";
+            return _KEY_TEXT_MOUSEBUTTON_LEFT;
         case KY_MOUSEBUTTON_RIGHT:
-            return "MouseButton-Right";
+            return _KEY_TEXT_MOUSEBUTTON_RIGHT;
         case KY_MOUSEBUTTON_MID:
-            return "MouseButton-Middle";
+            return _KEY_TEXT_MOUSEBUTTON_MIDDLE;
         case KY_CANCEL:
-            return "Cancel";
+            return _KEY_TEXT_CANCEL;
         case KY_BACKSPACE:
-            return "Backspace";
+            return _KEY_TEXT_BACKSPACE;
         case KY_TAB:
-            return "Tab";
+            return _KEY_TEXT_TAB;
         case KY_CLEAR:
-            return "Clear";
+            return _KEY_TEXT_CLEAR;
         case KY_ENTER:
-            return "Enter";
+            return _KEY_TEXT_ENTER;
         case KY_PAUSE:
-            return "Pause";
+            return _KEY_TEXT_PAUSE;
         case KY_CAPSLOCK:
-            return "CapsLock";
+            return _KEY_TEXT_CAPSLOCK;
         case KY_ESCAPE:
-            return "Escape";
+            return _KEY_TEXT_ESCAPE;
         case KY_SPACE:
-            return "Space";
+            return _KEY_TEXT_SPACE;
         case KY_PAGE_UP:
-            return "PageUp";
+            return _KEY_TEXT_PAGE_UP;
         case KY_PAGE_DOWN:
-            return "PageDown";
+            return _KEY_TEXT_PAGE_DOWN;
         case KY_END:
-            return "End";
+            return _KEY_TEXT_END;
         case KY_HOME:
-            return "Home";
+            return _KEY_TEXT_HOME;
         case KY_ARROW_LEFT:
-            return "Left";
+            return _KEY_TEXT_ARROW_LEFT;
         case KY_ARROW_UP:
-            return "Up";
+            return _KEY_TEXT_ARROW_UP;
         case KY_ARROW_RIGHT:
-            return "Right";
+            return _KEY_TEXT_ARROW_RIGHT;
         case KY_ARROW_DOWN:
-            return "Down";
+            return _KEY_TEXT_ARROW_DOWN;
         case KY_SELECT:
-            return "Select";
+            return _KEY_TEXT_SELECT;
         case KY_PRINT:
-            return "Print";
+            return _KEY_TEXT_PRINT;
         case KY_EXECUTE:
-            return "Execute";
+            return _KEY_TEXT_EXECUTE;
         case KY_PRINTSCREEN:
-            return "PrintScreen";
+            return _KEY_TEXT_PRINTSCREEN;
         case KY_INSERT:
-            return "Insert";
+            return _KEY_TEXT_INSERT;
         case KY_DELETE:
-            return "Delete";
+            return _KEY_TEXT_DELETE;
         case KY_HELP:
-            return "Help";
+            return _KEY_TEXT_HELP;
         case KY_APPS:
-            return "Apps";
+            return _KEY_TEXT_APPS;
         case KY_SLEEP:
-            return "Sleep";
+            return _KEY_TEXT_SLEEP;
         case KY_NUMPAD0:
-            return "Numpad-0";
+            return _KEY_TEXT_NUMPAD0;
         case KY_NUMPAD1:
-            return "Numpad-1";
+            return _KEY_TEXT_NUMPAD1;
         case KY_NUMPAD2:
-            return "Numpad-2";
+            return _KEY_TEXT_NUMPAD2;
         case KY_NUMPAD3:
-            return "Numpad-3";
+            return _KEY_TEXT_NUMPAD3;
         case KY_NUMPAD4:
-            return "Numpad-4";
+            return _KEY_TEXT_NUMPAD4;
         case KY_NUMPAD5:
-            return "Numpad-5";
+            return _KEY_TEXT_NUMPAD5;
         case KY_NUMPAD6:
-            return "Numpad-6";
+            return _KEY_TEXT_NUMPAD6;
         case KY_NUMPAD7:
-            return "Numpad-7";
+            return _KEY_TEXT_NUMPAD7;
         case KY_NUMPAD8:
-            return "Numpad-8";
+            return _KEY_TEXT_NUMPAD8;
         case KY_NUMPAD9:
-            return "Numpad-9";
+            return _KEY_TEXT_NUMPAD9;
         case KY_MULTIPLY:
-            return "Multiply";
+            return _KEY_TEXT_MULTIPLY;
         case KY_ADD:
-            return "Add";
+            return _KEY_TEXT_ADD;
         case KY_SEPARATOR:
-            return "Separator";
+            return _KEY_TEXT_SEPARATOR;
         case KY_SUBTRACT:
-            return "Subtract";
+            return _KEY_TEXT_SUBTRACT;
         case KY_DECIMAL:
-            return "Decimal";
+            return _KEY_TEXT_DECIMAL;
         case KY_DIVIDE:
-            return "Divide";
+            return _KEY_TEXT_DIVIDE;
         case KY_F1:
-            return "F1";
+            return _KEY_TEXT_F1;
         case KY_F2:
-            return "F2";
+            return _KEY_TEXT_F2;
         case KY_F3:
-            return "F3";
+            return _KEY_TEXT_F3;
         case KY_F4:
-            return "F4";
+            return _KEY_TEXT_F4;
         case KY_F5:
-            return "F5";
+            return _KEY_TEXT_F5;
         case KY_F6:
-            return "F6";
+            return _KEY_TEXT_F6;
         case KY_F7:
-            return "F7";
+            return _KEY_TEXT_F7;
         case KY_F8:
-            return "F8";
+            return _KEY_TEXT_F8;
         case KY_F9:
-            return "F9";
+            return _KEY_TEXT_F9;
         case KY_F10:
-            return "F10";
+            return _KEY_TEXT_F10;
         case KY_F11:
-            return "F11";
+            return _KEY_TEXT_F11;
         case KY_F12:
-            return "F12";
+            return _KEY_TEXT_F12;
         case KY_F13:
-            return "F13";
+            return _KEY_TEXT_F13;
         case KY_F14:
-            return "F14";
+            return _KEY_TEXT_F14;
         case KY_F15:
-            return "F15";
+            return _KEY_TEXT_F15;
         case KY_F16:
-            return "F16";
+            return _KEY_TEXT_F16;
         case KY_F17:
-            return "F17";
+            return _KEY_TEXT_F17;
         case KY_F18:
-            return "F18";
+            return _KEY_TEXT_F18;
         case KY_F19:
-            return "F19";
+            return _KEY_TEXT_F19;
         case KY_F20:
-            return "F20";
+            return _KEY_TEXT_F20;
         case KY_F21:
-            return "F21";
+            return _KEY_TEXT_F21;
         case KY_F22:
-            return "F22";
+            return _KEY_TEXT_F22;
         case KY_F23:
-            return "F23";
+            return _KEY_TEXT_F23;
         case KY_F24:
-            return "F24";
+            return _KEY_TEXT_F24;
         case KY_NUMLOCK:
-            return "NumLock";
+            return _KEY_TEXT_NUMLOCK;
         case KY_SCROLL_LOCK:
-            return "ScrollLock";
+            return _KEY_TEXT_SCROLL_LOCK;
         case KY_BROWSER_BACK:
-            return "Browser-Back";
+            return _KEY_TEXT_BROWSER_BACK;
         case KY_BROWSER_FORWARD:
-            return "Browser-Forward";
+            return _KEY_TEXT_BROWSER_FORWARD;
         case KY_BROWSER_REFRESH:
-            return "Browser-Refresh";
+            return _KEY_TEXT_BROWSER_REFRESH;
         case KY_BROWSER_STOP:
-            return "Browser-Stop";
+            return _KEY_TEXT_BROWSER_STOP;
         case KY_BROWSER_SEARCH:
-            return "Browser-Search";
+            return _KEY_TEXT_BROWSER_SEARCH;
         case KY_BROWSER_FAVORITES:
-            return "Browser-Favorites";
+            return _KEY_TEXT_BROWSER_FAVORITES;
         case KY_BROWSER_HOME:
-            return "Browser-Home";
+            return _KEY_TEXT_BROWSER_HOME;
         case KY_VOLUME_MUTE:
-            return "Volume-Mute";
+            return _KEY_TEXT_VOLUME_MUTE;
         case KY_VOLUME_UP:
-            return "Volume-Up";
+            return _KEY_TEXT_VOLUME_UP;
         case KY_VOLUME_DOWN:
-            return "Volume-Down";
+            return _KEY_TEXT_VOLUME_DOWN;
         case KY_MEDIA_NEXT_TRACK:
-            return "Media-Next";
+            return _KEY_TEXT_MEDIA_NEXT_TRACK;
         case KY_MEDIA_PREV_TRACK:
-            return "Media-Prev";
+            return _KEY_TEXT_MEDIA_PREV_TRACK;
         case KY_MEDIA_STOP:
-            return "Media-Stop";
+            return _KEY_TEXT_MEDIA_STOP;
         case KY_MEDIA_PLAY_PAUSE:
-            return "Media-Pause";
+            return _KEY_TEXT_MEDIA_PLAY_PAUSE;
         case KY_LAUNCH_MAIL:
-            return "Launch-Mail";
+            return _KEY_TEXT_LAUNCH_MAIL;
         case KY_LAUNCH_MEDIA_SELECT:
-            return "Launch-MediaSelect";
+            return _KEY_TEXT_LAUNCH_MEDIA_SELECT;
         case KY_LAUNCH_APP1:
-            return "Launch-App1";
+            return _KEY_TEXT_LAUNCH_APP1;
         case KY_LAUNCH_APP2:
-            return "Launch-App2";
+            return _KEY_TEXT_LAUNCH_APP2;
         case KY_ATTN:
-            return "ATTN";
+            return _KEY_TEXT_ATTN;
         case KY_CRSEL:
-            return "CRSEL";
+            return _KEY_TEXT_CRSEL;
         case KY_EXSEL:
-            return "EXSEL";
+            return _KEY_TEXT_EXSEL;
         case KY_ERASEEOF:
-            return "ERASEEOF";
+            return _KEY_TEXT_ERASEEOF;
         case KY_PLAY:
-            return "Play";
+            return _KEY_TEXT_PLAY;
         case KY_ZOOM:
-            return "Zoom";
+            return _KEY_TEXT_ZOOM;
         case KY_PA1:
-            return "Pa1";
+            return _KEY_TEXT_PA1;
         default:
-            return std::string(1, static_cast<char>(key));
+            return String(1, static_cast<char>(key));
     }
+}
+
+Modifier getModifierFromString(const String& str)
+{
+    static const String win = toUpper(_MOD_TEXT_WIN);
+    static const String super = toUpper(_MOD_TEXT_SUPER);
+    static const String cmd1 = toUpper(_MOD_TEXT_CMD_1);
+    static const String cmd2 = toUpper(_MOD_TEXT_CMD_2);
+    static const String alt = toUpper(_MOD_TEXT_ALT);
+    static const String ctrl = toUpper(_MOD_TEXT_CTRL);
+    static const String shift = toUpper(_MOD_TEXT_SHIFT);
+
+    String s = toUpper(str);
+
+    if (s == win || s == super || s == cmd1 || s == cmd2)
+        return META;
+    else if (s == alt)
+        return ALT;
+    else if (s == ctrl)
+        return CTRL;
+    else if (s == shift)
+        return SHIFT;
+    else
+        return static_cast<Modifier>(0);
+}
+
+uint getModifiersFromString(const String& str, char connector)
+{
+    std::stringstream ss;
+    ss << str;
+
+    uint rslt = 0;
+
+    String s;
+    while (std::getline(ss, s, connector)) {
+        Modifier mod = getModifierFromString(s);
+
+        if (mod == 0)
+            return 0;
+
+        rslt |= mod;
+    }
+
+    return rslt;
+}
+
+uint getKeyFromString(const String& str)
+{
+    static const Strings keyTextTable = {
+        toUpper(_KEY_TEXT_MOUSEBUTTON_LEFT),
+        toUpper(_KEY_TEXT_MOUSEBUTTON_RIGHT),
+        toUpper(_KEY_TEXT_MOUSEBUTTON_MIDDLE),
+        toUpper(_KEY_TEXT_CANCEL),
+        toUpper(_KEY_TEXT_BACKSPACE),
+        toUpper(_KEY_TEXT_TAB),
+        toUpper(_KEY_TEXT_CLEAR),
+        toUpper(_KEY_TEXT_ENTER),
+        toUpper(_KEY_TEXT_PAUSE),
+        toUpper(_KEY_TEXT_CAPSLOCK),
+        toUpper(_KEY_TEXT_ESCAPE),
+        toUpper(_KEY_TEXT_SPACE),
+        toUpper(_KEY_TEXT_PAGE_UP),
+        toUpper(_KEY_TEXT_PAGE_DOWN),
+        toUpper(_KEY_TEXT_END),
+        toUpper(_KEY_TEXT_HOME),
+        toUpper(_KEY_TEXT_ARROW_LEFT),
+        toUpper(_KEY_TEXT_ARROW_UP),
+        toUpper(_KEY_TEXT_ARROW_RIGHT),
+        toUpper(_KEY_TEXT_ARROW_DOWN),
+        toUpper(_KEY_TEXT_SELECT),
+        toUpper(_KEY_TEXT_PRINT),
+        toUpper(_KEY_TEXT_EXECUTE),
+        toUpper(_KEY_TEXT_PRINTSCREEN),
+        toUpper(_KEY_TEXT_INSERT),
+        toUpper(_KEY_TEXT_DELETE),
+        toUpper(_KEY_TEXT_HELP),
+        toUpper(_KEY_TEXT_APPS),
+        toUpper(_KEY_TEXT_SLEEP),
+        toUpper(_KEY_TEXT_NUMPAD0),
+        toUpper(_KEY_TEXT_NUMPAD1),
+        toUpper(_KEY_TEXT_NUMPAD2),
+        toUpper(_KEY_TEXT_NUMPAD3),
+        toUpper(_KEY_TEXT_NUMPAD4),
+        toUpper(_KEY_TEXT_NUMPAD5),
+        toUpper(_KEY_TEXT_NUMPAD6),
+        toUpper(_KEY_TEXT_NUMPAD7),
+        toUpper(_KEY_TEXT_NUMPAD8),
+        toUpper(_KEY_TEXT_NUMPAD9),
+        toUpper(_KEY_TEXT_MULTIPLY),
+        toUpper(_KEY_TEXT_ADD),
+        toUpper(_KEY_TEXT_SEPARATOR),
+        toUpper(_KEY_TEXT_SUBTRACT),
+        toUpper(_KEY_TEXT_DECIMAL),
+        toUpper(_KEY_TEXT_DIVIDE),
+        toUpper(_KEY_TEXT_F1),
+        toUpper(_KEY_TEXT_F2),
+        toUpper(_KEY_TEXT_F3),
+        toUpper(_KEY_TEXT_F4),
+        toUpper(_KEY_TEXT_F5),
+        toUpper(_KEY_TEXT_F6),
+        toUpper(_KEY_TEXT_F7),
+        toUpper(_KEY_TEXT_F8),
+        toUpper(_KEY_TEXT_F9),
+        toUpper(_KEY_TEXT_F10),
+        toUpper(_KEY_TEXT_F11),
+        toUpper(_KEY_TEXT_F12),
+        toUpper(_KEY_TEXT_F13),
+        toUpper(_KEY_TEXT_F14),
+        toUpper(_KEY_TEXT_F15),
+        toUpper(_KEY_TEXT_F16),
+        toUpper(_KEY_TEXT_F17),
+        toUpper(_KEY_TEXT_F18),
+        toUpper(_KEY_TEXT_F19),
+        toUpper(_KEY_TEXT_F20),
+        toUpper(_KEY_TEXT_F21),
+        toUpper(_KEY_TEXT_F22),
+        toUpper(_KEY_TEXT_F23),
+        toUpper(_KEY_TEXT_F24),
+        toUpper(_KEY_TEXT_NUMLOCK),
+        toUpper(_KEY_TEXT_SCROLL_LOCK),
+        toUpper(_KEY_TEXT_BROWSER_BACK),
+        toUpper(_KEY_TEXT_BROWSER_FORWARD),
+        toUpper(_KEY_TEXT_BROWSER_REFRESH),
+        toUpper(_KEY_TEXT_BROWSER_STOP),
+        toUpper(_KEY_TEXT_BROWSER_SEARCH),
+        toUpper(_KEY_TEXT_BROWSER_FAVORITES),
+        toUpper(_KEY_TEXT_BROWSER_HOME),
+        toUpper(_KEY_TEXT_VOLUME_MUTE),
+        toUpper(_KEY_TEXT_VOLUME_UP),
+        toUpper(_KEY_TEXT_VOLUME_DOWN),
+        toUpper(_KEY_TEXT_MEDIA_NEXT_TRACK),
+        toUpper(_KEY_TEXT_MEDIA_PREV_TRACK),
+        toUpper(_KEY_TEXT_MEDIA_STOP),
+        toUpper(_KEY_TEXT_MEDIA_PLAY_PAUSE),
+        toUpper(_KEY_TEXT_LAUNCH_MAIL),
+        toUpper(_KEY_TEXT_LAUNCH_MEDIA_SELECT),
+        toUpper(_KEY_TEXT_LAUNCH_APP1),
+        toUpper(_KEY_TEXT_LAUNCH_APP2),
+        toUpper(_KEY_TEXT_ATTN),
+        toUpper(_KEY_TEXT_CRSEL),
+        toUpper(_KEY_TEXT_EXSEL),
+        toUpper(_KEY_TEXT_ERASEEOF),
+        toUpper(_KEY_TEXT_PLAY),
+        toUpper(_KEY_TEXT_ZOOM),
+        toUpper(_KEY_TEXT_PA1)
+    };
+
+    String s = toUpper(str);
+
+    if (s.size() == 1) {
+        char ch = s[0];
+
+        bool isDigit = ch >= '0' && ch <= '9';
+        bool isAlpha = ch >= 'A' && ch <= 'Z';
+
+        if (isDigit || isAlpha)
+            return ch;
+        else
+            return 0;
+    }
+
+    for (uint i = 0; i < keyTextTable.size(); ++i) {
+        if (s != keyTextTable[i])
+            continue;
+
+        return i + KY_FIRST;
+    }
+
+    return 0;
 }
 
 uint getNativeModifier(Modifier modifier)
@@ -293,23 +609,34 @@ uint getNativeModifier(Modifier modifier)
     }
 }
 
-uint getNativeModifier(uint modifier)
+uint getNativeModifiers(uint modifiers)
 {
-    uint mod = 0;
+    uint mods = 0;
 
-    if (modifier & META)
-        mod |= getNativeModifier(META);
+    if (modifiers & META)
+        mods |= getNativeModifier(META);
 
-    if (modifier & ALT)
-        mod |= getNativeModifier(ALT);
+    if (modifiers & ALT)
+        mods |= getNativeModifier(ALT);
 
-    if (modifier & CTRL)
-        mod |= getNativeModifier(CTRL);
+    if (modifiers & CTRL)
+        mods |= getNativeModifier(CTRL);
 
-    if (modifier & SHIFT)
-        mod |= getNativeModifier(SHIFT);
+    if (modifiers & SHIFT)
+        mods |= getNativeModifier(SHIFT);
 
-    return mod;
+#if defined(_GLOBAL_HOTKEY_WIN)
+    if (mods & MOD_NOREPEAT)
+        mods ^= MOD_NOREPEAT;
+    else
+        mods |= MOD_NOREPEAT;
+#elif defined(_GLOBAL_HOTKEY_MAC)
+// TODO
+#elif defined(_GLOBAL_HOTKEY_LINUX)
+// TODO
+#endif
+
+    return mods;
 }
 
 uint getNativeKey(uint key)

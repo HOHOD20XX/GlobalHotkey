@@ -1,5 +1,7 @@
 #include <global_hotkey/keycombination.hpp>
 
+#include <sstream>
+
 #if defined(_GLOBAL_HOTKEY_WIN)
 #include <Windows.h>
 #elif defined(_GLOBAL_HOTKEY_MAC)
@@ -12,100 +14,91 @@
 namespace gbhk
 {
 
-KeyCombination::KeyCombination(uint modifier, uint key, bool isAutoRepeat) :
-    mod_(modifier), key_(key), isAutoRepeat_(isAutoRepeat)
+KeyCombination::KeyCombination(uint modifiers, uint key, bool isAutoRepeat) :
+    mods_(modifiers), key_(key), isAutoRepeat_(isAutoRepeat)
 {}
+
+KeyCombination KeyCombination::fromString(const String& str, char connector)
+{
+    KeyCombination rslt;
+
+    std::stringstream ss;
+    ss << str;
+
+    String s;
+    while (std::getline(ss, s, connector)) {
+        auto mod = getModifierFromString(s);
+        if (mod == 0) {
+            auto key = getKeyFromString(s);
+
+            if (key == 0)
+                return rslt;
+            else
+                rslt.setKey(key);
+        } else {
+            rslt.addModifier(mod);
+        }
+    }
+
+    return rslt;
+}
 
 size_t KeyCombination::Hash::operator()(const KeyCombination& obj) const
 {
-    auto h1 = std::hash<uint>()(obj.mod_);
+    auto h1 = std::hash<uint>()(obj.mods_);
     auto h2 = std::hash<uint>()(obj.key_);
 
     return h1 ^ (h2 << 8);
 }
 
-uint KeyCombination::nativeModifier() const
-{
-    uint mod = getNativeModifier(mod_);
+uint KeyCombination::modifiers() const { return mods_; }
 
-#if defined(_GLOBAL_HOTKEY_WIN)
-    if (isAutoRepeat_ && mod & MOD_NOREPEAT)
-        mod ^= MOD_NOREPEAT;
-    else
-        mod |= MOD_NOREPEAT;
-#elif defined(_GLOBAL_HOTKEY_MAC)
-// TODO
-#elif defined(_GLOBAL_HOTKEY_LINUX)
-// TODO
-#endif
-    return mod;
-}
+uint KeyCombination::nativeModifiers() const { return getNativeModifiers(mods_); }
 
-uint KeyCombination::modifier() const
-{
-    return mod_;
-}
+uint KeyCombination::key() const { return key_; }
 
-uint KeyCombination::nativeKey() const
-{
-    return getNativeKey(key_);
-}
+uint KeyCombination::nativeKey() const { return getNativeKey(key_); }
 
-uint KeyCombination::key() const
-{
-    return key_;
-}
+bool KeyCombination::isAutoRepeat() const { return isAutoRepeat_; }
 
-bool KeyCombination::isAutoRepeat() const
-{
-    return isAutoRepeat_;
-}
+void KeyCombination::setModifiers(uint modifier) { mods_ = modifier; }
 
-void KeyCombination::setModifier(uint modifier)
-{
-    mod_ = modifier;
-}
+void KeyCombination::addModifier(Modifier modifier) { mods_ |= modifier; }
 
-void KeyCombination::addModifier(Modifier modifier)
-{
-    mod_ |= modifier;
-}
+void KeyCombination::removeModifier(Modifier modifier) { mods_ &= ~modifier; }
 
-void KeyCombination::removeModifier(Modifier modifier)
-{
-    mod_ &= ~modifier;
-}
+void KeyCombination::resetModifiers() { mods_ = 0; }
 
-void KeyCombination::resetModifier()
-{
-    mod_ = 0;
-}
+void KeyCombination::setKey(uint key) { key_ = key; }
 
-void KeyCombination::setKey(uint key)
-{
-    key_ = key;
-}
-
-void KeyCombination::setIsAutoRepeat(bool isAutoRepeat)
-{
-    isAutoRepeat_ = isAutoRepeat;
-}
+void KeyCombination::setIsAutoRepeat(bool isAutoRepeat) { isAutoRepeat_ = isAutoRepeat; }
 
 void KeyCombination::reset()
 {
-    mod_ = 0;
+    mods_ = 0;
     key_ = 0;
     isAutoRepeat_ = false;
 }
 
-String KeyCombination::getString(bool hasKeyId, bool hasIsAutoRepeat) const
+bool KeyCombination::isValidModifers() const { return gbhk::isValidModifers(mods_); }
+
+bool KeyCombination::isValidKey() const { return gbhk::isValidKey(key_); }
+
+bool KeyCombination::isValid() const { return isValidModifers() && isValidKey(); }
+
+bool KeyCombination::equal(const KeyCombination& other) const
+{
+    return mods_ == other.mods_ && key_ == other.key_ && isAutoRepeat_ == other.isAutoRepeat_;
+}
+
+String KeyCombination::toString(char connector, bool hasKeyId, bool hasIsAutoRepeat) const
 {
     String rslt;
 
-    rslt += getModifierString(mod_);
+    rslt += getModifiersString(mods_, connector);
 
     if (!rslt.empty())
-        rslt += " + ";
+        rslt += connector;
 
     rslt += getKeyString(key_);
 
@@ -118,14 +111,9 @@ String KeyCombination::getString(bool hasKeyId, bool hasIsAutoRepeat) const
     return rslt;
 }
 
-bool KeyCombination::equal(const KeyCombination& other) const
-{
-    return mod_ == other.mod_ && key_ == other.key_ && isAutoRepeat_ == other.isAutoRepeat_;
-}
-
 bool KeyCombination::operator==(const KeyCombination& other) const
 {
-    return mod_ == other.mod_ && key_ == other.key_;
+    return mods_ == other.mods_ && key_ == other.key_;
 }
 
 bool KeyCombination::operator!=(const KeyCombination& other) const

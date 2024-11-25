@@ -2,7 +2,7 @@
 #define GLOBAL_HOTKEY_KEYCOMBINATION_HPP
 
 #include <string>
-#include <functional>   // hash
+#include <functional>   // std::hash
 
 #include "core/core.hpp"
 #include "key.hpp"
@@ -20,37 +20,56 @@ public:
 
     KeyCombination() = default;
 
-    KeyCombination(uint modifier, uint key, bool isAutoRepeat = false);
+    KeyCombination(uint modifiers, uint key, bool isAutoRepeat = false);
 
-    uint nativeModifier() const;
+    static KeyCombination fromString(const String& str, char connector = '+');
 
-    uint modifier() const;
+    uint modifiers() const;
 
-    uint nativeKey() const;
+    uint nativeModifiers() const;
 
     uint key() const;
 
+    uint nativeKey() const;
+
     bool isAutoRepeat() const;
 
-    void setModifier(uint modifier);
+    void setModifiers(uint modifiers);
 
     void addModifier(Modifier modifier);
 
     void removeModifier(Modifier modifier);
 
-    void resetModifier();
+    void resetModifiers();
 
     void setKey(uint key);
 
     void setIsAutoRepeat(bool isAutoRepeat);
 
+    // @brief #modifiers and #key be set to 0, and #isAutoRepeat be set to false.
     void reset();
 
-    // Ease to debug.
-    String getString(bool hasKeyId = true, bool hasIsAutoRepeat = true) const;
+    // @brief Check if the modifiers is valid.
+    // @return True if the modifiers not equal 0, else False.
+    // @note Check if the modifiers contain at least one modifier.
+    bool isValidModifers() const;
+
+    // @brief Check if the key is valid.
+    // @return True if the key is valid keyboard value
+    // (can be directly input by keyboard, except modifier (Alt, Ctrl...))
+    // else False.
+    bool isValidKey() const;
+
+    // @brief Check if the modifiers is valid and the key is valid.
+    // @note Check if the key combination contain at least one modifier and a valid key.
+    bool isValid() const;
 
     // @attention Compare the #isAutoRepeat.
     bool equal(const KeyCombination& other) const;
+
+    // @param hasKeyId Whether the result should be attach the key number value.
+    // @param hasIsAutoRepeat Whether the result should be attach info about if the key combination auto repeat.
+    String toString(char connector = '+', bool hasKeyId = false, bool hasIsAutoRepeat = false) const;
 
     // @attention Not compare the #isAutoRepeat.
     bool operator==(const KeyCombination& other) const;
@@ -59,7 +78,7 @@ public:
     bool operator!=(const KeyCombination& other) const;
 
 private:
-    uint mod_ = 0;
+    uint mods_ = 0;
     uint key_ = 0;
     bool isAutoRepeat_ = false;
 };

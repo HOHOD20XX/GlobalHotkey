@@ -19,7 +19,7 @@ using ArgFunc = void (*)(Arg);
 using ArgFuncArg = std::pair<ArgFunc, Arg>;
 
 using String = std::string;
-using Strings = std::vector<std::string>;
+using Strings = std::vector<String>;
 
 }
 

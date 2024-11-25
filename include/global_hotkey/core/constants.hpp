@@ -24,13 +24,6 @@ constexpr unsigned int _RC_ALREADY_EXISTED = 0x04;
 // (e.g. #RegGlobalHotkey::replace cant't use two identical #KeyCombination as oldkeycomb and newKeycomb.
 constexpr unsigned int _RC_OLD_EQUAL_NEW = 0x05;
 
-constexpr const char* _MODKEY_TEXT_WIN = "Win";
-constexpr const char* _MODKEY_TEXT_CMD = "Command";
-constexpr const char* _MODKEY_TEXT_SUPER = "Super";
-constexpr const char* _MODKEY_TEXT_ALT = "Alt";
-constexpr const char* _MODKEY_TEXT_CTRL = "Ctrl";
-constexpr const char* _MODKEY_TEXT_SHIFT = "Shift";
-
 }
 
 #endif // !GLOBAL_HOTKEY_CONSTANTS_HPP

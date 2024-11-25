@@ -68,9 +68,9 @@ GBHK_NODISCARD uint HookGlobalHotkey::start()
                 isPass = true;
             } else {
                 bool isJustModDiff = keycomb.key() == prevKeycomb.key() &&
-                    keycomb.modifier() != prevKeycomb.modifier();
-                bool isPrevModContainsCurMod = prevKeycomb.modifier() > keycomb.modifier() &&
-                    ((prevKeycomb.modifier() & keycomb.modifier()) == keycomb.modifier());
+                    keycomb.modifiers() != prevKeycomb.modifiers();
+                bool isPrevModContainsCurMod = prevKeycomb.modifiers() > keycomb.modifiers() &&
+                    ((prevKeycomb.modifiers() & keycomb.modifiers()) == keycomb.modifiers());
                 bool isInDebouncedTime = (chr::steady_clock::now() - prevWorkTime) <=
                     chr::milliseconds(debouncedTime_);
                 if (!isJustModDiff || !isPrevModContainsCurMod || !isInDebouncedTime)

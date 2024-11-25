@@ -37,19 +37,4 @@
 #error "Unsupported platform"
 #endif // _WIN32
 
-namespace gbhk
-{
-
-#if defined(_GLOBAL_HOTKEY_WIN)
-constexpr const char* _MODKEY_TEXT_META = _MODKEY_TEXT_WIN;
-#elif defined(_GLOBAL_HOTKEY_MAC)
-constexpr const char* _MODKEY_TEXT_META = _MODKEY_TEXT_CMD;
-#elif defined(_GLOBAL_HOTKEY_LINUX)
-constexpr const char* _MODKEY_TEXT_META = _MODKEY_TEXT_SUPER;
-#else
-constexpr const char* _MODKEY_TEXT_META = "";
-#endif // _GLOBAL_HOTKEY_WIN
-
-}
-
 #endif // !GLOBAL_HOTKEY_CORE_HPP
