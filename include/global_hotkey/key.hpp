@@ -141,7 +141,7 @@ String getModifiersString(uint modifiers, char connector = '+', bool hasSpace = 
 
 String getKeyString(uint key);
 
-// @return Return 0 if the string is invalid.
+// @return Return static_cast<Modifier>(0) if the string is invalid.
 Modifier getModifierFromString(const String& str);
 
 // @return Return 0 if the string is invalid.
