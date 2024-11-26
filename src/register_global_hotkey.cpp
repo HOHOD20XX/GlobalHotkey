@@ -245,6 +245,7 @@ void RegGlobalHotkey::work_()
     while (::PeekMessageA(&msg, NULL, 0, 0, PM_REMOVE)) {
         if (msg.message == WM_HOTKEY) {
             uint keyid = static_cast<uint>(msg.wParam);
+            mtx_.lock();
             if (keyIdKeycombs_.find(keyid) != keyIdKeycombs_.end()) {
                 VoidFunc voidfunc = getVoidFunc_(keyIdKeycombs_[keyid]);
                 if (voidfunc) {
@@ -255,6 +256,7 @@ void RegGlobalHotkey::work_()
                         argfuncarg.first(argfuncarg.second);
                 }
             }
+            mtx_.unlock();
         }
 
         ::TranslateMessage(&msg);
@@ -267,6 +269,7 @@ GBHK_NODISCARD uint RegGlobalHotkey::end_()
 {
     uint rslt = _RC_SUCCESS;
 
+    mtx_.lock();
     // Unregister all hotkey.
     for (const auto& var : keyIdKeycombs_) {
         if (::UnregisterHotKey(NULL, var.first))
@@ -276,17 +279,21 @@ GBHK_NODISCARD uint RegGlobalHotkey::end_()
     // Reset the members.
     keyId_ = 0;
     keyIdKeycombs_.clear();
+    mtx_.unlock();
 
     return rslt;
 }
 
 GBHK_NODISCARD uint RegGlobalHotkey::add_(const KeyCombination& keycomb)
 {
+    mtx_.lock();
     if (::RegisterHotKey(NULL, keyId_, keycomb.nativeModifiers(), keycomb.nativeKey())) {
         keyIdKeycombs_.insert({ keyId_, keycomb });
         keyId_++;
+        mtx_.unlock();
         return _RC_SUCCESS;
     }
+    mtx_.unlock();
     return ::GetLastError();
 }
 
