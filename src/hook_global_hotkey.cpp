@@ -196,17 +196,16 @@ GBHK_NODISCARD uint HookGlobalHotkey::replace(const KeyCombination& oldKeycomb,
 
     mtxFuncsOperate_.lock();
 
-    if (voidFuncs_.find(oldKeycomb) == voidFuncs_.end() &&
-        argFuncArgs_.find(oldKeycomb) == argFuncArgs_.end()) {
-        rslt = _RC_NOT_FIND;
-    } else if (voidFuncs_.find(oldKeycomb) != voidFuncs_.end()) {
-        auto& func = voidFuncs_[oldKeycomb].second;
+    if (voidFuncs_.find(oldKeycomb) != voidFuncs_.end()) {
+        auto func = voidFuncs_[oldKeycomb].second;
         voidFuncs_.erase(oldKeycomb);
         voidFuncs_.insert({ newKeycomb, { newKeycomb.isAutoRepeat(), func } });
-    } else {
-        auto& funcArg = argFuncArgs_[oldKeycomb].second;
+    } else if (argFuncArgs_.find(oldKeycomb) != argFuncArgs_.end())  {
+        auto funcArg = argFuncArgs_[oldKeycomb].second;
         argFuncArgs_.erase(oldKeycomb);
         argFuncArgs_.insert({ newKeycomb, { newKeycomb.isAutoRepeat(), funcArg } });
+    } else {
+        rslt = _RC_NOT_FIND;
     }
 
     mtxFuncsOperate_.unlock();
