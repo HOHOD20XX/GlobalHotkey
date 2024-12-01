@@ -8,25 +8,25 @@ void sleep(ullong millisecond)
     std::this_thread::sleep_for(std::chrono::milliseconds(millisecond));
 }
 
-GlobalHotkeyBase::GlobalHotkeyBase() :
+BaseGlobalHotkey::BaseGlobalHotkey() :
     isRunning_(false), shouldClose_(false), intervalTime_(10),
     timePoint_(std::chrono::steady_clock::time_point())
 {}
 
-GlobalHotkeyBase::~GlobalHotkeyBase() {}
+BaseGlobalHotkey::~BaseGlobalHotkey() {}
 
 
-bool GlobalHotkeyBase::isRunning() const
+bool BaseGlobalHotkey::isRunning() const
 {
     return isRunning_;
 }
 
-void GlobalHotkeyBase::setIntervalTime(ullong millisecond)
+void BaseGlobalHotkey::setIntervalTime(ullong millisecond)
 {
     intervalTime_ = millisecond;
 }
 
-void GlobalHotkeyBase::setTimePoint_()
+void BaseGlobalHotkey::setTimePoint_()
 {
     namespace chr = std::chrono;
 
@@ -35,21 +35,21 @@ void GlobalHotkeyBase::setTimePoint_()
     mtx_.unlock();
 }
 
-void GlobalHotkeyBase::waitInterval_()
+void BaseGlobalHotkey::waitInterval_()
 {
     mtx_.lock();
     std::this_thread::sleep_until(timePoint_);
     mtx_.unlock();
 }
 
-void GlobalHotkeyBase::setWorkThreadId_(const std::thread::id& id)
+void BaseGlobalHotkey::setWorkThreadId_(const std::thread::id& id)
 {
     mtx_.lock();
     workThreadId_ = id;
     mtx_.unlock();
 }
 
-std::thread::id GlobalHotkeyBase::getWorkThreadId_()
+std::thread::id BaseGlobalHotkey::getWorkThreadId_()
 {
     mtx_.lock();
     std::thread::id id = workThreadId_;

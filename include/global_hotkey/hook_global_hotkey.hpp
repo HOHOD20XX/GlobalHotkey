@@ -13,7 +13,7 @@
 namespace gbhk
 {
 
-class HookGlobalHotkey final : public GlobalHotkeyBase
+class HookGlobalHotkey final : public BaseGlobalHotkey
 {
 public:
     static HookGlobalHotkey& getInstance();

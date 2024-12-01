@@ -11,7 +11,7 @@
 namespace gbhk
 {
 
-class RegGlobalHotkey final : public GlobalHotkeyBase
+class RegGlobalHotkey final : public BaseGlobalHotkey
 {
 public:
     static RegGlobalHotkey& getInstance();

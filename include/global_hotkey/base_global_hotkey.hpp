@@ -14,7 +14,7 @@ namespace gbhk
 
 void sleep(ullong millisecond);
 
-class GlobalHotkeyBase
+class BaseGlobalHotkey
 {
 public:
     bool isRunning() const;
@@ -28,10 +28,10 @@ public:
     GBHK_NODISCARD virtual uint replace(const KeyCombination& oldKeycomb, const KeyCombination& newKeycomb) = 0;
 
 protected:
-    GlobalHotkeyBase();
-    ~GlobalHotkeyBase();
-    GlobalHotkeyBase(const GlobalHotkeyBase& other) = delete;
-    GlobalHotkeyBase& operator=(const GlobalHotkeyBase& other) = delete;
+    BaseGlobalHotkey();
+    ~BaseGlobalHotkey();
+    BaseGlobalHotkey(const BaseGlobalHotkey& other) = delete;
+    BaseGlobalHotkey& operator=(const BaseGlobalHotkey& other) = delete;
 
     void setTimePoint_();
     void waitInterval_();
