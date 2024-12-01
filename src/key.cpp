@@ -637,7 +637,7 @@ uint getNativeModifiers(uint modifiers, bool isAutoRepeat)
 
 #if defined(_GLOBAL_HOTKEY_WIN)
     if (isAutoRepeat)
-        mods ^= MOD_NOREPEAT;
+        mods &= ~MOD_NOREPEAT;
     else
         mods |= MOD_NOREPEAT;
 #elif defined(_GLOBAL_HOTKEY_MAC)
