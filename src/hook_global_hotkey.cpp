@@ -172,7 +172,7 @@ GBHK_NODISCARD uint HookGlobalHotkey::remove(const KeyCombination& keycomb)
 
     mtxFuncsOperate_.lock();
 
-    if (voidFuncs_.find(keycomb) == voidFuncs_.end() ||
+    if (voidFuncs_.find(keycomb) == voidFuncs_.end() &&
         argFuncArgs_.find(keycomb) == argFuncArgs_.end()) {
         rslt = _RC_NOT_FIND;
     } else {
