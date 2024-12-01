@@ -619,7 +619,7 @@ uint getNativeModifier(Modifier modifier)
     }
 }
 
-uint getNativeModifiers(uint modifiers)
+uint getNativeModifiers(uint modifiers, bool isAutoRepeat)
 {
     uint mods = 0;
 
@@ -636,9 +636,7 @@ uint getNativeModifiers(uint modifiers)
         mods |= getNativeModifier(SHIFT);
 
 #if defined(_GLOBAL_HOTKEY_WIN)
-    if (mods & MOD_NOREPEAT)
-        mods ^= MOD_NOREPEAT;
-    else
+    if (isAutoRepeat)
         mods |= MOD_NOREPEAT;
 #elif defined(_GLOBAL_HOTKEY_MAC)
 // TODO

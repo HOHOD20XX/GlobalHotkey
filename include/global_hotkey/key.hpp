@@ -152,7 +152,7 @@ uint getKeyFromString(const String& str);
 
 uint getNativeModifier(Modifier modifier);
 
-uint getNativeModifiers(uint modifiers);
+uint getNativeModifiers(uint modifiers, bool isAutoRepeat);
 
 uint getNativeKey(uint key);
 

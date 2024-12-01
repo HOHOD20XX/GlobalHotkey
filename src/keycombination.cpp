@@ -53,7 +53,7 @@ size_t KeyCombination::Hash::operator()(const KeyCombination& obj) const
 
 uint KeyCombination::modifiers() const { return mods_; }
 
-uint KeyCombination::nativeModifiers() const { return getNativeModifiers(mods_); }
+uint KeyCombination::nativeModifiers() const { return getNativeModifiers(mods_, isAutoRepeat_); }
 
 uint KeyCombination::key() const { return key_; }
 
