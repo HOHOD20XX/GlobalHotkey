@@ -1,3 +1,5 @@
 # Cross-Platform Global Hotkey Library
 
-For Qt, Console.
+For All Application.
+
+*e.g. GUI of Qt, MFC and so on, Console terminal.*
