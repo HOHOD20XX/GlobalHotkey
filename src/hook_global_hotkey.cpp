@@ -138,12 +138,14 @@ GBHK_NODISCARD uint HookGlobalHotkey::add(const KeyCombination& keycomb, VoidFun
 {
     uint rslt = _RC_SUCCESS;
 
+    KeyCombination _keycomb(keycomb.modifiers(), keycomb.nativeKey(), keycomb.isAutoRepeat());
+
     mtxFuncsOperate_.lock();
 
-    if (voidFuncs_.find(keycomb) != voidFuncs_.end())
+    if (voidFuncs_.find(_keycomb) != voidFuncs_.end())
         rslt = _RC_ALREADY_EXISTED;
     else
-        voidFuncs_.insert({ keycomb, { keycomb.isAutoRepeat(), callbackFunc } });
+        voidFuncs_.insert({ _keycomb, { _keycomb.isAutoRepeat(), callbackFunc } });
 
     mtxFuncsOperate_.unlock();
 
@@ -154,12 +156,14 @@ GBHK_NODISCARD uint HookGlobalHotkey::add(const KeyCombination& keycomb, ArgFunc
 {
     uint rslt = _RC_SUCCESS;
 
+    KeyCombination _keycomb(keycomb.modifiers(), keycomb.nativeKey(), keycomb.isAutoRepeat());
+
     mtxFuncsOperate_.lock();
 
-    if (argFuncArgs_.find(keycomb) != argFuncArgs_.end())
+    if (argFuncArgs_.find(_keycomb) != argFuncArgs_.end())
         rslt = _RC_ALREADY_EXISTED;
     else
-        argFuncArgs_.insert({ keycomb, { keycomb.isAutoRepeat(), { callbackFunc, arg } } });
+        argFuncArgs_.insert({ _keycomb, { _keycomb.isAutoRepeat(), { callbackFunc, arg } } });
 
     mtxFuncsOperate_.unlock();
 
@@ -170,14 +174,16 @@ GBHK_NODISCARD uint HookGlobalHotkey::remove(const KeyCombination& keycomb)
 {
     uint rslt = _RC_SUCCESS;
 
+    KeyCombination _keycomb(keycomb.modifiers(), keycomb.nativeKey(), keycomb.isAutoRepeat());
+
     mtxFuncsOperate_.lock();
 
-    if (voidFuncs_.find(keycomb) == voidFuncs_.end() &&
-        argFuncArgs_.find(keycomb) == argFuncArgs_.end()) {
+    if (voidFuncs_.find(_keycomb) == voidFuncs_.end() &&
+        argFuncArgs_.find(_keycomb) == argFuncArgs_.end()) {
         rslt = _RC_NOT_FIND;
     } else {
-        voidFuncs_.erase(keycomb);
-        argFuncArgs_.erase(keycomb);
+        voidFuncs_.erase(_keycomb);
+        argFuncArgs_.erase(_keycomb);
     }
 
     mtxFuncsOperate_.unlock();
@@ -194,16 +200,19 @@ GBHK_NODISCARD uint HookGlobalHotkey::replace(const KeyCombination& oldKeycomb,
 
     uint rslt = _RC_SUCCESS;
 
+    KeyCombination _oldKeycomb(oldKeycomb.modifiers(), oldKeycomb.nativeKey(), oldKeycomb.isAutoRepeat());
+    KeyCombination _newKeycomb(newKeycomb.modifiers(), newKeycomb.nativeKey(), newKeycomb.isAutoRepeat());
+
     mtxFuncsOperate_.lock();
 
-    if (voidFuncs_.find(oldKeycomb) != voidFuncs_.end()) {
-        auto func = voidFuncs_[oldKeycomb].second;
-        voidFuncs_.erase(oldKeycomb);
-        voidFuncs_.insert({ newKeycomb, { newKeycomb.isAutoRepeat(), func } });
-    } else if (argFuncArgs_.find(oldKeycomb) != argFuncArgs_.end())  {
-        auto funcArg = argFuncArgs_[oldKeycomb].second;
-        argFuncArgs_.erase(oldKeycomb);
-        argFuncArgs_.insert({ newKeycomb, { newKeycomb.isAutoRepeat(), funcArg } });
+    if (voidFuncs_.find(_oldKeycomb) != voidFuncs_.end()) {
+        auto func = voidFuncs_[_oldKeycomb].second;
+        voidFuncs_.erase(_oldKeycomb);
+        voidFuncs_.insert({ _newKeycomb, { _newKeycomb.isAutoRepeat(), func } });
+    } else if (argFuncArgs_.find(_oldKeycomb) != argFuncArgs_.end())  {
+        auto funcArg = argFuncArgs_[_oldKeycomb].second;
+        argFuncArgs_.erase(_oldKeycomb);
+        argFuncArgs_.insert({ _newKeycomb, { _newKeycomb.isAutoRepeat(), funcArg } });
     } else {
         rslt = _RC_NOT_FIND;
     }
