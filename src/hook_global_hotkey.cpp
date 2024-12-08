@@ -15,9 +15,7 @@ namespace gbhk
 std::mutex HookGlobalHotkey::mtxListenKeyChanged_;
 KeyCombination HookGlobalHotkey::pressed_;
 
-HookGlobalHotkey::HookGlobalHotkey() :
-    debouncedTime_(0)
-{}
+HookGlobalHotkey::HookGlobalHotkey() : debouncedTime_(0) {}
 
 HookGlobalHotkey::~HookGlobalHotkey()
 {
@@ -48,7 +46,7 @@ GBHK_NODISCARD uint HookGlobalHotkey::start()
         return rslt;
 
     isRunning_ = true;
-    workThread_ = std::thread([&] () {
+    workThread_ = std::thread([&]() {
         // Get the current thread id and set the #workThreadId_ value.
         setWorkThreadId_(std::this_thread::get_id());
 
@@ -67,12 +65,11 @@ GBHK_NODISCARD uint HookGlobalHotkey::start()
             if (debouncedTime_ == 0) {
                 isPass = true;
             } else {
-                bool isJustModDiff = keycomb.key() == prevKeycomb.key() &&
-                    keycomb.modifiers() != prevKeycomb.modifiers();
+                bool isJustModDiff =
+                    keycomb.key() == prevKeycomb.key() && keycomb.modifiers() != prevKeycomb.modifiers();
                 bool isPrevModContainsCurMod = prevKeycomb.modifiers() > keycomb.modifiers() &&
-                    ((prevKeycomb.modifiers() & keycomb.modifiers()) == keycomb.modifiers());
-                bool isInDebouncedTime = (chr::steady_clock::now() - prevWorkTime) <=
-                    chr::milliseconds(debouncedTime_);
+                                               ((prevKeycomb.modifiers() & keycomb.modifiers()) == keycomb.modifiers());
+                bool isInDebouncedTime = (chr::steady_clock::now() - prevWorkTime) <= chr::milliseconds(debouncedTime_);
                 if (!isJustModDiff || !isPrevModContainsCurMod || !isInDebouncedTime)
                     isPass = true;
             }
@@ -81,7 +78,8 @@ GBHK_NODISCARD uint HookGlobalHotkey::start()
                 mtxFuncsOperate_.lock();
 
                 if (voidFuncs_.find(keycomb) != voidFuncs_.end()) {
-                    // If the current keycomb not equal to previous keycomb or hotkey is auto repeat execute related function.
+                    // If the current keycomb not equal to previous keycomb or hotkey is auto repeat execute related
+                    // function.
                     if ((prevKeycomb != keycomb) || voidFuncs_[keycomb].first)
                         voidFuncs_[keycomb].second();
                 } else if (argFuncArgs_.find(keycomb) != argFuncArgs_.end()) {
@@ -178,8 +176,7 @@ GBHK_NODISCARD uint HookGlobalHotkey::remove(const KeyCombination& keycomb)
 
     mtxFuncsOperate_.lock();
 
-    if (voidFuncs_.find(_keycomb) == voidFuncs_.end() &&
-        argFuncArgs_.find(_keycomb) == argFuncArgs_.end()) {
+    if (voidFuncs_.find(_keycomb) == voidFuncs_.end() && argFuncArgs_.find(_keycomb) == argFuncArgs_.end()) {
         rslt = _RC_NOT_FIND;
     } else {
         voidFuncs_.erase(_keycomb);
@@ -191,8 +188,7 @@ GBHK_NODISCARD uint HookGlobalHotkey::remove(const KeyCombination& keycomb)
     return rslt;
 }
 
-GBHK_NODISCARD uint HookGlobalHotkey::replace(const KeyCombination& oldKeycomb,
-                                              const KeyCombination& newKeycomb)
+GBHK_NODISCARD uint HookGlobalHotkey::replace(const KeyCombination& oldKeycomb, const KeyCombination& newKeycomb)
 {
     // If the old key combination equal to new key combination do nothing.
     if (oldKeycomb.equal(newKeycomb))
@@ -209,7 +205,7 @@ GBHK_NODISCARD uint HookGlobalHotkey::replace(const KeyCombination& oldKeycomb,
         auto func = voidFuncs_[_oldKeycomb].second;
         voidFuncs_.erase(_oldKeycomb);
         voidFuncs_.insert({ _newKeycomb, { _newKeycomb.isAutoRepeat(), func } });
-    } else if (argFuncArgs_.find(_oldKeycomb) != argFuncArgs_.end())  {
+    } else if (argFuncArgs_.find(_oldKeycomb) != argFuncArgs_.end()) {
         auto funcArg = argFuncArgs_[_oldKeycomb].second;
         argFuncArgs_.erase(_oldKeycomb);
         argFuncArgs_.insert({ _newKeycomb, { _newKeycomb.isAutoRepeat(), funcArg } });
@@ -265,6 +261,6 @@ void HookGlobalHotkey::removePressedKey_(uint key)
     mtxListenKeyChanged_.unlock();
 }
 
-}
+} // namespace gbhk
 
 #endif // _GLOBAL_HOTKEY_WIN

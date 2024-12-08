@@ -6,7 +6,7 @@
 
 int main()
 {
-    gbhk::BaseGlobalHotkey *hotkeyManager = nullptr;
+    gbhk::BaseGlobalHotkey* hotkeyManager = nullptr;
 
     hotkeyManager = &gbhk::RegGlobalHotkey::getInstance();
 
@@ -18,26 +18,25 @@ int main()
     if (rtn != 0)
         throw std::runtime_error("Failed to start the hotkey.");
 
-    rtn = hotkeyManager->add(hotkey1, [] () {
-        std::cout << "hotkey1 triggered" << std::endl;
-    });
+    rtn = hotkeyManager->add(hotkey1, []() { std::cout << "hotkey1 triggered" << std::endl; });
     if (rtn != 0)
         throw std::runtime_error("Failed to add the hotkey.");
 
-    rtn = hotkeyManager->add(hotkey2, [] () {
-        std::cout << "hotkey2 triggered" << std::endl;
-    });
+    rtn = hotkeyManager->add(hotkey2, []() { std::cout << "hotkey2 triggered" << std::endl; });
     if (rtn != 0)
         throw std::runtime_error("Failed to add the hotkey.");
 
     std::atomic<bool> shouldClose(false);
 
-    rtn = hotkeyManager->add(hotkey3, [] (void* shouldClose) {
-        std::cout << "hotkey3 triggered" << std::endl;
-        std::cout << "exiting..." << std::endl;
+    rtn = hotkeyManager->add(
+        hotkey3,
+        [](void* shouldClose) {
+            std::cout << "hotkey3 triggered" << std::endl;
+            std::cout << "exiting..." << std::endl;
 
-        *static_cast<std::atomic<bool>*>(shouldClose) = true;
-    }, &shouldClose);
+            *static_cast<std::atomic<bool>*>(shouldClose) = true;
+        },
+        &shouldClose);
     if (rtn != 0)
         throw std::runtime_error("Failed to add the hotkey.");
 
