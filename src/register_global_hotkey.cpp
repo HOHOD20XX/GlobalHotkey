@@ -11,7 +11,9 @@
 namespace gbhk
 {
 
-RegGlobalHotkey::RegGlobalHotkey() : hasTask_(false), taskIsFinished_(false), taskResult_(0), keyId_(0) {}
+RegGlobalHotkey::RegGlobalHotkey() :
+    hasTask_(false), taskIsFinished_(false), taskResult_(0), keyId_(0)
+{}
 
 RegGlobalHotkey::~RegGlobalHotkey()
 {
@@ -31,7 +33,7 @@ GBHK_NODISCARD uint RegGlobalHotkey::start()
         return _RC_UNTIMELY_CALL;
 
     isRunning_ = true;
-    workThread_ = std::thread([&]() {
+    workThread_ = std::thread([&] () {
         // Get the current thread id and set the #workThreadId_ value.
         setWorkThreadId_(std::this_thread::get_id());
 
@@ -190,7 +192,8 @@ GBHK_NODISCARD uint RegGlobalHotkey::remove(const KeyCombination& keycomb)
     return rslt;
 }
 
-GBHK_NODISCARD uint RegGlobalHotkey::replace(const KeyCombination& oldKeycomb, const KeyCombination& newKeycomb)
+GBHK_NODISCARD uint RegGlobalHotkey::replace(const KeyCombination& oldKeycomb,
+                                             const KeyCombination& newKeycomb)
 {
     // If the thread is not running do nothing.
     if (!isRunning_)
@@ -302,7 +305,8 @@ GBHK_NODISCARD uint RegGlobalHotkey::remove_(const KeyCombination& keycomb)
     return _RC_NOT_FIND;
 }
 
-GBHK_NODISCARD uint RegGlobalHotkey::replace_(const KeyCombination& oldKeycomb, const KeyCombination& newKeycomb)
+GBHK_NODISCARD uint RegGlobalHotkey::replace_(const KeyCombination& oldKeycomb,
+                                              const KeyCombination& newKeycomb)
 {
     for (const auto& var : keyIdKeycombs_) {
         if (var.second == oldKeycomb) {
@@ -310,7 +314,8 @@ GBHK_NODISCARD uint RegGlobalHotkey::replace_(const KeyCombination& oldKeycomb, 
                 uint keyid = var.first;
                 keyIdKeycombs_.erase(keyid);
 
-                if (::RegisterHotKey(NULL, keyid, newKeycomb.nativeModifiers(), newKeycomb.nativeKey())) {
+                if (::RegisterHotKey(NULL, keyid,
+                                     newKeycomb.nativeModifiers(), newKeycomb.nativeKey())) {
                     keyIdKeycombs_.insert({ keyid, newKeycomb });
                     return _RC_SUCCESS;
                 }
@@ -407,4 +412,4 @@ void RegGlobalHotkey::removeFunc_(const KeyCombination& keycomb)
     mtx_.unlock();
 }
 
-} // namespace gbhk
+}

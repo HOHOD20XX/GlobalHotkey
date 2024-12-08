@@ -9,10 +9,12 @@ void sleep(ullong millisecond)
 }
 
 BaseGlobalHotkey::BaseGlobalHotkey() :
-    isRunning_(false), shouldClose_(false), intervalTime_(50), timePoint_(std::chrono::steady_clock::time_point())
+    isRunning_(false), shouldClose_(false), intervalTime_(10),
+    timePoint_(std::chrono::steady_clock::time_point())
 {}
 
 BaseGlobalHotkey::~BaseGlobalHotkey() {}
+
 
 bool BaseGlobalHotkey::isRunning() const
 {
@@ -56,4 +58,4 @@ std::thread::id BaseGlobalHotkey::getWorkThreadId_()
     return id;
 }
 
-} // namespace gbhk
+}

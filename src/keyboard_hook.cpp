@@ -48,15 +48,23 @@ static LRESULT WINAPI LowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lPar
         }
 
         if (kVoidFuncs.find(key) != kVoidFuncs.end()) {
-            bool keydownExe = kVoidFuncs[key].first == PRESSED && (wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN);
-            bool keyupExe = kVoidFuncs[key].first == RELEASED && (wParam == WM_KEYUP || wParam == WM_SYSKEYUP);
+            bool keydownExe =
+                kVoidFuncs[key].first == PRESSED &&
+                (wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN);
+            bool keyupExe =
+                kVoidFuncs[key].first == RELEASED &&
+                (wParam == WM_KEYUP || wParam == WM_SYSKEYUP);
             if (keydownExe || keyupExe)
                 kVoidFuncs[key].second();
         }
 
         if (kArgFuncArgs.find(key) != kArgFuncArgs.end()) {
-            bool keydownExe = kVoidFuncs[key].first == PRESSED && (wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN);
-            bool keyupExe = kVoidFuncs[key].first == RELEASED && (wParam == WM_KEYUP || wParam == WM_SYSKEYUP);
+            bool keydownExe =
+                kVoidFuncs[key].first == PRESSED &&
+                (wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN);
+            bool keyupExe =
+                kVoidFuncs[key].first == RELEASED &&
+                (wParam == WM_KEYUP || wParam == WM_SYSKEYUP);
             if (keydownExe || keyupExe) {
                 auto& fn = kArgFuncArgs[key].second.first;
                 auto& arg = kArgFuncArgs[key].second.second;
@@ -130,8 +138,8 @@ uint end()
     return ::GetLastError();
 }
 
-} // namespace keyboard_hook
+}
 
-} // namespace gbhk
+}
 
 #endif // _GLOBAL_HOTKEY_WIN

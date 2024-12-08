@@ -51,60 +51,27 @@ size_t KeyCombination::Hash::operator()(const KeyCombination& obj) const
     return h1 ^ (h2 << 8);
 }
 
-uint KeyCombination::modifiers() const
-{
-    return mods_;
-}
+uint KeyCombination::modifiers() const { return mods_; }
 
-uint KeyCombination::nativeModifiers() const
-{
-    return getNativeModifiers(mods_, isAutoRepeat_);
-}
+uint KeyCombination::nativeModifiers() const { return getNativeModifiers(mods_, isAutoRepeat_); }
 
-uint KeyCombination::key() const
-{
-    return key_;
-}
+uint KeyCombination::key() const { return key_; }
 
-uint KeyCombination::nativeKey() const
-{
-    return getNativeKey(key_);
-}
+uint KeyCombination::nativeKey() const { return getNativeKey(key_); }
 
-bool KeyCombination::isAutoRepeat() const
-{
-    return isAutoRepeat_;
-}
+bool KeyCombination::isAutoRepeat() const { return isAutoRepeat_; }
 
-void KeyCombination::setModifiers(uint modifier)
-{
-    mods_ = modifier;
-}
+void KeyCombination::setModifiers(uint modifier) { mods_ = modifier; }
 
-void KeyCombination::addModifier(Modifier modifier)
-{
-    mods_ |= modifier;
-}
+void KeyCombination::addModifier(Modifier modifier) { mods_ |= modifier; }
 
-void KeyCombination::removeModifier(Modifier modifier)
-{
-    mods_ &= ~modifier;
-}
+void KeyCombination::removeModifier(Modifier modifier) { mods_ &= ~modifier; }
 
-void KeyCombination::resetModifiers()
-{
-    mods_ = 0;
-}
+void KeyCombination::resetModifiers() { mods_ = 0; }
 
-void KeyCombination::setKey(uint key)
-{
-    key_ = key;
-}
+void KeyCombination::setKey(uint key) { key_ = key; }
 
-void KeyCombination::setIsAutoRepeat(bool isAutoRepeat)
-{
-    isAutoRepeat_ = isAutoRepeat;
-}
+void KeyCombination::setIsAutoRepeat(bool isAutoRepeat) { isAutoRepeat_ = isAutoRepeat; }
 
 void KeyCombination::reset()
 {
@@ -113,20 +80,11 @@ void KeyCombination::reset()
     isAutoRepeat_ = false;
 }
 
-bool KeyCombination::isValidModifers() const
-{
-    return gbhk::isValidModifers(mods_);
-}
+bool KeyCombination::isValidModifers() const { return gbhk::isValidModifers(mods_); }
 
-bool KeyCombination::isValidKey() const
-{
-    return gbhk::isValidKey(key_);
-}
+bool KeyCombination::isValidKey() const { return gbhk::isValidKey(key_); }
 
-bool KeyCombination::isValid() const
-{
-    return isValidModifers() && isValidKey();
-}
+bool KeyCombination::isValid() const { return isValidModifers() && isValidKey(); }
 
 bool KeyCombination::equal(const KeyCombination& other) const
 {
@@ -165,4 +123,4 @@ bool KeyCombination::operator!=(const KeyCombination& other) const
     return !(*this == other);
 }
 
-} // namespace gbhk
+}
