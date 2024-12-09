@@ -44,7 +44,7 @@ private:
     std::unordered_map<KeyCombination, std::pair<bool, ArgFuncArg>, KeyCombination::Hash> argFuncArgs_;
 };
 
-}
+} // namespace gbhk
 
 #endif // _GLOBAL_HOTKEY_WIN
 

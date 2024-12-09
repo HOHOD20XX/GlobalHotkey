@@ -90,6 +90,6 @@ private:
     std::unordered_map<uint, KeyCombination> keyIdKeycombs_;
 };
 
-}
+} // namespace gbhk
 
 #endif // !GLOBAL_HOTKEY_REGISTER_GLOBAL_HOTKEY_HPP

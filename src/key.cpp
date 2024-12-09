@@ -129,7 +129,7 @@ constexpr const char* KEY_TEXT_PLAY = "Play";
 constexpr const char* KEY_TEXT_ZOOM = "Zoom";
 constexpr const char* KEY_TEXT_PA1 = "PA1";
 
-}
+}  // namespace gbhk
 
 namespace gbhk
 {
@@ -159,9 +159,7 @@ bool isValidModifers(uint modifiers)
 
 bool isValidKey(uint key)
 {
-    return (key >= '0' && key <= '9') ||
-        (key >= 'A' && key <= 'Z') ||
-        (key >= KY_FIRST && key <= KY_LAST);
+    return (key >= '0' && key <= '9') || (key >= 'A' && key <= 'Z') || (key >= KY_FIRST && key <= KY_LAST);
 }
 
 String getModifierString(Modifier modifier)
@@ -583,37 +581,37 @@ uint getNativeModifier(Modifier modifier)
 {
     switch (modifier) {
         case META:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return MOD_WIN;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
             return cmdKey;
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
             return Mod4Mask;
-        #endif
+#endif
         case ALT:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return MOD_ALT;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
             return optionKey;
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
             return Mod1Mask;
-        #endif
+#endif
         case CTRL:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return MOD_CONTROL;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
             return cmdKey;
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
             return ControlMask;
-        #endif
+#endif
         case SHIFT:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return MOD_SHIFT;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
             return shiftKey;
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
             return ShiftMask;
-        #endif
+#endif
         default:
             return modifier;
     }
@@ -653,776 +651,776 @@ uint getNativeKey(uint key)
 {
     switch (key) {
         case KY_MOUSEBUTTON_LEFT:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_LBUTTON;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_MOUSEBUTTON_RIGHT:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_RBUTTON;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_MOUSEBUTTON_MID:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_MBUTTON;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_CANCEL:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_CANCEL;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_BACKSPACE:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_BACK;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_TAB:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_TAB;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_CLEAR:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_CLEAR;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_ENTER:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_RETURN;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_PAUSE:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_PAUSE;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_CAPSLOCK:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_CAPITAL;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_ESCAPE:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_ESCAPE;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_SPACE:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_SPACE;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_PAGE_UP:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_PRIOR;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_PAGE_DOWN:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_NEXT;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_END:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_END;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_HOME:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_HOME;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_ARROW_LEFT:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_LEFT;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_ARROW_UP:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_UP;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_ARROW_RIGHT:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_RIGHT;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_ARROW_DOWN:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_DOWN;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_SELECT:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_SELECT;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_PRINT:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_PRINT;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_EXECUTE:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_EXECUTE;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_PRINTSCREEN:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_SNAPSHOT;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_INSERT:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_INSERT;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_DELETE:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_DELETE;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_HELP:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_HELP;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_APPS:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_APPS;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_SLEEP:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_SLEEP;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_NUMPAD0:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_NUMPAD0;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_NUMPAD1:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_NUMPAD1;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_NUMPAD2:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_NUMPAD2;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_NUMPAD3:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_NUMPAD3;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_NUMPAD4:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_NUMPAD4;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_NUMPAD5:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_NUMPAD5;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_NUMPAD6:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_NUMPAD6;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_NUMPAD7:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_NUMPAD7;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_NUMPAD8:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_NUMPAD8;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_NUMPAD9:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_NUMPAD9;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_MULTIPLY:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_MULTIPLY;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_ADD:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_ADD;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_SEPARATOR:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_SEPARATOR;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_SUBTRACT:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_SUBTRACT;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_DECIMAL:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_DECIMAL;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_DIVIDE:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_DIVIDE;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_F1:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_F1;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_F2:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_F2;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_F3:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_F3;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_F4:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_F4;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_F5:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_F5;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_F6:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_F6;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_F7:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_F7;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_F8:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_F8;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_F9:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_F9;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_F10:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_F10;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_F11:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_F11;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_F12:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_F12;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_F13:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_F13;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_F14:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_F14;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_F15:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_F15;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_F16:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_F16;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_F17:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_F17;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_F18:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_F18;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_F19:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_F19;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_F20:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_F20;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_F21:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_F21;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_F22:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_F22;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_F23:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_F23;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_F24:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_F24;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_NUMLOCK:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_NUMLOCK;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_SCROLL_LOCK:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_SCROLL;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_BROWSER_BACK:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_BROWSER_BACK;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_BROWSER_FORWARD:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_BROWSER_FORWARD;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_BROWSER_REFRESH:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_BROWSER_REFRESH;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_BROWSER_STOP:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_BROWSER_STOP;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_BROWSER_SEARCH:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_BROWSER_SEARCH;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_BROWSER_FAVORITES:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_BROWSER_FAVORITES;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_BROWSER_HOME:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_BROWSER_HOME;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_VOLUME_MUTE:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_VOLUME_MUTE;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_VOLUME_UP:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_VOLUME_UP;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_VOLUME_DOWN:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_VOLUME_DOWN;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_MEDIA_NEXT_TRACK:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_MEDIA_NEXT_TRACK;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_MEDIA_PREV_TRACK:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_MEDIA_PREV_TRACK;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_MEDIA_STOP:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_MEDIA_STOP;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_MEDIA_PLAY_PAUSE:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_MEDIA_PLAY_PAUSE;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_LAUNCH_MAIL:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_LAUNCH_MAIL;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_LAUNCH_MEDIA_SELECT:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_LAUNCH_MEDIA_SELECT;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_LAUNCH_APP1:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_LAUNCH_APP1;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_LAUNCH_APP2:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_LAUNCH_APP2;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_ATTN:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_ATTN;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_CRSEL:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_CRSEL;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_EXSEL:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_EXSEL;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_ERASEEOF:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_EREOF;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_PLAY:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_PLAY;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_ZOOM:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_ZOOM;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         case KY_PA1:
-        #if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(_GLOBAL_HOTKEY_WIN)
             return VK_PA1;
-        #elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(_GLOBAL_HOTKEY_MAC)
 
-        #elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(_GLOBAL_HOTKEY_LINUX)
 
-        #endif
+#endif
         default:
             return key;
     }
 }
 
-}
+} // namespace gbhk

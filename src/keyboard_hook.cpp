@@ -48,23 +48,17 @@ static LRESULT WINAPI LowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lPar
         }
 
         if (kVoidFuncs.find(key) != kVoidFuncs.end()) {
-            bool keydownExe =
-                kVoidFuncs[key].first == PRESSED &&
-                (wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN);
-            bool keyupExe =
-                kVoidFuncs[key].first == RELEASED &&
-                (wParam == WM_KEYUP || wParam == WM_SYSKEYUP);
+            bool keydownExe = kVoidFuncs[key].first == PRESSED && (wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN);
+            bool keyupExe = kVoidFuncs[key].first == RELEASED && (wParam == WM_KEYUP || wParam == WM_SYSKEYUP);
+
             if (keydownExe || keyupExe)
                 kVoidFuncs[key].second();
         }
 
         if (kArgFuncArgs.find(key) != kArgFuncArgs.end()) {
-            bool keydownExe =
-                kVoidFuncs[key].first == PRESSED &&
-                (wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN);
-            bool keyupExe =
-                kVoidFuncs[key].first == RELEASED &&
-                (wParam == WM_KEYUP || wParam == WM_SYSKEYUP);
+            bool keydownExe = kVoidFuncs[key].first == PRESSED && (wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN);
+            bool keyupExe = kVoidFuncs[key].first == RELEASED && (wParam == WM_KEYUP || wParam == WM_SYSKEYUP);
+
             if (keydownExe || keyupExe) {
                 auto& fn = kArgFuncArgs[key].second.first;
                 auto& arg = kArgFuncArgs[key].second.second;
@@ -80,40 +74,32 @@ static LRESULT WINAPI LowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lPar
 
 void addKeyEventCallback(uint key, State state, VoidFunc callbackFunc)
 {
-    kMtx.lock();
+    std::lock_guard<std::mutex> lock(kMtx);
 
-    if (kArgFuncArgs.find(key) != kArgFuncArgs.end() && kArgFuncArgs[key].first == state) {
+    if (kArgFuncArgs.find(key) != kArgFuncArgs.end() && kArgFuncArgs[key].first == state)
         kArgFuncArgs.erase(key);
-    }
     kVoidFuncs.insert({ key, { state, callbackFunc } });
-
-    kMtx.unlock();
 }
 
 void addKeyEventCallback(uint key, State state, ArgFunc callbackFunc, Arg arg)
 {
-    kMtx.lock();
+    std::lock_guard<std::mutex> lock(kMtx);
 
-    if (kVoidFuncs.find(key) != kVoidFuncs.end() && kVoidFuncs[key].first == state) {
+    if (kVoidFuncs.find(key) != kVoidFuncs.end() && kVoidFuncs[key].first == state)
         kVoidFuncs.erase(key);
-    }
     kArgFuncArgs.insert({ key, { state, { callbackFunc, arg } } });
-
-    kMtx.unlock();
 }
 
 void setKeyPressedCallback(void (*callbackFunc)(uint key))
 {
-    kMtx.lock();
+    std::lock_guard<std::mutex> lock(kMtx);
     kKeyPressedCallback = callbackFunc;
-    kMtx.unlock();
 }
 
 void setKeyReleaseddCallback(void (*callbackFunc)(uint key))
 {
-    kMtx.lock();
+    std::lock_guard<std::mutex> lock(kMtx);
     kKeyReleasedCallback = callbackFunc;
-    kMtx.unlock();
 }
 
 uint run()
@@ -140,6 +126,6 @@ uint end()
 
 }
 
-}
+} // namespace gbhk
 
 #endif // _GLOBAL_HOTKEY_WIN

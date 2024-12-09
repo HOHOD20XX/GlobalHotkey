@@ -21,6 +21,6 @@ using ArgFuncArg = std::pair<ArgFunc, Arg>;
 using String = std::string;
 using Strings = std::vector<String>;
 
-}
+} // namespace gbhk
 
 #endif // !GLOBAL_HOTKEY_TYPEALIAS_HPP

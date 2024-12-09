@@ -24,6 +24,6 @@ constexpr unsigned int _RC_ALREADY_EXISTED = 0x04;
 // (e.g. #RegGlobalHotkey::replace cant't use two identical #KeyCombination as oldkeycomb and newKeycomb.
 constexpr unsigned int _RC_OLD_EQUAL_NEW = 0x05;
 
-}
+} // namespace gbhk
 
 #endif // !GLOBAL_HOTKEY_CONSTANTS_HPP

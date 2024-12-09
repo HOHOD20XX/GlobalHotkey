@@ -119,7 +119,7 @@ enum Key : uint
 constexpr uint KY_FIRST = KY_MOUSEBUTTON_LEFT;
 constexpr uint KY_LAST = KY_PA1;
 
-}
+} // namespace gbhk
 
 namespace gbhk
 {
@@ -156,6 +156,6 @@ uint getNativeModifiers(uint modifiers, bool isAutoRepeat);
 
 uint getNativeKey(uint key);
 
-}
+} // namespace gbhk
 
 #endif // !GLOBAL_HOTKEY_KEY_HPP

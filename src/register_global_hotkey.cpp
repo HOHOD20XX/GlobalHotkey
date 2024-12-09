@@ -192,8 +192,7 @@ GBHK_NODISCARD uint RegGlobalHotkey::remove(const KeyCombination& keycomb)
     return rslt;
 }
 
-GBHK_NODISCARD uint RegGlobalHotkey::replace(const KeyCombination& oldKeycomb,
-                                             const KeyCombination& newKeycomb)
+GBHK_NODISCARD uint RegGlobalHotkey::replace(const KeyCombination& oldKeycomb, const KeyCombination& newKeycomb)
 {
     // If the thread is not running do nothing.
     if (!isRunning_)
@@ -305,8 +304,7 @@ GBHK_NODISCARD uint RegGlobalHotkey::remove_(const KeyCombination& keycomb)
     return _RC_NOT_FIND;
 }
 
-GBHK_NODISCARD uint RegGlobalHotkey::replace_(const KeyCombination& oldKeycomb,
-                                              const KeyCombination& newKeycomb)
+GBHK_NODISCARD uint RegGlobalHotkey::replace_(const KeyCombination& oldKeycomb, const KeyCombination& newKeycomb)
 {
     for (const auto& var : keyIdKeycombs_) {
         if (var.second == oldKeycomb) {
@@ -314,8 +312,7 @@ GBHK_NODISCARD uint RegGlobalHotkey::replace_(const KeyCombination& oldKeycomb,
                 uint keyid = var.first;
                 keyIdKeycombs_.erase(keyid);
 
-                if (::RegisterHotKey(NULL, keyid,
-                                     newKeycomb.nativeModifiers(), newKeycomb.nativeKey())) {
+                if (::RegisterHotKey(NULL, keyid, newKeycomb.nativeModifiers(), newKeycomb.nativeKey())) {
                     keyIdKeycombs_.insert({ keyid, newKeycomb });
                     return _RC_SUCCESS;
                 }
@@ -366,12 +363,10 @@ VoidFunc RegGlobalHotkey::getVoidFunc_(const KeyCombination& keycomb)
 {
     VoidFunc rslt = nullptr;
 
-    mtx_.lock();
+    std::lock_guard<std::mutex> lock(mtx_);
 
     if (voidFuncs_.find(keycomb) != voidFuncs_.end())
         rslt = voidFuncs_[keycomb];
-
-    mtx_.unlock();
 
     return rslt;
 }
@@ -380,36 +375,32 @@ ArgFuncArg RegGlobalHotkey::getArgFuncArg_(const KeyCombination& keycomb)
 {
     ArgFuncArg rslt = { nullptr, nullptr };
 
-    mtx_.lock();
+    std::lock_guard<std::mutex> lock(mtx_);
 
     if (argFuncArgs_.find(keycomb) != argFuncArgs_.end())
         rslt = argFuncArgs_[keycomb];
-
-    mtx_.unlock();
 
     return rslt;
 }
 
 void RegGlobalHotkey::addFunc_(const KeyCombination& keycomb, VoidFunc callbackFunc)
 {
-    mtx_.lock();
+    std::lock_guard<std::mutex> lock(mtx_);
     voidFuncs_.insert({ keycomb, callbackFunc });
-    mtx_.unlock();
 }
 
 void RegGlobalHotkey::addFunc_(const KeyCombination& keycomb, ArgFunc callbackFunc, Arg arg)
 {
-    mtx_.lock();
+    std::lock_guard<std::mutex> lock(mtx_);
     argFuncArgs_.insert({ keycomb, { callbackFunc, arg } });
-    mtx_.unlock();
 }
 
 void RegGlobalHotkey::removeFunc_(const KeyCombination& keycomb)
 {
-    mtx_.lock();
+    std::lock_guard<std::mutex> lock(mtx_);
+
     voidFuncs_.erase(keycomb);
     argFuncArgs_.erase(keycomb);
-    mtx_.unlock();
 }
 
-}
+} // namespace gbhk

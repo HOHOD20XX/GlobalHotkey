@@ -50,6 +50,6 @@ private:
     std::thread::id workThreadId_;
 };
 
-}
+} // namespace gbhk
 
 #endif // !GLOBAL_HOTKEY_BASE_GLOBAL_HOTKEY_HPP

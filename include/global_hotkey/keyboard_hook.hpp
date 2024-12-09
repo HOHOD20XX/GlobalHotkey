@@ -29,7 +29,7 @@ uint end();
 
 }
 
-}
+} // namespace gbhk
 
 #endif // _GLOBAL_HOTKEY_WIN
 

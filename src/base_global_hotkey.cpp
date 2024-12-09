@@ -9,8 +9,7 @@ void sleep(ullong millisecond)
 }
 
 BaseGlobalHotkey::BaseGlobalHotkey() :
-    isRunning_(false), shouldClose_(false), intervalTime_(10),
-    timePoint_(std::chrono::steady_clock::time_point())
+    isRunning_(false), shouldClose_(false), intervalTime_(10), timePoint_(std::chrono::steady_clock::time_point())
 {}
 
 BaseGlobalHotkey::~BaseGlobalHotkey() {}
@@ -30,32 +29,28 @@ void BaseGlobalHotkey::setTimePoint_()
 {
     namespace chr = std::chrono;
 
-    mtx_.lock();
+    std::lock_guard<std::mutex> lock(mtx_);
     timePoint_ = chr::steady_clock::now() + chr::milliseconds(intervalTime_);
-    mtx_.unlock();
 }
 
 void BaseGlobalHotkey::waitInterval_()
 {
-    mtx_.lock();
+    std::lock_guard<std::mutex> lock(mtx_);
     std::this_thread::sleep_until(timePoint_);
-    mtx_.unlock();
 }
 
 void BaseGlobalHotkey::setWorkThreadId_(const std::thread::id& id)
 {
-    mtx_.lock();
+    std::lock_guard<std::mutex> lock(mtx_);
     workThreadId_ = id;
-    mtx_.unlock();
 }
 
 std::thread::id BaseGlobalHotkey::getWorkThreadId_()
 {
-    mtx_.lock();
+    std::lock_guard<std::mutex> lock(mtx_);
     std::thread::id id = workThreadId_;
-    mtx_.unlock();
 
     return id;
 }
 
-}
+} // namespace gbhk
