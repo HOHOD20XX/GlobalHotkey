@@ -6,7 +6,7 @@
 
 int main()
 {
-    gbhk::BaseGlobalHotkey *hotkeyManager = nullptr;
+    gbhk::BaseGlobalHotkey* hotkeyManager = nullptr;
 
     hotkeyManager = &gbhk::RegGlobalHotkey::getInstance();
 
