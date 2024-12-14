@@ -4,7 +4,7 @@
 #include "core/core.hpp"
 
 // Only usable in windows platform.
-#ifdef _GLOBAL_HOTKEY_WIN
+#ifdef GLOBAL_HOTKEY_WIN
 
 namespace gbhk
 {
@@ -31,6 +31,6 @@ uint end();
 
 } // namespace gbhk
 
-#endif // _GLOBAL_HOTKEY_WIN
+#endif // GLOBAL_HOTKEY_WIN
 
 #endif // !GLOBAL_HOTKEY_KEYBOARD_HOOK_HPP

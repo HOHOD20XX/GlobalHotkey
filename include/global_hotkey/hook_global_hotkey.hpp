@@ -4,7 +4,7 @@
 #include "base_global_hotkey.hpp"
 
 // Only usable in windows platform.
-#ifdef _GLOBAL_HOTKEY_WIN
+#ifdef GLOBAL_HOTKEY_WIN
 
 #include <atomic>
 #include <mutex>
@@ -46,6 +46,6 @@ private:
 
 } // namespace gbhk
 
-#endif // _GLOBAL_HOTKEY_WIN
+#endif // GLOBAL_HOTKEY_WIN
 
 #endif // !GLOBAL_HOTKEY_HOOK_GLOBAL_HOTKEY_HPP

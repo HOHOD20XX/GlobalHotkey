@@ -53,7 +53,7 @@ private:
             } replace;
         };
 
-        Task() : opc(NONE), add() {}
+        Task() : opc(NONE), replace() {}
     };
 
     RegGlobalHotkey();

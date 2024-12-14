@@ -2,7 +2,7 @@
 #define GLOBAL_HOTKEY_TYPEALIAS_HPP
 
 #include <string>
-#include <utility>  // std::pair
+#include <utility>  // pair
 #include <vector>
 
 namespace gbhk

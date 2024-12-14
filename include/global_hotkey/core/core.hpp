@@ -3,7 +3,7 @@
 
 #include <stddef.h>     // size_t
 
-#include "constants.hpp"
+#include "return_code.hpp"
 #include "typealias.hpp"
 
 #ifdef _MSVC_LANG
@@ -23,16 +23,16 @@
 #endif // _GLOBAL_HOTKEY_CPP17
 
 #if defined(_WIN32)
-#define _GLOBAL_HOTKEY_WIN
+#define GLOBAL_HOTKEY_WIN
 #elif defined(__APPLE__)
 #include <TargetConditionals.h>
 #if TARGET_OS_MAC
-#define _GLOBAL_HOTKEY_MAC
+#define GLOBAL_HOTKEY_MAC
 #else
 #error "Unsupported apple platform"
 #endif // TARGET_OS_MAC
 #elif defined(__linux__)
-#define _GLOBAL_HOTKEY_LINUX
+#define GLOBAL_HOTKEY_LINUX
 #else 
 #error "Unsupported platform"
 #endif // _WIN32

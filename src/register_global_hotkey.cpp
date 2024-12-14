@@ -1,10 +1,10 @@
 #include <global_hotkey/register_global_hotkey.hpp>
 
-#if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(GLOBAL_HOTKEY_WIN)
 #include <Windows.h>
-#elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(GLOBAL_HOTKEY_MAC)
 // TODO
-#elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(GLOBAL_HOTKEY_LINUX)
 // TODO
 #endif
 
@@ -30,7 +30,7 @@ GBHK_NODISCARD uint RegGlobalHotkey::start()
 {
     // If the thread is running do nothing.
     if (isRunning_)
-        return _RC_UNTIMELY_CALL;
+        return RC_UNTIMELY_CALL;
 
     isRunning_ = true;
     workThread_ = std::thread([&] () {
@@ -77,18 +77,18 @@ GBHK_NODISCARD uint RegGlobalHotkey::start()
     });
     workThread_.detach();
 
-    return _RC_SUCCESS;
+    return RC_SUCCESS;
 }
 
 GBHK_NODISCARD uint RegGlobalHotkey::end()
 {
     // If the thread is not running do nothing.
     if (!isRunning_)
-        return _RC_UNTIMELY_CALL;
+        return RC_UNTIMELY_CALL;
 
     // This function can't called in the work thread, else program get stuck in a loop.
     if (std::this_thread::get_id() == getWorkThreadId_())
-        return _RC_CALL_IN_WRONG_THREAD;
+        return RC_CALL_IN_WRONG_THREAD;
 
     Task tsk;
     tsk.opc = Task::END;
@@ -115,15 +115,15 @@ GBHK_NODISCARD uint RegGlobalHotkey::add(const KeyCombination& keycomb, VoidFunc
 {
     // If the thread is not running do nothing.
     if (!isRunning_)
-        return _RC_UNTIMELY_CALL;
+        return RC_UNTIMELY_CALL;
 
     // This function can't called in the work thread, else program get stuck in a loop.
     if (std::this_thread::get_id() == getWorkThreadId_())
-        return _RC_CALL_IN_WRONG_THREAD;
+        return RC_CALL_IN_WRONG_THREAD;
 
     // If the key combination already exists do nothing.
     if (getVoidFunc_(keycomb) || getArgFuncArg_(keycomb).first)
-        return _RC_ALREADY_EXISTED;
+        return RC_ALREADY_EXISTED;
 
     Task tsk;
     tsk.opc = Task::ADD;
@@ -132,7 +132,7 @@ GBHK_NODISCARD uint RegGlobalHotkey::add(const KeyCombination& keycomb, VoidFunc
     setTask_(tsk);
     uint rslt = waitTaskFinished_();
 
-    if (rslt == _RC_SUCCESS)
+    if (rslt == RC_SUCCESS)
         addFunc_(keycomb, callbackFunc);
 
     return rslt;
@@ -142,15 +142,15 @@ GBHK_NODISCARD uint RegGlobalHotkey::add(const KeyCombination& keycomb, ArgFunc 
 {
     // If the thread is not running do nothing.
     if (!isRunning_)
-        return _RC_UNTIMELY_CALL;
+        return RC_UNTIMELY_CALL;
 
     // This function can't called in the work thread, else program get stuck in a loop.
     if (std::this_thread::get_id() == getWorkThreadId_())
-        return _RC_CALL_IN_WRONG_THREAD;
+        return RC_CALL_IN_WRONG_THREAD;
 
     // If the key combination already exists do nothing.
     if (getVoidFunc_(keycomb) || getArgFuncArg_(keycomb).first)
-        return _RC_ALREADY_EXISTED;
+        return RC_ALREADY_EXISTED;
 
     Task tsk;
     tsk.opc = Task::ADD;
@@ -159,7 +159,7 @@ GBHK_NODISCARD uint RegGlobalHotkey::add(const KeyCombination& keycomb, ArgFunc 
     setTask_(tsk);
     uint rslt = waitTaskFinished_();
 
-    if (rslt == _RC_SUCCESS)
+    if (rslt == RC_SUCCESS)
         addFunc_(keycomb, callbackFunc, arg);
 
     return rslt;
@@ -169,15 +169,15 @@ GBHK_NODISCARD uint RegGlobalHotkey::remove(const KeyCombination& keycomb)
 {
     // If the thread is not running do nothing.
     if (!isRunning_)
-        return _RC_UNTIMELY_CALL;
+        return RC_UNTIMELY_CALL;
 
     // This function can't called in the work thread, else program get stuck in a loop.
     if (std::this_thread::get_id() == getWorkThreadId_())
-        return _RC_CALL_IN_WRONG_THREAD;
+        return RC_CALL_IN_WRONG_THREAD;
 
     // If the key combination is not exists do nothing.
     if (getVoidFunc_(keycomb) == nullptr && getArgFuncArg_(keycomb).first == nullptr)
-        return _RC_NOT_FIND;
+        return RC_NOT_FIND;
 
     Task tsk;
     tsk.opc = Task::REMOVE;
@@ -186,7 +186,7 @@ GBHK_NODISCARD uint RegGlobalHotkey::remove(const KeyCombination& keycomb)
     setTask_(tsk);
     uint rslt = waitTaskFinished_();
 
-    if (rslt == _RC_SUCCESS)
+    if (rslt == RC_SUCCESS)
         removeFunc_(keycomb);
 
     return rslt;
@@ -196,26 +196,26 @@ GBHK_NODISCARD uint RegGlobalHotkey::replace(const KeyCombination& oldKeycomb, c
 {
     // If the thread is not running do nothing.
     if (!isRunning_)
-        return _RC_UNTIMELY_CALL;
+        return RC_UNTIMELY_CALL;
 
     // This function can't called in the work thread, else program get stuck in a loop.
     if (std::this_thread::get_id() == getWorkThreadId_())
-        return _RC_CALL_IN_WRONG_THREAD;
+        return RC_CALL_IN_WRONG_THREAD;
 
     // If the old key combination equal to new key combination do nothing.
     if (oldKeycomb.equal(newKeycomb))
-        return _RC_OLD_EQUAL_NEW;
+        return RC_OLD_EQUAL_NEW;
 
     VoidFunc voidfunc = getVoidFunc_(oldKeycomb);
     ArgFuncArg argfuncarg = getArgFuncArg_(oldKeycomb);
 
     // If the old key combination is not exists do nothing.
     if (voidfunc == nullptr && argfuncarg.first == nullptr)
-        return _RC_NOT_FIND;
+        return RC_NOT_FIND;
 
     // If the new key combination already exists do nothing.
     if (getVoidFunc_(newKeycomb) || getArgFuncArg_(newKeycomb).first)
-        return _RC_ALREADY_EXISTED;
+        return RC_ALREADY_EXISTED;
 
     Task tsk;
     tsk.opc = Task::REPLACE;
@@ -225,7 +225,7 @@ GBHK_NODISCARD uint RegGlobalHotkey::replace(const KeyCombination& oldKeycomb, c
     setTask_(tsk);
     uint rslt = waitTaskFinished_();
 
-    if (rslt == _RC_SUCCESS) {
+    if (rslt == RC_SUCCESS) {
         removeFunc_(oldKeycomb);
 
         if (voidfunc)
@@ -264,7 +264,7 @@ void RegGlobalHotkey::work_()
 // @TODO How to fix the problem when UnregisterHotkey has error.
 GBHK_NODISCARD uint RegGlobalHotkey::end_()
 {
-    uint rslt = _RC_SUCCESS;
+    uint rslt = RC_SUCCESS;
 
     // Unregister all hotkey.
     for (const auto& var : keyIdKeycombs_) {
@@ -284,7 +284,7 @@ GBHK_NODISCARD uint RegGlobalHotkey::add_(const KeyCombination& keycomb)
     if (::RegisterHotKey(NULL, keyId_, keycomb.nativeModifiers(), keycomb.nativeKey())) {
         keyIdKeycombs_.insert({ keyId_, keycomb });
         keyId_++;
-        return _RC_SUCCESS;
+        return RC_SUCCESS;
     }
     return ::GetLastError();
 }
@@ -295,13 +295,13 @@ GBHK_NODISCARD uint RegGlobalHotkey::remove_(const KeyCombination& keycomb)
         if (var.second == keycomb) {
             if (::UnregisterHotKey(NULL, var.first)) {
                 keyIdKeycombs_.erase(var.first);
-                return _RC_SUCCESS;
+                return RC_SUCCESS;
             }
             return ::GetLastError();
         }
     }
 
-    return _RC_NOT_FIND;
+    return RC_NOT_FIND;
 }
 
 GBHK_NODISCARD uint RegGlobalHotkey::replace_(const KeyCombination& oldKeycomb, const KeyCombination& newKeycomb)
@@ -314,7 +314,7 @@ GBHK_NODISCARD uint RegGlobalHotkey::replace_(const KeyCombination& oldKeycomb, 
 
                 if (::RegisterHotKey(NULL, keyid, newKeycomb.nativeModifiers(), newKeycomb.nativeKey())) {
                     keyIdKeycombs_.insert({ keyid, newKeycomb });
-                    return _RC_SUCCESS;
+                    return RC_SUCCESS;
                 }
                 return ::GetLastError();
             } else {
@@ -323,7 +323,7 @@ GBHK_NODISCARD uint RegGlobalHotkey::replace_(const KeyCombination& oldKeycomb, 
         }
     }
 
-    return _RC_NOT_FIND;
+    return RC_NOT_FIND;
 }
 
 void RegGlobalHotkey::setTask_(const Task& task)

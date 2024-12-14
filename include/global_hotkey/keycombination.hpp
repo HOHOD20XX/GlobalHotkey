@@ -2,7 +2,7 @@
 #define GLOBAL_HOTKEY_KEYCOMBINATION_HPP
 
 #include <string>
-#include <functional>   // std::hash
+#include <functional>   // hash
 
 #include "core/core.hpp"
 #include "key.hpp"

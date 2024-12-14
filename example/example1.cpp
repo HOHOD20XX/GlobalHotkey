@@ -15,19 +15,19 @@ int main()
     gbhk::KeyCombination hotkey3(gbhk::CTRL | gbhk::SHIFT, gbhk::KY_DELETE, false);
 
     auto rtn = hotkeyManager->start();
-    if (rtn != 0)
+    if (rtn != gbhk::RC_SUCCESS)
         throw std::runtime_error("Failed to start the hotkey.");
 
     rtn = hotkeyManager->add(hotkey1, [] () {
         std::cout << "hotkey1 triggered" << std::endl;
     });
-    if (rtn != 0)
+    if (rtn != gbhk::RC_SUCCESS)
         throw std::runtime_error("Failed to add the hotkey.");
 
     rtn = hotkeyManager->add(hotkey2, [] () {
         std::cout << "hotkey2 triggered" << std::endl;
     });
-    if (rtn != 0)
+    if (rtn != gbhk::RC_SUCCESS)
         throw std::runtime_error("Failed to add the hotkey.");
 
     std::atomic<bool> shouldClose(false);
@@ -38,7 +38,7 @@ int main()
 
         *static_cast<std::atomic<bool>*>(shouldClose) = true;
     }, &shouldClose);
-    if (rtn != 0)
+    if (rtn != gbhk::RC_SUCCESS)
         throw std::runtime_error("Failed to add the hotkey.");
 
     while (!shouldClose) {
@@ -47,7 +47,7 @@ int main()
     }
 
     rtn = hotkeyManager->end();
-    if (rtn != 0)
+    if (rtn != gbhk::RC_SUCCESS)
         throw std::runtime_error("Failed to end the hotkey.");
 
     std::cout << "Success to exit." << std::endl;

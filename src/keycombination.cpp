@@ -2,14 +2,14 @@
 
 #include <sstream>
 
-#if defined(_GLOBAL_HOTKEY_WIN)
+#if defined(GLOBAL_HOTKEY_WIN)
 #include <Windows.h>
-#elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(GLOBAL_HOTKEY_MAC)
 #include <Carbon/Carbon.h>
-#elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(GLOBAL_HOTKEY_LINUX)
 #include <X11/Xlib.h>
 #include <xcb/xcb.h>
-#endif // _GLOBAL_HOTKEY_WIN
+#endif // GLOBAL_HOTKEY_WIN
 
 namespace gbhk
 {
