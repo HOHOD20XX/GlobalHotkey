@@ -1,6 +1,6 @@
-#include <atomic>
-#include <iostream>
-#include <stdexcept>
+#include <atomic>       // atomic
+#include <iostream>     // cout, endl
+#include <stdexcept>    // runtime_error
 
 #include <global_hotkey/global_hotkey.hpp>
 
