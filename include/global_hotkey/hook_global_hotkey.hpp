@@ -6,9 +6,7 @@
 // Only usable in windows platform.
 #ifdef GLOBAL_HOTKEY_WIN
 
-#include <atomic>
-#include <mutex>
-#include <unordered_map>
+#include <unordered_map>    // unordered_map
 
 namespace gbhk
 {

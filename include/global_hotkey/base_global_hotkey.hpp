@@ -1,10 +1,10 @@
 #ifndef GLOBAL_HOTKEY_BASE_GLOBAL_HOTKEY_HPP
 #define GLOBAL_HOTKEY_BASE_GLOBAL_HOTKEY_HPP
 
-#include <chrono>
-#include <atomic>
-#include <mutex>
-#include <thread>
+#include <chrono>   // chrono
+#include <atomic>   // atomic
+#include <mutex>    // mutex, lock_guard
+#include <thread>   // thread
 
 #include "core/core.hpp"
 #include "keycombination.hpp"

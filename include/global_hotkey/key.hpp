@@ -1,7 +1,7 @@
 #ifndef GLOBAL_HOTKEY_KEY_HPP
 #define GLOBAL_HOTKEY_KEY_HPP
 
-#include <string>
+#include <string>   // string
 
 #include "core/core.hpp"
 
@@ -10,10 +10,10 @@ namespace gbhk
 
 enum Modifier : uint
 {
-    META = 0X01,
-    ALT = 0X02,
-    CTRL = 0X04,
-    SHIFT = 0X08
+    META    = 0X01,
+    ALT     = 0X02,
+    CTRL    = 0X04,
+    SHIFT   = 0X08
 };
 
 enum Key : uint

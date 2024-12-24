@@ -1,7 +1,7 @@
 #ifndef GLOBAL_HOTKEY_KEYCOMBINATION_HPP
 #define GLOBAL_HOTKEY_KEYCOMBINATION_HPP
 
-#include <string>
+#include <string>       // string
 #include <functional>   // hash
 
 #include "core/core.hpp"
@@ -79,9 +79,9 @@ public:
     bool operator!=(const KeyCombination& other) const;
 
 private:
-    uint mods_ = 0;
-    uint key_ = 0;
-    bool isAutoRepeat_ = false;
+    uint mods_          = 0;
+    uint key_           = 0;
+    bool isAutoRepeat_  = false;
 };
 
 } // namespace gbhk

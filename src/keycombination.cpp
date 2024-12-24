@@ -1,6 +1,6 @@
 #include <global_hotkey/keycombination.hpp>
 
-#include <sstream>
+#include <sstream>  // stringstream
 
 #if defined(GLOBAL_HOTKEY_WIN)
 #include <Windows.h>

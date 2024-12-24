@@ -3,9 +3,9 @@
 // Only usable in windows platform.
 #ifdef GLOBAL_HOTKEY_WIN
 
-#include <atomic>
-#include <mutex>
-#include <unordered_map>
+#include <atomic>           // atomic
+#include <mutex>            // mutex, lock_guard
+#include <unordered_map>    // unordered_map
 
 #include <Windows.h>
 

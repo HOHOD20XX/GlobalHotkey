@@ -176,7 +176,7 @@ GBHK_NODISCARD uint RegGlobalHotkey::remove(const KeyCombination& keycomb)
         return RC_CALL_IN_WRONG_THREAD;
 
     // If the key combination is not exists do nothing.
-    if (!getVoidFunc_(keycomb) && !getArgFuncArg_(keycomb).first)
+    if (getVoidFunc_(keycomb) == nullptr && getArgFuncArg_(keycomb).first == nullptr)
         return RC_NOT_FIND;
 
     Task tsk;
@@ -210,7 +210,7 @@ GBHK_NODISCARD uint RegGlobalHotkey::replace(const KeyCombination& oldKeycomb, c
     ArgFuncArg argfuncarg = getArgFuncArg_(oldKeycomb);
 
     // If the old key combination is not exists do nothing.
-    if (!voidfunc && !argfuncarg.first)
+    if (voidfunc == nullptr && argfuncarg.first == nullptr)
         return RC_NOT_FIND;
 
     // If the new key combination already exists do nothing.

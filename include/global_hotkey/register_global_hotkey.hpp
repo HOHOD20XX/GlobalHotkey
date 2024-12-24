@@ -3,10 +3,7 @@
 
 #include "base_global_hotkey.hpp"
 
-#include <atomic>
-#include <mutex>
-#include <thread>
-#include <unordered_map>
+#include <unordered_map>    // unordered_map
 
 namespace gbhk
 {

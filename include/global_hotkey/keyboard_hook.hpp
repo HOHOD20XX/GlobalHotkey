@@ -22,9 +22,9 @@ void addKeyEventCallback(uint key, State state, VoidFunc callbackFunc);
 void addKeyEventCallback(uint key, State state, ArgFunc callbackFunc, Arg arg);
 void setKeyPressedCallback(void (*callbackFunc)(uint key));
 void setKeyReleaseddCallback(void (*callbackFunc)(uint key));
-// If success return 0, else return error code.
+// If success return #RC_SUCCESS, else return error code.
 uint run();
-// If success return 0, else return error code.
+// If success return #RC_SUCCESS, else return error code.
 uint end();
 
 }

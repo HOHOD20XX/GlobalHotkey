@@ -1,32 +1,34 @@
 #ifndef GLOBAL_HOTKEY_CONSTANTS_HPP
 #define GLOBAL_HOTKEY_CONSTANTS_HPP
 
-#include <string>
+#include <string>   // to_string
+
+#include "typealias.hpp"
 
 namespace gbhk
 {
 
-enum ReturnCode : unsigned int
+enum ReturnCode : uchar
 {
-    RC_SUCCESS = 0x00,
+    RC_SUCCESS                  = 0x00,
     // Function is untimely be called.
     // (e.g. too late or too early)
-    RC_UNTIMELY_CALL = 0x01,
+    RC_UNTIMELY_CALL            = 0x01,
     // Function is be called by wrong thread.
     // (e.g. #RegGlobalHotkey::add() can't be called in work thread.)
-    RC_CALL_IN_WRONG_THREAD = 0x02,
+    RC_CALL_IN_WRONG_THREAD     = 0x02,
     // The specified value is not find.
     // (e.g. a unregistered hotkey)
-    RC_NOT_FIND = 0x03,
+    RC_NOT_FIND                 = 0x03,
     // The specified value is already exists.
     // (e.g. add a registered hotkey again)
-    RC_ALREADY_EXISTED = 0x04,
+    RC_ALREADY_EXISTED          = 0x04,
     // The old value is equal to new value.
     // (e.g. #RegGlobalHotkey::replace() cant't use two identical #KeyCombination as oldkeycomb and newKeycomb.
-    RC_OLD_EQUAL_NEW = 0x05
+    RC_OLD_EQUAL_NEW            = 0x05
 };
 
-inline std::string getReturnCodeMessage(unsigned int rc)
+inline String getReturnCodeMessage(uchar rc)
 {
     switch (rc) {
         case RC_SUCCESS:
