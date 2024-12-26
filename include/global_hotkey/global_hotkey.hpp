@@ -1,7 +1,7 @@
-// The "Global Hotkey" library written in c++.
+// The "Global Hotkey" library, in c++.
 //
 // Web: https://github.com/JaderoChan/GlobalHotkey
-// You can contact me at: c_dl_cn@outlook.com
+// You can contact me by email: c_dl_cn@outlook.com
 //
 // MIT License
 //
