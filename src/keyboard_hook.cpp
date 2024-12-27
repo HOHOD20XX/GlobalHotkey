@@ -15,21 +15,12 @@ namespace gbhk
 namespace keyboard_hook
 {
 
-#ifdef _GLOBAL_HOTKEY_CPP17
-inline std::mutex gMtx;
-inline HHOOK gHhook = nullptr;
-inline void (*gKeyPressedCallback)(uint key) = nullptr;
-inline void (*gKeyReleasedCallback)(uint key) = nullptr;
-inline std::unordered_map<uint, std::pair<State, VoidFunc>> gVoidFuncs;
-inline std::unordered_map<uint, std::pair<State, ArgFuncArg>> gArgFuncArgs;
-#else
 static std::mutex gMtx;
 static HHOOK gHhook = nullptr;
 static void (*gKeyPressedCallback)(uint key) = nullptr;
 static void (*gKeyReleasedCallback)(uint key) = nullptr;
 static std::unordered_map<uint, std::pair<State, VoidFunc>> gVoidFuncs;
 static std::unordered_map<uint, std::pair<State, ArgFuncArg>> gArgFuncArgs;
-#endif // _GLOBAL_HOTKEY_CPP17
 
 static LRESULT WINAPI LowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
 {
@@ -119,6 +110,7 @@ uint end()
         gKeyReleasedCallback = nullptr;
         gVoidFuncs.clear();
         gArgFuncArgs.clear();
+
         return RC_SUCCESS;
     }
     return ::GetLastError();
