@@ -19,31 +19,21 @@ public:
     };
 
     KeyCombination() = default;
-
     KeyCombination(uint modifiers, uint key, bool isAutoRepeat = false);
 
     static KeyCombination fromString(const String& str, char connector = '+');
 
     uint modifiers() const;
-
     uint nativeModifiers() const;
-
     uint key() const;
-
     uint nativeKey() const;
-
     bool isAutoRepeat() const;
 
     void setModifiers(uint modifiers);
-
     void addModifier(Modifier modifier);
-
     void removeModifier(Modifier modifier);
-
     void resetModifiers();
-
     void setKey(uint key);
-
     void setIsAutoRepeat(bool isAutoRepeat);
 
     // @brief #modifiers and #key be set to 0, and #isAutoRepeat be set to false.
