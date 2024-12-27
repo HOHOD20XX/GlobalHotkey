@@ -1,6 +1,6 @@
 # Cross-Platform Global Hotkey Library
 
-For All Application.
+Available for all type program.
 
 *e.g. Qt, MFC and other GUI, even console terminal.*
 
