@@ -134,13 +134,13 @@ constexpr const char* KEY_TEXT_PA1                  = "PA1";
 namespace gbhk
 {
 
-// @biref Whether the char is Space, Tab and Newline so on.
+/// @brief Whether the char is Space, Tab and Newline so on.
 static bool isBlankChar(char ch)
 {
     return ch == 0x09 || ch == 0x0A || ch == 0x0B || ch == 0x0C || ch == 0x0D || ch == 0x20;
 }
 
-// @brief Convert string to upper case and remove the blank character.
+/// @brief Convert string to upper case and remove the blank character.
 static String uniform(const String& str)
 {
     String rslt;

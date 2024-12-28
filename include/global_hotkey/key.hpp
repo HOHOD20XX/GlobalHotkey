@@ -124,15 +124,15 @@ constexpr uint KY_LAST = KY_PA1;
 namespace gbhk
 {
 
-// @brief Check if the modifiers is valid.
-// @return True if the modifiers not equal 0, else False.
-// @note Check if the modifiers contain at least one modifier.
+/// @brief Check if the modifiers is valid.
+/// @return True if the modifiers not equal 0, else False.
+/// @note Check if the modifiers contain at least one modifier.
 bool isValidModifers(uint modifiers);
 
-// @brief Check if the key is valid.
-// @return True if the key is valid keyboard value
-// (can be directly input by keyboard, except modifier (Alt, Ctrl...))
-// else False.
+/// @brief Check if the key is valid.
+/// @return True if the key is valid keyboard value
+/// (can be directly input by keyboard, except modifier (Alt, Ctrl...))
+/// else False.
 bool isValidKey(uint key);
 
 String getModifierString(Modifier modifier);
@@ -141,13 +141,13 @@ String getModifiersString(uint modifiers, char connector = '+', bool hasSpace = 
 
 String getKeyString(uint key);
 
-// @return Return static_cast<Modifier>(0) if the string is invalid.
+/// @note Return static_cast<Modifier>(0) if the string is invalid.
 Modifier getModifierFromString(const String& str);
 
-// @return Return 0 if the string is invalid.
+/// @note Return 0 if the string is invalid.
 uint getModifiersFromString(const String& str, char connector = '+');
 
-// @return Return 0 if the string is invalid.
+/// @note Return 0 if the string is invalid.
 uint getKeyFromString(const String& str);
 
 uint getNativeModifier(Modifier modifier);
