@@ -136,6 +136,9 @@ GBHK_NODISCARD uint HookGlobalHotkey::end()
 
 GBHK_NODISCARD uint HookGlobalHotkey::add(const KeyCombination& keycomb, VoidFunc callbackFunc)
 {
+    if (!keycomb.isValid())
+        return RC_INVALID_KEY_COMBINATION;
+
     uint rslt = RC_SUCCESS;
 
     KeyCombination _keycomb(keycomb.modifiers(), keycomb.nativeKey(), keycomb.isAutoRepeat());
@@ -154,6 +157,9 @@ GBHK_NODISCARD uint HookGlobalHotkey::add(const KeyCombination& keycomb, VoidFun
 
 GBHK_NODISCARD uint HookGlobalHotkey::add(const KeyCombination& keycomb, ArgFunc callbackFunc, Arg arg)
 {
+    if (!keycomb.isValid())
+        return RC_INVALID_KEY_COMBINATION;
+
     uint rslt = RC_SUCCESS;
 
     KeyCombination _keycomb(keycomb.modifiers(), keycomb.nativeKey(), keycomb.isAutoRepeat());
@@ -192,6 +198,9 @@ GBHK_NODISCARD uint HookGlobalHotkey::remove(const KeyCombination& keycomb)
 
 GBHK_NODISCARD uint HookGlobalHotkey::replace(const KeyCombination& oldKeycomb, const KeyCombination& newKeycomb)
 {
+    if (!newKeycomb.isValid())
+        return RC_INVALID_KEY_COMBINATION;
+
     // If the old key combination equal to new key combination do nothing.
     if (oldKeycomb.equal(newKeycomb))
         return RC_OLD_EQUAL_NEW;

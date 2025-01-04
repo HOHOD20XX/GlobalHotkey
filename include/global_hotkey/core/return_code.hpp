@@ -25,7 +25,9 @@ enum ReturnCode : uchar
     RC_ALREADY_EXISTED          = 0x04,
     // The old value is equal to new value.
     // (e.g. #RegGlobalHotkey::replace() cant't use two identical #KeyCombination as oldkeycomb and newKeycomb.
-    RC_OLD_EQUAL_NEW            = 0x05
+    RC_OLD_EQUAL_NEW            = 0x05,
+    // Attempt register or hook a invalid key combination.
+    RC_INVALID_KEY_COMBINATION  = 0x06
 };
 
 inline String getReturnCodeMessage(uchar rc)
@@ -48,6 +50,9 @@ inline String getReturnCodeMessage(uchar rc)
         case RC_OLD_EQUAL_NEW:
             return "The specified value is equal to the value to be replacee, "
                    "e.g. Replace hotkey Ctrl+C to Ctrl+C.";
+       case RC_INVALID_KEY_COMBINATION:
+            return "The specified key combination is invalid, "
+                   "e.g. register a hotkey with invalid key combination.";
         default:
             return "The return code of external API (usually a system API): " + std::to_string(rc) + ".";
     }

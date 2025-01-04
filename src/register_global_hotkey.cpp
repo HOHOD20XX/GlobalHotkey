@@ -121,6 +121,9 @@ GBHK_NODISCARD uint RegGlobalHotkey::add(const KeyCombination& keycomb, VoidFunc
     if (std::this_thread::get_id() == getWorkThreadId_())
         return RC_CALL_IN_WRONG_THREAD;
 
+    if (!keycomb.isValid())
+        return RC_INVALID_KEY_COMBINATION;
+
     // If the key combination already exists do nothing.
     if (getVoidFunc_(keycomb) || getArgFuncArg_(keycomb).first)
         return RC_ALREADY_EXISTED;
@@ -147,6 +150,9 @@ GBHK_NODISCARD uint RegGlobalHotkey::add(const KeyCombination& keycomb, ArgFunc 
     // This function can't called in the work thread, else program get stuck in a loop.
     if (std::this_thread::get_id() == getWorkThreadId_())
         return RC_CALL_IN_WRONG_THREAD;
+
+    if (!keycomb.isValid())
+        return RC_INVALID_KEY_COMBINATION;
 
     // If the key combination already exists do nothing.
     if (getVoidFunc_(keycomb) || getArgFuncArg_(keycomb).first)
@@ -201,6 +207,9 @@ GBHK_NODISCARD uint RegGlobalHotkey::replace(const KeyCombination& oldKeycomb, c
     // This function can't called in the work thread, else program get stuck in a loop.
     if (std::this_thread::get_id() == getWorkThreadId_())
         return RC_CALL_IN_WRONG_THREAD;
+
+    if (!newKeycomb.isValid())
+        return RC_INVALID_KEY_COMBINATION;
 
     // If the old key combination equal to new key combination do nothing.
     if (oldKeycomb.equal(newKeycomb))
