@@ -1,5 +1,5 @@
-#ifndef GLOBAL_HOTKEY_BASE_GLOBAL_HOTKEY_HPP
-#define GLOBAL_HOTKEY_BASE_GLOBAL_HOTKEY_HPP
+#ifndef GLOBAL_HOTKEY_GLOBAL_HOTKEY_BASE_HPP
+#define GLOBAL_HOTKEY_GLOBAL_HOTKEY_BASE_HPP
 
 #include <chrono>   // chrono
 #include <atomic>   // atomic
@@ -14,7 +14,7 @@ namespace gbhk
 
 void sleep(ullong millisecond);
 
-class BaseGlobalHotkey
+class GlobalHotkeyBase
 {
 public:
     bool isRunning() const;
@@ -44,10 +44,10 @@ public:
     GBHK_NODISCARD virtual uint replace(const KeyCombination& oldKeycomb, const KeyCombination& newKeycomb) = 0;
 
 protected:
-    BaseGlobalHotkey();
-    ~BaseGlobalHotkey();
-    BaseGlobalHotkey(const BaseGlobalHotkey& other) = delete;
-    BaseGlobalHotkey& operator=(const BaseGlobalHotkey& other) = delete;
+    GlobalHotkeyBase();
+    ~GlobalHotkeyBase();
+    GlobalHotkeyBase(const GlobalHotkeyBase& other) = delete;
+    GlobalHotkeyBase& operator=(const GlobalHotkeyBase& other) = delete;
 
     void setTimePoint_();
     void waitInterval_();
@@ -68,4 +68,4 @@ private:
 
 } // namespace gbhk
 
-#endif // !GLOBAL_HOTKEY_BASE_GLOBAL_HOTKEY_HPP
+#endif // !GLOBAL_HOTKEY_GLOBAL_HOTKEY_BASE_HPP

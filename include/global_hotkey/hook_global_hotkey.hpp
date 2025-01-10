@@ -1,7 +1,7 @@
 #ifndef GLOBAL_HOTKEY_HOOK_GLOBAL_HOTKEY_HPP
 #define GLOBAL_HOTKEY_HOOK_GLOBAL_HOTKEY_HPP
 
-#include "base_global_hotkey.hpp"
+#include "global_hotkey_base.hpp"
 
 // Only usable in windows platform.
 #ifdef GLOBAL_HOTKEY_WIN
@@ -11,7 +11,7 @@
 namespace gbhk
 {
 
-class HookGlobalHotkey final : public BaseGlobalHotkey
+class HookGlobalHotkey final : public GlobalHotkeyBase
 {
 public:
     static HookGlobalHotkey& getInstance();

@@ -1,14 +1,14 @@
 #ifndef GLOBAL_HOTKEY_REGISTER_GLOBAL_HOTKEY_HPP
 #define GLOBAL_HOTKEY_REGISTER_GLOBAL_HOTKEY_HPP
 
-#include "base_global_hotkey.hpp"
+#include "global_hotkey_base.hpp"
 
 #include <unordered_map>    // unordered_map
 
 namespace gbhk
 {
 
-class RegGlobalHotkey final : public BaseGlobalHotkey
+class RegGlobalHotkey final : public GlobalHotkeyBase
 {
 public:
     static RegGlobalHotkey& getInstance();
