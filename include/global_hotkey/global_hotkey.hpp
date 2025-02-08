@@ -3,7 +3,7 @@
 // Web: https://github.com/JaderoChan/GlobalHotkey
 // You can contact me by email: c_dl_cn@outlook.com
 
-// MIT License
+// GPL-3.0 License
 //
 // Copyright (c) 2024 頔珞JaderoChan
 //
