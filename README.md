@@ -6,4 +6,4 @@ Available for all type program.
 
 Support use hook low level keyboard event to instead of register hotkey.
 
-Only support for windows now, but more platforms will be supported in the future.
+Only support for windows now.
