@@ -8,8 +8,6 @@
 namespace gbhk
 {
 
-using uchar         = unsigned char;
-using uint          = unsigned int;
 using llong         = long long;
 using ullong        = unsigned long long;
 

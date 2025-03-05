@@ -12,25 +12,25 @@ namespace gbhk
 namespace keyboard_hook
 {
 
-enum State : uchar
+enum State
 {
     PRESSED,
     RELEASED
 };
 
-void addKeyEventCallback(uint key, State state, VoidFunc callbackFunc);
+void addKeyEventCallback(int key, State state, VoidFunc callbackFunc);
 
-void addKeyEventCallback(uint key, State state, ArgFunc callbackFunc, Arg arg);
+void addKeyEventCallback(int key, State state, ArgFunc callbackFunc, Arg arg);
 
-void setKeyPressedCallback(void (*callbackFunc)(uint key));
+void setKeyPressedCallback(void (*callbackFunc)(int key));
 
-void setKeyReleaseddCallback(void (*callbackFunc)(uint key));
-
-/// @return If success return #RC_SUCCESS, else return error code.
-uint run();
+void setKeyReleaseddCallback(void (*callbackFunc)(int key));
 
 /// @return If success return #RC_SUCCESS, else return error code.
-uint end();
+int run();
+
+/// @return If success return #RC_SUCCESS, else return error code.
+int end();
 
 } // namespace keyboard_hook
 

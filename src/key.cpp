@@ -152,12 +152,12 @@ static String uniform(const String& str)
     return rslt;
 }
 
-bool isValidModifers(uint modifiers)
+bool isValidModifers(int modifiers)
 {
     return modifiers != 0;
 }
 
-bool isValidKey(uint key)
+bool isValidKey(int key)
 {
     return (key >= '0' && key <= '9') || (key >= 'A' && key <= 'Z') || (key >= KY_FIRST && key <= KY_LAST);
 }
@@ -178,7 +178,7 @@ String getModifierString(Modifier modifier)
     }
 }
 
-String getModifiersString(uint modifiers, char connector, bool hasSpace)
+String getModifiersString(int modifiers, char connector, bool hasSpace)
 {
     String _connector = hasSpace ? (' ' + std::string(1, connector) + ' ') : std::string(1, connector);
 
@@ -208,7 +208,7 @@ String getModifiersString(uint modifiers, char connector, bool hasSpace)
     return rslt;
 }
 
-String getKeyString(uint key)
+String getKeyString(int key)
 {
     switch (key) {
         case KY_MOUSEBUTTON_LEFT:
@@ -432,12 +432,12 @@ Modifier getModifierFromString(const String& str)
         return static_cast<Modifier>(0);
 }
 
-uint getModifiersFromString(const String& str, char connector)
+int getModifiersFromString(const String& str, char connector)
 {
     std::stringstream ss;
     ss << str;
 
-    uint rslt = 0;
+    int rslt = 0;
 
     String s;
     while (std::getline(ss, s, connector)) {
@@ -452,7 +452,7 @@ uint getModifiersFromString(const String& str, char connector)
     return rslt;
 }
 
-uint getKeyFromString(const String& str)
+int getKeyFromString(const String& str)
 {
     static const Strings keyTextTable = {
         uniform(KEY_TEXT_MOUSEBUTTON_LEFT),
@@ -567,7 +567,7 @@ uint getKeyFromString(const String& str)
             return 0;
     }
 
-    for (uint i = 0; i < keyTextTable.size(); ++i) {
+    for (int i = 0; i < keyTextTable.size(); ++i) {
         if (s != keyTextTable[i])
             continue;
 
@@ -577,7 +577,7 @@ uint getKeyFromString(const String& str)
     return 0;
 }
 
-uint getNativeModifier(Modifier modifier)
+int getNativeModifier(Modifier modifier)
 {
     switch (modifier) {
         case META:
@@ -617,9 +617,9 @@ uint getNativeModifier(Modifier modifier)
     }
 }
 
-uint getNativeModifiers(uint modifiers, bool isAutoRepeat)
+int getNativeModifiers(int modifiers, bool isAutoRepeat)
 {
-    uint mods = 0;
+    int mods = 0;
 
     if (modifiers & META)
         mods |= getNativeModifier(META);
@@ -647,7 +647,7 @@ uint getNativeModifiers(uint modifiers, bool isAutoRepeat)
     return mods;
 }
 
-uint getNativeKey(uint key)
+int getNativeKey(int key)
 {
     switch (key) {
         case KY_MOUSEBUTTON_LEFT:

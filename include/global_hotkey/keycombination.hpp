@@ -19,21 +19,21 @@ public:
     };
 
     KeyCombination() = default;
-    KeyCombination(uint modifiers, uint key, bool isAutoRepeat = false);
+    KeyCombination(int modifiers, int key, bool isAutoRepeat = false);
 
     static KeyCombination fromString(const String& str, char connector = '+');
 
-    uint modifiers() const;
-    uint nativeModifiers() const;
-    uint key() const;
-    uint nativeKey() const;
+    int modifiers() const;
+    int nativeModifiers() const;
+    int key() const;
+    int nativeKey() const;
     bool isAutoRepeat() const;
 
-    void setModifiers(uint modifiers);
+    void setModifiers(int modifiers);
     void addModifier(Modifier modifier);
     void removeModifier(Modifier modifier);
     void resetModifiers();
-    void setKey(uint key);
+    void setKey(int key);
     void setIsAutoRepeat(bool isAutoRepeat);
 
     /// @brief #modifiers and #key be set to 0, and #isAutoRepeat be set to false.
@@ -69,8 +69,8 @@ public:
     bool operator!=(const KeyCombination& other) const;
 
 private:
-    uint mods_          = 0;
-    uint key_           = 0;
+    int mods_           = 0;
+    int key_            = 0;
     bool isAutoRepeat_  = false;
 };
 

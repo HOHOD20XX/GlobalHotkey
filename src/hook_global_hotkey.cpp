@@ -19,7 +19,7 @@ HookGlobalHotkey::HookGlobalHotkey() :
 
 HookGlobalHotkey::~HookGlobalHotkey()
 {
-    uint rslt = end();
+    int rslt = end();
 }
 
 HookGlobalHotkey& HookGlobalHotkey::getInstance()
@@ -28,7 +28,7 @@ HookGlobalHotkey& HookGlobalHotkey::getInstance()
     return instance;
 }
 
-GBHK_NODISCARD uint HookGlobalHotkey::start()
+GBHK_NODISCARD int HookGlobalHotkey::start()
 {
     namespace chr = std::chrono;
 
@@ -40,7 +40,7 @@ GBHK_NODISCARD uint HookGlobalHotkey::start()
     keyboard_hook::setKeyPressedCallback(&addPressedKey_);
     keyboard_hook::setKeyReleaseddCallback(&removePressedKey_);
     // Start hook the #LowKeyboardEvent.
-    uint rslt = keyboard_hook::run();
+    int rslt = keyboard_hook::run();
     // If failed to hook return error code.
     if (rslt != RC_SUCCESS)
         return rslt;
@@ -108,7 +108,7 @@ GBHK_NODISCARD uint HookGlobalHotkey::start()
     return RC_SUCCESS;
 }
 
-GBHK_NODISCARD uint HookGlobalHotkey::end()
+GBHK_NODISCARD int HookGlobalHotkey::end()
 {
     // If is not running do nothing.
     if (!isRunning_)
@@ -134,12 +134,12 @@ GBHK_NODISCARD uint HookGlobalHotkey::end()
     return keyboard_hook::end();
 }
 
-GBHK_NODISCARD uint HookGlobalHotkey::add(const KeyCombination& keycomb, VoidFunc callbackFunc)
+GBHK_NODISCARD int HookGlobalHotkey::add(const KeyCombination& keycomb, VoidFunc callbackFunc)
 {
     if (!keycomb.isValid())
         return RC_INVALID_KEY_COMBINATION;
 
-    uint rslt = RC_SUCCESS;
+    int rslt = RC_SUCCESS;
 
     KeyCombination _keycomb(keycomb.modifiers(), keycomb.nativeKey(), keycomb.isAutoRepeat());
 
@@ -155,12 +155,12 @@ GBHK_NODISCARD uint HookGlobalHotkey::add(const KeyCombination& keycomb, VoidFun
     return rslt;
 }
 
-GBHK_NODISCARD uint HookGlobalHotkey::add(const KeyCombination& keycomb, ArgFunc callbackFunc, Arg arg)
+GBHK_NODISCARD int HookGlobalHotkey::add(const KeyCombination& keycomb, ArgFunc callbackFunc, Arg arg)
 {
     if (!keycomb.isValid())
         return RC_INVALID_KEY_COMBINATION;
 
-    uint rslt = RC_SUCCESS;
+    int rslt = RC_SUCCESS;
 
     KeyCombination _keycomb(keycomb.modifiers(), keycomb.nativeKey(), keycomb.isAutoRepeat());
 
@@ -176,9 +176,9 @@ GBHK_NODISCARD uint HookGlobalHotkey::add(const KeyCombination& keycomb, ArgFunc
     return rslt;
 }
 
-GBHK_NODISCARD uint HookGlobalHotkey::remove(const KeyCombination& keycomb)
+GBHK_NODISCARD int HookGlobalHotkey::remove(const KeyCombination& keycomb)
 {
-    uint rslt = RC_SUCCESS;
+    int rslt = RC_SUCCESS;
 
     KeyCombination _keycomb(keycomb.modifiers(), keycomb.nativeKey(), keycomb.isAutoRepeat());
 
@@ -196,7 +196,7 @@ GBHK_NODISCARD uint HookGlobalHotkey::remove(const KeyCombination& keycomb)
     return rslt;
 }
 
-GBHK_NODISCARD uint HookGlobalHotkey::replace(const KeyCombination& oldKeycomb, const KeyCombination& newKeycomb)
+GBHK_NODISCARD int HookGlobalHotkey::replace(const KeyCombination& oldKeycomb, const KeyCombination& newKeycomb)
 {
     if (!newKeycomb.isValid())
         return RC_INVALID_KEY_COMBINATION;
@@ -205,7 +205,7 @@ GBHK_NODISCARD uint HookGlobalHotkey::replace(const KeyCombination& oldKeycomb, 
     if (oldKeycomb.equal(newKeycomb))
         return RC_OLD_EQUAL_NEW;
 
-    uint rslt = RC_SUCCESS;
+    int rslt = RC_SUCCESS;
 
     KeyCombination _oldKeycomb(oldKeycomb.modifiers(), oldKeycomb.nativeKey(), oldKeycomb.isAutoRepeat());
     KeyCombination _newKeycomb(newKeycomb.modifiers(), newKeycomb.nativeKey(), newKeycomb.isAutoRepeat());
@@ -236,7 +236,7 @@ void HookGlobalHotkey::setDebouncedTime(ullong millisecond)
     debouncedTime_ = millisecond;
 }
 
-void HookGlobalHotkey::addPressedKey_(uint key)
+void HookGlobalHotkey::addPressedKey_(int key)
 {
     std::lock_guard<std::mutex> lock(mtxListenKeyChanged_);
 
@@ -253,7 +253,7 @@ void HookGlobalHotkey::addPressedKey_(uint key)
     }
 }
 
-void HookGlobalHotkey::removePressedKey_(uint key)
+void HookGlobalHotkey::removePressedKey_(int key)
 {
     std::lock_guard<std::mutex> lock(mtxListenKeyChanged_);
 

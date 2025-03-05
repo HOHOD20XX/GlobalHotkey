@@ -17,10 +17,10 @@ namespace keyboard_hook
 
 static std::mutex gMtx;
 static HHOOK gHhook = nullptr;
-static void (*gKeyPressedCallback)(uint key) = nullptr;
-static void (*gKeyReleasedCallback)(uint key) = nullptr;
-static std::unordered_map<uint, std::pair<State, VoidFunc>> gVoidFuncs;
-static std::unordered_map<uint, std::pair<State, ArgFuncArg>> gArgFuncArgs;
+static void (*gKeyPressedCallback)(int key) = nullptr;
+static void (*gKeyReleasedCallback)(int key) = nullptr;
+static std::unordered_map<int, std::pair<State, VoidFunc>> gVoidFuncs;
+static std::unordered_map<int, std::pair<State, ArgFuncArg>> gArgFuncArgs;
 
 static LRESULT WINAPI LowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
 {
@@ -63,7 +63,7 @@ static LRESULT WINAPI LowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lPar
     return CallNextHookEx(NULL, nCode, wParam, lParam);
 }
 
-void addKeyEventCallback(uint key, State state, VoidFunc callbackFunc)
+void addKeyEventCallback(int key, State state, VoidFunc callbackFunc)
 {
     std::lock_guard<std::mutex> lock(gMtx);
 
@@ -72,7 +72,7 @@ void addKeyEventCallback(uint key, State state, VoidFunc callbackFunc)
     gVoidFuncs.insert({ key, { state, callbackFunc } });
 }
 
-void addKeyEventCallback(uint key, State state, ArgFunc callbackFunc, Arg arg)
+void addKeyEventCallback(int key, State state, ArgFunc callbackFunc, Arg arg)
 {
     std::lock_guard<std::mutex> lock(gMtx);
 
@@ -81,28 +81,28 @@ void addKeyEventCallback(uint key, State state, ArgFunc callbackFunc, Arg arg)
     gArgFuncArgs.insert({ key, { state, { callbackFunc, arg } } });
 }
 
-void setKeyPressedCallback(void (*callbackFunc)(uint key))
+void setKeyPressedCallback(void (*callbackFunc)(int key))
 {
     std::lock_guard<std::mutex> lock(gMtx);
     gKeyPressedCallback = callbackFunc;
 }
 
-void setKeyReleaseddCallback(void (*callbackFunc)(uint key))
+void setKeyReleaseddCallback(void (*callbackFunc)(int key))
 {
     std::lock_guard<std::mutex> lock(gMtx);
     gKeyReleasedCallback = callbackFunc;
 }
 
-uint run()
+int run()
 {
-    gHhook = ::SetWindowsHookExA(WH_KEYBOARD_LL, LowLevelKeyboardProc, NULL, 0);
+    gHhook = ::SetWindowsHookExA(WH_KEYBOARD_LL, &LowLevelKeyboardProc, NULL, 0);
 
     if (gHhook)
         return RC_SUCCESS;
     return ::GetLastError();
 }
 
-uint end()
+int end()
 {
     if (::UnhookWindowsHookEx(gHhook)) {
         gHhook = nullptr;

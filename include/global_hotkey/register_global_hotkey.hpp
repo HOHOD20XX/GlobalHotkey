@@ -13,17 +13,17 @@ class RegGlobalHotkey final : public GlobalHotkeyBase
 public:
     static RegGlobalHotkey& getInstance();
 
-    GBHK_NODISCARD uint start();
-    GBHK_NODISCARD uint end();
-    GBHK_NODISCARD uint add(const KeyCombination& keycomb, VoidFunc callbackFunc);
-    GBHK_NODISCARD uint add(const KeyCombination& keycomb, ArgFunc callbackFunc, Arg arg);
-    GBHK_NODISCARD uint remove(const KeyCombination& keycomb);
-    GBHK_NODISCARD uint replace(const KeyCombination& oldKeycomb, const KeyCombination& newKeycomb);
+    GBHK_NODISCARD int start();
+    GBHK_NODISCARD int end();
+    GBHK_NODISCARD int add(const KeyCombination& keycomb, VoidFunc callbackFunc);
+    GBHK_NODISCARD int add(const KeyCombination& keycomb, ArgFunc callbackFunc, Arg arg);
+    GBHK_NODISCARD int remove(const KeyCombination& keycomb);
+    GBHK_NODISCARD int replace(const KeyCombination& oldKeycomb, const KeyCombination& newKeycomb);
 
 private:
     struct Task
     {
-        enum OpCode : uchar
+        enum OpCode
         {
             NONE,
             ADD,
@@ -59,14 +59,14 @@ private:
     RegGlobalHotkey& operator=(const RegGlobalHotkey& other) = delete;
 
     void work_();
-    GBHK_NODISCARD uint end_();
-    GBHK_NODISCARD uint add_(const KeyCombination& keycomb);
-    GBHK_NODISCARD uint remove_(const KeyCombination& keycomb);
-    GBHK_NODISCARD uint replace_(const KeyCombination& oldKeycomb, const KeyCombination& newKeycomb);
+    GBHK_NODISCARD int end_();
+    GBHK_NODISCARD int add_(const KeyCombination& keycomb);
+    GBHK_NODISCARD int remove_(const KeyCombination& keycomb);
+    GBHK_NODISCARD int replace_(const KeyCombination& oldKeycomb, const KeyCombination& newKeycomb);
 
     void setTask_(const Task& task);
     GBHK_NODISCARD Task getTask_();
-    GBHK_NODISCARD uint waitTaskFinished_() const;
+    GBHK_NODISCARD int waitTaskFinished_() const;
 
     VoidFunc getVoidFunc_(const KeyCombination& keycomb);
     ArgFuncArg getArgFuncArg_(const KeyCombination& keycomb);
@@ -78,13 +78,13 @@ private:
     Task task_;
     std::atomic<bool> hasTask_;
     std::atomic<bool> taskIsFinished_;
-    std::atomic<uint> taskResult_;
-    std::atomic<uint> keyId_;
+    std::atomic<int> taskResult_;
+    std::atomic<int> keyId_;
     std::mutex mtx_;
     // Mapping of the key combination and callback functions.
     std::unordered_map<KeyCombination, VoidFunc, KeyCombination::Hash> voidFuncs_;
     std::unordered_map<KeyCombination, ArgFuncArg, KeyCombination::Hash> argFuncArgs_;
-    std::unordered_map<uint, KeyCombination> keyIdKeycombs_;
+    std::unordered_map<int, KeyCombination> keyIdKeycombs_;
 };
 
 } // namespace gbhk

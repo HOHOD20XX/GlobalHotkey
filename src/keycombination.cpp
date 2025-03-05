@@ -14,7 +14,7 @@
 namespace gbhk
 {
 
-KeyCombination::KeyCombination(uint modifiers, uint key, bool isAutoRepeat) :
+KeyCombination::KeyCombination(int modifiers, int key, bool isAutoRepeat) :
     mods_(modifiers), key_(key), isAutoRepeat_(isAutoRepeat)
 {}
 
@@ -45,28 +45,28 @@ KeyCombination KeyCombination::fromString(const String& str, char connector)
 
 size_t KeyCombination::Hash::operator()(const KeyCombination& obj) const
 {
-    auto h1 = std::hash<uint>()(obj.mods_);
-    auto h2 = std::hash<uint>()(obj.key_);
+    auto h1 = std::hash<int>()(obj.mods_);
+    auto h2 = std::hash<int>()(obj.key_);
 
     return h1 ^ (h2 << 8);
 }
 
-uint KeyCombination::modifiers() const
+int KeyCombination::modifiers() const
 {
     return mods_;
 }
 
-uint KeyCombination::nativeModifiers() const
+int KeyCombination::nativeModifiers() const
 {
     return getNativeModifiers(mods_, isAutoRepeat_);
 }
 
-uint KeyCombination::key() const
+int KeyCombination::key() const
 {
     return key_;
 }
 
-uint KeyCombination::nativeKey() const
+int KeyCombination::nativeKey() const
 {
     return getNativeKey(key_);
 }
@@ -76,7 +76,7 @@ bool KeyCombination::isAutoRepeat() const
     return isAutoRepeat_;
 }
 
-void KeyCombination::setModifiers(uint modifier)
+void KeyCombination::setModifiers(int modifier)
 {
     mods_ = modifier;
 }
@@ -96,7 +96,7 @@ void KeyCombination::resetModifiers()
     mods_ = 0;
 }
 
-void KeyCombination::setKey(uint key)
+void KeyCombination::setKey(int key)
 {
     key_ = key;
 }

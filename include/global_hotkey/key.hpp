@@ -8,7 +8,7 @@
 namespace gbhk
 {
 
-enum Modifier : uint
+enum Modifier
 {
     META    = 0X01,
     ALT     = 0X02,
@@ -16,7 +16,7 @@ enum Modifier : uint
     SHIFT   = 0X08
 };
 
-enum Key : uint
+enum Key
 {
     KY_MOUSEBUTTON_LEFT = 0X100,
     KY_MOUSEBUTTON_RIGHT,
@@ -116,8 +116,8 @@ enum Key : uint
     KY_PA1
 };
 
-constexpr uint KY_FIRST = KY_MOUSEBUTTON_LEFT;
-constexpr uint KY_LAST = KY_PA1;
+constexpr int KY_FIRST  = KY_MOUSEBUTTON_LEFT;
+constexpr int KY_LAST   = KY_PA1;
 
 } // namespace gbhk
 
@@ -127,34 +127,34 @@ namespace gbhk
 /// @brief Check if the modifiers is valid.
 /// @return True if the modifiers not equal 0, else False.
 /// @note Check if the modifiers contain at least one modifier.
-bool isValidModifers(uint modifiers);
+bool isValidModifers(int modifiers);
 
 /// @brief Check if the key is valid.
 /// @return True if the key is valid keyboard value
 /// (can be directly input by keyboard, except modifier (Alt, Ctrl...))
 /// else False.
-bool isValidKey(uint key);
+bool isValidKey(int key);
 
 String getModifierString(Modifier modifier);
 
-String getModifiersString(uint modifiers, char connector = '+', bool hasSpace = true);
+String getModifiersString(int modifiers, char connector = '+', bool hasSpace = true);
 
-String getKeyString(uint key);
+String getKeyString(int key);
 
 /// @note Return static_cast<Modifier>(0) if the string is invalid.
 Modifier getModifierFromString(const String& str);
 
 /// @note Return 0 if the string is invalid.
-uint getModifiersFromString(const String& str, char connector = '+');
+int getModifiersFromString(const String& str, char connector = '+');
 
 /// @note Return 0 if the string is invalid.
-uint getKeyFromString(const String& str);
+int getKeyFromString(const String& str);
 
-uint getNativeModifier(Modifier modifier);
+int getNativeModifier(Modifier modifier);
 
-uint getNativeModifiers(uint modifiers, bool isAutoRepeat);
+int getNativeModifiers(int modifiers, bool isAutoRepeat);
 
-uint getNativeKey(uint key);
+int getNativeKey(int key);
 
 } // namespace gbhk
 

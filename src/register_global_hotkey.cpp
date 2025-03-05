@@ -17,7 +17,7 @@ RegGlobalHotkey::RegGlobalHotkey() :
 
 RegGlobalHotkey::~RegGlobalHotkey()
 {
-    uint rslt = end();
+    int rslt = end();
 }
 
 RegGlobalHotkey& RegGlobalHotkey::getInstance()
@@ -26,7 +26,7 @@ RegGlobalHotkey& RegGlobalHotkey::getInstance()
     return instance;
 }
 
-GBHK_NODISCARD uint RegGlobalHotkey::start()
+GBHK_NODISCARD int RegGlobalHotkey::start()
 {
     // If the thread is running do nothing.
     if (isRunning_)
@@ -80,7 +80,7 @@ GBHK_NODISCARD uint RegGlobalHotkey::start()
     return RC_SUCCESS;
 }
 
-GBHK_NODISCARD uint RegGlobalHotkey::end()
+GBHK_NODISCARD int RegGlobalHotkey::end()
 {
     // If the thread is not running do nothing.
     if (!isRunning_)
@@ -93,7 +93,7 @@ GBHK_NODISCARD uint RegGlobalHotkey::end()
     Task tsk;
     tsk.opc = Task::END;
     setTask_(tsk);
-    uint rslt = waitTaskFinished_();
+    int rslt = waitTaskFinished_();
 
     // Set this flag to true to exit thread.
     shouldClose_ = true;
@@ -111,7 +111,7 @@ GBHK_NODISCARD uint RegGlobalHotkey::end()
     return rslt;
 }
 
-GBHK_NODISCARD uint RegGlobalHotkey::add(const KeyCombination& keycomb, VoidFunc callbackFunc)
+GBHK_NODISCARD int RegGlobalHotkey::add(const KeyCombination& keycomb, VoidFunc callbackFunc)
 {
     // If the thread is not running do nothing.
     if (!isRunning_)
@@ -133,7 +133,7 @@ GBHK_NODISCARD uint RegGlobalHotkey::add(const KeyCombination& keycomb, VoidFunc
     tsk.add.keycomb = keycomb;
 
     setTask_(tsk);
-    uint rslt = waitTaskFinished_();
+    int rslt = waitTaskFinished_();
 
     if (rslt == RC_SUCCESS)
         addFunc_(keycomb, callbackFunc);
@@ -141,7 +141,7 @@ GBHK_NODISCARD uint RegGlobalHotkey::add(const KeyCombination& keycomb, VoidFunc
     return rslt;
 }
 
-GBHK_NODISCARD uint RegGlobalHotkey::add(const KeyCombination& keycomb, ArgFunc callbackFunc, Arg arg)
+GBHK_NODISCARD int RegGlobalHotkey::add(const KeyCombination& keycomb, ArgFunc callbackFunc, Arg arg)
 {
     // If the thread is not running do nothing.
     if (!isRunning_)
@@ -163,7 +163,7 @@ GBHK_NODISCARD uint RegGlobalHotkey::add(const KeyCombination& keycomb, ArgFunc 
     tsk.add.keycomb = keycomb;
 
     setTask_(tsk);
-    uint rslt = waitTaskFinished_();
+    int rslt = waitTaskFinished_();
 
     if (rslt == RC_SUCCESS)
         addFunc_(keycomb, callbackFunc, arg);
@@ -171,7 +171,7 @@ GBHK_NODISCARD uint RegGlobalHotkey::add(const KeyCombination& keycomb, ArgFunc 
     return rslt;
 }
 
-GBHK_NODISCARD uint RegGlobalHotkey::remove(const KeyCombination& keycomb)
+GBHK_NODISCARD int RegGlobalHotkey::remove(const KeyCombination& keycomb)
 {
     // If the thread is not running do nothing.
     if (!isRunning_)
@@ -190,7 +190,7 @@ GBHK_NODISCARD uint RegGlobalHotkey::remove(const KeyCombination& keycomb)
     tsk.remove.keycomb = keycomb;
 
     setTask_(tsk);
-    uint rslt = waitTaskFinished_();
+    int rslt = waitTaskFinished_();
 
     if (rslt == RC_SUCCESS)
         removeFunc_(keycomb);
@@ -198,7 +198,7 @@ GBHK_NODISCARD uint RegGlobalHotkey::remove(const KeyCombination& keycomb)
     return rslt;
 }
 
-GBHK_NODISCARD uint RegGlobalHotkey::replace(const KeyCombination& oldKeycomb, const KeyCombination& newKeycomb)
+GBHK_NODISCARD int RegGlobalHotkey::replace(const KeyCombination& oldKeycomb, const KeyCombination& newKeycomb)
 {
     // If the thread is not running do nothing.
     if (!isRunning_)
@@ -232,7 +232,7 @@ GBHK_NODISCARD uint RegGlobalHotkey::replace(const KeyCombination& oldKeycomb, c
     tsk.replace.newKeycomb = newKeycomb;
 
     setTask_(tsk);
-    uint rslt = waitTaskFinished_();
+    int rslt = waitTaskFinished_();
 
     if (rslt == RC_SUCCESS) {
         removeFunc_(oldKeycomb);
@@ -252,7 +252,7 @@ void RegGlobalHotkey::work_()
 
     while (::PeekMessageA(&msg, NULL, 0, 0, PM_REMOVE)) {
         if (msg.message == WM_HOTKEY) {
-            uint keyid = static_cast<uint>(msg.wParam);
+            int keyid = static_cast<int>(msg.wParam);
             if (keyIdKeycombs_.find(keyid) != keyIdKeycombs_.end()) {
                 VoidFunc voidfunc = getVoidFunc_(keyIdKeycombs_[keyid]);
                 if (voidfunc) {
@@ -271,9 +271,9 @@ void RegGlobalHotkey::work_()
 }
 
 // @TODO How to fix the problem when UnregisterHotkey has error.
-GBHK_NODISCARD uint RegGlobalHotkey::end_()
+GBHK_NODISCARD int RegGlobalHotkey::end_()
 {
-    uint rslt = RC_SUCCESS;
+    int rslt = RC_SUCCESS;
 
     // Unregister all hotkey.
     for (const auto& var : keyIdKeycombs_) {
@@ -288,7 +288,7 @@ GBHK_NODISCARD uint RegGlobalHotkey::end_()
     return rslt;
 }
 
-GBHK_NODISCARD uint RegGlobalHotkey::add_(const KeyCombination& keycomb)
+GBHK_NODISCARD int RegGlobalHotkey::add_(const KeyCombination& keycomb)
 {
     if (::RegisterHotKey(NULL, keyId_, keycomb.nativeModifiers(), keycomb.nativeKey())) {
         keyIdKeycombs_.insert({ keyId_, keycomb });
@@ -298,7 +298,7 @@ GBHK_NODISCARD uint RegGlobalHotkey::add_(const KeyCombination& keycomb)
     return ::GetLastError();
 }
 
-GBHK_NODISCARD uint RegGlobalHotkey::remove_(const KeyCombination& keycomb)
+GBHK_NODISCARD int RegGlobalHotkey::remove_(const KeyCombination& keycomb)
 {
     for (const auto& var : keyIdKeycombs_) {
         if (var.second == keycomb) {
@@ -313,12 +313,12 @@ GBHK_NODISCARD uint RegGlobalHotkey::remove_(const KeyCombination& keycomb)
     return RC_NOT_FIND;
 }
 
-GBHK_NODISCARD uint RegGlobalHotkey::replace_(const KeyCombination& oldKeycomb, const KeyCombination& newKeycomb)
+GBHK_NODISCARD int RegGlobalHotkey::replace_(const KeyCombination& oldKeycomb, const KeyCombination& newKeycomb)
 {
     for (const auto& var : keyIdKeycombs_) {
         if (var.second == oldKeycomb) {
             if (::UnregisterHotKey(NULL, var.first)) {
-                uint keyid = var.first;
+                int keyid = var.first;
                 keyIdKeycombs_.erase(keyid);
 
                 if (::RegisterHotKey(NULL, keyid, newKeycomb.nativeModifiers(), newKeycomb.nativeKey())) {
@@ -360,7 +360,7 @@ GBHK_NODISCARD RegGlobalHotkey::Task RegGlobalHotkey::getTask_()
     return tsk;
 }
 
-GBHK_NODISCARD uint RegGlobalHotkey::waitTaskFinished_() const
+GBHK_NODISCARD int RegGlobalHotkey::waitTaskFinished_() const
 {
     while (!taskIsFinished_)
         sleep(1);
