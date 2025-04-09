@@ -1,9 +1,28 @@
-# Global Hotkey Library
+# Global Hotkey
 
-Available for all type program.
+[中文文档](README_CN.md)
 
-*e.g. Qt, MFC and other GUI, even console terminal.*
+## Features
 
-Support use hook low level keyboard event to instead of register hotkey.
+- Can be used for any type of program (even console programs)
 
-Only support for windows now.
+  Examples Qt application, MFC application, command line application, and so on.
+
+- Supports lowlevel keyboard evnt listening using Hook instead of registered hotkeys.
+- Supports debounced of Hook lowlevel keyboard evnt listening.
+- Good exception handling mechanism.
+- Virtual key enumeration.
+- Keycombination supported.
+
+## Attention
+
+- Only Windows platform supported now.
+- Not support compile to dynamic library now.
+
+## Compile
+
+## Usage
+
+## Example
+
+[Example Code](example/example1.cpp)
