@@ -3,12 +3,12 @@
 #include <sstream>  // stringstream
 
 #if defined(GLOBAL_HOTKEY_WIN)
-#include <Windows.h>
+    #include <Windows.h>
 #elif defined(GLOBAL_HOTKEY_MAC)
-#include <Carbon/Carbon.h>
+    #include <Carbon/Carbon.h>
 #elif defined(GLOBAL_HOTKEY_LINUX)
-#include <X11/Xlib.h>
-#include <xcb/xcb.h>
+    #include <X11/Xlib.h>
+    #include <xcb/xcb.h>
 #endif // GLOBAL_HOTKEY_WIN
 
 namespace gbhk

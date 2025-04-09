@@ -1,11 +1,11 @@
 #include <global_hotkey/register_global_hotkey.hpp>
 
 #if defined(GLOBAL_HOTKEY_WIN)
-#include <Windows.h>
+    #include <Windows.h>
 #elif defined(GLOBAL_HOTKEY_MAC)
-// TODO
+    // TODO
 #elif defined(GLOBAL_HOTKEY_LINUX)
-// TODO
+    // TODO
 #endif
 
 namespace gbhk
