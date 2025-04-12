@@ -1,28 +1,28 @@
 # Global Hotkey
 
-[中文文档](README_CN.md)
+[English](README_EN.md)
 
-## Features
+## 特点
 
-- Can be used for any type of program (even console programs)
+- 可用于任意类型的程序（甚至是控制台程序）
 
-  Examples Qt application, MFC application, command line application, and so on.
+  例如Qt、MFC、命令行等等。
 
-- Supports lowlevel keyboard evnt listening using Hook instead of registered hotkeys.
-- Supports debounced of Hook lowlevel keyboard evnt listening.
-- Good exception handling mechanism.
-- Virtual key enumeration.
-- Keycombination supported.
+- 支持使用Hook实现的按键监听替代注册型热键。
+- 支持Hook按键监听的去抖动。
+- 良好的异常处理机制。
+- 虚拟键枚举。
+- 组合热键支持。
 
-## Attention
+## 注意
 
-- Only Windows platform supported now.
-- Not support compile to dynamic library now.
+- 目前仅支持Windows平台。
+- 目前暂不支持动态库生成。
 
-## Compile
+## 编译
 
-## Usage
+## 使用
 
-## Example
+## 示例
 
-[Example Code](example/example1.cpp)
+[示例代码](example/example1.cpp)
