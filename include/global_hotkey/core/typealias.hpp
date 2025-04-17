@@ -1,15 +1,13 @@
 #ifndef GLOBAL_HOTKEY_TYPEALIAS_HPP
 #define GLOBAL_HOTKEY_TYPEALIAS_HPP
 
+#include <stddef.h> // size_t
 #include <string>   // string
 #include <utility>  // pair
 #include <vector>   // vector
 
 namespace gbhk
 {
-
-using llong         = long long;
-using ullong        = unsigned long long;
 
 using Arg           = void*;
 using VoidFunc      = void (*)();

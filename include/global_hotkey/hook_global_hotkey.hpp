@@ -22,7 +22,7 @@ public:
     GBHK_NODISCARD int add(const KeyCombination& keycomb, ArgFunc callbackFunc, Arg arg);
     GBHK_NODISCARD int remove(const KeyCombination& keycomb);
     GBHK_NODISCARD int replace(const KeyCombination& oldKeycomb, const KeyCombination& newKeycomb);
-    void setDebouncedTime(ullong millisecond);
+    void setDebouncedTime(size_t millisecond);
 
 private:
     HookGlobalHotkey();
@@ -36,7 +36,7 @@ private:
     static std::mutex mtxListenKeyChanged_;
     static KeyCombination pressed_;
 
-    std::atomic<ullong> debouncedTime_;
+    std::atomic<size_t> debouncedTime_;
     std::mutex mtxFuncsOperate_;
     std::unordered_map<KeyCombination, std::pair<bool, VoidFunc>, KeyCombination::Hash> voidFuncs_;
     std::unordered_map<KeyCombination, std::pair<bool, ArgFuncArg>, KeyCombination::Hash> argFuncArgs_;

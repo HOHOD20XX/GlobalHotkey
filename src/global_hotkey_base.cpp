@@ -3,7 +3,7 @@
 namespace gbhk
 {
 
-void sleep(ullong millisecond)
+void sleep(size_t millisecond)
 {
     std::this_thread::sleep_for(std::chrono::milliseconds(millisecond));
 }
@@ -20,7 +20,7 @@ bool GlobalHotkeyBase::isRunning() const
     return isRunning_;
 }
 
-void GlobalHotkeyBase::setIntervalTime(ullong millisecond)
+void GlobalHotkeyBase::setIntervalTime(size_t millisecond)
 {
     intervalTime_ = millisecond;
 }

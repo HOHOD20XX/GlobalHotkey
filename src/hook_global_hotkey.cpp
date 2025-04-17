@@ -248,7 +248,7 @@ GBHK_NODISCARD int HookGlobalHotkey::replace(const KeyCombination& oldKeycomb, c
     return rslt;
 }
 
-void HookGlobalHotkey::setDebouncedTime(ullong millisecond)
+void HookGlobalHotkey::setDebouncedTime(size_t millisecond)
 {
     debouncedTime_ = millisecond;
 }

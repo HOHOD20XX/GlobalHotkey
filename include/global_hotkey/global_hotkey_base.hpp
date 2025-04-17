@@ -12,13 +12,13 @@
 namespace gbhk
 {
 
-void sleep(ullong millisecond);
+void sleep(size_t millisecond);
 
 class GlobalHotkeyBase
 {
 public:
     bool isRunning() const;
-    void setIntervalTime(ullong millisecond);
+    void setIntervalTime(size_t millisecond);
 
     GBHK_NODISCARD virtual int start() = 0;
     GBHK_NODISCARD virtual int end() = 0;
@@ -60,7 +60,7 @@ protected:
     std::thread workThread_;
 
 private:
-    std::atomic<ullong> intervalTime_;
+    std::atomic<size_t> intervalTime_;
     std::chrono::steady_clock::time_point timePoint_;
     std::mutex mtx_;
     std::thread::id workThreadId_;
