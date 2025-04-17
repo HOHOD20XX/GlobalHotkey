@@ -16,6 +16,12 @@ if (NOT DEFINED GBHK_MASTER_PROJECT)
     endif ()
 endif ()
 
+if (WIN32)
+    set(GBHK_WINDOWS ON)
+else()
+    set(GBHK_WINDOWS OFF)
+endif()
+
 # Build shared library option.
 option(GBHK_BUILD_SHARED "Build shared library" OFF)
 
@@ -23,12 +29,17 @@ option(GBHK_BUILD_SHARED "Build shared library" OFF)
 option(GBHK_DISABLE_REGISTER "Disable register global hotkey" OFF)
 
 # Disable hook hotkey option.
-option(GBHK_DISABLE_HOOK "Disable hook global hotkey" OFF)
+option(GBHK_DISABLE_HOOK "Disable hook global hotkey" !GBHK_WINDOWS)
+
+if (NOT GBHK_WINDOWS AND NOT GBHK_DISABLE_HOOK)
+    message(FATAL_ERROR "Hook global hotkey is only supported on Windows")
+endif()
 
 # Build example option.
 option(GBHK_BUILD_EXAMPLE "Build example" ${GBHK_MASTER_PROJECT})
 
 # Only windows is supported for now.
+# Maybe be removed in the future.
 if (NOT WIN32)
     message(FATAL_ERROR "GlobalHotkey only supports Windows")
 endif()
