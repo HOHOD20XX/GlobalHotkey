@@ -1,4 +1,4 @@
-#include <global_hotkey/register_global_hotkey.hpp>
+#include "global_hotkey/register_global_hotkey.hpp"
 
 #if defined(GLOBAL_HOTKEY_WIN)
     #include <Windows.h>

@@ -1,9 +1,9 @@
-#include <global_hotkey/hook_global_hotkey.hpp>
+#include "global_hotkey/hook_global_hotkey.hpp"
 
 // Only usable in windows platform.
 #ifdef GLOBAL_HOTKEY_WIN
 
-#include <global_hotkey/keyboard_hook.hpp>
+#include "global_hotkey/keyboard_hook.hpp"
 
 #include <Windows.h>
 

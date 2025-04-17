@@ -1,4 +1,4 @@
-#include <global_hotkey/keycombination.hpp>
+#include "global_hotkey/keycombination.hpp"
 
 #include <sstream>  // stringstream
 
