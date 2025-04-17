@@ -1,9 +1,6 @@
 #ifndef GLOBAL_HOTKEY_CORE_HPP
 #define GLOBAL_HOTKEY_CORE_HPP
 
-#include <stddef.h>     // size_t
-
-#include "return_code.hpp"
 #include "typealias.hpp"
 
 #ifdef _MSVC_LANG
@@ -36,5 +33,17 @@
 #else 
     #error "Unsupported platform"
 #endif // _WIN32
+
+#ifdef GLOBAL_HOTKEY_WIN
+    #ifdef GLOBAL_HOTKEY_BUILD_SHARED
+        #define GBHK_API __declspec(dllexport)
+    #elif defined(GLOBAL_HOTKEY_SHARED)
+        #define GBHK_API __declspec(dllimport)
+    #else
+        #define GBHK_API
+    #endif // GLOBAL_HOTKEY_BUILD_SHARED
+#else
+    #define GBHK_API __attribute__((visibility("default")))
+#endif // GLOBAL_HOTKEY_WIN
 
 #endif // !GLOBAL_HOTKEY_CORE_HPP
