@@ -6,7 +6,7 @@
 #include <mutex>    // mutex, lock_guard
 #include <thread>   // thread
 
-#include "core/core.hpp"
+#include "core/base.hpp"
 #include "keycombination.hpp"
 
 namespace gbhk

@@ -1,7 +1,7 @@
 #ifndef GLOBAL_HOTKEY_KEYBOARD_HOOK_HPP
 #define GLOBAL_HOTKEY_KEYBOARD_HOOK_HPP
 
-#include "core/core.hpp"
+#include "core/base.hpp"
 
 // Only usable in windows platform.
 #ifdef GLOBAL_HOTKEY_WIN

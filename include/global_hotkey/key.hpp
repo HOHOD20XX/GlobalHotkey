@@ -3,7 +3,7 @@
 
 #include <string>   // string
 
-#include "core/core.hpp"
+#include "core/base.hpp"
 
 namespace gbhk
 {
