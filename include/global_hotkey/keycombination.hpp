@@ -1,7 +1,6 @@
 #ifndef GLOBAL_HOTKEY_KEYCOMBINATION_HPP
 #define GLOBAL_HOTKEY_KEYCOMBINATION_HPP
 
-#include <string>       // string
 #include <functional>   // hash
 
 #include "core/base.hpp"
@@ -10,7 +9,7 @@
 namespace gbhk
 {
 
-class KeyCombination
+class GBHK_API KeyCombination
 {
 public:
     struct Hash

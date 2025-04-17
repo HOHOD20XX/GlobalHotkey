@@ -3,15 +3,14 @@
 
 #include "global_hotkey_base.hpp"
 
-// Only usable in windows platform.
-#ifdef GLOBAL_HOTKEY_WIN
+#if defined(GLOBAL_HOTKEY_WIN) && !defined(GLOBAL_HOTKEY_NOHOOK)
 
 #include <unordered_map>    // unordered_map
 
 namespace gbhk
 {
 
-class HookGlobalHotkey final : public GlobalHotkeyBase
+class GBHK_API HookGlobalHotkey final : public GlobalHotkeyBase
 {
 public:
     static HookGlobalHotkey& getInstance();
@@ -44,6 +43,6 @@ private:
 
 } // namespace gbhk
 
-#endif // GLOBAL_HOTKEY_WIN
+#endif // GLOBAL_HOTKEY_WIN && !GLOBAL_HOTKEY_NOHOOK
 
 #endif // !GLOBAL_HOTKEY_HOOK_GLOBAL_HOTKEY_HPP

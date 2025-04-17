@@ -1,5 +1,5 @@
-#ifndef GLOBAL_HOTKEY_CORE_HPP
-#define GLOBAL_HOTKEY_CORE_HPP
+#ifndef GLOBAL_HOTKEY_BASE_HPP
+#define GLOBAL_HOTKEY_BASE_HPP
 
 #include "typealias.hpp"
 
@@ -46,4 +46,4 @@
     #define GBHK_API __attribute__((visibility("default")))
 #endif // GLOBAL_HOTKEY_WIN
 
-#endif // !GLOBAL_HOTKEY_CORE_HPP
+#endif // !GLOBAL_HOTKEY_BASE_HPP

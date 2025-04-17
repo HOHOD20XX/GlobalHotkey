@@ -1,11 +1,10 @@
 #include "global_hotkey/hook_global_hotkey.hpp"
 
-// Only usable in windows platform.
-#ifdef GLOBAL_HOTKEY_WIN
-
-#include "global_hotkey/keyboard_hook.hpp"
+#if defined(GLOBAL_HOTKEY_WIN) && !defined(GLOBAL_HOTKEY_NOHOOK)
 
 #include <Windows.h>
+
+#include "global_hotkey/keyboard_hook.hpp"
 
 namespace gbhk
 {
@@ -307,4 +306,4 @@ void HookGlobalHotkey::removePressedKey_(int key)
 
 } // namespace gbhk
 
-#endif // GLOBAL_HOTKEY_WIN
+#endif // GLOBAL_HOTKEY_WIN && !GLOBAL_HOTKEY_NOHOOK

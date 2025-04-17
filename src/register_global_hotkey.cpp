@@ -1,5 +1,7 @@
 #include "global_hotkey/register_global_hotkey.hpp"
 
+#ifndef GLOBAL_HOTKEY_NOREGISTER
+
 #if defined(GLOBAL_HOTKEY_WIN)
     #include <Windows.h>
 #elif defined(GLOBAL_HOTKEY_MAC)
@@ -436,3 +438,5 @@ void RegGlobalHotkey::removeFunc_(const KeyCombination& keycomb)
 }
 
 } // namespace gbhk
+
+#endif // !GLOBAL_HOTKEY_NOREGISTER

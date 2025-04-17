@@ -1,8 +1,6 @@
 #ifndef GLOBAL_HOTKEY_KEY_HPP
 #define GLOBAL_HOTKEY_KEY_HPP
 
-#include <string>   // string
-
 #include "core/base.hpp"
 
 namespace gbhk
@@ -127,34 +125,34 @@ namespace gbhk
 /// @brief Check if the modifiers is valid.
 /// @return True if the modifiers not equal 0, else False.
 /// @note Check if the modifiers contain at least one modifier.
-bool isValidModifers(int modifiers);
+GBHK_API bool isValidModifers(int modifiers);
 
 /// @brief Check if the key is valid.
 /// @return True if the key is valid keyboard value
 /// (can be directly input by keyboard, except modifier (Alt, Ctrl...))
 /// else False.
-bool isValidKey(int key);
+GBHK_API bool isValidKey(int key);
 
-String getModifierString(Modifier modifier);
+GBHK_API String getModifierString(Modifier modifier);
 
-String getModifiersString(int modifiers, char connector = '+', bool hasSpace = true);
+GBHK_API String getModifiersString(int modifiers, char connector = '+', bool hasSpace = true);
 
-String getKeyString(int key);
+GBHK_API String getKeyString(int key);
 
 /// @note Return static_cast<Modifier>(0) if the string is invalid.
-Modifier getModifierFromString(const String& str);
+GBHK_API Modifier getModifierFromString(const String& str);
 
 /// @note Return 0 if the string is invalid.
-int getModifiersFromString(const String& str, char connector = '+');
+GBHK_API int getModifiersFromString(const String& str, char connector = '+');
 
 /// @note Return 0 if the string is invalid.
-int getKeyFromString(const String& str);
+GBHK_API int getKeyFromString(const String& str);
 
-int getNativeModifier(Modifier modifier);
+GBHK_API int getNativeModifier(Modifier modifier);
 
-int getNativeModifiers(int modifiers, bool isAutoRepeat);
+GBHK_API int getNativeModifiers(int modifiers, bool isAutoRepeat);
 
-int getNativeKey(int key);
+GBHK_API int getNativeKey(int key);
 
 } // namespace gbhk
 

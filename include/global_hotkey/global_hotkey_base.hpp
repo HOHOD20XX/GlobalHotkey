@@ -1,20 +1,21 @@
 #ifndef GLOBAL_HOTKEY_GLOBAL_HOTKEY_BASE_HPP
 #define GLOBAL_HOTKEY_GLOBAL_HOTKEY_BASE_HPP
 
-#include <chrono>   // chrono
 #include <atomic>   // atomic
+#include <chrono>   // chrono
 #include <mutex>    // mutex, lock_guard
 #include <thread>   // thread
 
 #include "core/base.hpp"
+#include "core/return_code.hpp"
 #include "keycombination.hpp"
 
 namespace gbhk
 {
 
-void sleep(size_t millisecond);
+void GBHK_API sleep(size_t millisecond);
 
-class GlobalHotkeyBase
+class GBHK_API GlobalHotkeyBase
 {
 public:
     bool isRunning() const;

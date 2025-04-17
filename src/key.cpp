@@ -23,13 +23,13 @@ constexpr const char* MOD_TEXT_CTRL     = "Ctrl";
 constexpr const char* MOD_TEXT_SHIFT    = "Shift";
 
 #if defined(GLOBAL_HOTKEY_WIN)
-constexpr const char* MOD_TEXT_META     = MOD_TEXT_WIN;
+    constexpr const char* MOD_TEXT_META     = MOD_TEXT_WIN;
 #elif defined(GLOBAL_HOTKEY_MAC)
-constexpr const char* MOD_TEXT_META     = MOD_TEXT_CMD_1;
+    constexpr const char* MOD_TEXT_META     = MOD_TEXT_CMD_1;
 #elif defined(GLOBAL_HOTKEY_LINUX)
-constexpr const char* MOD_TEXT_META     = MOD_TEXT_SUPER;
+    constexpr const char* MOD_TEXT_META     = MOD_TEXT_SUPER;
 #else
-constexpr const char* MOD_TEXT_META     = "";
+    constexpr const char* MOD_TEXT_META     = "";
 #endif // GLOBAL_HOTKEY_WIN
 
 constexpr const char* KEY_TEXT_MOUSEBUTTON_LEFT     = "Left Mouse Button";
@@ -462,8 +462,7 @@ int getModifiersFromString(const String& str, char connector)
 
 int getKeyFromString(const String& str)
 {
-    static const Strings keyTextTable =
-    {
+    static const Strings keyTextTable = {
         uniform(KEY_TEXT_MOUSEBUTTON_LEFT),
         uniform(KEY_TEXT_MOUSEBUTTON_RIGHT),
         uniform(KEY_TEXT_MOUSEBUTTON_MIDDLE),

@@ -3,12 +3,14 @@
 
 #include "global_hotkey_base.hpp"
 
+#ifndef GLOBAL_HOTKEY_NOREGISTER
+
 #include <unordered_map>    // unordered_map
 
 namespace gbhk
 {
 
-class RegGlobalHotkey final : public GlobalHotkeyBase
+class GBHK_API RegGlobalHotkey final : public GlobalHotkeyBase
 {
 public:
     static RegGlobalHotkey& getInstance();
@@ -88,5 +90,7 @@ private:
 };
 
 } // namespace gbhk
+
+#endif // !GLOBAL_HOTKEY_NOREGISTER
 
 #endif // !GLOBAL_HOTKEY_REGISTER_GLOBAL_HOTKEY_HPP

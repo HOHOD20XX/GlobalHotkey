@@ -3,8 +3,7 @@
 
 #include "core/base.hpp"
 
-// Only usable in windows platform.
-#ifdef GLOBAL_HOTKEY_WIN
+#if defined(GLOBAL_HOTKEY_WIN) && !defined(GLOBAL_HOTKEY_NOHOOK)
 
 namespace gbhk
 {
@@ -18,24 +17,24 @@ enum State
     RELEASED
 };
 
-void addKeyEventCallback(int key, State state, VoidFunc callbackFunc);
+void GBHK_API addKeyEventCallback(int key, State state, VoidFunc callbackFunc);
 
-void addKeyEventCallback(int key, State state, ArgFunc callbackFunc, Arg arg);
+void GBHK_API addKeyEventCallback(int key, State state, ArgFunc callbackFunc, Arg arg);
 
-void setKeyPressedCallback(void (*callbackFunc)(int key));
+void GBHK_API setKeyPressedCallback(void (*callbackFunc)(int key));
 
-void setKeyReleaseddCallback(void (*callbackFunc)(int key));
-
-/// @return If success return #RC_SUCCESS, else return error code.
-int run();
+void GBHK_API setKeyReleaseddCallback(void (*callbackFunc)(int key));
 
 /// @return If success return #RC_SUCCESS, else return error code.
-int end();
+int GBHK_API run();
+
+/// @return If success return #RC_SUCCESS, else return error code.
+int GBHK_API end();
 
 } // namespace keyboard_hook
 
 } // namespace gbhk
 
-#endif // GLOBAL_HOTKEY_WIN
+#endif // GLOBAL_HOTKEY_WIN && !GLOBAL_HOTKEY_NOHOOK
 
 #endif // !GLOBAL_HOTKEY_KEYBOARD_HOOK_HPP

@@ -14,7 +14,6 @@ GlobalHotkeyBase::GlobalHotkeyBase() :
 
 GlobalHotkeyBase::~GlobalHotkeyBase() {}
 
-
 bool GlobalHotkeyBase::isRunning() const
 {
     return isRunning_;

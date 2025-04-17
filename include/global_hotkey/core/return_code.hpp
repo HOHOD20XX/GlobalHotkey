@@ -3,12 +3,21 @@
 
 #include <string>   // to_string
 
+#include "base.hpp"
 #include "typealias.hpp"
 
 namespace gbhk
 {
 
-constexpr int RC_MASK = 1 << 29;
+#ifdef GLOBAL_HOTKEY_WIN
+    constexpr int RC_MASK = 1 << 29;
+#elif defined(GLOBAL_HOTKEY_MAC)
+    // TODO
+#elif defined(GLOBAL_HOTKEY_LINUX)
+    // TODO
+#else
+    constexpr int RC_MASK = 0;
+#endif // GLOBAL_HOTKEY_WIN
 
 enum ReturnCode
 {

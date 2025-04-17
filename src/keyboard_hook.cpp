@@ -1,13 +1,14 @@
 #include "global_hotkey/keyboard_hook.hpp"
 
-// Only usable in windows platform.
-#ifdef GLOBAL_HOTKEY_WIN
+#if defined(GLOBAL_HOTKEY_WIN) && !defined(GLOBAL_HOTKEY_NOHOOK)
 
 #include <atomic>           // atomic
 #include <mutex>            // mutex, lock_guard
 #include <unordered_map>    // unordered_map
 
 #include <Windows.h>
+
+#include "global_hotkey/core/return_code.hpp"
 
 namespace gbhk
 {
@@ -128,4 +129,4 @@ int end()
 
 } // namespace gbhk
 
-#endif // GLOBAL_HOTKEY_WIN
+#endif // GLOBAL_HOTKEY_WIN && !GLOBAL_HOTKEY_NOHOOK
