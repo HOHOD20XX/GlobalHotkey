@@ -26,16 +26,20 @@ KeyCombination KeyCombination::fromString(const String& str, char connector)
     ss << str;
 
     String s;
-    while (std::getline(ss, s, connector)) {
+    while (std::getline(ss, s, connector))
+    {
         auto mod = getModifierFromString(s);
-        if (mod == 0) {
+        if (mod == 0)
+        {
             auto key = getKeyFromString(s);
 
             if (key == 0)
                 return rslt;
             else
                 rslt.setKey(key);
-        } else {
+        }
+        else
+        {
             rslt.addModifier(mod);
         }
     }

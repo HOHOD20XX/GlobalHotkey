@@ -34,7 +34,8 @@ enum ReturnCode
 
 inline String getReturnCodeMessage(int rc)
 {
-    switch (rc) {
+    switch (rc)
+    {
         case RC_SUCCESS:
             return "Success.";
         case RC_UNTIMELY_CALL:

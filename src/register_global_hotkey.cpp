@@ -33,19 +33,23 @@ GBHK_NODISCARD int RegGlobalHotkey::start()
         return RC_UNTIMELY_CALL;
 
     isRunning_ = true;
-    workThread_ = std::thread([&] () {
+    workThread_ = std::thread([&]()
+    {
         // Get the current thread id and set the #workThreadId_ value.
         setWorkThreadId_(std::this_thread::get_id());
 
         // The loop of the work thread.
-        while (!shouldClose_) {
+        while (!shouldClose_)
+        {
             setTimePoint_();
 
             // Process possible task first in each loop.
             Task tsk = getTask_();
             // If get a valid task, process this task.
-            if (tsk.opc != Task::NONE) {
-                switch (tsk.opc) {
+            if (tsk.opc != Task::NONE)
+            {
+                switch (tsk.opc)
+                {
                     case Task::ADD:
                         taskResult_ = add_(tsk.add.keycomb);
                         break;
@@ -234,7 +238,8 @@ GBHK_NODISCARD int RegGlobalHotkey::replace(const KeyCombination& oldKeycomb, co
     setTask_(tsk);
     int rslt = waitTaskFinished_();
 
-    if (rslt == RC_SUCCESS) {
+    if (rslt == RC_SUCCESS)
+    {
         removeFunc_(oldKeycomb);
 
         if (voidfunc)
@@ -250,14 +255,20 @@ void RegGlobalHotkey::work_()
 {
     MSG msg;
 
-    while (::PeekMessageA(&msg, NULL, 0, 0, PM_REMOVE)) {
-        if (msg.message == WM_HOTKEY) {
+    while (::PeekMessageA(&msg, NULL, 0, 0, PM_REMOVE))
+    {
+        if (msg.message == WM_HOTKEY)
+        {
             int keyid = static_cast<int>(msg.wParam);
-            if (keyIdKeycombs_.find(keyid) != keyIdKeycombs_.end()) {
+            if (keyIdKeycombs_.find(keyid) != keyIdKeycombs_.end())
+            {
                 VoidFunc voidfunc = getVoidFunc_(keyIdKeycombs_[keyid]);
-                if (voidfunc) {
+                if (voidfunc)
+                {
                     voidfunc();
-                } else {
+                }
+                else
+                {
                     ArgFuncArg argfuncarg = getArgFuncArg_(keyIdKeycombs_[keyid]);
                     if (argfuncarg.first)
                         argfuncarg.first(argfuncarg.second);
@@ -276,7 +287,8 @@ GBHK_NODISCARD int RegGlobalHotkey::end_()
     int rslt = RC_SUCCESS;
 
     // Unregister all hotkey.
-    for (const auto& var : keyIdKeycombs_) {
+    for (const auto& var : keyIdKeycombs_)
+    {
         if (!::UnregisterHotKey(NULL, var.first))
             rslt = ::GetLastError();
     }
@@ -290,7 +302,8 @@ GBHK_NODISCARD int RegGlobalHotkey::end_()
 
 GBHK_NODISCARD int RegGlobalHotkey::add_(const KeyCombination& keycomb)
 {
-    if (::RegisterHotKey(NULL, keyId_, keycomb.nativeModifiers(), keycomb.nativeKey())) {
+    if (::RegisterHotKey(NULL, keyId_, keycomb.nativeModifiers(), keycomb.nativeKey()))
+    {
         keyIdKeycombs_.insert({ keyId_, keycomb });
         keyId_++;
         return RC_SUCCESS;
@@ -300,9 +313,12 @@ GBHK_NODISCARD int RegGlobalHotkey::add_(const KeyCombination& keycomb)
 
 GBHK_NODISCARD int RegGlobalHotkey::remove_(const KeyCombination& keycomb)
 {
-    for (const auto& var : keyIdKeycombs_) {
-        if (var.second == keycomb) {
-            if (::UnregisterHotKey(NULL, var.first)) {
+    for (const auto& var : keyIdKeycombs_)
+    {
+        if (var.second == keycomb)
+        {
+            if (::UnregisterHotKey(NULL, var.first))
+            {
                 keyIdKeycombs_.erase(var.first);
                 return RC_SUCCESS;
             }
@@ -315,18 +331,24 @@ GBHK_NODISCARD int RegGlobalHotkey::remove_(const KeyCombination& keycomb)
 
 GBHK_NODISCARD int RegGlobalHotkey::replace_(const KeyCombination& oldKeycomb, const KeyCombination& newKeycomb)
 {
-    for (const auto& var : keyIdKeycombs_) {
-        if (var.second == oldKeycomb) {
-            if (::UnregisterHotKey(NULL, var.first)) {
+    for (const auto& var : keyIdKeycombs_)
+    {
+        if (var.second == oldKeycomb)
+        {
+            if (::UnregisterHotKey(NULL, var.first))
+            {
                 int keyid = var.first;
                 keyIdKeycombs_.erase(keyid);
 
-                if (::RegisterHotKey(NULL, keyid, newKeycomb.nativeModifiers(), newKeycomb.nativeKey())) {
+                if (::RegisterHotKey(NULL, keyid, newKeycomb.nativeModifiers(), newKeycomb.nativeKey()))
+                {
                     keyIdKeycombs_.insert({ keyid, newKeycomb });
                     return RC_SUCCESS;
                 }
                 return ::GetLastError();
-            } else {
+            }
+            else
+            {
                 return ::GetLastError();
             }
         }
@@ -349,7 +371,8 @@ GBHK_NODISCARD RegGlobalHotkey::Task RegGlobalHotkey::getTask_()
 {
     Task tsk;
 
-    if (hasTask_) {
+    if (hasTask_)
+    {
         mtx_.lock();
         tsk = task_;
         mtx_.unlock();

@@ -146,8 +146,10 @@ static String uniform(const String& str)
     String rslt;
 
     for (const auto& ch : str)
+    {
         if (!isBlankChar(ch))
             rslt += std::toupper(ch);
+    }
 
     return rslt;
 }
@@ -164,7 +166,8 @@ bool isValidKey(int key)
 
 String getModifierString(Modifier modifier)
 {
-    switch (modifier) {
+    switch (modifier)
+    {
         case META:
             return MOD_TEXT_META;
         case ALT:
@@ -187,19 +190,22 @@ String getModifiersString(int modifiers, char connector, bool hasSpace)
     if (modifiers & META)
         rslt += getModifierString(META);
 
-    if (modifiers & ALT) {
+    if (modifiers & ALT)
+    {
         if (!rslt.empty())
             rslt += _connector;
         rslt += getModifierString(ALT);
     }
 
-    if (modifiers & CTRL) {
+    if (modifiers & CTRL)
+    {
         if (!rslt.empty())
             rslt += _connector;
         rslt += getModifierString(CTRL);
     }
 
-    if (modifiers & SHIFT) {
+    if (modifiers & SHIFT)
+    {
         if (!rslt.empty())
             rslt += _connector;
         rslt += getModifierString(SHIFT);
@@ -210,7 +216,8 @@ String getModifiersString(int modifiers, char connector, bool hasSpace)
 
 String getKeyString(int key)
 {
-    switch (key) {
+    switch (key)
+    {
         case KY_MOUSEBUTTON_LEFT:
             return KEY_TEXT_MOUSEBUTTON_LEFT;
         case KY_MOUSEBUTTON_RIGHT:
@@ -440,7 +447,8 @@ int getModifiersFromString(const String& str, char connector)
     int rslt = 0;
 
     String s;
-    while (std::getline(ss, s, connector)) {
+    while (std::getline(ss, s, connector))
+    {
         Modifier mod = getModifierFromString(s);
 
         if (mod == 0)
@@ -454,7 +462,8 @@ int getModifiersFromString(const String& str, char connector)
 
 int getKeyFromString(const String& str)
 {
-    static const Strings keyTextTable = {
+    static const Strings keyTextTable =
+    {
         uniform(KEY_TEXT_MOUSEBUTTON_LEFT),
         uniform(KEY_TEXT_MOUSEBUTTON_RIGHT),
         uniform(KEY_TEXT_MOUSEBUTTON_MIDDLE),
@@ -555,7 +564,8 @@ int getKeyFromString(const String& str)
 
     String s = uniform(str);
 
-    if (s.size() == 1) {
+    if (s.size() == 1)
+    {
         char ch = s[0];
 
         bool isDigit = ch >= '0' && ch <= '9';
@@ -567,7 +577,8 @@ int getKeyFromString(const String& str)
             return 0;
     }
 
-    for (int i = 0; i < keyTextTable.size(); ++i) {
+    for (int i = 0; i < keyTextTable.size(); ++i)
+    {
         if (s != keyTextTable[i])
             continue;
 
@@ -579,7 +590,8 @@ int getKeyFromString(const String& str)
 
 int getNativeModifier(Modifier modifier)
 {
-    switch (modifier) {
+    switch (modifier)
+    {
         case META:
 #if defined(GLOBAL_HOTKEY_WIN)
             return MOD_WIN;
@@ -649,7 +661,8 @@ int getNativeModifiers(int modifiers, bool isAutoRepeat)
 
 int getNativeKey(int key)
 {
-    switch (key) {
+    switch (key)
+    {
         case KY_MOUSEBUTTON_LEFT:
 #if defined(GLOBAL_HOTKEY_WIN)
             return VK_LBUTTON;

@@ -24,21 +24,26 @@ static std::unordered_map<int, std::pair<State, ArgFuncArg>> gArgFuncArgs;
 
 static LRESULT WINAPI LowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
 {
-    if (nCode == HC_ACTION) {
+    if (nCode == HC_ACTION)
+    {
         KBDLLHOOKSTRUCT* p = (KBDLLHOOKSTRUCT*) lParam;
         auto key = p->vkCode;
 
         gMtx.lock();
 
-        if (wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN) {
+        if (wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN)
+        {
             if (gKeyPressedCallback)
                 gKeyPressedCallback(key);
-        } else if (wParam == WM_KEYUP || wParam == WM_SYSKEYUP) {
+        }
+        else if (wParam == WM_KEYUP || wParam == WM_SYSKEYUP)
+        {
             if (gKeyReleasedCallback)
                 gKeyReleasedCallback(key);
         }
 
-        if (gVoidFuncs.find(key) != gVoidFuncs.end()) {
+        if (gVoidFuncs.find(key) != gVoidFuncs.end())
+        {
             bool keydownExe = gVoidFuncs[key].first == PRESSED && (wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN);
             bool keyupExe = gVoidFuncs[key].first == RELEASED && (wParam == WM_KEYUP || wParam == WM_SYSKEYUP);
 
@@ -46,11 +51,13 @@ static LRESULT WINAPI LowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lPar
                 gVoidFuncs[key].second();
         }
 
-        if (gArgFuncArgs.find(key) != gArgFuncArgs.end()) {
+        if (gArgFuncArgs.find(key) != gArgFuncArgs.end())
+        {
             bool keydownExe = gVoidFuncs[key].first == PRESSED && (wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN);
             bool keyupExe = gVoidFuncs[key].first == RELEASED && (wParam == WM_KEYUP || wParam == WM_SYSKEYUP);
 
-            if (keydownExe || keyupExe) {
+            if (keydownExe || keyupExe)
+            {
                 auto& fn = gArgFuncArgs[key].second.first;
                 auto& arg = gArgFuncArgs[key].second.second;
                 fn(arg);
@@ -104,7 +111,8 @@ int run()
 
 int end()
 {
-    if (::UnhookWindowsHookEx(gHhook)) {
+    if (::UnhookWindowsHookEx(gHhook))
+    {
         gHhook = nullptr;
         gKeyPressedCallback = nullptr;
         gKeyReleasedCallback = nullptr;

@@ -46,14 +46,16 @@ GBHK_NODISCARD int HookGlobalHotkey::start()
         return rslt;
 
     isRunning_ = true;
-    workThread_ = std::thread([&] () {
+    workThread_ = std::thread([&]()
+    {
         // Get the current thread id and set the #workThreadId_ value.
         setWorkThreadId_(std::this_thread::get_id());
 
         // Record the previous pressed key combination.
         KeyCombination prevKeycomb;
         chr::steady_clock::time_point prevWorkTime = chr::steady_clock::now();
-        while (!shouldClose_) {
+        while (!shouldClose_)
+        {
             setTimePoint_();
 
             // Get the current pressed key combination.
@@ -62,9 +64,12 @@ GBHK_NODISCARD int HookGlobalHotkey::start()
             mtxListenKeyChanged_.unlock();
 
             bool isPass = false;
-            if (debouncedTime_ == 0) {
+            if (debouncedTime_ == 0)
+            {
                 isPass = true;
-            } else {
+            }
+            else
+            {
                 bool isJustModDiff =
                      keycomb.key() == prevKeycomb.key() && keycomb.modifiers() != prevKeycomb.modifiers();
                 bool isPrevModContainsCurMod =
@@ -76,15 +81,19 @@ GBHK_NODISCARD int HookGlobalHotkey::start()
                     isPass = true;
             }
 
-            if (isPass) {
+            if (isPass)
+            {
                 mtxFuncsOperate_.lock();
 
-                if (voidFuncs_.find(keycomb) != voidFuncs_.end()) {
+                if (voidFuncs_.find(keycomb) != voidFuncs_.end())
+                {
                     // If the current keycomb not equal to previous keycomb or
                     // hotkey is auto repeat execute related function.
                     if ((prevKeycomb != keycomb) || voidFuncs_[keycomb].first)
                         voidFuncs_[keycomb].second();
-                } else if (argFuncArgs_.find(keycomb) != argFuncArgs_.end()) {
+                }
+                else if (argFuncArgs_.find(keycomb) != argFuncArgs_.end())
+                {
                     auto& fnArg = argFuncArgs_[keycomb].second;
                     // Ditto.
                     if ((prevKeycomb != keycomb) || argFuncArgs_[keycomb].first)
@@ -184,9 +193,12 @@ GBHK_NODISCARD int HookGlobalHotkey::remove(const KeyCombination& keycomb)
 
     mtxFuncsOperate_.lock();
 
-    if (voidFuncs_.find(_keycomb) == voidFuncs_.end() && argFuncArgs_.find(_keycomb) == argFuncArgs_.end()) {
+    if (voidFuncs_.find(_keycomb) == voidFuncs_.end() && argFuncArgs_.find(_keycomb) == argFuncArgs_.end())
+    {
         rslt = RC_NOT_FIND;
-    } else {
+    }
+    else
+    {
         voidFuncs_.erase(_keycomb);
         argFuncArgs_.erase(_keycomb);
     }
@@ -212,17 +224,22 @@ GBHK_NODISCARD int HookGlobalHotkey::replace(const KeyCombination& oldKeycomb, c
 
     mtxFuncsOperate_.lock();
 
-    if (voidFuncs_.find(_oldKeycomb) != voidFuncs_.end()) {
+    if (voidFuncs_.find(_oldKeycomb) != voidFuncs_.end())
+    {
         auto func = voidFuncs_[_oldKeycomb].second;
 
         voidFuncs_.erase(_oldKeycomb);
         voidFuncs_.insert({ _newKeycomb, { _newKeycomb.isAutoRepeat(), func } });
-    } else if (argFuncArgs_.find(_oldKeycomb) != argFuncArgs_.end()) {
+    }
+    else if (argFuncArgs_.find(_oldKeycomb) != argFuncArgs_.end())
+    {
         auto funcArg = argFuncArgs_[_oldKeycomb].second;
 
         argFuncArgs_.erase(_oldKeycomb);
         argFuncArgs_.insert({ _newKeycomb, { _newKeycomb.isAutoRepeat(), funcArg } });
-    } else {
+    }
+    else
+    {
         rslt = RC_NOT_FIND;
     }
 
@@ -240,15 +257,24 @@ void HookGlobalHotkey::addPressedKey_(int key)
 {
     std::lock_guard<std::mutex> lock(mtxListenKeyChanged_);
 
-    if (key == VK_LWIN || key == VK_RWIN) {
+    if (key == VK_LWIN || key == VK_RWIN)
+    {
         pressed_.addModifier(META);
-    } else if (key == VK_MENU || key == VK_LMENU || key == VK_RMENU) {
+    }
+    else if (key == VK_MENU || key == VK_LMENU || key == VK_RMENU)
+    {
         pressed_.addModifier(ALT);
-    } else if (key == VK_CONTROL || key == VK_LCONTROL || key == VK_RCONTROL) {
+    }
+    else if (key == VK_CONTROL || key == VK_LCONTROL || key == VK_RCONTROL)
+    {
         pressed_.addModifier(CTRL);
-    } else if (key == VK_SHIFT || key == VK_LSHIFT || key == VK_RSHIFT) {
+    }
+    else if (key == VK_SHIFT || key == VK_LSHIFT || key == VK_RSHIFT)
+    {
         pressed_.addModifier(SHIFT);
-    } else {
+    }
+    else
+    {
         pressed_.setKey(key);
     }
 }
@@ -257,15 +283,24 @@ void HookGlobalHotkey::removePressedKey_(int key)
 {
     std::lock_guard<std::mutex> lock(mtxListenKeyChanged_);
 
-    if (key == VK_LWIN || key == VK_RWIN) {
+    if (key == VK_LWIN || key == VK_RWIN)
+    {
         pressed_.removeModifier(META);
-    } else if (key == VK_MENU || key == VK_LMENU || key == VK_RMENU) {
+    }
+    else if (key == VK_MENU || key == VK_LMENU || key == VK_RMENU)
+    {
         pressed_.removeModifier(ALT);
-    } else if (key == VK_CONTROL || key == VK_LCONTROL || key == VK_RCONTROL) {
+    }
+    else if (key == VK_CONTROL || key == VK_LCONTROL || key == VK_RCONTROL)
+    {
         pressed_.removeModifier(CTRL);
-    } else if (key == VK_SHIFT || key == VK_LSHIFT || key == VK_RSHIFT) {
+    }
+    else if (key == VK_SHIFT || key == VK_LSHIFT || key == VK_RSHIFT)
+    {
         pressed_.removeModifier(SHIFT);
-    } else {
+    }
+    else
+    {
         pressed_.setKey(0);
     }
 }
