@@ -277,7 +277,7 @@ GBHK_NODISCARD int RegGlobalHotkey::end_()
 
     // Unregister all hotkey.
     for (const auto& var : keyIdKeycombs_) {
-        if (::UnregisterHotKey(NULL, var.first))
+        if (!::UnregisterHotKey(NULL, var.first))
             rslt = ::GetLastError();
     }
 
