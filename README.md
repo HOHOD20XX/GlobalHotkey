@@ -24,7 +24,7 @@ $ cd build
 $ make
 ```
 
-### 可用选项
+#### 可用选项
 
 - `GBHK_BUILD_SHARED` 指定是否生成动态库，默认为OFF。若启用，在项目中使用动态库时指定 `GLOBAL_HOTKEY_SHARED` 宏以获得更好的性能。
 - `GBHK_DISABLE_REGISTER` 指定是否禁用生成注册型热键，默认为OFF。
