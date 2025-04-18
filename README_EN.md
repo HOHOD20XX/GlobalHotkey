@@ -14,6 +14,8 @@
 
 ## Compiling
 
+Compile with MinGW and specify other options as needed.
+
 ```console
 git clone https://github.com/JaderoChan/GlobalHotkey
 cd GlobalHotkey

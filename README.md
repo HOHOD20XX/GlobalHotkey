@@ -16,6 +16,8 @@
 
 ## 编译
 
+使用MinGW进行编译，可根据需求指定其他选项。
+
 ```console
 git clone https://github.com/JaderoChan/GlobalHotkey
 cd GlobalHotkey
