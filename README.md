@@ -17,11 +17,11 @@
 ## 编译
 
 ```console
-$ git clone https://github.com/JaderoChan/GlobalHotkey
-$ cd GlobalHotkey
-$ cmake -S ./ -B ./build
-$ cd build
-$ make
+git clone https://github.com/JaderoChan/GlobalHotkey
+cd GlobalHotkey
+cmake -S ./ -B ./build -G "MinGW Makefiles"
+cd build
+make
 ```
 
 #### 可用选项
@@ -40,7 +40,7 @@ $ make
 
 ## 使用
 
-最基本的流程是
+最基本的流程是：
 
 1. 决定你需要使用的热键系统（注册型/Hook型）
 2. 获取对应的 **热键管理器** 实例对象。
