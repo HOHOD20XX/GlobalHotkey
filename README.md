@@ -16,7 +16,7 @@
 
 ## 编译
 
-```
+```console
 $ git clone https://github.com/JaderoChan/GlobalHotkey
 $ cd GlobalHotkey
 $ cmake -S ./ -B ./build
