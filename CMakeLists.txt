@@ -17,9 +17,7 @@ if (NOT DEFINED GBHK_MASTER_PROJECT)
 endif ()
 
 if (WIN32)
-    set(GBHK_WINDOWS ON)
-else()
-    set(GBHK_WINDOWS OFF)
+    set(CMAKE_STATIC_LIBRARY_SUFFIX ".lib")
 endif()
 
 # Build shared library option.
@@ -29,9 +27,9 @@ option(GBHK_BUILD_SHARED "Build shared library" OFF)
 option(GBHK_DISABLE_REGISTER "Disable register global hotkey" OFF)
 
 # Disable hook hotkey option.
-option(GBHK_DISABLE_HOOK "Disable hook global hotkey" !GBHK_WINDOWS)
+option(GBHK_DISABLE_HOOK "Disable hook global hotkey" !WIN32)
 
-if (NOT GBHK_WINDOWS AND NOT GBHK_DISABLE_HOOK)
+if (NOT WIN32 AND NOT GBHK_DISABLE_HOOK)
     message(FATAL_ERROR "Hook global hotkey is only supported on Windows")
 endif()
 
