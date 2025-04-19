@@ -1,5 +1,5 @@
-#ifndef GLOBAL_HOTKEY_CONSTANTS_HPP
-#define GLOBAL_HOTKEY_CONSTANTS_HPP
+#ifndef GLOBAL_HOTKEY_RETURN_CODE_HPP
+#define GLOBAL_HOTKEY_RETURN_CODE_HPP
 
 #include <string>   // to_string
 
@@ -72,4 +72,4 @@ inline String getReturnCodeMessage(int rc)
 
 } // namespace gbhk
 
-#endif // !GLOBAL_HOTKEY_CONSTANTS_HPP
+#endif // !GLOBAL_HOTKEY_RETURN_CODE_HPP
