@@ -1,5 +1,7 @@
 # Global Hotkey
 
+**[简体中文](README.md) | English**
+
 ## Features
 
 - Can be used for any type of program (even console programs)
