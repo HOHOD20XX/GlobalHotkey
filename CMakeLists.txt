@@ -36,7 +36,7 @@ endif()
 # Build example option.
 option(GBHK_BUILD_EXAMPLE "Build example" ${GBHK_MASTER_PROJECT})
 
-# Only windows is supported for now.
+# Only Windows is supported for now.
 # Maybe be removed in the future.
 if (NOT WIN32)
     message(FATAL_ERROR "GlobalHotkey only supports Windows")
