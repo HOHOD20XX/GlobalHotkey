@@ -12,6 +12,7 @@ namespace gbhk
 class GBHK_API KeyCombination
 {
 public:
+    /// @attention Not hash the #isAutoRepeat.
     struct Hash
     {
         size_t operator()(const KeyCombination& obj) const;
@@ -38,23 +39,16 @@ public:
     /// @brief #modifiers and #key be set to 0, and #isAutoRepeat be set to false.
     void reset();
 
-    /// @brief Check if the modifiers is valid.
-    /// @return True if the modifiers not equal 0, else False.
-    /// @note Check if the modifiers contain at least one modifier.
+    /// @brief Check whether the modifiers contain at least one modifier.
+    /// @return True if the modifiers value not is 0, else False.
     bool isValidModifers() const;
 
-    /// @brief Check if the key is valid.
-    /// @return True if the key is valid keyboard value
-    // (can be directly input by keyboard, except modifier (Alt, Ctrl...))
-    // else False.
+    /// @brief Check whether the key is valid.
+    /// @return True if the key is valid keyboard value else False.
     bool isValidKey() const;
 
-    /// @brief Check if the modifiers is valid and the key is valid.
-    /// @note Check if the key combination contain at least one modifier and a valid key.
+    /// @brief Check whether the key combination contain at least one modifier and a valid key.
     bool isValid() const;
-
-    /// @attention Compare the #isAutoRepeat.
-    bool equal(const KeyCombination& other) const;
 
     /// @param hasKeyId         Whether the result should be attach the key number value.
     /// @param hasIsAutoRepeat  Whether the result should be attach info about if the key combination auto repeat.
