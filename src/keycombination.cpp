@@ -132,11 +132,6 @@ bool KeyCombination::isValid() const
     return isValidModifers() && isValidKey();
 }
 
-bool KeyCombination::equal(const KeyCombination& other) const
-{
-    return mods_ == other.mods_ && key_ == other.key_ && isAutoRepeat_ == other.isAutoRepeat_;
-}
-
 String KeyCombination::toString(char connector, bool hasSpace, bool hasKeyId, bool hasIsAutoRepeat) const
 {
     String _connector = hasSpace ? (' ' + std::string(1, connector) + ' ') : std::string(1, connector);

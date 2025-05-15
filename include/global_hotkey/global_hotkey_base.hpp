@@ -23,22 +23,22 @@ public:
 
     GBHK_NODISCARD virtual int start() = 0;
     GBHK_NODISCARD virtual int end() = 0;
-    /// @brief Register a global hotkey.
+    /// @brief                  Register a global hotkey.
     /// @param keycomb          The key combination to register.
     /// @param callbackFunc     The callback function to be called when the hotkey is triggered.
     /// @return                 The return code of the operation.
     GBHK_NODISCARD virtual int add(const KeyCombination& keycomb, VoidFunc callbackFunc) = 0;
-    /// @brief Register a global hotkey.
+    /// @brief                  Register a global hotkey.
     /// @param keycomb          The key combination to register.
     /// @param callbackFunc     The callback function to be called when the hotkey is triggered.
     /// @param arg              The argument to be passed to the callback function.
     /// @return                 The return code of the operation.
     GBHK_NODISCARD virtual int add(const KeyCombination& keycomb, ArgFunc callbackFunc, Arg arg) = 0;
-    /// @brief Unregister a global hotkey.
+    /// @brief                  Unregister a global hotkey.
     /// @param keycomb          The key combination to unregister.
     /// @return                 The return code of the operation.
     GBHK_NODISCARD virtual int remove(const KeyCombination& keycomb) = 0;
-    /// @brief  Replace a global hotkey.
+    /// @brief                  Replace a global hotkey.
     /// @param oldKeycomb       The old key combination to be replaced.
     /// @param newKeycomb       The new key combination to replace with.
     /// @return                 The return code of the operation.

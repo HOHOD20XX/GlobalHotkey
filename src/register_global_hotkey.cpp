@@ -218,7 +218,7 @@ GBHK_NODISCARD int RegGlobalHotkey::replace(const KeyCombination& oldKeycomb, co
         return RC_INVALID_KEY_COMBINATION;
 
     // If the old key combination equal to new key combination do nothing.
-    if (oldKeycomb.equal(newKeycomb))
+    if (oldKeycomb == newKeycomb && oldKeycomb.isAutoRepeat() == newKeycomb.isAutoRepeat())
         return RC_OLD_EQUAL_NEW;
 
     VoidFunc voidfunc = getVoidFunc_(oldKeycomb);

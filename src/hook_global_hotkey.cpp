@@ -213,7 +213,7 @@ GBHK_NODISCARD int HookGlobalHotkey::replace(const KeyCombination& oldKeycomb, c
         return RC_INVALID_KEY_COMBINATION;
 
     // If the old key combination equal to new key combination do nothing.
-    if (oldKeycomb.equal(newKeycomb))
+    if (oldKeycomb == newKeycomb && oldKeycomb.isAutoRepeat() == newKeycomb.isAutoRepeat())
         return RC_OLD_EQUAL_NEW;
 
     int rslt = RC_SUCCESS;
