@@ -48,23 +48,23 @@ inline String getReturnCodeMessage(int rc)
         case RC_SUCCESS:
             return "Success.";
         case RC_UNTIMELY_CALL:
-            return "The function is untimely be called (too late or too early), "
-                   "e.g. call the #end() before call the #start().";
+            return "The function is untimely be called (too late or too early). "
+                   "(e.g. call the #end() before call the #start().)";
         case RC_CALL_IN_WRONG_THREAD:
-            return "The function is be called by wrong thread, "
-                   "e.g. #RegGlobalHotkey::add() can't be called in work thread.";
+            return "The function is be called by wrong thread. "
+                   "(e.g. #RegGlobalHotkey::add() called in work thread.)";
         case RC_NOT_FIND:
-            return "The specified value is not be finded, "
-                   "e.g. modify a unregistered hotkey.";
+            return "The specified value is not be finded. "
+                   "(e.g. modify a unregistered hotkey.)";
         case RC_ALREADY_EXISTED:
-            return "The specified value is already exists, "
-                   "e.g. Add a registered hotkey agian.";
+            return "The specified value is already exists. "
+                   "(e.g. Add a registered hotkey agian.)";
         case RC_OLD_EQUAL_NEW:
-            return "The specified value is equal to the value to be replacee, "
-                   "e.g. Replace hotkey Ctrl+C to Ctrl+C.";
+            return "The specified value is equal to the value to be replace. "
+                   "(e.g. Replace hotkey Ctrl+C to Ctrl+C.)";
        case RC_INVALID_KEY_COMBINATION:
-            return "The specified key combination is invalid, "
-                   "e.g. register a hotkey with invalid key combination.";
+            return "The specified key combination is invalid. "
+                   "(e.g. register a hotkey with invalid key combination.)";
         default:
             return "The return code of external API (usually a system API): " + std::to_string(rc) + ".";
     }
