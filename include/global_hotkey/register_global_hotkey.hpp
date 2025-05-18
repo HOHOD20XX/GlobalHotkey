@@ -15,12 +15,12 @@ class GBHK_API RegGlobalHotkey final : public GlobalHotkeyBase
 public:
     static RegGlobalHotkey& getInstance();
 
-    GBHK_NODISCARD int start();
-    GBHK_NODISCARD int end();
-    GBHK_NODISCARD int add(const KeyCombination& keycomb, VoidFunc callbackFunc);
-    GBHK_NODISCARD int add(const KeyCombination& keycomb, ArgFunc callbackFunc, Arg arg);
-    GBHK_NODISCARD int remove(const KeyCombination& keycomb);
-    GBHK_NODISCARD int replace(const KeyCombination& oldKeycomb, const KeyCombination& newKeycomb);
+    int start();
+    int end();
+    int add(const KeyCombination& keycomb, VoidFunc callbackFunc);
+    int add(const KeyCombination& keycomb, ArgFunc callbackFunc, Arg arg);
+    int remove(const KeyCombination& keycomb);
+    int replace(const KeyCombination& oldKeycomb, const KeyCombination& newKeycomb);
 
 private:
     struct Task
@@ -61,14 +61,14 @@ private:
     RegGlobalHotkey& operator=(const RegGlobalHotkey& other) = delete;
 
     void work_();
-    GBHK_NODISCARD int end_();
-    GBHK_NODISCARD int add_(const KeyCombination& keycomb);
-    GBHK_NODISCARD int remove_(const KeyCombination& keycomb);
-    GBHK_NODISCARD int replace_(const KeyCombination& oldKeycomb, const KeyCombination& newKeycomb);
+    int end_();
+    int add_(const KeyCombination& keycomb);
+    int remove_(const KeyCombination& keycomb);
+    int replace_(const KeyCombination& oldKeycomb, const KeyCombination& newKeycomb);
 
     void setTask_(const Task& task);
-    GBHK_NODISCARD Task getTask_();
-    GBHK_NODISCARD int waitTaskFinished_() const;
+    Task getTask_();
+    int waitTaskFinished_() const;
 
     VoidFunc getVoidFunc_(const KeyCombination& keycomb);
     ArgFuncArg getArgFuncArg_(const KeyCombination& keycomb);

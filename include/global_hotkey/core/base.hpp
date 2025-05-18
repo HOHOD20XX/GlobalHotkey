@@ -13,12 +13,6 @@
     #define _GLOBAL_HOTKEY_CPP17
 #endif // _GLOBAL_HOTKEY_CPPVERS >= 201703L
 
-#ifdef _GLOBAL_HOTKEY_CPP17
-    #define GBHK_NODISCARD  [[nodiscard]]
-#else
-    #define GBHK_NODISCARD
-#endif // _GLOBAL_HOTKEY_CPP17
-
 #if defined(_WIN32)
     #define GLOBAL_HOTKEY_WIN
 #elif defined(__APPLE__)

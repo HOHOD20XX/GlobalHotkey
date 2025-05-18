@@ -15,12 +15,12 @@ class GBHK_API HookGlobalHotkey final : public GlobalHotkeyBase
 public:
     static HookGlobalHotkey& getInstance();
 
-    GBHK_NODISCARD int start();
-    GBHK_NODISCARD int end();
-    GBHK_NODISCARD int add(const KeyCombination& keycomb, VoidFunc callbackFunc);
-    GBHK_NODISCARD int add(const KeyCombination& keycomb, ArgFunc callbackFunc, Arg arg);
-    GBHK_NODISCARD int remove(const KeyCombination& keycomb);
-    GBHK_NODISCARD int replace(const KeyCombination& oldKeycomb, const KeyCombination& newKeycomb);
+    int start();
+    int end();
+    int add(const KeyCombination& keycomb, VoidFunc callbackFunc);
+    int add(const KeyCombination& keycomb, ArgFunc callbackFunc, Arg arg);
+    int remove(const KeyCombination& keycomb);
+    int replace(const KeyCombination& oldKeycomb, const KeyCombination& newKeycomb);
     void setDebouncedTime(size_t millisecond);
 
 private:

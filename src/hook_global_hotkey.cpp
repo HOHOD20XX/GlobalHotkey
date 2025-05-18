@@ -27,7 +27,7 @@ HookGlobalHotkey& HookGlobalHotkey::getInstance()
     return instance;
 }
 
-GBHK_NODISCARD int HookGlobalHotkey::start()
+int HookGlobalHotkey::start()
 {
     namespace chr = std::chrono;
 
@@ -116,7 +116,7 @@ GBHK_NODISCARD int HookGlobalHotkey::start()
     return RC_SUCCESS;
 }
 
-GBHK_NODISCARD int HookGlobalHotkey::end()
+int HookGlobalHotkey::end()
 {
     // If is not running do nothing.
     if (!isRunning_)
@@ -142,7 +142,7 @@ GBHK_NODISCARD int HookGlobalHotkey::end()
     return keyboard_hook::end();
 }
 
-GBHK_NODISCARD int HookGlobalHotkey::add(const KeyCombination& keycomb, VoidFunc callbackFunc)
+int HookGlobalHotkey::add(const KeyCombination& keycomb, VoidFunc callbackFunc)
 {
     if (!keycomb.isValid())
         return RC_INVALID_KEY_COMBINATION;
@@ -163,7 +163,7 @@ GBHK_NODISCARD int HookGlobalHotkey::add(const KeyCombination& keycomb, VoidFunc
     return rslt;
 }
 
-GBHK_NODISCARD int HookGlobalHotkey::add(const KeyCombination& keycomb, ArgFunc callbackFunc, Arg arg)
+int HookGlobalHotkey::add(const KeyCombination& keycomb, ArgFunc callbackFunc, Arg arg)
 {
     if (!keycomb.isValid())
         return RC_INVALID_KEY_COMBINATION;
@@ -184,7 +184,7 @@ GBHK_NODISCARD int HookGlobalHotkey::add(const KeyCombination& keycomb, ArgFunc 
     return rslt;
 }
 
-GBHK_NODISCARD int HookGlobalHotkey::remove(const KeyCombination& keycomb)
+int HookGlobalHotkey::remove(const KeyCombination& keycomb)
 {
     int rslt = RC_SUCCESS;
 
@@ -207,7 +207,7 @@ GBHK_NODISCARD int HookGlobalHotkey::remove(const KeyCombination& keycomb)
     return rslt;
 }
 
-GBHK_NODISCARD int HookGlobalHotkey::replace(const KeyCombination& oldKeycomb, const KeyCombination& newKeycomb)
+int HookGlobalHotkey::replace(const KeyCombination& oldKeycomb, const KeyCombination& newKeycomb)
 {
     if (!newKeycomb.isValid())
         return RC_INVALID_KEY_COMBINATION;
