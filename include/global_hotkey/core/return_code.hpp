@@ -41,7 +41,7 @@ enum ReturnCode
     RC_INVALID_KEY_COMBINATION  = 0x06 | RC_MASK
 };
 
-inline String getReturnCodeMessage(int rc)
+inline String returnCodeMessage(int rc)
 {
     switch (rc)
     {
