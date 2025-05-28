@@ -1,5 +1,6 @@
 #include "global_hotkey/key.hpp"
 
+#include <cctype>   // isspace, tolower
 #include <sstream>  // stringstream
 
 #if defined(GLOBAL_HOTKEY_WIN)
@@ -134,29 +135,35 @@ constexpr const char* KEY_TEXT_PA1                  = "PA1";
 namespace gbhk
 {
 
-/// @brief Whether the char is Space, Tab and Newline so on.
-static bool isBlankChar(char ch)
+static bool isEqualString(const String& str1, const String& str2, bool ignoreSpace = true, bool ignoreCase = true)
 {
-    return ch == 0x09 || ch == 0x0A || ch == 0x0B || ch == 0x0C || ch == 0x0D || ch == 0x20;
-}
-
-/// @brief Convert string to upper case and remove the blank character.
-static String uniform(const String& str)
-{
-    String rslt;
-
-    for (const auto& ch : str)
+    int i = 0, j = 0;
+    while (i < str1.size() || j < str2.size())
     {
-        if (!isBlankChar(ch))
-            rslt += std::toupper(ch);
+        if (ignoreSpace)
+        {
+            while (i < str1.size() && std::isspace(str1[i])) i++;
+            while (j < str2.size() && std::isspace(str2[j])) j++;
+        }
+
+        if (i >= str1.size() || j >= str2.size())
+            return (i >= str1.size() && j >= str2.size());
+
+        char c1 = ignoreCase ? std::tolower(str1[i]) : str1[i];
+        char c2 = ignoreCase ? std::tolower(str2[j]) : str2[j];
+        if (c1 != c2)
+            return false;
+
+        i++;
+        j++;
     }
 
-    return rslt;
+    return true;
 }
 
-bool isValidModifers(int modifiers)
+bool isValidModifiers(int modifiers)
 {
-    return modifiers != 0;
+    return (modifiers & META) || (modifiers & ALT) || (modifiers & CTRL) || (modifiers & SHIFT);
 }
 
 bool isValidKey(int key)
@@ -181,33 +188,32 @@ String getModifierString(Modifier modifier)
     }
 }
 
-String getModifiersString(int modifiers, char connector, bool hasSpace)
+String getModifiersString(int modifiers, bool isPrettySpace)
 {
-    String _connector = hasSpace ? (' ' + std::string(1, connector) + ' ') : std::string(1, connector);
-
+    String separator = isPrettySpace ? " + " : "+";
     String rslt;
 
     if (modifiers & META)
         rslt += getModifierString(META);
 
-    if (modifiers & ALT)
-    {
-        if (!rslt.empty())
-            rslt += _connector;
-        rslt += getModifierString(ALT);
-    }
-
     if (modifiers & CTRL)
     {
         if (!rslt.empty())
-            rslt += _connector;
+            rslt += separator;
         rslt += getModifierString(CTRL);
+    }
+
+    if (modifiers & ALT)
+    {
+        if (!rslt.empty())
+            rslt += separator;
+        rslt += getModifierString(ALT);
     }
 
     if (modifiers & SHIFT)
     {
         if (!rslt.empty())
-            rslt += _connector;
+            rslt += separator;
         rslt += getModifierString(SHIFT);
     }
 
@@ -417,29 +423,29 @@ String getKeyString(int key)
 
 Modifier getModifierFromString(const String& str)
 {
-    static const String win = uniform(MOD_TEXT_WIN);
-    static const String super = uniform(MOD_TEXT_SUPER);
-    static const String cmd1 = uniform(MOD_TEXT_CMD_1);
-    static const String cmd2 = uniform(MOD_TEXT_CMD_2);
-    static const String alt = uniform(MOD_TEXT_ALT);
-    static const String ctrl = uniform(MOD_TEXT_CTRL);
-    static const String shift = uniform(MOD_TEXT_SHIFT);
+    static const String win = MOD_TEXT_WIN;
+    static const String super = MOD_TEXT_SUPER;
+    static const String cmd1 = MOD_TEXT_CMD_1;
+    static const String cmd2 = MOD_TEXT_CMD_2;
+    static const String alt = MOD_TEXT_ALT;
+    static const String ctrl = MOD_TEXT_CTRL;
+    static const String shift = MOD_TEXT_SHIFT;
 
-    String s = uniform(str);
+    String s = str;
 
-    if (s == win || s == super || s == cmd1 || s == cmd2)
+    if (isEqualString(s, win) || isEqualString(s, super) || isEqualString(s, cmd1) || isEqualString(s, cmd2))
         return META;
-    else if (s == alt)
+    else if (isEqualString(s, alt))
         return ALT;
-    else if (s == ctrl)
+    else if (isEqualString(s, ctrl))
         return CTRL;
-    else if (s == shift)
+    else if (isEqualString(s, shift))
         return SHIFT;
     else
         return static_cast<Modifier>(0);
 }
 
-int getModifiersFromString(const String& str, char connector)
+int getModifiersFromString(const String& str)
 {
     std::stringstream ss;
     ss << str;
@@ -447,7 +453,7 @@ int getModifiersFromString(const String& str, char connector)
     int rslt = 0;
 
     String s;
-    while (std::getline(ss, s, connector))
+    while (std::getline(ss, s, '+'))
     {
         Modifier mod = getModifierFromString(s);
 
@@ -463,105 +469,105 @@ int getModifiersFromString(const String& str, char connector)
 int getKeyFromString(const String& str)
 {
     static const Strings keyTextTable = {
-        uniform(KEY_TEXT_MOUSEBUTTON_LEFT),
-        uniform(KEY_TEXT_MOUSEBUTTON_RIGHT),
-        uniform(KEY_TEXT_MOUSEBUTTON_MIDDLE),
-        uniform(KEY_TEXT_CANCEL),
-        uniform(KEY_TEXT_BACKSPACE),
-        uniform(KEY_TEXT_TAB),
-        uniform(KEY_TEXT_CLEAR),
-        uniform(KEY_TEXT_ENTER),
-        uniform(KEY_TEXT_PAUSE),
-        uniform(KEY_TEXT_CAPSLOCK),
-        uniform(KEY_TEXT_ESCAPE),
-        uniform(KEY_TEXT_SPACE),
-        uniform(KEY_TEXT_PAGE_UP),
-        uniform(KEY_TEXT_PAGE_DOWN),
-        uniform(KEY_TEXT_END),
-        uniform(KEY_TEXT_HOME),
-        uniform(KEY_TEXT_ARROW_LEFT),
-        uniform(KEY_TEXT_ARROW_UP),
-        uniform(KEY_TEXT_ARROW_RIGHT),
-        uniform(KEY_TEXT_ARROW_DOWN),
-        uniform(KEY_TEXT_SELECT),
-        uniform(KEY_TEXT_PRINT),
-        uniform(KEY_TEXT_EXECUTE),
-        uniform(KEY_TEXT_PRINTSCREEN),
-        uniform(KEY_TEXT_INSERT),
-        uniform(KEY_TEXT_DELETE),
-        uniform(KEY_TEXT_HELP),
-        uniform(KEY_TEXT_APPS),
-        uniform(KEY_TEXT_SLEEP),
-        uniform(KEY_TEXT_NUMPAD0),
-        uniform(KEY_TEXT_NUMPAD1),
-        uniform(KEY_TEXT_NUMPAD2),
-        uniform(KEY_TEXT_NUMPAD3),
-        uniform(KEY_TEXT_NUMPAD4),
-        uniform(KEY_TEXT_NUMPAD5),
-        uniform(KEY_TEXT_NUMPAD6),
-        uniform(KEY_TEXT_NUMPAD7),
-        uniform(KEY_TEXT_NUMPAD8),
-        uniform(KEY_TEXT_NUMPAD9),
-        uniform(KEY_TEXT_MULTIPLY),
-        uniform(KEY_TEXT_ADD),
-        uniform(KEY_TEXT_SEPARATOR),
-        uniform(KEY_TEXT_SUBTRACT),
-        uniform(KEY_TEXT_DECIMAL),
-        uniform(KEY_TEXT_DIVIDE),
-        uniform(KEY_TEXT_F1),
-        uniform(KEY_TEXT_F2),
-        uniform(KEY_TEXT_F3),
-        uniform(KEY_TEXT_F4),
-        uniform(KEY_TEXT_F5),
-        uniform(KEY_TEXT_F6),
-        uniform(KEY_TEXT_F7),
-        uniform(KEY_TEXT_F8),
-        uniform(KEY_TEXT_F9),
-        uniform(KEY_TEXT_F10),
-        uniform(KEY_TEXT_F11),
-        uniform(KEY_TEXT_F12),
-        uniform(KEY_TEXT_F13),
-        uniform(KEY_TEXT_F14),
-        uniform(KEY_TEXT_F15),
-        uniform(KEY_TEXT_F16),
-        uniform(KEY_TEXT_F17),
-        uniform(KEY_TEXT_F18),
-        uniform(KEY_TEXT_F19),
-        uniform(KEY_TEXT_F20),
-        uniform(KEY_TEXT_F21),
-        uniform(KEY_TEXT_F22),
-        uniform(KEY_TEXT_F23),
-        uniform(KEY_TEXT_F24),
-        uniform(KEY_TEXT_NUMLOCK),
-        uniform(KEY_TEXT_SCROLL_LOCK),
-        uniform(KEY_TEXT_BROWSER_BACK),
-        uniform(KEY_TEXT_BROWSER_FORWARD),
-        uniform(KEY_TEXT_BROWSER_REFRESH),
-        uniform(KEY_TEXT_BROWSER_STOP),
-        uniform(KEY_TEXT_BROWSER_SEARCH),
-        uniform(KEY_TEXT_BROWSER_FAVORITES),
-        uniform(KEY_TEXT_BROWSER_HOME),
-        uniform(KEY_TEXT_VOLUME_MUTE),
-        uniform(KEY_TEXT_VOLUME_UP),
-        uniform(KEY_TEXT_VOLUME_DOWN),
-        uniform(KEY_TEXT_MEDIA_NEXT_TRACK),
-        uniform(KEY_TEXT_MEDIA_PREV_TRACK),
-        uniform(KEY_TEXT_MEDIA_STOP),
-        uniform(KEY_TEXT_MEDIA_PLAY_PAUSE),
-        uniform(KEY_TEXT_LAUNCH_MAIL),
-        uniform(KEY_TEXT_LAUNCH_MEDIA_SELECT),
-        uniform(KEY_TEXT_LAUNCH_APP1),
-        uniform(KEY_TEXT_LAUNCH_APP2),
-        uniform(KEY_TEXT_ATTN),
-        uniform(KEY_TEXT_CRSEL),
-        uniform(KEY_TEXT_EXSEL),
-        uniform(KEY_TEXT_ERASEEOF),
-        uniform(KEY_TEXT_PLAY),
-        uniform(KEY_TEXT_ZOOM),
-        uniform(KEY_TEXT_PA1)
+        KEY_TEXT_MOUSEBUTTON_LEFT,
+        KEY_TEXT_MOUSEBUTTON_RIGHT,
+        KEY_TEXT_MOUSEBUTTON_MIDDLE,
+        KEY_TEXT_CANCEL,
+        KEY_TEXT_BACKSPACE,
+        KEY_TEXT_TAB,
+        KEY_TEXT_CLEAR,
+        KEY_TEXT_ENTER,
+        KEY_TEXT_PAUSE,
+        KEY_TEXT_CAPSLOCK,
+        KEY_TEXT_ESCAPE,
+        KEY_TEXT_SPACE,
+        KEY_TEXT_PAGE_UP,
+        KEY_TEXT_PAGE_DOWN,
+        KEY_TEXT_END,
+        KEY_TEXT_HOME,
+        KEY_TEXT_ARROW_LEFT,
+        KEY_TEXT_ARROW_UP,
+        KEY_TEXT_ARROW_RIGHT,
+        KEY_TEXT_ARROW_DOWN,
+        KEY_TEXT_SELECT,
+        KEY_TEXT_PRINT,
+        KEY_TEXT_EXECUTE,
+        KEY_TEXT_PRINTSCREEN,
+        KEY_TEXT_INSERT,
+        KEY_TEXT_DELETE,
+        KEY_TEXT_HELP,
+        KEY_TEXT_APPS,
+        KEY_TEXT_SLEEP,
+        KEY_TEXT_NUMPAD0,
+        KEY_TEXT_NUMPAD1,
+        KEY_TEXT_NUMPAD2,
+        KEY_TEXT_NUMPAD3,
+        KEY_TEXT_NUMPAD4,
+        KEY_TEXT_NUMPAD5,
+        KEY_TEXT_NUMPAD6,
+        KEY_TEXT_NUMPAD7,
+        KEY_TEXT_NUMPAD8,
+        KEY_TEXT_NUMPAD9,
+        KEY_TEXT_MULTIPLY,
+        KEY_TEXT_ADD,
+        KEY_TEXT_SEPARATOR,
+        KEY_TEXT_SUBTRACT,
+        KEY_TEXT_DECIMAL,
+        KEY_TEXT_DIVIDE,
+        KEY_TEXT_F1,
+        KEY_TEXT_F2,
+        KEY_TEXT_F3,
+        KEY_TEXT_F4,
+        KEY_TEXT_F5,
+        KEY_TEXT_F6,
+        KEY_TEXT_F7,
+        KEY_TEXT_F8,
+        KEY_TEXT_F9,
+        KEY_TEXT_F10,
+        KEY_TEXT_F11,
+        KEY_TEXT_F12,
+        KEY_TEXT_F13,
+        KEY_TEXT_F14,
+        KEY_TEXT_F15,
+        KEY_TEXT_F16,
+        KEY_TEXT_F17,
+        KEY_TEXT_F18,
+        KEY_TEXT_F19,
+        KEY_TEXT_F20,
+        KEY_TEXT_F21,
+        KEY_TEXT_F22,
+        KEY_TEXT_F23,
+        KEY_TEXT_F24,
+        KEY_TEXT_NUMLOCK,
+        KEY_TEXT_SCROLL_LOCK,
+        KEY_TEXT_BROWSER_BACK,
+        KEY_TEXT_BROWSER_FORWARD,
+        KEY_TEXT_BROWSER_REFRESH,
+        KEY_TEXT_BROWSER_STOP,
+        KEY_TEXT_BROWSER_SEARCH,
+        KEY_TEXT_BROWSER_FAVORITES,
+        KEY_TEXT_BROWSER_HOME,
+        KEY_TEXT_VOLUME_MUTE,
+        KEY_TEXT_VOLUME_UP,
+        KEY_TEXT_VOLUME_DOWN,
+        KEY_TEXT_MEDIA_NEXT_TRACK,
+        KEY_TEXT_MEDIA_PREV_TRACK,
+        KEY_TEXT_MEDIA_STOP,
+        KEY_TEXT_MEDIA_PLAY_PAUSE,
+        KEY_TEXT_LAUNCH_MAIL,
+        KEY_TEXT_LAUNCH_MEDIA_SELECT,
+        KEY_TEXT_LAUNCH_APP1,
+        KEY_TEXT_LAUNCH_APP2,
+        KEY_TEXT_ATTN,
+        KEY_TEXT_CRSEL,
+        KEY_TEXT_EXSEL,
+        KEY_TEXT_ERASEEOF,
+        KEY_TEXT_PLAY,
+        KEY_TEXT_ZOOM,
+        KEY_TEXT_PA1
     };
 
-    String s = uniform(str);
+    String s = str;
 
     if (s.size() == 1)
     {
@@ -578,10 +584,8 @@ int getKeyFromString(const String& str)
 
     for (int i = 0; i < keyTextTable.size(); ++i)
     {
-        if (s != keyTextTable[i])
-            continue;
-
-        return i + KY_FIRST;
+        if (isEqualString(s, keyTextTable[i]))
+            return i + KY_FIRST;
     }
 
     return 0;

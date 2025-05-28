@@ -123,8 +123,7 @@ namespace gbhk
 {
 
 /// @brief Check whether the modifiers contain at least one modifier.
-/// @return True if the modifiers value not is 0, else False.
-GBHK_API bool isValidModifers(int modifiers);
+GBHK_API bool isValidModifiers(int modifiers);
 
 /// @brief Check whether the key is valid.
 /// @return True if the key is valid keyboard value else False.
@@ -132,7 +131,7 @@ GBHK_API bool isValidKey(int key);
 
 GBHK_API String getModifierString(Modifier modifier);
 
-GBHK_API String getModifiersString(int modifiers, char connector = '+', bool hasSpace = true);
+GBHK_API String getModifiersString(int modifiers, bool isPrettySpace = false);
 
 GBHK_API String getKeyString(int key);
 
@@ -140,7 +139,7 @@ GBHK_API String getKeyString(int key);
 GBHK_API Modifier getModifierFromString(const String& str);
 
 /// @note Return 0 if the string is invalid.
-GBHK_API int getModifiersFromString(const String& str, char connector = '+');
+GBHK_API int getModifiersFromString(const String& str);
 
 /// @note Return 0 if the string is invalid.
 GBHK_API int getKeyFromString(const String& str);

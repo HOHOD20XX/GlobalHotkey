@@ -21,7 +21,7 @@ public:
     KeyCombination() = default;
     KeyCombination(int modifiers, int key, bool isAutoRepeat = false);
 
-    static KeyCombination fromString(const String& str, char connector = '+');
+    static KeyCombination fromString(const String& str);
 
     int modifiers() const;
     int nativeModifiers() const;
@@ -40,8 +40,7 @@ public:
     void reset();
 
     /// @brief Check whether the modifiers contain at least one modifier.
-    /// @return True if the modifiers value not is 0, else False.
-    bool isValidModifers() const;
+    bool isValidModifiers() const;
 
     /// @brief Check whether the key is valid.
     /// @return True if the key is valid keyboard value else False.
@@ -50,10 +49,9 @@ public:
     /// @brief Check whether the key combination contain at least one modifier and a valid key.
     bool isValid() const;
 
-    /// @param hasKeyId         Whether the result should be attach the key number value.
     /// @param hasIsAutoRepeat  Whether the result should be attach info about if the key combination auto repeat.
-    String toString(char connector = '+',
-                    bool hasSpace = false, bool hasKeyId = false, bool hasIsAutoRepeat = false) const;
+    /// @param hasKeyId         Whether the result should be attach the key number value.
+    String toString(bool isPrettySpace = false, bool hasIsAutoRepeat = false, bool hasKeyId = false) const;
 
     /// @attention Not compare the #isAutoRepeat.
     bool operator==(const KeyCombination& other) const;

@@ -18,7 +18,7 @@ KeyCombination::KeyCombination(int modifiers, int key, bool isAutoRepeat) :
     mods_(modifiers), key_(key), isAutoRepeat_(isAutoRepeat)
 {}
 
-KeyCombination KeyCombination::fromString(const String& str, char connector)
+KeyCombination KeyCombination::fromString(const String& str)
 {
     KeyCombination rslt;
 
@@ -26,7 +26,7 @@ KeyCombination KeyCombination::fromString(const String& str, char connector)
     ss << str;
 
     String s;
-    while (std::getline(ss, s, connector))
+    while (std::getline(ss, s, '+'))
     {
         auto mod = getModifierFromString(s);
         if (mod == 0)
@@ -117,9 +117,9 @@ void KeyCombination::reset()
     isAutoRepeat_ = false;
 }
 
-bool KeyCombination::isValidModifers() const
+bool KeyCombination::isValidModifiers() const
 {
-    return gbhk::isValidModifers(mods_);
+    return gbhk::isValidModifiers(mods_);
 }
 
 bool KeyCombination::isValidKey() const
@@ -129,19 +129,17 @@ bool KeyCombination::isValidKey() const
 
 bool KeyCombination::isValid() const
 {
-    return isValidModifers() && isValidKey();
+    return isValidModifiers() && isValidKey();
 }
 
-String KeyCombination::toString(char connector, bool hasSpace, bool hasKeyId, bool hasIsAutoRepeat) const
+String KeyCombination::toString(bool isPrettySpace, bool hasIsAutoRepeat, bool hasKeyId) const
 {
-    String _connector = hasSpace ? (' ' + std::string(1, connector) + ' ') : std::string(1, connector);
-
     String rslt;
 
-    rslt += getModifiersString(mods_, connector, hasSpace);
+    rslt += getModifiersString(mods_, isPrettySpace);
 
     if (!rslt.empty())
-        rslt += _connector;
+        rslt += isPrettySpace ? " + " : "+";
 
     rslt += getKeyString(key_);
 
