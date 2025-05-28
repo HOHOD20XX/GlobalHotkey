@@ -25,11 +25,11 @@ int main()
     gbhk::KeyCombination hotkey2(gbhk::CTRL | gbhk::SHIFT, 'J', true);
     gbhk::KeyCombination hotkey3(gbhk::CTRL | gbhk::SHIFT, gbhk::KY_DELETE, false);
 
-    std::cout << "The Hotkeys: "
-              << "[Ctrl + J, No Auto Repeat]; "
-              << "[Ctrl + Shift + J, Auto Repeat];"
+    std::cout << "The Hotkeys: " << "\n"
+              << hotkey1.toString(true, true) << "\n"
+              << hotkey2.toString(true, true) << "\n"
               << std::endl;
-    std::cout << "Press [Ctrl + Shift + Delete] To Exit!" << std::endl;
+    std::cout << "Press " << hotkey3.toString(true) << " To Exit!" << std::endl;
 
     auto rtn = hotkeyManager->start();
     if (rtn != gbhk::RC_SUCCESS)
