@@ -2,23 +2,10 @@
     "version": 3,
     "configurePresets": [
         {
-            "name": "msvc-x64-debug",
-            "displayName": "MSVC 2022 x64 Debug",
+            "name": "msvc-x64",
+            "displayName": "MSVC 2022 x64",
             "generator": "Visual Studio 17 2022",
             "architecture": "x64",
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug"
-            },
-            "binaryDir": "${sourceDir}/build/${presetName}"
-        },
-        {
-            "name": "msvc-x64-release",
-            "displayName": "MSVC 2022 x64 Release",
-            "generator": "Visual Studio 17 2022",
-            "architecture": "x64",
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Release"
-            },
             "binaryDir": "${sourceDir}/build/${presetName}"
         },
         {
