@@ -12,7 +12,7 @@ endif()
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/src SRC)
 
-set(GBHK_MSG_PREFIX "@GlobalHotkey:")
+set(GBHK_MSG_PREFIX "[GlobalHotkey]")
 
 if (CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
     message(FATAL_ERROR "${GBHK_MSG_PREFIX} In-source builds are not allowed. Please make a new directory (e.g. build) and run CMake from there.")
