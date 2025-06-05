@@ -11,13 +11,16 @@ if(NOT TARGET global_hotkey)
 endif()
 
 option(BUILD_EXAMPLE_USE_HOOK "Use hook global hotkey to build example" OFF)
+if (BUILD_EXAMPLE_USE_HOOK)
+	message(STATUS "${GBHK_MSG_PREFIX} Use hook for example")
+endif()
 
 add_executable(example1 example1.cpp)
 
 if (GBHK_DISABLE_REGISTER AND NOT BUILD_EXAMPLE_USE_HOOK)
-    message(FATAL_ERROR "Cannot build example using register global hotkey with GBHK_DISABLE_REGISTER")
+    message(FATAL_ERROR "${GBHK_MSG_PREFIX} Cannot build example using register global hotkey with GBHK_DISABLE_REGISTER")
 elseif (GBHK_DISABLE_HOOK AND BUILD_EXAMPLE_USE_HOOK)
-    message(FATAL_ERROR "Cannot build example using hook global hotkey with GBHK_DISABLE_HOOK")
+    message(FATAL_ERROR "${GBHK_MSG_PREFIX} Cannot build example using hook global hotkey with GBHK_DISABLE_HOOK")
 endif()
 
 if (BUILD_EXAMPLE_USE_HOOK)

@@ -12,8 +12,10 @@ endif()
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/src SRC)
 
+set(GBHK_MSG_PREFIX "@GlobalHotkey:")
+
 if (CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
-    message(FATAL_ERROR "In-source builds are not allowed. Please make a new directory (e.g. build) and run CMake from there.")
+    message(FATAL_ERROR "${GBHK_MSG_PREFIX} In-source builds are not allowed. Please make a new directory (e.g. build) and run CMake from there.")
 endif()
 
 if (NOT DEFINED GBHK_MASTER_PROJECT)
@@ -30,28 +32,44 @@ endif()
 
 # Build shared library option.
 option(GBHK_BUILD_SHARED "Build shared library" OFF)
+if (GBHK_BUILD_SHARED)
+    message(STATUS "${GBHK_MSG_PREFIX} Building shared library")
+else()
+    message(STATUS "${GBHK_MSG_PREFIX} Building static library")
+endif()
 
 # Disable register hotkey option.
 option(GBHK_DISABLE_REGISTER "Disable register global hotkey" OFF)
+if (GBHK_DISABLE_REGISTER)
+    message(STATUS "${GBHK_MSG_PREFIX} Disabling register global hotkey")
+endif()
 
 # Disable hook hotkey option.
 option(GBHK_DISABLE_HOOK "Disable hook global hotkey" !WIN32)
+if (GBHK_DISABLE_HOOK)
+    message(STATUS "${GBHK_MSG_PREFIX} Disabling hook global hotkey")
+endif()
 
 if (NOT WIN32 AND NOT GBHK_DISABLE_HOOK)
-    message(FATAL_ERROR "Hook global hotkey is only supported on Windows")
+    message(FATAL_ERROR "${GBHK_MSG_PREFIX} Hook global hotkey is only supported on Windows")
 endif()
 
 # Build example option.
 option(GBHK_BUILD_EXAMPLE "Build example" ${GBHK_MASTER_PROJECT})
+if (GBHK_BUILD_EXAMPLE)
+    message(STATUS "${GBHK_MSG_PREFIX} Building example")
+else()
+    message(STATUS "${GBHK_MSG_PREFIX} Not building example")
+endif()
 
 # Only Windows is supported for now.
 # Maybe be removed in the future.
 if (NOT WIN32)
-    message(FATAL_ERROR "GlobalHotkey only supports Windows")
+    message(FATAL_ERROR "${GBHK_MSG_PREFIX} GlobalHotkey only supports Windows")
 endif()
 
 if (GBHK_DISABLE_HOOK AND GBHK_DISABLE_REGISTER)
-    message(FATAL_ERROR "Cannot set Both GBHK_DISABLE_HOOK and GBHK_DISABLE_REGISTER to ON")
+    message(FATAL_ERROR "${GBHK_MSG_PREFIX} Cannot set Both GBHK_DISABLE_HOOK and GBHK_DISABLE_REGISTER to ON")
 endif()
 
 find_package(Threads REQUIRED)
