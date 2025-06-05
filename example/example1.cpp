@@ -73,7 +73,7 @@ int main()
     MSG msg = {};
     while (!shouldClose)
     {
-        if (::PeekMessageA(&msg, NULL, 0, 0, PM_REMOVE) == TRUE)
+        if (::PeekMessageA(&msg, NULL, WM_KEYFIRST, WM_KEYLAST, PM_REMOVE) != 0)
         {
             ::TranslateMessage(&msg);
             ::DispatchMessageA(&msg);
