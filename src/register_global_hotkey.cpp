@@ -283,7 +283,7 @@ void RegGlobalHotkey::work_()
     }
 }
 
-// @TODO How to fix the problem when UnregisterHotkey has error.
+// @TODO How to fix the return value problem when UnregisterHotkey has error on one.
 int RegGlobalHotkey::end_()
 {
     int rslt = RC_SUCCESS;
