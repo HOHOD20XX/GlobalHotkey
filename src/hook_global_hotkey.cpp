@@ -39,7 +39,7 @@ int HookGlobalHotkey::start()
     keyboard_hook::setKeyPressedCallback(&addPressedKey_);
     keyboard_hook::setKeyReleaseddCallback(&removePressedKey_);
     // Start hook the #LowKeyboardEvent.
-    int rslt = keyboard_hook::run();
+    int rslt = keyboard_hook::start();
     // If failed to hook return error code.
     if (rslt != RC_SUCCESS)
         return rslt;

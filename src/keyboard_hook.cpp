@@ -101,7 +101,7 @@ void setKeyReleaseddCallback(void (*callbackFunc)(int key))
     gKeyReleasedCallback = callbackFunc;
 }
 
-int run()
+int start()
 {
     gHhook = ::SetWindowsHookExA(WH_KEYBOARD_LL, &LowLevelKeyboardProc, NULL, 0);
 

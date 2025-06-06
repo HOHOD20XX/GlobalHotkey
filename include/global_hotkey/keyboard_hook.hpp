@@ -26,7 +26,7 @@ void GBHK_API setKeyPressedCallback(void (*callbackFunc)(int key));
 void GBHK_API setKeyReleaseddCallback(void (*callbackFunc)(int key));
 
 /// @return If success return #RC_SUCCESS, else return error code.
-int GBHK_API run();
+int GBHK_API start();
 
 /// @return If success return #RC_SUCCESS, else return error code.
 int GBHK_API end();
