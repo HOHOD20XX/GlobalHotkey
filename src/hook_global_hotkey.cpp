@@ -130,7 +130,7 @@ int HookGlobalHotkey::end()
     shouldClose_ = true;
     // Wait the thread exits.
     while (isRunning_)
-        sleep(1);
+        sleep(THREAD_WAIT_MILLISECONDS);
     // Reset this flag to default state.
     shouldClose_ = false;
 
@@ -151,14 +151,11 @@ int HookGlobalHotkey::add(const KeyCombination& keycomb, VoidFunc callbackFunc)
 
     KeyCombination _keycomb(keycomb.modifiers(), keycomb.nativeKey(), keycomb.isAutoRepeat());
 
-    mtxFuncsOperate_.lock();
-
+    std::lock_guard<std::mutex> lock(mtxFuncsOperate_);
     if (voidFuncs_.find(_keycomb) != voidFuncs_.end())
         rtn = RC_ALREADY_EXISTED;
     else
         voidFuncs_.insert({ _keycomb, { _keycomb.isAutoRepeat(), callbackFunc } });
-
-    mtxFuncsOperate_.unlock();
 
     return rtn;
 }
@@ -172,14 +169,11 @@ int HookGlobalHotkey::add(const KeyCombination& keycomb, ArgFunc callbackFunc, A
 
     KeyCombination _keycomb(keycomb.modifiers(), keycomb.nativeKey(), keycomb.isAutoRepeat());
 
-    mtxFuncsOperate_.lock();
-
+    std::lock_guard<std::mutex> lock(mtxFuncsOperate_);
     if (argFuncArgs_.find(_keycomb) != argFuncArgs_.end())
         rtn = RC_ALREADY_EXISTED;
     else
         argFuncArgs_.insert({ _keycomb, { _keycomb.isAutoRepeat(), { callbackFunc, arg } } });
-
-    mtxFuncsOperate_.unlock();
 
     return rtn;
 }
@@ -190,8 +184,7 @@ int HookGlobalHotkey::remove(const KeyCombination& keycomb)
 
     KeyCombination _keycomb(keycomb.modifiers(), keycomb.nativeKey(), keycomb.isAutoRepeat());
 
-    mtxFuncsOperate_.lock();
-
+    std::lock_guard<std::mutex> lock(mtxFuncsOperate_);
     if (voidFuncs_.find(_keycomb) == voidFuncs_.end() && argFuncArgs_.find(_keycomb) == argFuncArgs_.end())
     {
         rtn = RC_NOT_FIND;
@@ -201,8 +194,6 @@ int HookGlobalHotkey::remove(const KeyCombination& keycomb)
         voidFuncs_.erase(_keycomb);
         argFuncArgs_.erase(_keycomb);
     }
-
-    mtxFuncsOperate_.unlock();
 
     return rtn;
 }
@@ -221,19 +212,16 @@ int HookGlobalHotkey::replace(const KeyCombination& oldKeycomb, const KeyCombina
     KeyCombination _oldKeycomb(oldKeycomb.modifiers(), oldKeycomb.nativeKey(), oldKeycomb.isAutoRepeat());
     KeyCombination _newKeycomb(newKeycomb.modifiers(), newKeycomb.nativeKey(), newKeycomb.isAutoRepeat());
 
-    mtxFuncsOperate_.lock();
-
+    std::lock_guard<std::mutex> lock(mtxFuncsOperate_);
     if (voidFuncs_.find(_oldKeycomb) != voidFuncs_.end())
     {
         auto func = voidFuncs_[_oldKeycomb].second;
-
         voidFuncs_.erase(_oldKeycomb);
         voidFuncs_.insert({ _newKeycomb, { _newKeycomb.isAutoRepeat(), func } });
     }
     else if (argFuncArgs_.find(_oldKeycomb) != argFuncArgs_.end())
     {
         auto funcArg = argFuncArgs_[_oldKeycomb].second;
-
         argFuncArgs_.erase(_oldKeycomb);
         argFuncArgs_.insert({ _newKeycomb, { _newKeycomb.isAutoRepeat(), funcArg } });
     }
@@ -241,8 +229,6 @@ int HookGlobalHotkey::replace(const KeyCombination& oldKeycomb, const KeyCombina
     {
         rtn = RC_NOT_FIND;
     }
-
-    mtxFuncsOperate_.unlock();
 
     return rtn;
 }

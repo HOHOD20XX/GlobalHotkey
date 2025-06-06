@@ -48,7 +48,6 @@ std::thread::id GlobalHotkeyBase::getWorkThreadId_()
 {
     std::lock_guard<std::mutex> lock(mtx_);
     std::thread::id id = workThreadId_;
-
     return id;
 }
 

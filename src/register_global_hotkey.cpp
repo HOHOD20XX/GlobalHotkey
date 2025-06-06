@@ -105,7 +105,7 @@ int RegGlobalHotkey::end()
     shouldClose_ = true;
     // Wait the thread exits.
     while (isRunning_)
-        sleep(1);
+        sleep(THREAD_WAIT_MILLISECONDS);
     // Reset this flag to default state.
     shouldClose_ = false;
 
@@ -140,7 +140,6 @@ int RegGlobalHotkey::add(const KeyCombination& keycomb, VoidFunc callbackFunc)
 
     setTask_(tsk);
     int rtn = waitTaskFinished_();
-
     if (rtn == RC_SUCCESS)
         addFunc_(keycomb, callbackFunc);
 
@@ -170,7 +169,6 @@ int RegGlobalHotkey::add(const KeyCombination& keycomb, ArgFunc callbackFunc, Ar
 
     setTask_(tsk);
     int rtn = waitTaskFinished_();
-
     if (rtn == RC_SUCCESS)
         addFunc_(keycomb, callbackFunc, arg);
 
@@ -197,7 +195,6 @@ int RegGlobalHotkey::remove(const KeyCombination& keycomb)
 
     setTask_(tsk);
     int rtn = waitTaskFinished_();
-
     if (rtn == RC_SUCCESS)
         removeFunc_(keycomb);
 
@@ -239,11 +236,9 @@ int RegGlobalHotkey::replace(const KeyCombination& oldKeycomb, const KeyCombinat
 
     setTask_(tsk);
     int rtn = waitTaskFinished_();
-
     if (rtn == RC_SUCCESS)
     {
         removeFunc_(oldKeycomb);
-
         if (voidfunc)
             addFunc_(newKeycomb, voidfunc);
         else
@@ -256,7 +251,6 @@ int RegGlobalHotkey::replace(const KeyCombination& oldKeycomb, const KeyCombinat
 void RegGlobalHotkey::work_()
 {
     MSG msg = {0};
-
     while (::PeekMessageA(&msg, NULL, 0, 0, PM_REMOVE) != 0)
     {
         if (msg.message == WM_HOTKEY)
@@ -291,7 +285,7 @@ int RegGlobalHotkey::end_()
     // Unregister all hotkey.
     for (const auto& var : keyIdKeycombs_)
     {
-        if (!::UnregisterHotKey(NULL, var.first) == 0)
+        if (::UnregisterHotKey(NULL, var.first) == 0)
             rtn = ::GetLastError();
     }
 
@@ -304,13 +298,16 @@ int RegGlobalHotkey::end_()
 
 int RegGlobalHotkey::add_(const KeyCombination& keycomb)
 {
-    if (::RegisterHotKey(NULL, keyId_, keycomb.nativeModifiers(), keycomb.nativeKey()))
+    if (::RegisterHotKey(NULL, keyId_, keycomb.nativeModifiers(), keycomb.nativeKey()) != 0)
     {
         keyIdKeycombs_.insert({ keyId_, keycomb });
         keyId_++;
         return RC_SUCCESS;
     }
-    return ::GetLastError();
+    else
+    {
+        return ::GetLastError();
+    }
 }
 
 int RegGlobalHotkey::remove_(const KeyCombination& keycomb)
@@ -324,7 +321,10 @@ int RegGlobalHotkey::remove_(const KeyCombination& keycomb)
                 keyIdKeycombs_.erase(var.first);
                 return RC_SUCCESS;
             }
-            return ::GetLastError();
+            else
+            {
+                return ::GetLastError();
+            }
         }
     }
 
@@ -347,7 +347,10 @@ int RegGlobalHotkey::replace_(const KeyCombination& oldKeycomb, const KeyCombina
                     keyIdKeycombs_.insert({ keyid, newKeycomb });
                     return RC_SUCCESS;
                 }
-                return ::GetLastError();
+                else
+                {
+                    return ::GetLastError();
+                }
             }
             else
             {
@@ -361,59 +364,51 @@ int RegGlobalHotkey::replace_(const KeyCombination& oldKeycomb, const KeyCombina
 
 void RegGlobalHotkey::setTask_(const Task& task)
 {
-    mtx_.lock();
+    std::lock_guard<std::mutex> lock(mtx_);
     task_ = task;
-    mtx_.unlock();
-
     hasTask_ = true;
     taskIsFinished_ = false;
 }
 
 RegGlobalHotkey::Task RegGlobalHotkey::getTask_()
 {
-    Task tsk;
-
     if (hasTask_)
     {
-        mtx_.lock();
-        tsk = task_;
-        mtx_.unlock();
-
+        std::lock_guard<std::mutex> lock(mtx_);
+        Task tsk = task_;
         hasTask_ = false;
+        return tsk;
     }
-
-    return tsk;
+    else
+    {
+        return Task();
+    }
 }
 
 int RegGlobalHotkey::waitTaskFinished_() const
 {
     while (!taskIsFinished_)
-        sleep(1);
-
+        sleep(THREAD_WAIT_MILLISECONDS);
     return taskResult_;
 }
 
 VoidFunc RegGlobalHotkey::getVoidFunc_(const KeyCombination& keycomb)
 {
-    VoidFunc rtn = nullptr;
-
     std::lock_guard<std::mutex> lock(mtx_);
 
+    VoidFunc rtn = nullptr;
     if (voidFuncs_.find(keycomb) != voidFuncs_.end())
         rtn = voidFuncs_[keycomb];
-
     return rtn;
 }
 
 ArgFuncArg RegGlobalHotkey::getArgFuncArg_(const KeyCombination& keycomb)
 {
-    ArgFuncArg rtn = { nullptr, nullptr };
-
     std::lock_guard<std::mutex> lock(mtx_);
 
+    ArgFuncArg rtn = { nullptr, nullptr };
     if (argFuncArgs_.find(keycomb) != argFuncArgs_.end())
         rtn = argFuncArgs_[keycomb];
-
     return rtn;
 }
 
@@ -432,7 +427,6 @@ void RegGlobalHotkey::addFunc_(const KeyCombination& keycomb, ArgFunc callbackFu
 void RegGlobalHotkey::removeFunc_(const KeyCombination& keycomb)
 {
     std::lock_guard<std::mutex> lock(mtx_);
-
     voidFuncs_.erase(keycomb);
     argFuncArgs_.erase(keycomb);
 }

@@ -15,6 +15,8 @@ namespace gbhk
 
 void GBHK_API sleep(size_t millisecond);
 
+constexpr size_t THREAD_WAIT_MILLISECONDS = 5;
+
 class GBHK_API GlobalHotkeyBase
 {
 public:

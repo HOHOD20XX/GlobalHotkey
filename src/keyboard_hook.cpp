@@ -30,7 +30,7 @@ static LRESULT WINAPI LowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lPar
         KBDLLHOOKSTRUCT* p = (KBDLLHOOKSTRUCT*) lParam;
         auto key = p->vkCode;
 
-        gMtx.lock();
+        std::lock_guard<std::mutex> lock(gMtx);
 
         if (wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN)
         {
@@ -64,17 +64,14 @@ static LRESULT WINAPI LowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lPar
                 fn(arg);
             }
         }
-
-        gMtx.unlock();
     }
 
-    return CallNextHookEx(NULL, nCode, wParam, lParam);
+    return ::CallNextHookEx(NULL, nCode, wParam, lParam);
 }
 
 void addKeyEventCallback(int key, State state, VoidFunc callbackFunc)
 {
     std::lock_guard<std::mutex> lock(gMtx);
-
     if (gArgFuncArgs.find(key) != gArgFuncArgs.end() && gArgFuncArgs[key].first == state)
         gArgFuncArgs.erase(key);
     gVoidFuncs.insert({ key, { state, callbackFunc } });
@@ -83,7 +80,6 @@ void addKeyEventCallback(int key, State state, VoidFunc callbackFunc)
 void addKeyEventCallback(int key, State state, ArgFunc callbackFunc, Arg arg)
 {
     std::lock_guard<std::mutex> lock(gMtx);
-
     if (gVoidFuncs.find(key) != gVoidFuncs.end() && gVoidFuncs[key].first == state)
         gVoidFuncs.erase(key);
     gArgFuncArgs.insert({ key, { state, { callbackFunc, arg } } });
@@ -104,10 +100,10 @@ void setKeyReleaseddCallback(void (*callbackFunc)(int key))
 int start()
 {
     gHhook = ::SetWindowsHookExA(WH_KEYBOARD_LL, &LowLevelKeyboardProc, NULL, 0);
-
     if (gHhook)
         return RC_SUCCESS;
-    return ::GetLastError();
+    else
+        return ::GetLastError();
 }
 
 int end()
@@ -122,7 +118,10 @@ int end()
 
         return RC_SUCCESS;
     }
-    return ::GetLastError();
+    else
+    {
+        return ::GetLastError();
+    }
 }
 
 }
