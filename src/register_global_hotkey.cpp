@@ -19,7 +19,7 @@ RegGlobalHotkey::RegGlobalHotkey() :
 
 RegGlobalHotkey::~RegGlobalHotkey()
 {
-    int rslt = end();
+    int rtn = end();
 }
 
 RegGlobalHotkey& RegGlobalHotkey::getInstance()
@@ -99,7 +99,7 @@ int RegGlobalHotkey::end()
     Task tsk;
     tsk.opc = Task::END;
     setTask_(tsk);
-    int rslt = waitTaskFinished_();
+    int rtn = waitTaskFinished_();
 
     // Set this flag to true to exit thread.
     shouldClose_ = true;
@@ -114,7 +114,7 @@ int RegGlobalHotkey::end()
     voidFuncs_.clear();
     argFuncArgs_.clear();
 
-    return rslt;
+    return rtn;
 }
 
 int RegGlobalHotkey::add(const KeyCombination& keycomb, VoidFunc callbackFunc)
@@ -139,12 +139,12 @@ int RegGlobalHotkey::add(const KeyCombination& keycomb, VoidFunc callbackFunc)
     tsk.add.keycomb = keycomb;
 
     setTask_(tsk);
-    int rslt = waitTaskFinished_();
+    int rtn = waitTaskFinished_();
 
-    if (rslt == RC_SUCCESS)
+    if (rtn == RC_SUCCESS)
         addFunc_(keycomb, callbackFunc);
 
-    return rslt;
+    return rtn;
 }
 
 int RegGlobalHotkey::add(const KeyCombination& keycomb, ArgFunc callbackFunc, Arg arg)
@@ -169,12 +169,12 @@ int RegGlobalHotkey::add(const KeyCombination& keycomb, ArgFunc callbackFunc, Ar
     tsk.add.keycomb = keycomb;
 
     setTask_(tsk);
-    int rslt = waitTaskFinished_();
+    int rtn = waitTaskFinished_();
 
-    if (rslt == RC_SUCCESS)
+    if (rtn == RC_SUCCESS)
         addFunc_(keycomb, callbackFunc, arg);
 
-    return rslt;
+    return rtn;
 }
 
 int RegGlobalHotkey::remove(const KeyCombination& keycomb)
@@ -196,12 +196,12 @@ int RegGlobalHotkey::remove(const KeyCombination& keycomb)
     tsk.remove.keycomb = keycomb;
 
     setTask_(tsk);
-    int rslt = waitTaskFinished_();
+    int rtn = waitTaskFinished_();
 
-    if (rslt == RC_SUCCESS)
+    if (rtn == RC_SUCCESS)
         removeFunc_(keycomb);
 
-    return rslt;
+    return rtn;
 }
 
 int RegGlobalHotkey::replace(const KeyCombination& oldKeycomb, const KeyCombination& newKeycomb)
@@ -238,9 +238,9 @@ int RegGlobalHotkey::replace(const KeyCombination& oldKeycomb, const KeyCombinat
     tsk.replace.newKeycomb = newKeycomb;
 
     setTask_(tsk);
-    int rslt = waitTaskFinished_();
+    int rtn = waitTaskFinished_();
 
-    if (rslt == RC_SUCCESS)
+    if (rtn == RC_SUCCESS)
     {
         removeFunc_(oldKeycomb);
 
@@ -250,7 +250,7 @@ int RegGlobalHotkey::replace(const KeyCombination& oldKeycomb, const KeyCombinat
             addFunc_(newKeycomb, argfuncarg.first, argfuncarg.second);
     }
 
-    return rslt;
+    return rtn;
 }
 
 void RegGlobalHotkey::work_()
@@ -286,20 +286,20 @@ void RegGlobalHotkey::work_()
 // @TODO How to fix the return value problem when UnregisterHotkey has error on one.
 int RegGlobalHotkey::end_()
 {
-    int rslt = RC_SUCCESS;
+    int rtn = RC_SUCCESS;
 
     // Unregister all hotkey.
     for (const auto& var : keyIdKeycombs_)
     {
         if (!::UnregisterHotKey(NULL, var.first))
-            rslt = ::GetLastError();
+            rtn = ::GetLastError();
     }
 
     // Reset the members.
     keyId_ = 0;
     keyIdKeycombs_.clear();
 
-    return rslt;
+    return rtn;
 }
 
 int RegGlobalHotkey::add_(const KeyCombination& keycomb)
@@ -395,26 +395,26 @@ int RegGlobalHotkey::waitTaskFinished_() const
 
 VoidFunc RegGlobalHotkey::getVoidFunc_(const KeyCombination& keycomb)
 {
-    VoidFunc rslt = nullptr;
+    VoidFunc rtn = nullptr;
 
     std::lock_guard<std::mutex> lock(mtx_);
 
     if (voidFuncs_.find(keycomb) != voidFuncs_.end())
-        rslt = voidFuncs_[keycomb];
+        rtn = voidFuncs_[keycomb];
 
-    return rslt;
+    return rtn;
 }
 
 ArgFuncArg RegGlobalHotkey::getArgFuncArg_(const KeyCombination& keycomb)
 {
-    ArgFuncArg rslt = { nullptr, nullptr };
+    ArgFuncArg rtn = { nullptr, nullptr };
 
     std::lock_guard<std::mutex> lock(mtx_);
 
     if (argFuncArgs_.find(keycomb) != argFuncArgs_.end())
-        rslt = argFuncArgs_[keycomb];
+        rtn = argFuncArgs_[keycomb];
 
-    return rslt;
+    return rtn;
 }
 
 void RegGlobalHotkey::addFunc_(const KeyCombination& keycomb, VoidFunc callbackFunc)

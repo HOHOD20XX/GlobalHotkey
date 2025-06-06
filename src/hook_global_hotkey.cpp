@@ -18,7 +18,7 @@ HookGlobalHotkey::HookGlobalHotkey() :
 
 HookGlobalHotkey::~HookGlobalHotkey()
 {
-    int rslt = end();
+    int rtn = end();
 }
 
 HookGlobalHotkey& HookGlobalHotkey::getInstance()
@@ -39,10 +39,10 @@ int HookGlobalHotkey::start()
     keyboard_hook::setKeyPressedCallback(&addPressedKey_);
     keyboard_hook::setKeyReleaseddCallback(&removePressedKey_);
     // Start hook the #LowKeyboardEvent.
-    int rslt = keyboard_hook::start();
+    int rtn = keyboard_hook::start();
     // If failed to hook return error code.
-    if (rslt != RC_SUCCESS)
-        return rslt;
+    if (rtn != RC_SUCCESS)
+        return rtn;
 
     isRunning_ = true;
     workThread_ = std::thread([&]()
@@ -147,20 +147,20 @@ int HookGlobalHotkey::add(const KeyCombination& keycomb, VoidFunc callbackFunc)
     if (!keycomb.isValid())
         return RC_INVALID_KEY_COMBINATION;
 
-    int rslt = RC_SUCCESS;
+    int rtn = RC_SUCCESS;
 
     KeyCombination _keycomb(keycomb.modifiers(), keycomb.nativeKey(), keycomb.isAutoRepeat());
 
     mtxFuncsOperate_.lock();
 
     if (voidFuncs_.find(_keycomb) != voidFuncs_.end())
-        rslt = RC_ALREADY_EXISTED;
+        rtn = RC_ALREADY_EXISTED;
     else
         voidFuncs_.insert({ _keycomb, { _keycomb.isAutoRepeat(), callbackFunc } });
 
     mtxFuncsOperate_.unlock();
 
-    return rslt;
+    return rtn;
 }
 
 int HookGlobalHotkey::add(const KeyCombination& keycomb, ArgFunc callbackFunc, Arg arg)
@@ -168,25 +168,25 @@ int HookGlobalHotkey::add(const KeyCombination& keycomb, ArgFunc callbackFunc, A
     if (!keycomb.isValid())
         return RC_INVALID_KEY_COMBINATION;
 
-    int rslt = RC_SUCCESS;
+    int rtn = RC_SUCCESS;
 
     KeyCombination _keycomb(keycomb.modifiers(), keycomb.nativeKey(), keycomb.isAutoRepeat());
 
     mtxFuncsOperate_.lock();
 
     if (argFuncArgs_.find(_keycomb) != argFuncArgs_.end())
-        rslt = RC_ALREADY_EXISTED;
+        rtn = RC_ALREADY_EXISTED;
     else
         argFuncArgs_.insert({ _keycomb, { _keycomb.isAutoRepeat(), { callbackFunc, arg } } });
 
     mtxFuncsOperate_.unlock();
 
-    return rslt;
+    return rtn;
 }
 
 int HookGlobalHotkey::remove(const KeyCombination& keycomb)
 {
-    int rslt = RC_SUCCESS;
+    int rtn = RC_SUCCESS;
 
     KeyCombination _keycomb(keycomb.modifiers(), keycomb.nativeKey(), keycomb.isAutoRepeat());
 
@@ -194,7 +194,7 @@ int HookGlobalHotkey::remove(const KeyCombination& keycomb)
 
     if (voidFuncs_.find(_keycomb) == voidFuncs_.end() && argFuncArgs_.find(_keycomb) == argFuncArgs_.end())
     {
-        rslt = RC_NOT_FIND;
+        rtn = RC_NOT_FIND;
     }
     else
     {
@@ -204,7 +204,7 @@ int HookGlobalHotkey::remove(const KeyCombination& keycomb)
 
     mtxFuncsOperate_.unlock();
 
-    return rslt;
+    return rtn;
 }
 
 int HookGlobalHotkey::replace(const KeyCombination& oldKeycomb, const KeyCombination& newKeycomb)
@@ -216,7 +216,7 @@ int HookGlobalHotkey::replace(const KeyCombination& oldKeycomb, const KeyCombina
     if (oldKeycomb == newKeycomb && oldKeycomb.isAutoRepeat() == newKeycomb.isAutoRepeat())
         return RC_OLD_EQUAL_NEW;
 
-    int rslt = RC_SUCCESS;
+    int rtn = RC_SUCCESS;
 
     KeyCombination _oldKeycomb(oldKeycomb.modifiers(), oldKeycomb.nativeKey(), oldKeycomb.isAutoRepeat());
     KeyCombination _newKeycomb(newKeycomb.modifiers(), newKeycomb.nativeKey(), newKeycomb.isAutoRepeat());
@@ -239,12 +239,12 @@ int HookGlobalHotkey::replace(const KeyCombination& oldKeycomb, const KeyCombina
     }
     else
     {
-        rslt = RC_NOT_FIND;
+        rtn = RC_NOT_FIND;
     }
 
     mtxFuncsOperate_.unlock();
 
-    return rslt;
+    return rtn;
 }
 
 void HookGlobalHotkey::setDebouncedTime(size_t millisecond)
