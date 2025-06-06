@@ -255,7 +255,7 @@ int RegGlobalHotkey::replace(const KeyCombination& oldKeycomb, const KeyCombinat
 
 void RegGlobalHotkey::work_()
 {
-    MSG msg;
+    MSG msg = {0};
 
     while (::PeekMessageA(&msg, NULL, 0, 0, PM_REMOVE))
     {

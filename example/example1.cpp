@@ -70,7 +70,7 @@ int main()
     }
 
 #ifdef GLOBAL_HOTKEY_EXAMPLE_USE_HOOK
-    MSG msg = {};
+    MSG msg = {0};
     while (!shouldClose)
     {
         if (::PeekMessageA(&msg, NULL, WM_KEYFIRST, WM_KEYLAST, PM_REMOVE) == TRUE)
