@@ -257,7 +257,7 @@ void RegGlobalHotkey::work_()
 {
     MSG msg = {0};
 
-    while (::PeekMessageA(&msg, NULL, 0, 0, PM_REMOVE))
+    while (::PeekMessageA(&msg, NULL, 0, 0, PM_REMOVE) != 0)
     {
         if (msg.message == WM_HOTKEY)
         {
@@ -291,7 +291,7 @@ int RegGlobalHotkey::end_()
     // Unregister all hotkey.
     for (const auto& var : keyIdKeycombs_)
     {
-        if (!::UnregisterHotKey(NULL, var.first))
+        if (!::UnregisterHotKey(NULL, var.first) == 0)
             rtn = ::GetLastError();
     }
 
@@ -319,7 +319,7 @@ int RegGlobalHotkey::remove_(const KeyCombination& keycomb)
     {
         if (var.second == keycomb)
         {
-            if (::UnregisterHotKey(NULL, var.first))
+            if (::UnregisterHotKey(NULL, var.first) != 0)
             {
                 keyIdKeycombs_.erase(var.first);
                 return RC_SUCCESS;
@@ -337,12 +337,12 @@ int RegGlobalHotkey::replace_(const KeyCombination& oldKeycomb, const KeyCombina
     {
         if (var.second == oldKeycomb)
         {
-            if (::UnregisterHotKey(NULL, var.first))
+            if (::UnregisterHotKey(NULL, var.first) != 0)
             {
                 int keyid = var.first;
                 keyIdKeycombs_.erase(keyid);
 
-                if (::RegisterHotKey(NULL, keyid, newKeycomb.nativeModifiers(), newKeycomb.nativeKey()))
+                if (::RegisterHotKey(NULL, keyid, newKeycomb.nativeModifiers(), newKeycomb.nativeKey()) != 0)
                 {
                     keyIdKeycombs_.insert({ keyid, newKeycomb });
                     return RC_SUCCESS;

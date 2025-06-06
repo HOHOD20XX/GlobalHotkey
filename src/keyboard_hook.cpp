@@ -112,7 +112,7 @@ int start()
 
 int end()
 {
-    if (::UnhookWindowsHookEx(gHhook))
+    if (::UnhookWindowsHookEx(gHhook) != 0)
     {
         gHhook = nullptr;
         gKeyPressedCallback = nullptr;
