@@ -1,40 +1,61 @@
 #ifndef GLOBAL_HOTKEY_KEYBOARD_HOOK_HPP
 #define GLOBAL_HOTKEY_KEYBOARD_HOOK_HPP
 
-#include "core/base.hpp"
+#ifndef GLOBAL_HOTKEY_DISABLE_HOOK
 
-#if defined(GLOBAL_HOTKEY_WIN) && !defined(GLOBAL_HOTKEY_NOHOOK)
+#include <memory>   // unique_ptr
+
+#include "base.hpp"
 
 namespace gbhk
 {
 
-namespace keyboard_hook
+namespace kbhook
 {
 
-enum State
+enum KeyState
 {
-    PRESSED,
-    RELEASED
+    KS_PRESSED,
+    KS_RELEASED
 };
 
-void GBHK_API addKeyEventCallback(int key, State state, VoidFunc callbackFunc);
+class _KeyboardHookPrivate;
 
-void GBHK_API addKeyEventCallback(int key, State state, ArgFunc callbackFunc, Arg arg);
+using KeyEventCallback = void (*)(int);
 
-void GBHK_API setKeyPressedCallback(void (*callbackFunc)(int key));
+class GBHK_API KeyboardHook final
+{
+public:
+    KeyboardHook(const KeyboardHook&) = delete;
+    KeyboardHook& operator=(const KeyboardHook&) = delete;
 
-void GBHK_API setKeyReleaseddCallback(void (*callbackFunc)(int key));
+    static KeyboardHook& getInstance();
 
-/// @return If success return #RC_SUCCESS, else return error code.
-int GBHK_API start();
+    int start();
+    int end();
+    int addKeyListener(int nativeKey, KeyState state, VoidFunc func);
+    int addKeyListener(int nativeKey, KeyState state, ArgFunc func, Arg arg);
+    int removeKeyListener(int nativeKey, KeyState state);
+    int removeAllKeyListener();
+    int setKeyPressedEvent(KeyEventCallback func);
+    int setKeyReleasedEvent(KeyEventCallback func);
+    int unsetKeyPressedEvent();
+    int unsetKeyReleasedEvent();
 
-/// @return If success return #RC_SUCCESS, else return error code.
-int GBHK_API end();
+    bool hasKeyListener(int nativeKey, KeyState state) const;
+    bool isRunning() const;
 
-} // namespace keyboard_hook
+private:
+    KeyboardHook();
+    ~KeyboardHook();
+
+    std::unique_ptr<_KeyboardHookPrivate> p_;
+};
+
+} // namespace kbhook
 
 } // namespace gbhk
 
-#endif // GLOBAL_HOTKEY_WIN && !GLOBAL_HOTKEY_NOHOOK
+#endif // !GLOBAL_HOTKEY_DISABLE_HOOK
 
 #endif // !GLOBAL_HOTKEY_KEYBOARD_HOOK_HPP

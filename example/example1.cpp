@@ -3,68 +3,71 @@
 #include <stdexcept>    // runtime_error
 #include <string>       // to_string()
 
-#ifdef GLOBAL_HOTKEY_EXAMPLE_USE_HOOK
-#include <windows.h>    // Window event loop.
-#endif // GLOBAL_HOTKEY_EXAMPLE_USE_HOOK
-
 #include <global_hotkey/global_hotkey.hpp>
+
+#ifdef GLOBAL_HOTKEY_EXAMPLE_USE_HOOK
+    #ifdef _GLOBAL_HOTKEY_WIN
+        #include <windows.h>    // Window event loop.
+    #elif defined(_GLOBAL_HOTKEY_MAC)
+        // TODO
+    #elif defined(_GLOBAL_HOTKEY_LINUX)
+        // TODO
+    #endif // _GLOBAL_HOTKEY_WIN
+#endif // GLOBAL_HOTKEY_EXAMPLE_USE_HOOK
 
 #define THROW_RT_ERR(errmsg, code) throw std::runtime_error(errmsg + std::to_string(code))
 
 int main()
 {
-    gbhk::GlobalHotkeyBase* hotkeyManager = nullptr;
-
 #ifdef GLOBAL_HOTKEY_EXAMPLE_USE_HOOK
-    hotkeyManager = &gbhk::HookGlobalHotkey::getInstance();
+    gbhk::GlobalHotkeyManager& hotkeyManager = gbhk::HookGHM::getInstance();
 #else
-    hotkeyManager = &gbhk::RegGlobalHotkey::getInstance();
+    gbhk::GlobalHotkeyManager& hotkeyManager = gbhk::RegisterGHM::getInstance();
 #endif // GLOBAL_HOTKEY_EXAMPLE_USE_HOOK
 
-    gbhk::KeyCombination hotkey1(gbhk::CTRL, 'J', false);
-    gbhk::KeyCombination hotkey2(gbhk::CTRL | gbhk::SHIFT, 'J', true);
-    gbhk::KeyCombination hotkey3(gbhk::CTRL | gbhk::SHIFT, gbhk::KY_DELETE, false);
+    gbhk::KeyCombination hotkey1(gbhk::MODI_CTRL, 'J');
+    gbhk::KeyCombination hotkey2(gbhk::MODI_CTRL | gbhk::MODI_SHIFT, 'J');
+    gbhk::KeyCombination hotkey3(gbhk::MODI_CTRL | gbhk::MODI_SHIFT, gbhk::KEY_DELETE);
 
     std::cout << "The Hotkeys: " << "\n"
-              << hotkey1.toString(true, true) << "\n"
-              << hotkey2.toString(true, true) << "\n"
+              << hotkey1.toString(true) << "\n"
+              << hotkey2.toString(true) << "\n"
               << std::endl;
     std::cout << "Press " << hotkey3.toString(true) << " To Exit!" << std::endl;
 
-    auto rtn = hotkeyManager->start();
-    if (rtn != gbhk::RC_SUCCESS)
+    auto rtn = hotkeyManager.start();
+    if (rtn != gbhk::EC_SUCCESS)
     {
         THROW_RT_ERR("Failed to start the hotkey: ", rtn);
     }
 
-    rtn = hotkeyManager->add(hotkey1, []()
+    rtn = hotkeyManager.add(hotkey1, []()
     {
         std::cout << "hotkey1 triggered" << std::endl;
     });
-    if (rtn != gbhk::RC_SUCCESS)
+    if (rtn != gbhk::EC_SUCCESS)
     {
         THROW_RT_ERR("Failed to add the hotkey: ", rtn);
     }
 
-    rtn = hotkeyManager->add(hotkey2, []()
+    rtn = hotkeyManager.add(hotkey2, []()
     {
         std::cout << "hotkey2 triggered" << std::endl;
-    });
-    if (rtn != gbhk::RC_SUCCESS)
+    }, true);
+    if (rtn != gbhk::EC_SUCCESS)
     {
         THROW_RT_ERR("Failed to add the hotkey: ", rtn);
     }
 
     std::atomic<bool> shouldClose(false);
-
-    rtn = hotkeyManager->add(hotkey3, [](void* shouldClose)
+    rtn = hotkeyManager.add(hotkey3, [](void* shouldClose)
     {
         std::cout << "hotkey3 triggered" << std::endl;
         std::cout << "exiting..." << std::endl;
 
         *static_cast<std::atomic<bool>*>(shouldClose) = true;
     }, &shouldClose);
-    if (rtn != gbhk::RC_SUCCESS)
+    if (rtn != gbhk::EC_SUCCESS)
     {
         THROW_RT_ERR("Failed to add the hotkey: ", rtn);
     }
@@ -79,18 +82,17 @@ int main()
             ::DispatchMessageA(&msg);
         }
 
-        gbhk::sleep(10);
+        gbhk::yield();
     }
 #else
     while (!shouldClose)
     {
-        // Pass
-        continue;
+        gbhk::yield();
     }
 #endif // GLOBAL_HOTKEY_EXAMPLE_USE_HOOK
 
-    rtn = hotkeyManager->end();
-    if (rtn != gbhk::RC_SUCCESS)
+    rtn = hotkeyManager.end();
+    if (rtn != gbhk::EC_SUCCESS)
     {
         THROW_RT_ERR("Failed to end the hotkey: ", rtn);
     }

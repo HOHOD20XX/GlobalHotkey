@@ -1,16 +1,14 @@
-// The "Global Hotkey" library, in c++.
-//
-// Web: https://github.com/JaderoChan/GlobalHotkey
-// You can contact me by email: c_dl_cn@outlook.com
+#ifndef GLOBAL_HOTKEY_GLOBAL_HOTKEY_HPP
+#define GLOBAL_HOTKEY_GLOBAL_HOTKEY_HPP
 
-// GPL-3.0 License
-//
-// Copyright (c) 2024 頔珞JaderoChan
+// Author: 頔珞JaderoChan
+// Repositories URL : https://github.com/JaderoChan/GlobalHotkey
+// License: GPL-3.0
 
-#ifndef GLOBAL_HOTKEY_HPP
-#define GLOBAL_HOTKEY_HPP
+#include "base.hpp"
+#include "error_code.hpp"
+#include "hook_ghm.hpp"
+#include "register_ghm.hpp"
+#include "utility.hpp"
 
-#include "register_global_hotkey.hpp"
-#include "hook_global_hotkey.hpp"
-
-#endif // !GLOBAL_HOTKEY_H
+#endif // !GLOBAL_HOTKEY_GLOBAL_HOTKEY_HPP

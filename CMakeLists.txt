@@ -10,7 +10,7 @@ if (NOT CMAKE_BUILD_TYPE)
 endif()
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
-aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/src SRC)
+file(GLOB_RECURSE SRC src/*.cpp)
 
 set(GBHK_MSG_PREFIX "[GlobalHotkey]")
 
@@ -33,39 +33,29 @@ endif()
 # Build shared library option.
 option(GBHK_BUILD_SHARED "Build shared library" OFF)
 if (GBHK_BUILD_SHARED)
-    message(STATUS "${GBHK_MSG_PREFIX} Building shared library")
+    message(STATUS "${GBHK_MSG_PREFIX} Build shared library")
 else()
-    message(STATUS "${GBHK_MSG_PREFIX} Building static library")
+    message(STATUS "${GBHK_MSG_PREFIX} Build static library")
 endif()
 
-# Disable register hotkey option.
-option(GBHK_DISABLE_REGISTER "Disable register global hotkey" OFF)
+# Disable register hotkey manager option.
+option(GBHK_DISABLE_REGISTER "Disable register global hotkey manager" OFF)
 if (GBHK_DISABLE_REGISTER)
-    message(STATUS "${GBHK_MSG_PREFIX} Disabling register global hotkey")
+    message(STATUS "${GBHK_MSG_PREFIX} Disable register global hotkey manager")
 endif()
 
-# Disable hook hotkey option.
-option(GBHK_DISABLE_HOOK "Disable hook global hotkey" !WIN32)
+# Disable hook hotkey manager option.
+option(GBHK_DISABLE_HOOK "Disable hook global hotkey manager" OFF)
 if (GBHK_DISABLE_HOOK)
-    message(STATUS "${GBHK_MSG_PREFIX} Disabling hook global hotkey")
-endif()
-
-if (NOT WIN32 AND NOT GBHK_DISABLE_HOOK)
-    message(FATAL_ERROR "${GBHK_MSG_PREFIX} Hook global hotkey is only supported on Windows")
+    message(STATUS "${GBHK_MSG_PREFIX} Disable hook global hotkey manager")
 endif()
 
 # Build example option.
 option(GBHK_BUILD_EXAMPLE "Build example" ${GBHK_MASTER_PROJECT})
 if (GBHK_BUILD_EXAMPLE)
-    message(STATUS "${GBHK_MSG_PREFIX} Building example")
+    message(STATUS "${GBHK_MSG_PREFIX} Build example")
 else()
-    message(STATUS "${GBHK_MSG_PREFIX} Not building example")
-endif()
-
-# Only Windows is supported for now.
-# Maybe be removed in the future.
-if (NOT WIN32)
-    message(FATAL_ERROR "${GBHK_MSG_PREFIX} GlobalHotkey only supports Windows")
+    message(STATUS "${GBHK_MSG_PREFIX} Not build example")
 endif()
 
 if (GBHK_DISABLE_HOOK AND GBHK_DISABLE_REGISTER)
@@ -82,11 +72,11 @@ else()
 endif()
 
 if (GBHK_DISABLE_REGISTER)
-    target_compile_definitions(global_hotkey PUBLIC GLOBAL_HOTKEY_NOREGISTER)
+    target_compile_definitions(global_hotkey PUBLIC GLOBAL_HOTKEY_DISABLE_REGISTER)
 endif()
 
 if (GBHK_DISABLE_HOOK)
-    target_compile_definitions(global_hotkey PUBLIC GLOBAL_HOTKEY_NOHOOK)
+    target_compile_definitions(global_hotkey PUBLIC GLOBAL_HOTKEY_DISABLE_HOOK)
 endif()
 
 target_link_libraries(global_hotkey PUBLIC Threads::Threads)

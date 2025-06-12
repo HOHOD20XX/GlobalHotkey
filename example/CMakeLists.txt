@@ -10,20 +10,20 @@ if(NOT TARGET global_hotkey)
     find_package(global_hotkey REQUIRED)
 endif()
 
-option(BUILD_EXAMPLE_USE_HOOK "Use hook global hotkey to build example" OFF)
-if (BUILD_EXAMPLE_USE_HOOK)
-	message(STATUS "${GBHK_MSG_PREFIX} Use hook for example")
+option(GBHK_EXAMPLE_USE_HOOK "Build example using hook global hotkey manager" OFF)
+if (GBHK_EXAMPLE_USE_HOOK)
+    message(STATUS "${GBHK_MSG_PREFIX} Build example using hook global hotkey manager")
 endif()
 
 add_executable(example1 example1.cpp)
 
-if (GBHK_DISABLE_REGISTER AND NOT BUILD_EXAMPLE_USE_HOOK)
-    message(FATAL_ERROR "${GBHK_MSG_PREFIX} Cannot build example using register global hotkey with GBHK_DISABLE_REGISTER")
-elseif (GBHK_DISABLE_HOOK AND BUILD_EXAMPLE_USE_HOOK)
-    message(FATAL_ERROR "${GBHK_MSG_PREFIX} Cannot build example using hook global hotkey with GBHK_DISABLE_HOOK")
+if (GBHK_DISABLE_REGISTER AND NOT GBHK_EXAMPLE_USE_HOOK)
+    message(FATAL_ERROR "${GBHK_MSG_PREFIX} Cannot build example using register global hotkey manager with GBHK_DISABLE_REGISTER")
+elseif (GBHK_DISABLE_HOOK AND GBHK_EXAMPLE_USE_HOOK)
+    message(FATAL_ERROR "${GBHK_MSG_PREFIX} Cannot build example using hook global hotkey manager with GBHK_DISABLE_HOOK")
 endif()
 
-if (BUILD_EXAMPLE_USE_HOOK)
+if (GBHK_EXAMPLE_USE_HOOK)
     target_compile_definitions(example1 PRIVATE GLOBAL_HOTKEY_EXAMPLE_USE_HOOK)
 endif()
 
