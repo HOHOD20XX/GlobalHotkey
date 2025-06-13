@@ -167,8 +167,8 @@ GBHK_API Key getKeyFromNative(int nativeKey) noexcept
         case KEY_102ND:                 return Key_Angle_Bracket;   // Need to check.
 
         // Modifier keys.
-        case KEY_LEFTMEAT:              return Key_Modi_Meta_Left;
-        case KEY_RIGHTMEAT:             return Key_Modi_Meta_Right;
+        case KEY_LEFTMETA:              return Key_Modi_Meta_Left;
+        case KEY_RIGHTMETA:             return Key_Modi_Meta_Right;
         case KEY_LEFTCTRL:              return Key_Modi_Ctrl_Left;
         case KEY_RIGHTCTRL:             return Key_Modi_Ctrl_Right;
         case KEY_LEFTALT:               return Key_Modi_Alt_Left;
@@ -340,8 +340,8 @@ GBHK_API int getNativeKey(const Key& key) noexcept
 
         // Modifier keys.
         case Key_Modi_Meta:             return 0;   // Not supported.
-        case Key_Modi_Meta_Left:        return KEY_LEFTMEAT;
-        case Key_Modi_Meta_Right:       return KEY_RIGHTMEAT;
+        case Key_Modi_Meta_Left:        return KEY_LEFTMETA;
+        case Key_Modi_Meta_Right:       return KEY_RIGHTMETA;
         case Key_Modi_Ctrl:             return 0;   // Not supported.
         case Key_Modi_Ctrl_Left:        return KEY_LEFTCTRL;
         case Key_Modi_Ctrl_Right:       return KEY_RIGHTCTRL;
