@@ -72,7 +72,7 @@ int main()
         THROW_RT_ERR("Failed to add the hotkey: ", rtn);
     }
 
-#ifdef GLOBAL_HOTKEY_EXAMPLE_USE_HOOK
+#ifdef GLOBAL_HOTKEY_EXAMPLE_USE_HOOK && defined(_GLOBAL_HOTKEY_WIN)
     MSG msg = {0};
     while (!shouldClose)
     {
