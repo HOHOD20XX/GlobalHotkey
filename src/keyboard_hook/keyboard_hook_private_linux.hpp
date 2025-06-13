@@ -24,14 +24,16 @@ public:
     _KeyboardHookPrivateLinux();
     ~_KeyboardHookPrivateLinux();
 
-protected:
-    int start_() override;
-    int end_() override;
+    int start() override;
+    int end() override;
 
 private:
+    void handleKeyEvent_(int state, int key) const;
+
+    std::atomic<bool> shouldClose_;
     std::thread workThread_;
 
-    std::vector<libevdev*> devices_;
+    std::vector<Pair<int, libevdev*>> devices_;
 };
 
 } // namespace kbhook

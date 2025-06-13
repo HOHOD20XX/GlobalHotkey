@@ -18,21 +18,38 @@ _KeyboardHookPrivateWin::_KeyboardHookPrivateWin() = default;
 
 _KeyboardHookPrivateWin::~_KeyboardHookPrivateWin() = default;
 
-int _KeyboardHookPrivateWin::start_()
+int _KeyboardHookPrivateWin::start()
 {
+    if (isRunning_)
+        return RC_SUCCESS;
+
     hhook_ = ::SetWindowsHookExA(WH_KEYBOARD_LL, &LowLevelKeyboardProc, NULL, 0);
     if (hhook_)
+    {
+        isRunning_ = true;
         return RC_SUCCESS;
+    }
     else
+    {
         return ::GetLastError();
+    }
 }
 
-int _KeyboardHookPrivateWin::end_()
+int _KeyboardHookPrivateWin::end()
 {
+    if (!isRunning_)
+        return RC_SUCCESS;
+
     int rtn = RC_SUCCESS;
     if (::UnhookWindowsHookEx(hhook_) == 0)
         rtn = ::GetLastError();
+
+    removeAllKeyListener();
+    unsetKeyPressedEvent();
+    unsetKeyReleasedEvent();
     hhook_ = nullptr;
+    isRunning_ = false;
+
     return rtn;
 }
 
@@ -58,28 +75,26 @@ LRESULT WINAPI LowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
 
         if (KBHP::voidFuncs_.find(key) != KBHP::voidFuncs_.end())
         {
-            bool keydownExe = (KBHP::voidFuncs_[key].first == KS_PRESSED) &&
-                              (wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN);
-            bool keyupExe = (KBHP::voidFuncs_[key].first == KS_RELEASED) &&
-                            (wParam == WM_KEYUP || wParam == WM_SYSKEYUP);
+            bool keydownExec = (KBHP::voidFuncs_[key].first == KS_PRESSED) &&
+                               (wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN);
+            bool keyupExec = (KBHP::voidFuncs_[key].first == KS_RELEASED) &&
+                             (wParam == WM_KEYUP || wParam == WM_SYSKEYUP);
 
-            if (keydownExe || keyupExe)
-                KBHP::voidFuncs_[key].second();
+            auto& func = KBHP::voidFuncs_[key].second;
+            if ((keydownExec || keyupExec) && func)
+                func();
         }
-
-        if (KBHP::argFuncArgs_.find(key) != KBHP::argFuncArgs_.end())
+        else if (KBHP::argFuncArgs_.find(key) != KBHP::argFuncArgs_.end())
         {
-            bool keydownExe = (KBHP::argFuncArgs_[key].first == KS_PRESSED) &&
-                              (wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN);
-            bool keyupExe = (KBHP::argFuncArgs_[key].first == KS_RELEASED) &&
-                            (wParam == WM_KEYUP || wParam == WM_SYSKEYUP);
+            bool keydownExec = (KBHP::argFuncArgs_[key].first == KS_PRESSED) &&
+                               (wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN);
+            bool keyupExec = (KBHP::argFuncArgs_[key].first == KS_RELEASED) &&
+                             (wParam == WM_KEYUP || wParam == WM_SYSKEYUP);
 
-            if (keydownExe || keyupExe)
-            {
-                auto& func = KBHP::argFuncArgs_[key].second.first;
-                auto& arg = KBHP::argFuncArgs_[key].second.second;
+            auto& func = KBHP::argFuncArgs_[key].second.first;
+            auto& arg = KBHP::argFuncArgs_[key].second.second;
+            if ((keydownExec || keyupExec) && func)
                 func(arg);
-            }
         }
     }
 

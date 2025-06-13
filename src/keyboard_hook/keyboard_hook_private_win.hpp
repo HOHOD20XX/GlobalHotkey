@@ -21,9 +21,8 @@ public:
     _KeyboardHookPrivateWin();
     ~_KeyboardHookPrivateWin();
 
-protected:
-    int start_() override;
-    int end_() override;
+    int start() override;
+    int end() override;
 
 private:
     friend LRESULT LowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam);

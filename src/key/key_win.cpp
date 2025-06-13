@@ -1,8 +1,8 @@
-#include <windows.h>
-
 #include <global_hotkey/key.hpp>
 
 #ifdef _GLOBAL_HOTKEY_WIN
+
+#include <windows.h>
 
 namespace gbhk
 {

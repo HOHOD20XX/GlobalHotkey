@@ -20,35 +20,7 @@ _KeyboardHookPrivate::_KeyboardHookPrivate() :
     isRunning_(false)
 {}
 
-_KeyboardHookPrivate::~_KeyboardHookPrivate()
-{
-    end();
-}
-
-int _KeyboardHookPrivate::start()
-{
-    if (isRunning_)
-        return RC_SUCCESS;
-
-    int rtn = start_();
-    if (rtn == RC_SUCCESS)
-        isRunning_ = true;
-    return rtn;
-}
-
-int _KeyboardHookPrivate::end()
-{
-    if (!isRunning_)
-        return RC_SUCCESS;
-
-    int rtn = end_();
-    removeAllKeyListener();
-    unsetKeyPressedEvent();
-    unsetKeyReleasedEvent();
-    isRunning_ = false;
-
-    return rtn;
-}
+_KeyboardHookPrivate::~_KeyboardHookPrivate() = default;
 
 int _KeyboardHookPrivate::addKeyListener(int nativeKey, KeyState state, VoidFunc func)
 {
@@ -132,16 +104,6 @@ bool _KeyboardHookPrivate::hasKeyListener(int nativeKey, KeyState state) const
 bool _KeyboardHookPrivate::isRunning() const
 {
     return isRunning_;
-}
-
-int _KeyboardHookPrivate::start_()
-{
-    return RC_SUCCESS;
-}
-
-int _KeyboardHookPrivate::end_()
-{
-    return RC_SUCCESS;
 }
 
 } // namespace kbhook

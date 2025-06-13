@@ -23,8 +23,8 @@ public:
     _KeyboardHookPrivate();
     virtual ~_KeyboardHookPrivate();
 
-    int start();
-    int end();
+    virtual int start() = 0;
+    virtual int end() = 0;
     int addKeyListener(int nativeKey, KeyState state, VoidFunc func);
     int addKeyListener(int nativeKey, KeyState state, ArgFunc func, Arg arg);
     int removeKeyListener(int nativeKey, KeyState state);
@@ -38,16 +38,12 @@ public:
     bool isRunning() const;
 
 protected:
-    virtual int start_();
-    virtual int end_();
-
     static std::mutex mtx_;
     static Map<int, Pair<KeyState, VoidFunc>> voidFuncs_;
     static Map<int, Pair<KeyState, ArgFuncArg>> argFuncArgs_;
     static KeyEventCallback keyPressedCallback_;
     static KeyEventCallback keyReleasedCallback_;
 
-private:
     std::atomic<bool> isRunning_;
 };
 
