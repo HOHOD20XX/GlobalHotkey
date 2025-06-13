@@ -8,7 +8,7 @@ namespace gbhk
 
 enum ModifierFlag : int
 {
-    MODI_META           = 0X01,        // Win or Command or Super.
+    MODI_META           = 0X01,         // Win or Command or Super.
     MODI_CTRL           = 0X02,
     MODI_ALT            = 0X04,
     MODI_SHIFT          = 0X08,
@@ -17,178 +17,178 @@ enum ModifierFlag : int
     MODI_WIN            = MODI_META,
     MODI_COMMAND        = MODI_META,
     MODI_SUPER          = MODI_META,
-    MODI_OPTION         = MODI_ALT     // The Alt key on MacOS.
+    MODI_OPTION         = MODI_ALT      // The Alt key on MacOS.
 };
 
 enum KeyFlag : int
 {
     // Number keys.
-    KEY_0               = 0x0030,
-    KEY_1               = 0x0031,
-    KEY_2               = 0x0032,
-    KEY_3               = 0x0033,
-    KEY_4               = 0x0034,
-    KEY_5               = 0x0035,
-    KEY_6               = 0x0036,
-    KEY_7               = 0x0037,
-    KEY_8               = 0x0038,
-    KEY_9               = 0x0039,
+    Key_0               = 0x0030,
+    Key_1               = 0x0031,
+    Key_2               = 0x0032,
+    Key_3               = 0x0033,
+    Key_4               = 0x0034,
+    Key_5               = 0x0035,
+    Key_6               = 0x0036,
+    Key_7               = 0x0037,
+    Key_8               = 0x0038,
+    Key_9               = 0x0039,
 
     // Ascii alpha keys.
-    KEY_A               = 0x0041,
-    KEY_B               = 0x0042,
-    KEY_C               = 0x0043,
-    KEY_D               = 0x0044,
-    KEY_E               = 0x0045,
-    KEY_F               = 0x0046,
-    KEY_G               = 0x0047,
-    KEY_H               = 0x0048,
-    KEY_I               = 0x0049,
-    KEY_J               = 0x004a,
-    KEY_K               = 0x004b,
-    KEY_L               = 0x004c,
-    KEY_M               = 0x004d,
-    KEY_N               = 0x004e,
-    KEY_O               = 0x004f,
-    KEY_P               = 0x0050,
-    KEY_Q               = 0x0051,
-    KEY_R               = 0x0052,
-    KEY_S               = 0x0053,
-    KEY_T               = 0x0054,
-    KEY_U               = 0x0055,
-    KEY_V               = 0x0056,
-    KEY_W               = 0x0057,
-    KEY_X               = 0x0058,
-    KEY_Y               = 0x0059,
-    KEY_Z               = 0x005a,
+    Key_A               = 0x0041,
+    Key_B               = 0x0042,
+    Key_C               = 0x0043,
+    Key_D               = 0x0044,
+    Key_E               = 0x0045,
+    Key_F               = 0x0046,
+    Key_G               = 0x0047,
+    Key_H               = 0x0048,
+    Key_I               = 0x0049,
+    Key_J               = 0x004a,
+    Key_K               = 0x004b,
+    Key_L               = 0x004c,
+    Key_M               = 0x004d,
+    Key_N               = 0x004e,
+    Key_O               = 0x004f,
+    Key_P               = 0x0050,
+    Key_Q               = 0x0051,
+    Key_R               = 0x0052,
+    Key_S               = 0x0053,
+    Key_T               = 0x0054,
+    Key_U               = 0x0055,
+    Key_V               = 0x0056,
+    Key_W               = 0x0057,
+    Key_X               = 0x0058,
+    Key_Y               = 0x0059,
+    Key_Z               = 0x005a,
 
     // Whitespace keys.
-    KEY_TAB             = 0x8000,
-    KEY_SPACE,
-    KEY_ENTER,
+    Key_Tab             = 0x8000,
+    Key_Space,
+    Key_Enter,
 
     // Navigation keys.
-    KEY_HOME,
-    KEY_END,
-    KEY_PAGE_UP,
-    KEY_PAGE_DOWN,
-    KEY_LEFT,
-    KEY_UP,
-    KEY_RIGHT,
-    KEY_DOWN,
+    Key_Home,
+    Key_End,
+    Key_Page_Up,
+    Key_Page_Down,
+    Key_Left,
+    Key_Up,
+    Key_Right,
+    Key_Down,
 
     // Editing keys.
-    KEY_BACKSPACE,
-    KEY_INSERT,
-    KEY_DELETE,
-    KEY_CLEAR,
+    Key_Backspace,
+    Key_Insert,
+    Key_Delete,
+    Key_Clear,
 
     // Function keys.
-    KEY_F1,
-    KEY_F2,
-    KEY_F3,
-    KEY_F4,
-    KEY_F5,
-    KEY_F6,
-    KEY_F7,
-    KEY_F8,
-    KEY_F9,
-    KEY_F10,
-    KEY_F11,
-    KEY_F12,
-    KEY_F13,
-    KEY_F14,
-    KEY_F15,
-    KEY_F16,
-    KEY_F17,
-    KEY_F18,
-    KEY_F19,
-    KEY_F20,
-    KEY_F21,
-    KEY_F22,
-    KEY_F23,
-    KEY_F24,
+    Key_F1,
+    Key_F2,
+    Key_F3,
+    Key_F4,
+    Key_F5,
+    Key_F6,
+    Key_F7,
+    Key_F8,
+    Key_F9,
+    Key_F10,
+    Key_F11,
+    Key_F12,
+    Key_F13,
+    Key_F14,
+    Key_F15,
+    Key_F16,
+    Key_F17,
+    Key_F18,
+    Key_F19,
+    Key_F20,
+    Key_F21,
+    Key_F22,
+    Key_F23,
+    Key_F24,
 
     // Numpad number keys.
-    KEY_NUMPAD_0,
-    KEY_NUMPAD_1,
-    KEY_NUMPAD_2,
-    KEY_NUMPAD_3,
-    KEY_NUMPAD_4,
-    KEY_NUMPAD_5,
-    KEY_NUMPAD_6,
-    KEY_NUMPAD_7,
-    KEY_NUMPAD_8,
-    KEY_NUMPAD_9,
+    Key_Numpad_0,
+    Key_Numpad_1,
+    Key_Numpad_2,
+    Key_Numpad_3,
+    Key_Numpad_4,
+    Key_Numpad_5,
+    Key_Numpad_6,
+    Key_Numpad_7,
+    Key_Numpad_8,
+    Key_Numpad_9,
 
     // Numpad operator keys.
-    KEY_NUMPAD_ADD,         // '+' on numpad.
-    KEY_NUMPAD_SUBTRACT,    // '-' on numpad.
-    KEY_NUMPAD_MULTIPLY,    // '*' or '×' on numpad.
-    KEY_NUMPAD_DIVIDE,      // '/' or '÷' on numpad.
-    KEY_NUMPAD_DECIMAL,     // '.' on numpad.
-    KEY_NUMPAD_SEPARATOR,   // ',' on numpad.
+    Key_Numpad_Add,         // '+' on numpad.
+    Key_Numpad_Subtract,    // '-' on numpad.
+    Key_Numpad_Multiply,    // '*' or '×' on numpad.
+    Key_Numpad_Divide,      // '/' or '÷' on numpad.
+    Key_Numpad_Decimal,     // '.' on numpad.
+    Key_Numpad_Separator,   // ',' on numpad.
 
     // Applications keys.
-    KEY_ESCAPE,
-    KEY_PAUSE,              // Not is MEDIA_PLAY_PAUSE.
-    KEY_PLAY,               // Not is MEDIA_PLAY_PAUSE. Maybe be removed in future.
-    KEY_HELP,
+    Key_Escape,
+    Key_Pause,              // Not is MEDIA_PLAY_PAUSE.
+    Key_Play,               // Not is MEDIA_PLAY_PAUSE. Maybe be removed in future.
+    Key_Help,
 
     // Media keys.
-    KEY_MEDIA_NEXT,
-    KEY_MEDIA_PREVIOUS,
-    KEY_MEDIA_PLAY_PAUSE,
-    KEY_MEDIA_STOP,
+    Key_Media_Next,
+    Key_Media_Previous,
+    Key_Media_Play_Pause,
+    Key_Media_Stop,
 
     // Volume keys.
-    KEY_VOLUME_UP,
-    KEY_VOLUME_DOWN,
-    KEY_VOLUME_MUTE,
+    Key_Volume_Up,
+    Key_Volume_Down,
+    Key_Volume_Mute,
 
     // Lock keys.
-    KEY_CAPS_LOCK,
-    KEY_NUM_LOCK,
-    KEY_SCROLL_LOCK,
+    Key_Caps_Lock,
+    Key_Num_Lock,
+    Key_Scroll_Lock,
 
     // Misc keys.
-    KEY_PRINT_SCREEN,
-    KEY_MENU,
+    Key_Print_Screen,
+    Key_Menu,
 
     // OEM keys.
-    KEY_LEFT_QUOTE,         // '`~' on US standard keyboard.
-    KEY_MINUS,              // '-_' on US standard keyboard.
-    KEY_EQUAL,              // '=+' on US standard keyboard.
-    KEY_LEFT_BRACKET,       // '[{' on US standard keyboard.
-    KEY_RIGHT_BRACKET,      // ']}' on US standard keyboard.
-    KEY_SEMICOLON,          // ';:' on US standard keyboard.
-    KEY_APOSTROPHE,         // ''"' on US standard keyboard.
-    KEY_COMMA,              // ',<' on US standard keyboard.
-    KEY_PERIOD,             // '.>' on US standard keyboard.
-    KEY_SLASH,              // '/?' on US standard keyboard.
-    KEY_BACKSLASH,          // '\|' on US standard keyboard.
-    KEY_ANGLE_BRACKET,      // '<>' or '\|' on RT 102-key keyboard.
+    Key_Left_Quote,         // '`~' on US standard keyboard.
+    Key_Minus,              // '-_' on US standard keyboard.
+    Key_Equal,              // '=+' on US standard keyboard.
+    Key_Left_Bracket,       // '[{' on US standard keyboard.
+    Key_Right_Bracket,      // ']}' on US standard keyboard.
+    Key_Semicolon,          // ';:' on US standard keyboard.
+    Key_Apostrophe,         // ''"' on US standard keyboard.
+    Key_Comma,              // ',<' on US standard keyboard.
+    Key_Period,             // '.>' on US standard keyboard.
+    Key_Slash,              // '/?' on US standard keyboard.
+    Key_Backslash,          // '\|' on US standard keyboard.
+    Key_Angle_Bracket,      // '<>' or '\|' on RT 102-key keyboard.
 
     // Modifier keys.
     // Use the key combination with these keys as a hotkey is useless.)
     // These keys only be used to keyboard hook event. (e.g. the #addKeyListener() in the key_board module.)
-    KEY_MODI_META,
-    KEY_MODI_META_LEFT,
-    KEY_MODI_META_RIGHT,
-    KEY_MODI_CTRL,
-    KEY_MODI_CTRL_LEFT,
-    KEY_MODI_CTRL_RIGHT,
-    KEY_MODI_ALT,
-    KEY_MODI_ALT_LEFT,
-    KEY_MODI_ALT_RIGHT,
-    KEY_MODI_SHIFT,
-    KEY_MODI_SHIFT_LEFT,
-    KEY_MODI_SHIFT_RIGHT,
+    Key_Modi_Meta,
+    Key_Modi_Meta_Left,
+    Key_Modi_Meta_Right,
+    Key_Modi_Ctrl,
+    Key_Modi_Ctrl_Left,
+    Key_Modi_Ctrl_Right,
+    Key_Modi_Alt,
+    Key_Modi_Alt_Left,
+    Key_Modi_Alt_Right,
+    Key_Modi_Shift,
+    Key_Modi_Shift_Left,
+    Key_Modi_Shift_Right,
 
     // Alias.
-    KEY_MODI_OPTION         = KEY_MODI_ALT,
-    KEY_MODI_OPTION_LEFT    = KEY_MODI_ALT_LEFT,
-    KEY_MODI_OPTION_RIGHT   = KEY_MODI_ALT_RIGHT
+    Key_Modi_Option         = Key_Modi_Alt,
+    Key_Modi_Option_Left    = Key_Modi_Alt_Left,
+    Key_Modi_Option_Right   = Key_Modi_Alt_Right
 };
 
 class Modifiers

@@ -13,19 +13,6 @@ class GBHK_API RegisterGHM final : public GlobalHotkeyManager
 public:
     static RegisterGHM& getInstance();
 
-    int start() override;
-    int end() override;
-    int add(const KeyCombination& kc, VoidFunc func, bool autoRepeat) override;
-    int add(const KeyCombination& kc, ArgFunc func, Arg arg, bool autoRepeat) override;
-    int remove(const KeyCombination& kc) override;
-    int removeAll() override;
-    int replace(const KeyCombination& oldKc, const KeyCombination& newKc) override;
-    int setAutoRepeat(const KeyCombination& kc, bool autoRepeat) override;
-    int setCycleTime(size_t milliseconds) override;
-    bool has(const KeyCombination& kc) const override;
-    bool isAutoRepeat(const KeyCombination& kc) const override;
-    bool isRunning() const override;
-
 private:
     RegisterGHM();
     ~RegisterGHM();

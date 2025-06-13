@@ -38,6 +38,8 @@ public:
     bool isRunning() const;
 
 protected:
+    void resetStaticMember_();
+
     static std::mutex mtx_;
     static Map<int, Pair<KeyState, VoidFunc>> voidFuncs_;
     static Map<int, Pair<KeyState, ArgFuncArg>> argFuncArgs_;

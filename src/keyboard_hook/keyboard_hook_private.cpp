@@ -106,6 +106,13 @@ bool _KeyboardHookPrivate::isRunning() const
     return isRunning_;
 }
 
+void _KeyboardHookPrivate::resetStaticMember_()
+{
+    removeAllKeyListener();
+    unsetKeyPressedEvent();
+    unsetKeyReleasedEvent();
+}
+
 } // namespace kbhook
 
 } // namespace gbhk

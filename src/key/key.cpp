@@ -15,23 +15,23 @@ static String modifiersStringHelper(ModifierFlag flag) noexcept
     switch (flag)
     {
     #ifdef _GLOBAL_HOTKEY_WIN
-        case MODI_META:    return "Win";
+        case MODI_META:     return "Win";
     #elif defined(_GLOBAL_HOTKEY_MAC)
-        case MODI_META:    return "Command";
+        case MODI_META:     return "Command";
     #elif defined(_GLOBAL_HOTKEY_LINUX)
-        case MODI_META:    return "Super";
+        case MODI_META:     return "Super";
     #endif // _GLOBAL_HOTKEY_WIN
 
-        case MODI_CTRL:    return "Ctrl";
+        case MODI_CTRL:     return "Ctrl";
 
     #ifdef _GLOBAL_HOTKEY_MAC
-        case MODI_ALT:     return "Option";
+        case MODI_ALT:      return "Option";
     #else
-        case MODI_ALT:     return "Alt";
+        case MODI_ALT:      return "Alt";
     #endif // _GLOBAL_HOTKEY_MAC
 
-        case MODI_SHIFT:   return "Shift";
-        default:           return "";
+        case MODI_SHIFT:    return "Shift";
+        default:            return "";
     }
 }
 
@@ -57,153 +57,153 @@ GBHK_API String keyString(const Key& key) noexcept
     switch (key)
     {
         // Number keys.
-        case KEY_0:                 return "0";
-        case KEY_1:                 return "1";
-        case KEY_2:                 return "2";
-        case KEY_3:                 return "3";
-        case KEY_4:                 return "4";
-        case KEY_5:                 return "5";
-        case KEY_6:                 return "6";
-        case KEY_7:                 return "7";
-        case KEY_8:                 return "8";
-        case KEY_9:                 return "9";
+        case Key_0:                 return "0";
+        case Key_1:                 return "1";
+        case Key_2:                 return "2";
+        case Key_3:                 return "3";
+        case Key_4:                 return "4";
+        case Key_5:                 return "5";
+        case Key_6:                 return "6";
+        case Key_7:                 return "7";
+        case Key_8:                 return "8";
+        case Key_9:                 return "9";
 
         // Ascii alpha keys.
-        case KEY_A:                 return "A";
-        case KEY_B:                 return "B";
-        case KEY_C:                 return "C";
-        case KEY_D:                 return "D";
-        case KEY_E:                 return "E";
-        case KEY_F:                 return "F";
-        case KEY_G:                 return "G";
-        case KEY_H:                 return "H";
-        case KEY_I:                 return "I";
-        case KEY_J:                 return "J";
-        case KEY_K:                 return "K";
-        case KEY_L:                 return "L";
-        case KEY_M:                 return "M";
-        case KEY_N:                 return "N";
-        case KEY_O:                 return "O";
-        case KEY_P:                 return "P";
-        case KEY_Q:                 return "Q";
-        case KEY_R:                 return "R";
-        case KEY_S:                 return "S";
-        case KEY_T:                 return "T";
-        case KEY_U:                 return "U";
-        case KEY_V:                 return "V";
-        case KEY_W:                 return "W";
-        case KEY_X:                 return "X";
-        case KEY_Y:                 return "Y";
-        case KEY_Z:                 return "Z";
+        case Key_A:                 return "A";
+        case Key_B:                 return "B";
+        case Key_C:                 return "C";
+        case Key_D:                 return "D";
+        case Key_E:                 return "E";
+        case Key_F:                 return "F";
+        case Key_G:                 return "G";
+        case Key_H:                 return "H";
+        case Key_I:                 return "I";
+        case Key_J:                 return "J";
+        case Key_K:                 return "K";
+        case Key_L:                 return "L";
+        case Key_M:                 return "M";
+        case Key_N:                 return "N";
+        case Key_O:                 return "O";
+        case Key_P:                 return "P";
+        case Key_Q:                 return "Q";
+        case Key_R:                 return "R";
+        case Key_S:                 return "S";
+        case Key_T:                 return "T";
+        case Key_U:                 return "U";
+        case Key_V:                 return "V";
+        case Key_W:                 return "W";
+        case Key_X:                 return "X";
+        case Key_Y:                 return "Y";
+        case Key_Z:                 return "Z";
 
         // Whitespace keys.
-        case KEY_TAB:               return "Tab";
-        case KEY_SPACE:             return "Space";
-        case KEY_ENTER:             return "Enter";
+        case Key_Tab:               return "Tab";
+        case Key_Space:             return "Space";
+        case Key_Enter:             return "Enter";
 
         // Navigation keys.
-        case KEY_HOME:              return "Home";
-        case KEY_END:               return "End";
-        case KEY_PAGE_UP:           return "Page Up";
-        case KEY_PAGE_DOWN:         return "Page Down";
-        case KEY_LEFT:              return "Left";
-        case KEY_UP:                return "Up";
-        case KEY_RIGHT:             return "Right";
-        case KEY_DOWN:              return "Down";
+        case Key_Home:              return "Home";
+        case Key_End:               return "End";
+        case Key_Page_Up:           return "Page Up";
+        case Key_Page_Down:         return "Page Down";
+        case Key_Left:              return "Left";
+        case Key_Up:                return "Up";
+        case Key_Right:             return "Right";
+        case Key_Down:              return "Down";
 
         // Editing keys.
-        case KEY_BACKSPACE:         return "Backspace";
-        case KEY_INSERT:            return "Insert";
-        case KEY_DELETE:            return "Delete";
-        case KEY_CLEAR:             return "Clear";
+        case Key_Backspace:         return "Backspace";
+        case Key_Insert:            return "Insert";
+        case Key_Delete:            return "Delete";
+        case Key_Clear:             return "Clear";
 
         // Function keys.
-        case KEY_F1:                return "F1";
-        case KEY_F2:                return "F2";
-        case KEY_F3:                return "F3";
-        case KEY_F4:                return "F4";
-        case KEY_F5:                return "F5";
-        case KEY_F6:                return "F6";
-        case KEY_F7:                return "F7";
-        case KEY_F8:                return "F8";
-        case KEY_F9:                return "F9";
-        case KEY_F10:               return "F10";
-        case KEY_F11:               return "F11";
-        case KEY_F12:               return "F12";
-        case KEY_F13:               return "F13";
-        case KEY_F14:               return "F14";
-        case KEY_F15:               return "F15";
-        case KEY_F16:               return "F16";
-        case KEY_F17:               return "F17";
-        case KEY_F18:               return "F18";
-        case KEY_F19:               return "F19";
-        case KEY_F20:               return "F20";
-        case KEY_F21:               return "F21";
-        case KEY_F22:               return "F22";
-        case KEY_F23:               return "F23";
-        case KEY_F24:               return "F24";
+        case Key_F1:                return "F1";
+        case Key_F2:                return "F2";
+        case Key_F3:                return "F3";
+        case Key_F4:                return "F4";
+        case Key_F5:                return "F5";
+        case Key_F6:                return "F6";
+        case Key_F7:                return "F7";
+        case Key_F8:                return "F8";
+        case Key_F9:                return "F9";
+        case Key_F10:               return "F10";
+        case Key_F11:               return "F11";
+        case Key_F12:               return "F12";
+        case Key_F13:               return "F13";
+        case Key_F14:               return "F14";
+        case Key_F15:               return "F15";
+        case Key_F16:               return "F16";
+        case Key_F17:               return "F17";
+        case Key_F18:               return "F18";
+        case Key_F19:               return "F19";
+        case Key_F20:               return "F20";
+        case Key_F21:               return "F21";
+        case Key_F22:               return "F22";
+        case Key_F23:               return "F23";
+        case Key_F24:               return "F24";
 
         // Numpad number keys.
-        case KEY_NUMPAD_0:          return "Numpad 0";
-        case KEY_NUMPAD_1:          return "Numpad 1";
-        case KEY_NUMPAD_2:          return "Numpad 2";
-        case KEY_NUMPAD_3:          return "Numpad 3";
-        case KEY_NUMPAD_4:          return "Numpad 4";
-        case KEY_NUMPAD_5:          return "Numpad 5";
-        case KEY_NUMPAD_6:          return "Numpad 6";
-        case KEY_NUMPAD_7:          return "Numpad 7";
-        case KEY_NUMPAD_8:          return "Numpad 8";
-        case KEY_NUMPAD_9:          return "Numpad 9";
+        case Key_Numpad_0:          return "Numpad 0";
+        case Key_Numpad_1:          return "Numpad 1";
+        case Key_Numpad_2:          return "Numpad 2";
+        case Key_Numpad_3:          return "Numpad 3";
+        case Key_Numpad_4:          return "Numpad 4";
+        case Key_Numpad_5:          return "Numpad 5";
+        case Key_Numpad_6:          return "Numpad 6";
+        case Key_Numpad_7:          return "Numpad 7";
+        case Key_Numpad_8:          return "Numpad 8";
+        case Key_Numpad_9:          return "Numpad 9";
 
         // Numpad operator keys.
-        case KEY_NUMPAD_ADD:        return "Numpad Add";
-        case KEY_NUMPAD_SUBTRACT:   return "Numpad Subtract";
-        case KEY_NUMPAD_MULTIPLY:   return "Numpad Multiply";
-        case KEY_NUMPAD_DIVIDE:     return "Numpad Divide";
-        case KEY_NUMPAD_DECIMAL:    return "Numpad Decimal";
-        case KEY_NUMPAD_SEPARATOR:  return "Numpad Separator";
+        case Key_Numpad_Add:        return "Numpad Add";
+        case Key_Numpad_Subtract:   return "Numpad Subtract";
+        case Key_Numpad_Multiply:   return "Numpad Multiply";
+        case Key_Numpad_Divide:     return "Numpad Divide";
+        case Key_Numpad_Decimal:    return "Numpad Decimal";
+        case Key_Numpad_Separator:  return "Numpad Separator";
 
         // Applications keys.
-        case KEY_ESCAPE:            return "Esc";
-        case KEY_PAUSE:             return "Pause";
-        case KEY_PLAY:              return "Play";
-        case KEY_HELP:              return "Help";
+        case Key_Escape:            return "Esc";
+        case Key_Pause:             return "Pause";
+        case Key_Play:              return "Play";
+        case Key_Help:              return "Help";
 
         // Media keys.
-        case KEY_MEDIA_NEXT:        return "Media Next";
-        case KEY_MEDIA_PREVIOUS:    return "Media Previous";
-        case KEY_MEDIA_PLAY_PAUSE:  return "Media Play/Pause";
-        case KEY_MEDIA_STOP:        return "Media Stop";
+        case Key_Media_Next:        return "Media Next";
+        case Key_Media_Previous:    return "Media Previous";
+        case Key_Media_Play_Pause:  return "Media Play/Pause";
+        case Key_Media_Stop:        return "Media Stop";
 
         // Volume keys.
-        case KEY_VOLUME_UP:         return "Volume Up";
-        case KEY_VOLUME_DOWN:       return "Volume Down";
-        case KEY_VOLUME_MUTE:       return "Volume Mute";
+        case Key_Volume_Up:         return "Volume Up";
+        case Key_Volume_Down:       return "Volume Down";
+        case Key_Volume_Mute:       return "Volume Mute";
 
         // Lock keys.
-        case KEY_CAPS_LOCK:         return "CapsLock";
-        case KEY_NUM_LOCK:          return "NumLock";
-        case KEY_SCROLL_LOCK:       return "ScrollLock";
+        case Key_Caps_Lock:         return "CapsLock";
+        case Key_Num_Lock:          return "NumLock";
+        case Key_Scroll_Lock:       return "ScrollLock";
 
         // Misc keys.
-        case KEY_PRINT_SCREEN:      return "PrintScreen";
-        case KEY_MENU:              return "Menu";
+        case Key_Print_Screen:      return "PrintScreen";
+        case Key_Menu:              return "Menu";
 
         // OEM keys.
-        case KEY_LEFT_QUOTE:        return "`";
-        case KEY_MINUS:             return "-";
-        case KEY_EQUAL:             return "=";
-        case KEY_LEFT_BRACKET:      return "[";
-        case KEY_RIGHT_BRACKET:     return "]";
-        case KEY_SEMICOLON:         return ";";
-        case KEY_APOSTROPHE:        return "'";
-        case KEY_COMMA:             return ",";
-        case KEY_PERIOD:            return ".";
-        case KEY_SLASH:             return "/";
-        case KEY_BACKSLASH:         return "\\";
-        case KEY_ANGLE_BRACKET:     return "<>";
+        case Key_Left_Quote:        return "`";
+        case Key_Minus:             return "-";
+        case Key_Equal:             return "=";
+        case Key_Left_Bracket:      return "[";
+        case Key_Right_Bracket:     return "]";
+        case Key_Semicolon:         return ";";
+        case Key_Apostrophe:        return "'";
+        case Key_Comma:             return ",";
+        case Key_Period:            return ".";
+        case Key_Slash:             return "/";
+        case Key_Backslash:         return "\\";
+        case Key_Angle_Bracket:     return "<>";
 
-        default:                     return "";
+        default:                    return "";
     }
 }
 
@@ -264,133 +264,133 @@ GBHK_API Key getKeyFromString(const String& str) noexcept
         return Key(str[0]);
 
     // Whitespace keys.
-    if (isEqualStr(str, "tab"))                 return KEY_TAB;
-    if (isEqualStr(str, "space"))               return KEY_SPACE;
+    if (isEqualStr(str, "tab"))                 return Key_Tab;
+    if (isEqualStr(str, "space"))               return Key_Space;
     if (isEqualStr(str, "enter") || isEqualStr(str, "return"))
-        return KEY_ENTER;
+        return Key_Enter;
 
     // Navigation keys.
-    if (isEqualStr(str, "home"))                return KEY_HOME;
-    if (isEqualStr(str, "end"))                 return KEY_END;
+    if (isEqualStr(str, "home"))                return Key_Home;
+    if (isEqualStr(str, "end"))                 return Key_End;
     if (isEqualStr(str, "page up") || isEqualStr(str, "pgup"))
-        return KEY_PAGE_UP;
+        return Key_Page_Up;
     if (isEqualStr(str, "page down") || isEqualStr(str, "pgdn"))
-        return KEY_PAGE_DOWN;
+        return Key_Page_Down;
     if (isEqualStr(str, "left") || isEqualStr(str, "arrow left"))
-        return KEY_LEFT;
+        return Key_Left;
     if (isEqualStr(str, "up") || isEqualStr(str, "arrow up"))
-        return KEY_UP;
+        return Key_Up;
     if (isEqualStr(str, "right") || isEqualStr(str, "arrow right"))
-        return KEY_RIGHT;
+        return Key_Right;
     if (isEqualStr(str, "down") || isEqualStr(str, "arrow down"))
-        return KEY_DOWN;
+        return Key_Down;
 
     // Editing keys.
     if (isEqualStr(str, "backspace") || isEqualStr(str, "back"))
-        return KEY_BACKSPACE;
+        return Key_Backspace;
     if (isEqualStr(str, "insert") || isEqualStr(str, "ins"))
-        return KEY_INSERT;
+        return Key_Insert;
     if (isEqualStr(str, "delete") || isEqualStr(str, "del"))
-        return KEY_DELETE;
-    if (isEqualStr(str, "clear"))               return KEY_CLEAR;
+        return Key_Delete;
+    if (isEqualStr(str, "clear"))               return Key_Clear;
 
     // Function keys.
-    if (isEqualStr(str, "f1"))                  return KEY_F1;
-    if (isEqualStr(str, "f2"))                  return KEY_F2;
-    if (isEqualStr(str, "f3"))                  return KEY_F3;
-    if (isEqualStr(str, "f4"))                  return KEY_F4;
-    if (isEqualStr(str, "f5"))                  return KEY_F5;
-    if (isEqualStr(str, "f6"))                  return KEY_F6;
-    if (isEqualStr(str, "f7"))                  return KEY_F7;
-    if (isEqualStr(str, "f8"))                  return KEY_F8;
-    if (isEqualStr(str, "f9"))                  return KEY_F9;
-    if (isEqualStr(str, "f10"))                 return KEY_F10;
-    if (isEqualStr(str, "f11"))                 return KEY_F11;
-    if (isEqualStr(str, "f12"))                 return KEY_F12;
-    if (isEqualStr(str, "f13"))                 return KEY_F13;
-    if (isEqualStr(str, "f14"))                 return KEY_F14;
-    if (isEqualStr(str, "f15"))                 return KEY_F15;
-    if (isEqualStr(str, "f16"))                 return KEY_F16;
-    if (isEqualStr(str, "f17"))                 return KEY_F17;
-    if (isEqualStr(str, "f18"))                 return KEY_F18;
-    if (isEqualStr(str, "f19"))                 return KEY_F19;
-    if (isEqualStr(str, "f20"))                 return KEY_F20;
-    if (isEqualStr(str, "f21"))                 return KEY_F21;
-    if (isEqualStr(str, "f22"))                 return KEY_F22;
-    if (isEqualStr(str, "f23"))                 return KEY_F23;
-    if (isEqualStr(str, "f24"))                 return KEY_F24;
+    if (isEqualStr(str, "f1"))                  return Key_F1;
+    if (isEqualStr(str, "f2"))                  return Key_F2;
+    if (isEqualStr(str, "f3"))                  return Key_F3;
+    if (isEqualStr(str, "f4"))                  return Key_F4;
+    if (isEqualStr(str, "f5"))                  return Key_F5;
+    if (isEqualStr(str, "f6"))                  return Key_F6;
+    if (isEqualStr(str, "f7"))                  return Key_F7;
+    if (isEqualStr(str, "f8"))                  return Key_F8;
+    if (isEqualStr(str, "f9"))                  return Key_F9;
+    if (isEqualStr(str, "f10"))                 return Key_F10;
+    if (isEqualStr(str, "f11"))                 return Key_F11;
+    if (isEqualStr(str, "f12"))                 return Key_F12;
+    if (isEqualStr(str, "f13"))                 return Key_F13;
+    if (isEqualStr(str, "f14"))                 return Key_F14;
+    if (isEqualStr(str, "f15"))                 return Key_F15;
+    if (isEqualStr(str, "f16"))                 return Key_F16;
+    if (isEqualStr(str, "f17"))                 return Key_F17;
+    if (isEqualStr(str, "f18"))                 return Key_F18;
+    if (isEqualStr(str, "f19"))                 return Key_F19;
+    if (isEqualStr(str, "f20"))                 return Key_F20;
+    if (isEqualStr(str, "f21"))                 return Key_F21;
+    if (isEqualStr(str, "f22"))                 return Key_F22;
+    if (isEqualStr(str, "f23"))                 return Key_F23;
+    if (isEqualStr(str, "f24"))                 return Key_F24;
 
     // Numpad number keys.
-    if (isEqualStr(str, "numpad 0"))            return KEY_NUMPAD_0;
-    if (isEqualStr(str, "numpad 1"))            return KEY_NUMPAD_1;
-    if (isEqualStr(str, "numpad 2"))            return KEY_NUMPAD_2;
-    if (isEqualStr(str, "numpad 3"))            return KEY_NUMPAD_3;
-    if (isEqualStr(str, "numpad 4"))            return KEY_NUMPAD_4;
-    if (isEqualStr(str, "numpad 5"))            return KEY_NUMPAD_5;
-    if (isEqualStr(str, "numpad 6"))            return KEY_NUMPAD_6;
-    if (isEqualStr(str, "numpad 7"))            return KEY_NUMPAD_7;
-    if (isEqualStr(str, "numpad 8"))            return KEY_NUMPAD_8;
-    if (isEqualStr(str, "numpad 9"))            return KEY_NUMPAD_9;
+    if (isEqualStr(str, "numpad 0"))            return Key_Numpad_0;
+    if (isEqualStr(str, "numpad 1"))            return Key_Numpad_1;
+    if (isEqualStr(str, "numpad 2"))            return Key_Numpad_2;
+    if (isEqualStr(str, "numpad 3"))            return Key_Numpad_3;
+    if (isEqualStr(str, "numpad 4"))            return Key_Numpad_4;
+    if (isEqualStr(str, "numpad 5"))            return Key_Numpad_5;
+    if (isEqualStr(str, "numpad 6"))            return Key_Numpad_6;
+    if (isEqualStr(str, "numpad 7"))            return Key_Numpad_7;
+    if (isEqualStr(str, "numpad 8"))            return Key_Numpad_8;
+    if (isEqualStr(str, "numpad 9"))            return Key_Numpad_9;
 
     // Numpad operator keys.
-    if (isEqualStr(str, "numpad add"))          return KEY_NUMPAD_ADD;
-    if (isEqualStr(str, "numpad subtract"))     return KEY_NUMPAD_SUBTRACT;
-    if (isEqualStr(str, "numpad multiply"))     return KEY_NUMPAD_MULTIPLY;
-    if (isEqualStr(str, "numpad divide"))       return KEY_NUMPAD_DIVIDE;
-    if (isEqualStr(str, "numpad decimal"))      return KEY_NUMPAD_DECIMAL;
-    if (isEqualStr(str, "numpad separator"))    return KEY_NUMPAD_SEPARATOR;
+    if (isEqualStr(str, "numpad add"))          return Key_Numpad_Add;
+    if (isEqualStr(str, "numpad subtract"))     return Key_Numpad_Subtract;
+    if (isEqualStr(str, "numpad multiply"))     return Key_Numpad_Multiply;
+    if (isEqualStr(str, "numpad divide"))       return Key_Numpad_Divide;
+    if (isEqualStr(str, "numpad decimal"))      return Key_Numpad_Decimal;
+    if (isEqualStr(str, "numpad separator"))    return Key_Numpad_Separator;
 
     // Applications keys.
     if (isEqualStr(str, "esc") || isEqualStr(str, "escape"))
-        return KEY_ESCAPE;
-    if (isEqualStr(str, "pause"))               return KEY_PAUSE;
-    if (isEqualStr(str, "play"))                return KEY_PLAY;
-    if (isEqualStr(str, "help"))                return KEY_HELP;
+        return Key_Escape;
+    if (isEqualStr(str, "pause"))               return Key_Pause;
+    if (isEqualStr(str, "play"))                return Key_Play;
+    if (isEqualStr(str, "help"))                return Key_Help;
 
     // Media keys.
     if (isEqualStr(str, "media next") || isEqualStr(str, "media track next"))
-        return KEY_MEDIA_NEXT;
+        return Key_Media_Next;
     if (isEqualStr(str, "media previous") || isEqualStr(str, "media prev") ||
         isEqualStr(str, "media track previous") || isEqualStr(str, "media track prev"))
-        return KEY_MEDIA_PREVIOUS;
+        return Key_Media_Previous;
     if (isEqualStr(str, "media play/pause") || isEqualStr(str, "media play pause"))
-        return KEY_MEDIA_PLAY_PAUSE;
-    if (isEqualStr(str, "media stop"))          return KEY_MEDIA_STOP;
+        return Key_Media_Play_Pause;
+    if (isEqualStr(str, "media stop"))          return Key_Media_Stop;
 
     // Volume keys.
     if (isEqualStr(str, "volume up") || isEqualStr(str, "vol up"))
-        return KEY_VOLUME_UP;
+        return Key_Volume_Up;
     if (isEqualStr(str, "volume down") || isEqualStr(str, "vol down"))
-        return KEY_VOLUME_DOWN;
+        return Key_Volume_Down;
     if (isEqualStr(str, "volume mute") || isEqualStr(str, "vol mute"))
-        return KEY_VOLUME_MUTE;
+        return Key_Volume_Mute;
 
     // Lock keys.
     if (isEqualStr(str, "caps lock") || isEqualStr(str, "caps lk"))
-        return KEY_CAPS_LOCK;
+        return Key_Caps_Lock;
     if (isEqualStr(str, "num lock") || isEqualStr(str, "num lk"))
-        return KEY_NUM_LOCK;
+        return Key_Num_Lock;
     if (isEqualStr(str, "scroll lock") || isEqualStr(str, "scroll lk"))
-        return KEY_SCROLL_LOCK;
+        return Key_Scroll_Lock;
 
     // Misc keys.
     if (isEqualStr(str, "print screen") || isEqualStr(str, "prtsc"))
-        return KEY_PRINT_SCREEN;
-    if (isEqualStr(str, "menu"))                return KEY_MENU;
+        return Key_Print_Screen;
+    if (isEqualStr(str, "menu"))                return Key_Menu;
 
     // OEM keys.
-    if (isEqualStr(str, "`"))                   return KEY_LEFT_QUOTE;
-    if (isEqualStr(str, "-"))                   return KEY_MINUS;
-    if (isEqualStr(str, "="))                   return KEY_EQUAL;
-    if (isEqualStr(str, "["))                   return KEY_LEFT_BRACKET;
-    if (isEqualStr(str, "]"))                   return KEY_RIGHT_BRACKET;
-    if (isEqualStr(str, ";"))                   return KEY_SEMICOLON;
-    if (isEqualStr(str, "'"))                   return KEY_APOSTROPHE;
-    if (isEqualStr(str, ","))                   return KEY_COMMA;
-    if (isEqualStr(str, "."))                   return KEY_PERIOD;
-    if (isEqualStr(str, "/"))                   return KEY_SLASH;
-    if (isEqualStr(str, "\\"))                  return KEY_BACKSLASH;
-    if (isEqualStr(str, "<>"))                  return KEY_ANGLE_BRACKET;
+    if (isEqualStr(str, "`"))                   return Key_Left_Quote;
+    if (isEqualStr(str, "-"))                   return Key_Minus;
+    if (isEqualStr(str, "="))                   return Key_Equal;
+    if (isEqualStr(str, "["))                   return Key_Left_Bracket;
+    if (isEqualStr(str, "]"))                   return Key_Right_Bracket;
+    if (isEqualStr(str, ";"))                   return Key_Semicolon;
+    if (isEqualStr(str, "'"))                   return Key_Apostrophe;
+    if (isEqualStr(str, ","))                   return Key_Comma;
+    if (isEqualStr(str, "."))                   return Key_Period;
+    if (isEqualStr(str, "/"))                   return Key_Slash;
+    if (isEqualStr(str, "\\"))                  return Key_Backslash;
+    if (isEqualStr(str, "<>"))                  return Key_Angle_Bracket;
 
     return Key();
 }

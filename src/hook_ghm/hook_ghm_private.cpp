@@ -19,7 +19,10 @@ _HookGHMPrivate::_HookGHMPrivate() :
     debouncedTime_(_DEFAULT_DEBOUNCED_TIME)
 {}
 
-_HookGHMPrivate::~_HookGHMPrivate() = default;
+_HookGHMPrivate::~_HookGHMPrivate()
+{
+    end();
+}
 
 int _HookGHMPrivate::start()
 {
@@ -213,13 +216,13 @@ int _HookGHMPrivate::setDebouncedTime(size_t milliseconds)
 void _HookGHMPrivate::pressedKeyCallback_(int nativeKey)
 {
     auto key = getKeyFromNative(nativeKey);
-    if (key == KEY_MODI_META || key == KEY_MODI_META_LEFT || key == KEY_MODI_META_RIGHT)
+    if (key == Key_Modi_Meta || key == Key_Modi_Meta_Left || key == Key_Modi_Meta_Right)
         pressedModi_ = pressedModi_.load().add(MODI_META);
-    else if (key == KEY_MODI_CTRL || key == KEY_MODI_CTRL_LEFT || key == KEY_MODI_CTRL_RIGHT)
+    else if (key == Key_Modi_Ctrl || key == Key_Modi_Ctrl_Left || key == Key_Modi_Ctrl_Right)
         pressedModi_ = pressedModi_.load().add(MODI_CTRL);
-    else if (key == KEY_MODI_ALT || key == KEY_MODI_ALT_LEFT || key == KEY_MODI_ALT_RIGHT)
+    else if (key == Key_Modi_Alt || key == Key_Modi_Alt_Left || key == Key_Modi_Alt_Right)
         pressedModi_ = pressedModi_.load().add(MODI_ALT);
-    else if (key == KEY_MODI_SHIFT || key == KEY_MODI_SHIFT_LEFT || key == KEY_MODI_SHIFT_RIGHT)
+    else if (key == Key_Modi_Shift || key == Key_Modi_Shift_Left || key == Key_Modi_Shift_Right)
         pressedModi_ = pressedModi_.load().add(MODI_SHIFT);
     else
         pressedKey_ = key;
@@ -228,13 +231,13 @@ void _HookGHMPrivate::pressedKeyCallback_(int nativeKey)
 void _HookGHMPrivate::releasedKeyCallback_(int nativeKey)
 {
     auto key = getKeyFromNative(nativeKey);
-    if (key == KEY_MODI_META || key == KEY_MODI_META_LEFT || key == KEY_MODI_META_RIGHT)
+    if (key == Key_Modi_Meta || key == Key_Modi_Meta_Left || key == Key_Modi_Meta_Right)
         pressedModi_ = pressedModi_.load().remove(MODI_META);
-    else if (key == KEY_MODI_CTRL || key == KEY_MODI_CTRL_LEFT || key == KEY_MODI_CTRL_RIGHT)
+    else if (key == Key_Modi_Ctrl || key == Key_Modi_Ctrl_Left || key == Key_Modi_Ctrl_Right)
         pressedModi_ = pressedModi_.load().remove(MODI_CTRL);
-    else if (key == KEY_MODI_ALT || key == KEY_MODI_ALT_LEFT || key == KEY_MODI_ALT_RIGHT)
+    else if (key == Key_Modi_Alt || key == Key_Modi_Alt_Left || key == Key_Modi_Alt_Right)
         pressedModi_ = pressedModi_.load().remove(MODI_ALT);
-    else if (key == KEY_MODI_SHIFT || key == KEY_MODI_SHIFT_LEFT || key == KEY_MODI_SHIFT_RIGHT)
+    else if (key == Key_Modi_Shift || key == Key_Modi_Shift_Left || key == Key_Modi_Shift_Right)
         pressedModi_ = pressedModi_.load().remove(MODI_SHIFT);
     else
         pressedKey_ = 0;

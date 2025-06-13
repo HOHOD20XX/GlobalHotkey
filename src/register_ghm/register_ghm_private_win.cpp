@@ -13,7 +13,10 @@ _RegisterGHMPrivateWin::_RegisterGHMPrivateWin() :
     hasTask_(false), taskFinished_(false), taskResult_(RC_SUCCESS), hotkeyIndex_(0)
 {}
 
-_RegisterGHMPrivateWin::~_RegisterGHMPrivateWin() = default;
+_RegisterGHMPrivateWin::~_RegisterGHMPrivateWin()
+{
+    end();
+}
 
 int _RegisterGHMPrivateWin::start()
 {

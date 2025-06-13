@@ -16,7 +16,10 @@ LRESULT WINAPI LowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam);
 
 _KeyboardHookPrivateWin::_KeyboardHookPrivateWin() = default;
 
-_KeyboardHookPrivateWin::~_KeyboardHookPrivateWin() = default;
+_KeyboardHookPrivateWin::~_KeyboardHookPrivateWin()
+{
+    end();
+}
 
 int _KeyboardHookPrivateWin::start()
 {
@@ -44,9 +47,7 @@ int _KeyboardHookPrivateWin::end()
     if (::UnhookWindowsHookEx(hhook_) == 0)
         rtn = ::GetLastError();
 
-    removeAllKeyListener();
-    unsetKeyPressedEvent();
-    unsetKeyReleasedEvent();
+    _KeyboardHookPrivate::resetStaticMember_();
     hhook_ = nullptr;
     isRunning_ = false;
 

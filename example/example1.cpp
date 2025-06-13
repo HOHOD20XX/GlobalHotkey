@@ -27,7 +27,7 @@ int main()
 
     gbhk::KeyCombination hotkey1(gbhk::MODI_CTRL, 'J');
     gbhk::KeyCombination hotkey2(gbhk::MODI_CTRL | gbhk::MODI_SHIFT, 'J');
-    gbhk::KeyCombination hotkey3(gbhk::MODI_CTRL | gbhk::MODI_SHIFT, gbhk::KEY_DELETE);
+    gbhk::KeyCombination hotkey3(gbhk::MODI_CTRL | gbhk::MODI_SHIFT, gbhk::Key_Delete);
 
     std::cout << "The Hotkeys: " << "\n"
               << hotkey1.toString(true) << "\n"

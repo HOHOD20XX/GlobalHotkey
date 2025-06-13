@@ -8,50 +8,7 @@ _GlobalHotkeyManagerPrivate::_GlobalHotkeyManagerPrivate() :
     cycleTime_(_DEFAULT_CYCLE_TIME)
 {}
 
-_GlobalHotkeyManagerPrivate::~_GlobalHotkeyManagerPrivate()
-{
-    end();
-}
-
-int _GlobalHotkeyManagerPrivate::start()
-{
-    return RC_SUCCESS;
-}
-
-int _GlobalHotkeyManagerPrivate::end()
-{
-    return RC_SUCCESS;
-}
-
-int _GlobalHotkeyManagerPrivate::add(const KeyCombination& kc, VoidFunc func, bool autoRepeat)
-{
-    return RC_SUCCESS;
-}
-
-int _GlobalHotkeyManagerPrivate::add(const KeyCombination& kc, ArgFunc func, Arg arg, bool autoRepeat)
-{
-    return RC_SUCCESS;
-}
-
-int _GlobalHotkeyManagerPrivate::remove(const KeyCombination& kc)
-{
-    return RC_SUCCESS;
-}
-
-int _GlobalHotkeyManagerPrivate::removeAll()
-{
-    return RC_SUCCESS;
-}
-
-int _GlobalHotkeyManagerPrivate::replace(const KeyCombination& oldKc, const KeyCombination& newKc)
-{
-    return RC_SUCCESS;
-}
-
-int _GlobalHotkeyManagerPrivate::setAutoRepeat(const KeyCombination& kc, bool autoRepeat)
-{
-    return RC_SUCCESS;
-}
+_GlobalHotkeyManagerPrivate::~_GlobalHotkeyManagerPrivate() = default;
 
 int _GlobalHotkeyManagerPrivate::setCycleTime(size_t milliseconds)
 {

@@ -21,14 +21,14 @@ public:
     _GlobalHotkeyManagerPrivate();
     virtual ~_GlobalHotkeyManagerPrivate();
 
-    virtual int start();
-    virtual int end();
-    virtual int add(const KeyCombination& kc, VoidFunc func, bool autoRepeat = false);
-    virtual int add(const KeyCombination& kc, ArgFunc func, Arg arg, bool autoRepeat = false);
-    virtual int remove(const KeyCombination& kc);
-    virtual int removeAll();
-    virtual int replace(const KeyCombination& oldKc, const KeyCombination& newKc);
-    virtual int setAutoRepeat(const KeyCombination& kc, bool autoRepeat);
+    virtual int start() = 0;
+    virtual int end() = 0;
+    virtual int add(const KeyCombination& kc, VoidFunc func, bool autoRepeat = false) = 0;
+    virtual int add(const KeyCombination& kc, ArgFunc func, Arg arg, bool autoRepeat = false) = 0;
+    virtual int remove(const KeyCombination& kc) = 0;
+    virtual int removeAll() = 0;
+    virtual int replace(const KeyCombination& oldKc, const KeyCombination& newKc) = 0;
+    virtual int setAutoRepeat(const KeyCombination& kc, bool autoRepeat) = 0;
     int setCycleTime(size_t milliseconds);
     bool has(const KeyCombination& kc) const;
     bool isAutoRepeat(const KeyCombination& kc) const;

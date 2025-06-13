@@ -17,8 +17,9 @@ namespace kbhook
 {
 
 constexpr const char* EVDEV_FILE_PREFIX = "/dev/input/event";
-constexpr int KEY_PRESSED = 1;
 constexpr int KEY_RELEASED = 0;
+constexpr int KEY_PRESSED = 1;
+constexpr int KEY_HELD = 2;
 
 static bool isFileExists(const String& fileName)
 {
@@ -43,7 +44,10 @@ _KeyboardHookPrivateLinux::_KeyboardHookPrivateLinux()
     : shouldClose_(false)
 {}
 
-_KeyboardHookPrivateLinux::~_KeyboardHookPrivateLinux() = default;
+_KeyboardHookPrivateLinux::~_KeyboardHookPrivateLinux()
+{
+    end();
+}
 
 int _KeyboardHookPrivateLinux::start()
 {
@@ -103,11 +107,7 @@ int _KeyboardHookPrivateLinux::end()
     shouldClose_ = true;
     while (isRunning_)
         gbhk::yield();
-
     shouldClose_ = false;
-    removeAllKeyListener();
-    unsetKeyPressedEvent();
-    unsetKeyReleasedEvent();
 
     for (auto& device : devices_)
     {
@@ -116,6 +116,8 @@ int _KeyboardHookPrivateLinux::end()
         ::close(fd);
         ::libevdev_free(dev);
     }
+
+    _KeyboardHookPrivate::resetStaticMember_();
 
     return RC_SUCCESS;
 }

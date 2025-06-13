@@ -16,34 +16,34 @@ public:
 
     /// @brief Start the global hotkey manager.
     /// @return A #ReturnCode or a platfrom-specific error code.
-    virtual int start() = 0;
+    int start();
     /// @brief End the global hotkey manager.
     /// @return A #ReturnCode or a platfrom-specific error code.
     /// @note All hotkeys will be removed.
-    virtual int end() = 0;
+    int end();
     /// @brief Add a hotkey to the global hotkey manager.
     /// @param autoRepeat Whether the hotkey should be auto-repeated when held down.
     /// @return A #ReturnCode or a platfrom-specific error code.
-    virtual int add(const KeyCombination& kc, VoidFunc func, bool autoRepeat = false) = 0;
+    int add(const KeyCombination& kc, VoidFunc func, bool autoRepeat = false);
     /// @overload
-    virtual int add(const KeyCombination& kc, ArgFunc func, Arg arg, bool autoRepeat = false) = 0;
+    int add(const KeyCombination& kc, ArgFunc func, Arg arg, bool autoRepeat = false);
     /// @brief Remove a hotkey from the global hotkey manager.
     /// @return A #ReturnCode or a platfrom-specific error code.
-    virtual int remove(const KeyCombination& kc) = 0;
+    int remove(const KeyCombination& kc);
     /// @brief Remove all hotkeys in the global hotkey manager.
     /// @return A #ReturnCode or a platfrom-specific error code.
-    virtual int removeAll() = 0;
+    int removeAll();
     /// @brief Replace a hotkey with another one.
     /// @return A #ReturnCode or a platfrom-specific error code.
-    virtual int replace(const KeyCombination& oldKc, const KeyCombination& newKc) = 0;
+    int replace(const KeyCombination& oldKc, const KeyCombination& newKc);
     /// @brief Set whether a hotkey should be auto-repeated when held down.
     /// @return A #ReturnCode or a platfrom-specific error code.
-    virtual int setAutoRepeat(const KeyCombination& kc, bool autoRepeat) = 0;
+    int setAutoRepeat(const KeyCombination& kc, bool autoRepeat);
     /// @return Always #RC_SUCCESS.
-    virtual int setCycleTime(size_t milliseconds) = 0;
-    virtual bool has(const KeyCombination& kc) const = 0;
-    virtual bool isAutoRepeat(const KeyCombination& kc) const = 0;
-    virtual bool isRunning() const = 0;
+    int setCycleTime(size_t milliseconds);
+    bool has(const KeyCombination& kc) const;
+    bool isAutoRepeat(const KeyCombination& kc) const;
+    bool isRunning() const;
 
 protected:
     explicit GlobalHotkeyManager(_GlobalHotkeyManagerPrivate* p);
