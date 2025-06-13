@@ -89,7 +89,7 @@ int main()
     {
         gbhk::yield();
     }
-#endif // GLOBAL_HOTKEY_EXAMPLE_USE_HOOK
+#endif // GLOBAL_HOTKEY_EXAMPLE_USE_HOOK && _GLOBAL_HOTKEY_WIN
 
     rtn = hotkeyManager.end();
     if (rtn != gbhk::RC_SUCCESS)
