@@ -10,6 +10,26 @@ namespace gbhk
 namespace kbhook
 {
 
+_KeyboardHookPrivateLinux::_KeyboardHookPrivateLinux()
+{
+
+}
+
+_KeyboardHookPrivateLinux::~_KeyboardHookPrivateLinux()
+{
+
+}
+
+int _KeyboardHookPrivateLinux::start_()
+{
+
+}
+
+int _KeyboardHookPrivateLinux::end_()
+{
+
+}
+
 } // namespace kbhook
 
 } // namespace gbhk

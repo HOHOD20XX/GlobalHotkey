@@ -12,6 +12,28 @@ namespace gbhk
 namespace kbhook
 {
 
+_KeyboardHookPrivateWin::_KeyboardHookPrivateWin() = default;
+
+_KeyboardHookPrivateWin::~_KeyboardHookPrivateWin() = default;
+
+int _KeyboardHookPrivateWin::start_()
+{
+    hhook_ = ::SetWindowsHookExA(WH_KEYBOARD_LL, &LowLevelKeyboardProc, NULL, 0);
+    if (hhook_)
+        return EC_SUCCESS;
+    else
+        return ::GetLastError();
+}
+
+int _KeyboardHookPrivateWin::end_()
+{
+    int rtn = EC_SUCCESS;
+    if (::UnhookWindowsHookEx(hhook_) == 0)
+        rtn = ::GetLastError();
+    hhook_ = nullptr;
+    return rtn;
+}
+
 LRESULT WINAPI LowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
 {
     if (nCode == HC_ACTION)
@@ -60,24 +82,6 @@ LRESULT WINAPI LowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
     }
 
     return ::CallNextHookEx(NULL, nCode, wParam, lParam);
-}
-
-int _KeyboardHookPrivateWin::start_()
-{
-    hhook_ = ::SetWindowsHookExA(WH_KEYBOARD_LL, &LowLevelKeyboardProc, NULL, 0);
-    if (hhook_)
-        return EC_SUCCESS;
-    else
-        return ::GetLastError();
-}
-
-int _KeyboardHookPrivateWin::end_()
-{
-    int rtn = EC_SUCCESS;
-    if (::UnhookWindowsHookEx(hhook_) == 0)
-        rtn = ::GetLastError();
-    hhook_ = nullptr;
-    return rtn;
 }
 
 } // namespace kbhook

@@ -7,6 +7,11 @@
 
 #ifdef _GLOBAL_HOTKEY_LINUX
 
+#include <thread>    // thread
+#include <vector>    // vector
+
+#include <libevdev/libevdev.h>
+
 namespace gbhk
 {
 
@@ -16,12 +21,17 @@ namespace kbhook
 class _KeyboardHookPrivateLinux final : public _KeyboardHookPrivate
 {
 public:
-    _KeyboardHookPrivateLinux() noexcept = default;
-    ~_KeyboardHookPrivateLinux() noexcept = default;
+    _KeyboardHookPrivateLinux();
+    ~_KeyboardHookPrivateLinux();
 
 protected:
+    int start_() override;
+    int end_() override;
 
 private:
+    std::thread workThread_;
+
+    std::vector<libevdev*> devices_;
 };
 
 } // namespace kbhook

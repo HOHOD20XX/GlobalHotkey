@@ -16,8 +16,8 @@ namespace kbhook
 class _KeyboardHookPrivateMac final : public _KeyboardHookPrivate
 {
 public:
-    _KeyboardHookPrivateMac() noexcept = default;
-    ~_KeyboardHookPrivateMac() noexcept = default;
+    _KeyboardHookPrivateMac();
+    ~_KeyboardHookPrivateMac();
 
 protected:
 

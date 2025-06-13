@@ -18,8 +18,8 @@ namespace kbhook
 class _KeyboardHookPrivateWin final : public _KeyboardHookPrivate
 {
 public:
-    _KeyboardHookPrivateWin() noexcept = default;
-    ~_KeyboardHookPrivateWin() noexcept = default;
+    _KeyboardHookPrivateWin();
+    ~_KeyboardHookPrivateWin();
 
 protected:
     int start_() override;

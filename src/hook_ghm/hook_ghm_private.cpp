@@ -101,6 +101,8 @@ int _HookGHMPrivate::end()
     while (isRunning_)
         yield();
     shouldClose_ = false;
+    pressedModi_ = 0;
+    pressedKey_ = 0;
     workThreadId_ = std::thread::id();
     removeAll();
 
