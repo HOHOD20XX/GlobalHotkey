@@ -36,7 +36,7 @@ int main()
     std::cout << "Press " << hotkey3.toString(true) << " To Exit!" << std::endl;
 
     auto rtn = hotkeyManager.start();
-    if (rtn != gbhk::EC_SUCCESS)
+    if (rtn != gbhk::RC_SUCCESS)
     {
         THROW_RT_ERR("Failed to start the hotkey: ", rtn);
     }
@@ -45,7 +45,7 @@ int main()
     {
         std::cout << "hotkey1 triggered" << std::endl;
     });
-    if (rtn != gbhk::EC_SUCCESS)
+    if (rtn != gbhk::RC_SUCCESS)
     {
         THROW_RT_ERR("Failed to add the hotkey: ", rtn);
     }
@@ -54,7 +54,7 @@ int main()
     {
         std::cout << "hotkey2 triggered" << std::endl;
     }, true);
-    if (rtn != gbhk::EC_SUCCESS)
+    if (rtn != gbhk::RC_SUCCESS)
     {
         THROW_RT_ERR("Failed to add the hotkey: ", rtn);
     }
@@ -67,7 +67,7 @@ int main()
 
         *static_cast<std::atomic<bool>*>(shouldClose) = true;
     }, &shouldClose);
-    if (rtn != gbhk::EC_SUCCESS)
+    if (rtn != gbhk::RC_SUCCESS)
     {
         THROW_RT_ERR("Failed to add the hotkey: ", rtn);
     }
@@ -92,7 +92,7 @@ int main()
 #endif // GLOBAL_HOTKEY_EXAMPLE_USE_HOOK
 
     rtn = hotkeyManager.end();
-    if (rtn != gbhk::EC_SUCCESS)
+    if (rtn != gbhk::RC_SUCCESS)
     {
         THROW_RT_ERR("Failed to end the hotkey: ", rtn);
     }

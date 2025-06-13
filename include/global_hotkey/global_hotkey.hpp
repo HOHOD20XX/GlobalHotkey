@@ -6,7 +6,7 @@
 // License: GPL-3.0
 
 #include "base.hpp"
-#include "error_code.hpp"
+#include "return_code.hpp"
 #include "hook_ghm.hpp"
 #include "register_ghm.hpp"
 #include "utility.hpp"

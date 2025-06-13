@@ -22,14 +22,14 @@ int _KeyboardHookPrivateWin::start_()
 {
     hhook_ = ::SetWindowsHookExA(WH_KEYBOARD_LL, &LowLevelKeyboardProc, NULL, 0);
     if (hhook_)
-        return EC_SUCCESS;
+        return RC_SUCCESS;
     else
         return ::GetLastError();
 }
 
 int _KeyboardHookPrivateWin::end_()
 {
-    int rtn = EC_SUCCESS;
+    int rtn = RC_SUCCESS;
     if (::UnhookWindowsHookEx(hhook_) == 0)
         rtn = ::GetLastError();
     hhook_ = nullptr;

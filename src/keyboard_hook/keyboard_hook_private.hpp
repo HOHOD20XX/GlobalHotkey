@@ -6,7 +6,7 @@
 #include <atomic>   // atomic
 #include <mutex>    // mutex, lock_guard
 
-#include <global_hotkey/error_code.hpp>
+#include <global_hotkey/return_code.hpp>
 #include <global_hotkey/keyboard_hook.hpp>
 
 #define LOCK_MUTEX(mtx) std::lock_guard<std::mutex> lock(mtx)

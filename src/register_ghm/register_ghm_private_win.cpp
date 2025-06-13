@@ -10,7 +10,7 @@ namespace gbhk
 {
 
 _RegisterGHMPrivateWin::_RegisterGHMPrivateWin() :
-    hasTask_(false), taskFinished_(false), taskResult_(EC_SUCCESS), hotkeyIndex_(0)
+    hasTask_(false), taskFinished_(false), taskResult_(RC_SUCCESS), hotkeyIndex_(0)
 {}
 
 _RegisterGHMPrivateWin::~_RegisterGHMPrivateWin() = default;
@@ -18,7 +18,7 @@ _RegisterGHMPrivateWin::~_RegisterGHMPrivateWin() = default;
 int _RegisterGHMPrivateWin::start()
 {
     if (isRunning_)
-        return EC_SUCCESS;
+        return RC_SUCCESS;
 
     isRunning_ = true;
     workThread_ = std::thread([=]()
@@ -67,13 +67,13 @@ int _RegisterGHMPrivateWin::start()
         isRunning_ = false;
     });
     workThread_.detach();
-    return EC_SUCCESS;
+    return RC_SUCCESS;
 }
 
 int _RegisterGHMPrivateWin::end()
 {
-    if (!isRunning_)                    return EC_SUCCESS;
-    if (CUR_TH_ID == workThreadId_)     return EC_END_GHM_IN_WRONG_THREAD;
+    if (!isRunning_)                    return RC_SUCCESS;
+    if (CUR_TH_ID == workThreadId_)     return RC_END_GHM_IN_WRONG_THREAD;
 
     Task tsk;
     tsk.op = Task::END;
@@ -93,10 +93,10 @@ int _RegisterGHMPrivateWin::end()
 
 int _RegisterGHMPrivateWin::add(const KeyCombination& kc, VoidFunc func, bool autoRepeat)
 {
-    if (!kc.isValid() || func == nullptr)   return EC_INVALID_VALUE;
-    if (!isRunning_)                        return EC_ARR_GHM_IN_WRONG_TIME;
-    if (CUR_TH_ID == workThreadId_)         return EC_ARR_GHM_IN_WRONG_THREAD;
-    if (has(kc))                            return EC_EXIST_SAME_VALUE;
+    if (!kc.isValid() || func == nullptr)   return RC_INVALID_VALUE;
+    if (!isRunning_)                        return RC_ARR_GHM_IN_WRONG_TIME;
+    if (CUR_TH_ID == workThreadId_)         return RC_ARR_GHM_IN_WRONG_THREAD;
+    if (has(kc))                            return RC_EXIST_SAME_VALUE;
 
     Task tsk;
     tsk.op = Task::ADD;
@@ -105,7 +105,7 @@ int _RegisterGHMPrivateWin::add(const KeyCombination& kc, VoidFunc func, bool au
 
     setTask_(tsk);
     int rtn = waitTask_();
-    if (rtn == EC_SUCCESS)
+    if (rtn == RC_SUCCESS)
     {
         LOCK_MUTEX(mtx_);
         voidFuncs_.insert({ kc, { autoRepeat, func } });
@@ -116,10 +116,10 @@ int _RegisterGHMPrivateWin::add(const KeyCombination& kc, VoidFunc func, bool au
 
 int _RegisterGHMPrivateWin::add(const KeyCombination& kc, ArgFunc func, Arg arg, bool autoRepeat)
 {
-    if (!kc.isValid() || func == nullptr)   return EC_INVALID_VALUE;
-    if (!isRunning_)                        return EC_ARR_GHM_IN_WRONG_TIME;
-    if (CUR_TH_ID == workThreadId_)         return EC_ARR_GHM_IN_WRONG_THREAD;
-    if (has(kc))                            return EC_EXIST_SAME_VALUE;
+    if (!kc.isValid() || func == nullptr)   return RC_INVALID_VALUE;
+    if (!isRunning_)                        return RC_ARR_GHM_IN_WRONG_TIME;
+    if (CUR_TH_ID == workThreadId_)         return RC_ARR_GHM_IN_WRONG_THREAD;
+    if (has(kc))                            return RC_EXIST_SAME_VALUE;
 
     Task tsk;
     tsk.op = Task::ADD;
@@ -128,7 +128,7 @@ int _RegisterGHMPrivateWin::add(const KeyCombination& kc, ArgFunc func, Arg arg,
 
     setTask_(tsk);
     int rtn = waitTask_();
-    if (rtn == EC_SUCCESS)
+    if (rtn == RC_SUCCESS)
     {
         LOCK_MUTEX(mtx_);
         argFuncArgs_.insert({ kc, { autoRepeat, { func, arg } } });
@@ -139,9 +139,9 @@ int _RegisterGHMPrivateWin::add(const KeyCombination& kc, ArgFunc func, Arg arg,
 
 int _RegisterGHMPrivateWin::remove(const KeyCombination& kc)
 {
-    if (!isRunning_)                    return EC_ARR_GHM_IN_WRONG_TIME;
-    if (CUR_TH_ID == workThreadId_)     return EC_ARR_GHM_IN_WRONG_THREAD;
-    if (!has(kc))                       return EC_NO_SPECIFIED_VALUE;
+    if (!isRunning_)                    return RC_ARR_GHM_IN_WRONG_TIME;
+    if (CUR_TH_ID == workThreadId_)     return RC_ARR_GHM_IN_WRONG_THREAD;
+    if (!has(kc))                       return RC_NO_SPECIFIED_VALUE;
 
     Task tsk;
     tsk.op = Task::REMOVE;
@@ -149,7 +149,7 @@ int _RegisterGHMPrivateWin::remove(const KeyCombination& kc)
 
     setTask_(tsk);
     int rtn = waitTask_();
-    if (rtn == EC_SUCCESS)
+    if (rtn == RC_SUCCESS)
     {
         LOCK_MUTEX(mtx_);
         if (voidFuncs_.find(kc) != voidFuncs_.end())
@@ -163,15 +163,15 @@ int _RegisterGHMPrivateWin::remove(const KeyCombination& kc)
 
 int _RegisterGHMPrivateWin::removeAll()
 {
-    if (!isRunning_)                    return EC_ARR_GHM_IN_WRONG_TIME;
-    if (CUR_TH_ID == workThreadId_)     return EC_ARR_GHM_IN_WRONG_THREAD;
+    if (!isRunning_)                    return RC_ARR_GHM_IN_WRONG_TIME;
+    if (CUR_TH_ID == workThreadId_)     return RC_ARR_GHM_IN_WRONG_THREAD;
 
     Task tsk;
     tsk.op = Task::REMOVE_ALL;
 
     setTask_(tsk);
     int rtn = waitTask_();
-    if (rtn == EC_SUCCESS)
+    if (rtn == RC_SUCCESS)
     {
         LOCK_MUTEX(mtx_);
         voidFuncs_.clear();
@@ -183,12 +183,12 @@ int _RegisterGHMPrivateWin::removeAll()
 
 int _RegisterGHMPrivateWin::replace(const KeyCombination& oldKc, const KeyCombination& newKc)
 {
-    if (!newKc.isValid())               return EC_INVALID_VALUE;
-    if (!isRunning_)                    return EC_ARR_GHM_IN_WRONG_TIME;
-    if (CUR_TH_ID == workThreadId_)     return EC_ARR_GHM_IN_WRONG_THREAD;
-    if (oldKc == newKc)                 return EC_NO_CHANGED_VALUE;
-    if (!has(oldKc))                    return EC_NO_SPECIFIED_VALUE;
-    if (has(newKc))                     return EC_EXIST_SAME_VALUE;
+    if (!newKc.isValid())               return RC_INVALID_VALUE;
+    if (!isRunning_)                    return RC_ARR_GHM_IN_WRONG_TIME;
+    if (CUR_TH_ID == workThreadId_)     return RC_ARR_GHM_IN_WRONG_THREAD;
+    if (oldKc == newKc)                 return RC_NO_CHANGED_VALUE;
+    if (!has(oldKc))                    return RC_NO_SPECIFIED_VALUE;
+    if (has(newKc))                     return RC_EXIST_SAME_VALUE;
 
     Task tsk;
     tsk.op = Task::REPLACE;
@@ -197,7 +197,7 @@ int _RegisterGHMPrivateWin::replace(const KeyCombination& oldKc, const KeyCombin
 
     setTask_(tsk);
     int rtn = waitTask_();
-    if (rtn == EC_SUCCESS)
+    if (rtn == RC_SUCCESS)
     {
         LOCK_MUTEX(mtx_);
         if (voidFuncs_.find(oldKc) != voidFuncs_.end())
@@ -219,10 +219,10 @@ int _RegisterGHMPrivateWin::replace(const KeyCombination& oldKc, const KeyCombin
 
 int _RegisterGHMPrivateWin::setAutoRepeat(const KeyCombination& kc, bool autoRepeat)
 {
-    if (!isRunning_)                    return EC_ARR_GHM_IN_WRONG_TIME;
-    if (CUR_TH_ID == workThreadId_)     return EC_ARR_GHM_IN_WRONG_THREAD;
-    if (!has(kc))                       return EC_NO_SPECIFIED_VALUE;
-    if (isAutoRepeat(kc) == autoRepeat) return EC_NO_CHANGED_VALUE;
+    if (!isRunning_)                    return RC_ARR_GHM_IN_WRONG_TIME;
+    if (CUR_TH_ID == workThreadId_)     return RC_ARR_GHM_IN_WRONG_THREAD;
+    if (!has(kc))                       return RC_NO_SPECIFIED_VALUE;
+    if (isAutoRepeat(kc) == autoRepeat) return RC_NO_CHANGED_VALUE;
 
     Task tsk;
     tsk.op = Task::SET_AUTO_REPEAT;
@@ -231,7 +231,7 @@ int _RegisterGHMPrivateWin::setAutoRepeat(const KeyCombination& kc, bool autoRep
 
     setTask_(tsk);
     int rtn = waitTask_();
-    if (rtn == EC_SUCCESS)
+    if (rtn == RC_SUCCESS)
     {
         LOCK_MUTEX(mtx_);
         if (voidFuncs_.find(kc) != voidFuncs_.end())
@@ -296,7 +296,7 @@ int _RegisterGHMPrivateWin::add_(const KeyCombination& kc, bool autoRepeat)
         hotkeyIdToKc_.insert({ hotkeyIndex_, kc });
         kcToHotkeyId_.insert({ kc, hotkeyIndex_ });
         hotkeyIndex_++;
-        return EC_SUCCESS;
+        return RC_SUCCESS;
     }
     else
     {
@@ -311,7 +311,7 @@ int _RegisterGHMPrivateWin::remove_(const KeyCombination& kc)
     {
         hotkeyIdToKc_.erase(hotkeyId);
         kcToHotkeyId_.erase(kc);
-        return EC_SUCCESS;
+        return RC_SUCCESS;
     }
     else
     {
@@ -321,7 +321,7 @@ int _RegisterGHMPrivateWin::remove_(const KeyCombination& kc)
 
 int _RegisterGHMPrivateWin::removeAll_()
 {
-    int ec = EC_SUCCESS;
+    int ec = RC_SUCCESS;
     for (const auto& var : hotkeyIdToKc_)
     {
         int hotkeyId = var.first;
@@ -351,7 +351,7 @@ int _RegisterGHMPrivateWin::replace_(const KeyCombination& oldKc, const KeyCombi
         {
             hotkeyIdToKc_.insert({ hotkeyId, newKc });
             kcToHotkeyId_.insert({ newKc, hotkeyId });
-            return EC_SUCCESS;
+            return RC_SUCCESS;
         }
         else
         {
@@ -378,7 +378,7 @@ int _RegisterGHMPrivateWin::setAutoRepeat_(const KeyCombination& kc, bool autoRe
         {
             hotkeyIdToKc_.insert({ hotkeyId, kc });
             kcToHotkeyId_.insert({ kc, hotkeyId });
-            return EC_SUCCESS;
+            return RC_SUCCESS;
         }
         else
         {

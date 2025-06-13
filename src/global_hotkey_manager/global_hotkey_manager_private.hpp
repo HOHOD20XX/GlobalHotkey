@@ -6,7 +6,7 @@
 #include <thread>   // thread, thread::id
 
 #include <global_hotkey/base.hpp>
-#include <global_hotkey/error_code.hpp>
+#include <global_hotkey/return_code.hpp>
 #include <global_hotkey/key_combination.hpp>
 
 #define LOCK_MUTEX(mtx) std::lock_guard<std::mutex> lock(mtx)

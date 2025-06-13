@@ -28,10 +28,10 @@ _KeyboardHookPrivate::~_KeyboardHookPrivate()
 int _KeyboardHookPrivate::start()
 {
     if (isRunning_)
-        return EC_SUCCESS;
+        return RC_SUCCESS;
 
     int rtn = start_();
-    if (rtn == EC_SUCCESS)
+    if (rtn == RC_SUCCESS)
         isRunning_ = true;
     return rtn;
 }
@@ -39,7 +39,7 @@ int _KeyboardHookPrivate::start()
 int _KeyboardHookPrivate::end()
 {
     if (!isRunning_)
-        return EC_SUCCESS;
+        return RC_SUCCESS;
 
     int rtn = end_();
     removeAllKeyListener();
@@ -55,9 +55,9 @@ int _KeyboardHookPrivate::addKeyListener(int nativeKey, KeyState state, VoidFunc
     LOCK_MUTEX(mtx_);
 
     if (hasKeyListener(nativeKey, state))
-        return EC_EXIST_SAME_VALUE;
+        return RC_EXIST_SAME_VALUE;
     voidFuncs_.insert({ nativeKey, { state, func } });
-    return EC_SUCCESS;
+    return RC_SUCCESS;
 }
 
 int _KeyboardHookPrivate::addKeyListener(int nativeKey, KeyState state, ArgFunc func, Arg arg)
@@ -65,9 +65,9 @@ int _KeyboardHookPrivate::addKeyListener(int nativeKey, KeyState state, ArgFunc 
     LOCK_MUTEX(mtx_);
 
     if (hasKeyListener(nativeKey, state))
-        return EC_EXIST_SAME_VALUE;
+        return RC_EXIST_SAME_VALUE;
     argFuncArgs_.insert({ nativeKey, { state, { func, arg } } });
-    return EC_SUCCESS;
+    return RC_SUCCESS;
 }
 
 int _KeyboardHookPrivate::removeKeyListener(int nativeKey, KeyState state)
@@ -77,14 +77,14 @@ int _KeyboardHookPrivate::removeKeyListener(int nativeKey, KeyState state)
     if (HAS_KEY_LISTENER(voidFuncs_, nativeKey, state))
     {
         voidFuncs_.erase(nativeKey);
-        return EC_SUCCESS;
+        return RC_SUCCESS;
     }
     if (HAS_KEY_LISTENER(argFuncArgs_, nativeKey, state))
     {
         argFuncArgs_.erase(nativeKey);
-        return EC_SUCCESS;
+        return RC_SUCCESS;
     }
-    return EC_NO_SPECIFIED_VALUE;
+    return RC_NO_SPECIFIED_VALUE;
 }
 
 int _KeyboardHookPrivate::removeAllKeyListener()
@@ -92,35 +92,35 @@ int _KeyboardHookPrivate::removeAllKeyListener()
     LOCK_MUTEX(mtx_);
     voidFuncs_.clear();
     argFuncArgs_.clear();
-    return EC_SUCCESS;
+    return RC_SUCCESS;
 }
 
 int _KeyboardHookPrivate::setKeyPressedEvent(KeyEventCallback func)
 {
     LOCK_MUTEX(mtx_);
     keyPressedCallback_ = func;
-    return EC_SUCCESS;
+    return RC_SUCCESS;
 }
 
 int _KeyboardHookPrivate::setKeyReleasedEvent(KeyEventCallback func)
 {
     LOCK_MUTEX(mtx_);
     keyReleasedCallback_ = func;
-    return EC_SUCCESS;
+    return RC_SUCCESS;
 }
 
 int _KeyboardHookPrivate::unsetKeyPressedEvent()
 {
     LOCK_MUTEX(mtx_);
     keyPressedCallback_ = nullptr;
-    return EC_SUCCESS;
+    return RC_SUCCESS;
 }
 
 int _KeyboardHookPrivate::unsetKeyReleasedEvent()
 {
     LOCK_MUTEX(mtx_);
     keyReleasedCallback_ = nullptr;
-    return EC_SUCCESS;
+    return RC_SUCCESS;
 }
 
 bool _KeyboardHookPrivate::hasKeyListener(int nativeKey, KeyState state) const
@@ -136,12 +136,12 @@ bool _KeyboardHookPrivate::isRunning() const
 
 int _KeyboardHookPrivate::start_()
 {
-    return EC_SUCCESS;
+    return RC_SUCCESS;
 }
 
 int _KeyboardHookPrivate::end_()
 {
-    return EC_SUCCESS;
+    return RC_SUCCESS;
 }
 
 } // namespace kbhook

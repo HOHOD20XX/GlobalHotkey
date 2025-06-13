@@ -24,13 +24,13 @@ _HookGHMPrivate::~_HookGHMPrivate() = default;
 int _HookGHMPrivate::start()
 {
     if (isRunning_)
-        return EC_SUCCESS;
+        return RC_SUCCESS;
 
     auto& keyboardHook = kbhook::KeyboardHook::getInstance();
     keyboardHook.setKeyPressedEvent(&pressedKeyCallback_);
     keyboardHook.setKeyReleasedEvent(&releasedKeyCallback_);
     int ec = keyboardHook.start();
-    if (ec != EC_SUCCESS)
+    if (ec != RC_SUCCESS)
         return ec;
 
     isRunning_ = true;
@@ -89,13 +89,13 @@ int _HookGHMPrivate::start()
         isRunning_ = false;
     });
     workThread_.detach();
-    return EC_SUCCESS;
+    return RC_SUCCESS;
 }
 
 int _HookGHMPrivate::end()
 {
-    if (!isRunning_)                    return EC_SUCCESS;
-    if (CUR_TH_ID == workThreadId_)     return EC_END_GHM_IN_WRONG_THREAD;
+    if (!isRunning_)                    return RC_SUCCESS;
+    if (CUR_TH_ID == workThreadId_)     return RC_END_GHM_IN_WRONG_THREAD;
 
     shouldClose_ = true;
     while (isRunning_)
@@ -106,27 +106,27 @@ int _HookGHMPrivate::end()
     workThreadId_ = std::thread::id();
     removeAll();
 
-    return EC_SUCCESS;
+    return RC_SUCCESS;
 }
 
 int _HookGHMPrivate::add(const KeyCombination& kc, VoidFunc func, bool autoRepeat)
 {
-    if (!kc.isValid() || func == nullptr)   return EC_INVALID_VALUE;
-    if (has(kc))                            return EC_EXIST_SAME_VALUE;
+    if (!kc.isValid() || func == nullptr)   return RC_INVALID_VALUE;
+    if (has(kc))                            return RC_EXIST_SAME_VALUE;
 
     LOCK_MUTEX(mtx_);
     voidFuncs_.insert({ kc, { autoRepeat, func } });
-    return EC_SUCCESS;
+    return RC_SUCCESS;
 }
 
 int _HookGHMPrivate::add(const KeyCombination& kc, ArgFunc func, Arg arg, bool autoRepeat)
 {
-    if (!kc.isValid() || func == nullptr)   return EC_INVALID_VALUE;
-    if (has(kc))                            return EC_EXIST_SAME_VALUE;
+    if (!kc.isValid() || func == nullptr)   return RC_INVALID_VALUE;
+    if (has(kc))                            return RC_EXIST_SAME_VALUE;
 
     LOCK_MUTEX(mtx_);
     argFuncArgs_.insert({ kc, { autoRepeat, { func, arg } } });
-    return EC_SUCCESS;
+    return RC_SUCCESS;
 }
 
 int _HookGHMPrivate::remove(const KeyCombination& kc)
@@ -138,9 +138,9 @@ int _HookGHMPrivate::remove(const KeyCombination& kc)
     else if (argFuncArgs_.find(kc) != argFuncArgs_.end())
         argFuncArgs_.erase(kc);
     else
-        return EC_NO_SPECIFIED_VALUE;
+        return RC_NO_SPECIFIED_VALUE;
 
-    return EC_SUCCESS;
+    return RC_SUCCESS;
 }
 
 int _HookGHMPrivate::removeAll()
@@ -148,13 +148,13 @@ int _HookGHMPrivate::removeAll()
     LOCK_MUTEX(mtx_);
     voidFuncs_.clear();
     argFuncArgs_.clear();
-    return EC_SUCCESS;
+    return RC_SUCCESS;
 }
 
 int _HookGHMPrivate::replace(const KeyCombination& oldKc, const KeyCombination& newKc)
 {
-    if (!newKc.isValid())   return EC_INVALID_VALUE;
-    if (oldKc == newKc)     return EC_NO_CHANGED_VALUE;
+    if (!newKc.isValid())   return RC_INVALID_VALUE;
+    if (oldKc == newKc)     return RC_NO_CHANGED_VALUE;
 
     LOCK_MUTEX(mtx_);
 
@@ -172,10 +172,10 @@ int _HookGHMPrivate::replace(const KeyCombination& oldKc, const KeyCombination& 
     }
     else
     {
-        return EC_NO_SPECIFIED_VALUE;
+        return RC_NO_SPECIFIED_VALUE;
     }
 
-    return EC_SUCCESS;
+    return RC_SUCCESS;
 }
 
 int _HookGHMPrivate::setAutoRepeat(const KeyCombination& kc, bool autoRepeat)
@@ -186,28 +186,28 @@ int _HookGHMPrivate::setAutoRepeat(const KeyCombination& kc, bool autoRepeat)
     {
         auto& pair = voidFuncs_[kc];
         if (pair.first == autoRepeat)
-            return EC_NO_CHANGED_VALUE;
+            return RC_NO_CHANGED_VALUE;
         pair.first = autoRepeat;
     }
     else if (argFuncArgs_.find(kc) != argFuncArgs_.end())
     {
         auto& pair = argFuncArgs_[kc];
         if (pair.first == autoRepeat)
-            return EC_NO_CHANGED_VALUE;
+            return RC_NO_CHANGED_VALUE;
         pair.first = autoRepeat;
     }
     else
     {
-        return EC_NO_SPECIFIED_VALUE;
+        return RC_NO_SPECIFIED_VALUE;
     }
 
-    return EC_SUCCESS;
+    return RC_SUCCESS;
 }
 
 int _HookGHMPrivate::setDebouncedTime(size_t milliseconds)
 {
     debouncedTime_ = milliseconds;
-    return EC_SUCCESS;
+    return RC_SUCCESS;
 }
 
 void _HookGHMPrivate::pressedKeyCallback_(int nativeKey)
