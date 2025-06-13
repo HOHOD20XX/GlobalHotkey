@@ -65,21 +65,6 @@ endif()
 
 find_package(Threads REQUIRED)
 
-if(LINUX)
-    message(STATUS "${GBHK_MSG_PREFIX} Linux platform detected")
-
-    find_path(LIBEVDEV_INCLUDE_DIR libevdev/libevdev.h PATHS /usr/include /usr/include/libevdev-1.0)
-    find_library(LIBEVDEV_LIBRARY NAMES evdev PATHS /usr/lib /usr/lib/x86_64-linux-gnu)
-
-    if(LIBEVDEV_INCLUDE_DIR AND LIBEVDEV_LIBRARY)
-        message(STATUS "${GBHK_MSG_PREFIX} Found libevdev: ${LIBEVDEV_LIBRARY}")
-        include_directories(${LIBEVDEV_INCLUDE_DIR})
-        target_link_libraries(global_hotkey PRIVATE ${LIBEVDEV_LIBRARY})
-    else()
-        message(FATAL_ERROR "${GBHK_MSG_PREFIX} Not found libevdev")
-    endif()
-endif()
-
 
 if(GBHK_BUILD_SHARED)
     add_library(global_hotkey SHARED ${SRC})
@@ -97,6 +82,21 @@ if(GBHK_DISABLE_HOOK)
 endif()
 
 target_link_libraries(global_hotkey PRIVATE Threads::Threads)
+
+if(LINUX)
+    message(STATUS "${GBHK_MSG_PREFIX} Linux platform detected")
+
+    find_path(LIBEVDEV_INCLUDE_DIR libevdev/libevdev.h PATHS /usr/include /usr/include/libevdev-1.0)
+    find_library(LIBEVDEV_LIBRARY NAMES evdev PATHS /usr/lib /usr/lib/x86_64-linux-gnu)
+
+    if(LIBEVDEV_INCLUDE_DIR AND LIBEVDEV_LIBRARY)
+        message(STATUS "${GBHK_MSG_PREFIX} Found libevdev: ${LIBEVDEV_LIBRARY}")
+        include_directories(${LIBEVDEV_INCLUDE_DIR})
+        target_link_libraries(global_hotkey PRIVATE ${LIBEVDEV_LIBRARY})
+    else()
+        message(FATAL_ERROR "${GBHK_MSG_PREFIX} Not found libevdev")
+    endif()
+endif()
 
 set_target_properties(global_hotkey PROPERTIES DEBUG_POSTFIX d)
 
