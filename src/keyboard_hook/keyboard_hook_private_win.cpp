@@ -12,6 +12,8 @@ namespace gbhk
 namespace kbhook
 {
 
+LRESULT WINAPI LowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam);
+
 _KeyboardHookPrivateWin::_KeyboardHookPrivateWin() = default;
 
 _KeyboardHookPrivateWin::~_KeyboardHookPrivateWin() = default;
