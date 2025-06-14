@@ -1,21 +1,21 @@
 # Global Hotkey
 
-**简体中文 | [English](README_EN.md)**
+**English | [简体中文](README.md)**
 
-## 特点
+## Features
 
-- 可用于任意类型的程序（甚至是控制台程序）
+- Can be used for any type of program (even console programs)
 
-  例如Qt、MFC、命令行等等。
+  e.g. Qt, MFC, command line programs etc.
 
-- 支持使用Hook实现的按键监听替代注册型热键。
-- 支持Hook按键监听的去抖动。
-- 虚拟键枚举。
-- 组合热键支持。
+- Supports hook-based keyborad event listener to instead of register-based hotkey.
+- Supports debouncing to avoid repeated trigger of the hook hotkey.
+- Virtual key enumeration.
+- Keycombination is supported.
 
-## 编译
+## Compiling
 
-使用MinGW进行编译，可根据需求指定其他选项。
+Compile with MinGW and specify other options as needed.
 
 ```console
 git clone https://github.com/JaderoChan/GlobalHotkey
@@ -25,36 +25,36 @@ cd build
 make
 ```
 
-### 可用选项
+### Options
 
-- `GBHK_BUILD_SHARED` 指定是否生成动态库，默认为OFF。若启用，在项目中使用动态库时指定 `GLOBAL_HOTKEY_SHARED` 宏以获得更好的性能。
-- `GBHK_DISABLE_REGISTER` 指定是否禁用生成注册型热键，默认为OFF。
-- `GBHK_DISABLE_HOOK` 指定是否禁用生成Hook型热键，默认为OFF。
-- `GBHK_BUILD_EXAMPLE` 是否生成示例程序，默认值取决于项目是否为主项目。
-- `GBHK_EXAMPLE_USE_HOOK` 指定示例程序使用的热键类型，默认为OFF。
+- `GBHK_BUILD_SHARED` specifies whether to generate a dynamic library, default is OFF. If enabled, specify `GLOBAL_HOTKEY_SHARED` macro in your project to get better performance.
+- `GBHK_DISABLE_REGISTER` specifies whether to disable generating register-based hotkeys, default is OFF.
+- `GBHK_DISABLE_HOOK` specifies whether to disable generating hook-based hotkeys, default is OFF.
+- `GBHK_BUILD_EXAMPLE` specifies whether to build the example program, default is ON if the project is the main project, otherwise it is OFF.
+- `GBHK_EXAMPLE_USE_HOOK` specifies the type of hotkey used by the example program, default is OFF.
 
-## 概念
+## Concepts
 
-- 对热键进行集中管理的对象被称为 **热键管理器 GlobalHotkeyManager**。
-- 注册型热键代表由平台/系统进行管理的热键系统。
-- Hook型热键代表由库通过Hook或注入技术进行按键监听实现的热键系统，其不存在热键冲突问题，可用于某些特殊场合。
+- The object that centrally manages hotkeys is called a **Global Hotkey Manager**.
+- Register typed hotkeys represent hotkey systems managed by the platform/system.
+- Hook typed hotkeys represent hotkey systems implemented by libraries through Hook or injection techniques for key monitoring. They do not have hotkey conflict issues and can be used in certain special circumstances.
 
-## 使用
+## Usage
 
-最基本的流程是：
+The most basic process is as follows:
 
-1. 决定你需要使用的热键系统（注册型/Hook型）
-2. 获取对应的 **热键管理器** 实例对象。
-3. 调用 **热键管理器** 的 `start` 函数以启动。
-4. 利用相关接口以添加、删除与变更热键。
-5. 在程序结束或不需要使用热键系统时调用 `end` 函数以结束 **热键管理器**。
+1. Decide on the hotkey system (registration type / Hook type) you need to use
+2. Obtain the corresponding instance object of the **Global     Hotkey Manager**.
+3. Call the `start` function of the **Global Hotkey Manager** to start.
+4. Use the relevant interfaces to add, delete and change hotkeys.
+5. Call the `end` function to end the **Global Hotkey Manager** when the program ends or the hotkey system is no longer needed.
 
 ```cpp
-GlobalHotkeyManager& ghm = RegisterGHM::getInstance();  // 获取 热键管理器 实例对象。
+GlobalHotkeyManager& ghm = RegisterGHM::getInstance();  // Get the instance object of the Global Hotkey Manager.
 
-ghm.start();    // 启动 热键管理器。
+ghm.start();    // Start the Global Hotkey Manager.
 
-// 添加、删除与变更热键。
+// Add, delete and modify hotkeys.
 KeyCombination kc1(MODI_CTRL | MODI_SHIFT, 'G');
 KeyCombination kc2(MODI_ALT, 'J');
 KeyCombination kc3(MODI_ALT, 'H');
@@ -65,19 +65,16 @@ ghm.remove(kc3);
 
 // ...
 
-ghm.end();    // 结束 热键管理器。
+ghm.end();    // End the Global Hotkey Manager.
 ```
 
-## 注意
+## Attention
 
-- 目前仅支持Windows平台。
-- **注册型热键管理器**的热键的增加、删除与变更必须在其启动后进行。
-- `GBHK_DISABLE_REGISTER` 与 `GBHK_DISABLE_HOOK` 不可同时设为ON。
-- 当 `GBHK_DISABLE_HOOK` 设为ON时，不可启用 `GBHK_EXAMPLE_USE_HOOK` 选项。
-- 热键的回调函数不应执行繁重的任务，以免出现线程阻塞等异常情况，合理的做法是使用异步机制或消息队列（例如Qt中的信号槽）。
-在Windows平台下使用Hook热键管理器时，应保证回调函数的执行时间在限定范围内。（详细信息参见 [Windows LowLevelKeyboard](https://learn.microsoft.com/zh-cn/windows/win32/winmsg/lowlevelkeyboardproc) ，其Remarks中提到Timeout时间为1000毫秒）
-- 对于Windows平台下的Hook热键管理器，用户应保证安装Hook的线程（在此处，即是调用Hook热键管理器start函数的线程）具有消息循环。（详细信息参见 [Windows LowLevelKeyboard](https://learn.microsoft.com/zh-cn/windows/win32/winmsg/lowlevelkeyboardproc) ）
+- Only supports Windows platform for now.
+- The addition, deletion and modification of hotkeys in the "Register Global Hotkey Manager" must be carried out after it is started.
+- `GBHK_DISABLE_REGISTER` and `GBHK_DISABLE_HOOK` cannot be set to ON at the same time.
+- Cannot enable the `GBHK_EXAMPLE_USE_HOOK` option when the `GBHK_DISABLE_HOOK` is turned on.
 
-## 示例
+## Example
 
-[示例代码](example/example1.cpp)
+[Example Code](example/example1.cpp)
