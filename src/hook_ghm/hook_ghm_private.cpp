@@ -36,9 +36,9 @@ int _HookGHMPrivate::start()
     keyboardHook.setKeyPressedEvent(&pressedKeyCallback_);
     keyboardHook.setKeyReleasedEvent(&releasedKeyCallback_);
 
+    isRunning_ = true;
     workThread_ = std::thread([=]()
     {
-        isRunning_ = true;
         workThreadId_ = CUR_TH_ID;
         work_();
         isRunning_ = false;

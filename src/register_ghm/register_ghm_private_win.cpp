@@ -23,9 +23,9 @@ int _RegisterGHMPrivateWin::start()
     if (isRunning_)
         return RC_SUCCESS;
 
+    isRunning_ = true;
     workThread_ = std::thread([=]()
     {
-        isRunning_ = true;
         workThreadId_ = CUR_TH_ID;
         work_();
         isRunning_ = false;

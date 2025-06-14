@@ -80,8 +80,8 @@ int _KeyboardHookPrivateLinux::start()
         }
     }
 
+    isRunning_ = true;
     workThread_ = std::thread([=]() {
-        isRunning_ = true;
         work_();
         isRunning_ = false;
     });
