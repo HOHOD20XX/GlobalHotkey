@@ -114,43 +114,30 @@ int _KeyboardHookPrivateLinux::end()
     return RC_SUCCESS;
 }
 
-void _KeyboardHookPrivateLinux::handleEvent_(int state, int key) const
+void _KeyboardHookPrivateLinux::handleEvent_(int nativeKey, int state) const
 {
     LOCK_MUTEX(mtx_);
 
+    int ks = 0;
     if (state == KEY_PRESSED)
     {
         if (keyPressedCallback_)
-            keyPressedCallback_(key);
+            keyPressedCallback_(nativeKey);
+        ks = KS_PRESSED;
     }
     else if (state == KEY_RELEASED)
     {
         if (keyReleasedCallback_)
-            keyReleasedCallback_(key);
+            keyReleasedCallback_(nativeKey);
+        ks = KS_RELEASED;
     }
 
-    if (voidFuncs_.find(key) != voidFuncs_.end())
+    Combine combine(nativeKey, static_cast<KeyState>(ks));
+    if (funcs_.find(combine) != funcs_.end())
     {
-        bool keydownExec = (voidFuncs_[key].first == KS_PRESSED) &&
-                           (state == KEY_PRESSED);
-        bool keyupExec = (voidFuncs_[key].first == KS_RELEASED) &&
-                         (state == KEY_RELEASED);
-
-        auto& func = voidFuncs_[key].second;
-        if ((keydownExec || keyupExec) && func)
+        auto& func = funcs_[combine];
+        if (func)
             func();
-    }
-    else if (argFuncArgs_.find(key) != argFuncArgs_.end())
-    {
-        bool keydownExec = (argFuncArgs_[key].first == KS_PRESSED) &&
-                           (state == KEY_PRESSED);
-        bool keyupExec = (argFuncArgs_[key].first == KS_RELEASED) &&
-                         (state == KEY_RELEASED);
-
-        auto& func = argFuncArgs_[key].second.first;
-        auto& arg = argFuncArgs_[key].second.second;
-        if ((keydownExec || keyupExec) && func)
-            func(arg);
     }
 }
 
@@ -166,9 +153,9 @@ void _KeyboardHookPrivateLinux::work_()
             {
                 if (ev.type == EV_KEY)
                 {
-                    int state = ev.value;
-                    int code = ev.code;
-                    handleEvent_(state, code);
+                    int keyCode = ev.code;
+                    int keyState = ev.value;
+                    handleEvent_(keyCode, keyState);
                 }
             }
         }

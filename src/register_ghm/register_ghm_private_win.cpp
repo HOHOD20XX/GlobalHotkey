@@ -49,18 +49,17 @@ int _RegisterGHMPrivateWin::end()
         yield();
     shouldClose_ = false;
     workThreadId_ = std::thread::id();
-    voidFuncs_.clear();
-    argFuncArgs_.clear();
+    funcs_.clear();
 
     return rtn;
 }
 
-int _RegisterGHMPrivateWin::add(const KeyCombination& kc, VoidFunc func, bool autoRepeat)
+int _RegisterGHMPrivateWin::add(const KeyCombination& kc, const std::function<void()>& func, bool autoRepeat)
 {
-    if (!kc.isValid() || func == nullptr)   return RC_INVALID_VALUE;
-    if (!isRunning_)                        return RC_ARR_GHM_IN_WRONG_TIME;
-    if (CUR_TH_ID == workThreadId_)         return RC_ARR_GHM_IN_WRONG_THREAD;
-    if (has(kc))                            return RC_EXIST_SAME_VALUE;
+    if (!isRunning_)                    return RC_ARR_GHM_IN_WRONG_TIME;
+    if (CUR_TH_ID == workThreadId_)     return RC_ARR_GHM_IN_WRONG_THREAD;
+    if (!kc.isValid() || !func)         return RC_INVALID_VALUE;
+    if (has(kc))                        return RC_EXIST_SAME_VALUE;
 
     Task tsk;
     tsk.op = Task::ADD;
@@ -72,18 +71,18 @@ int _RegisterGHMPrivateWin::add(const KeyCombination& kc, VoidFunc func, bool au
     if (rtn == RC_SUCCESS)
     {
         LOCK_MUTEX(mtx_);
-        voidFuncs_.insert({ kc, { autoRepeat, func } });
+        funcs_.insert({ kc, { autoRepeat, func } });
     }
 
     return rtn;
 }
 
-int _RegisterGHMPrivateWin::add(const KeyCombination& kc, ArgFunc func, Arg arg, bool autoRepeat)
+int _RegisterGHMPrivateWin::add(const KeyCombination& kc, std::function<void()>&& func, bool autoRepeat)
 {
-    if (!kc.isValid() || func == nullptr)   return RC_INVALID_VALUE;
-    if (!isRunning_)                        return RC_ARR_GHM_IN_WRONG_TIME;
-    if (CUR_TH_ID == workThreadId_)         return RC_ARR_GHM_IN_WRONG_THREAD;
-    if (has(kc))                            return RC_EXIST_SAME_VALUE;
+    if (!isRunning_)                    return RC_ARR_GHM_IN_WRONG_TIME;
+    if (CUR_TH_ID == workThreadId_)     return RC_ARR_GHM_IN_WRONG_THREAD;
+    if (!kc.isValid() || !func)         return RC_INVALID_VALUE;
+    if (has(kc))                        return RC_EXIST_SAME_VALUE;
 
     Task tsk;
     tsk.op = Task::ADD;
@@ -95,7 +94,7 @@ int _RegisterGHMPrivateWin::add(const KeyCombination& kc, ArgFunc func, Arg arg,
     if (rtn == RC_SUCCESS)
     {
         LOCK_MUTEX(mtx_);
-        argFuncArgs_.insert({ kc, { autoRepeat, { func, arg } } });
+        funcs_.insert({ kc, { autoRepeat, std::move(func) } });
     }
 
     return rtn;
@@ -116,10 +115,7 @@ int _RegisterGHMPrivateWin::remove(const KeyCombination& kc)
     if (rtn == RC_SUCCESS)
     {
         LOCK_MUTEX(mtx_);
-        if (voidFuncs_.find(kc) != voidFuncs_.end())
-            voidFuncs_.erase(kc);
-        else
-            argFuncArgs_.erase(kc);
+        funcs_.erase(kc);
     }
 
     return rtn;
@@ -138,8 +134,7 @@ int _RegisterGHMPrivateWin::removeAll()
     if (rtn == RC_SUCCESS)
     {
         LOCK_MUTEX(mtx_);
-        voidFuncs_.clear();
-        argFuncArgs_.clear();
+        funcs_.clear();
     }
 
     return rtn;
@@ -147,12 +142,14 @@ int _RegisterGHMPrivateWin::removeAll()
 
 int _RegisterGHMPrivateWin::replace(const KeyCombination& oldKc, const KeyCombination& newKc)
 {
-    if (!newKc.isValid())               return RC_INVALID_VALUE;
     if (!isRunning_)                    return RC_ARR_GHM_IN_WRONG_TIME;
     if (CUR_TH_ID == workThreadId_)     return RC_ARR_GHM_IN_WRONG_THREAD;
-    if (oldKc == newKc)                 return RC_NO_CHANGED_VALUE;
+    if (!newKc.isValid())               return RC_INVALID_VALUE;
     if (!has(oldKc))                    return RC_NO_SPECIFIED_VALUE;
     if (has(newKc))                     return RC_EXIST_SAME_VALUE;
+
+    if (oldKc == newKc)
+        return RC_SUCCESS;
 
     Task tsk;
     tsk.op = Task::REPLACE;
@@ -164,18 +161,8 @@ int _RegisterGHMPrivateWin::replace(const KeyCombination& oldKc, const KeyCombin
     if (rtn == RC_SUCCESS)
     {
         LOCK_MUTEX(mtx_);
-        if (voidFuncs_.find(oldKc) != voidFuncs_.end())
-        {
-            auto& pair = voidFuncs_[oldKc];
-            voidFuncs_.erase(oldKc);
-            voidFuncs_.insert({ newKc, pair });
-        }
-        else
-        {
-            auto& pair = argFuncArgs_[oldKc];
-            argFuncArgs_.erase(oldKc);
-            argFuncArgs_.insert({ newKc, pair });
-        }
+        funcs_[newKc] = std::move(funcs_[oldKc]);
+        funcs_.erase(oldKc);
     }
 
     return rtn;
@@ -186,7 +173,6 @@ int _RegisterGHMPrivateWin::setAutoRepeat(const KeyCombination& kc, bool autoRep
     if (!isRunning_)                    return RC_ARR_GHM_IN_WRONG_TIME;
     if (CUR_TH_ID == workThreadId_)     return RC_ARR_GHM_IN_WRONG_THREAD;
     if (!has(kc))                       return RC_NO_SPECIFIED_VALUE;
-    if (isAutoRepeat(kc) == autoRepeat) return RC_NO_CHANGED_VALUE;
 
     Task tsk;
     tsk.op = Task::SET_AUTO_REPEAT;
@@ -198,16 +184,7 @@ int _RegisterGHMPrivateWin::setAutoRepeat(const KeyCombination& kc, bool autoRep
     if (rtn == RC_SUCCESS)
     {
         LOCK_MUTEX(mtx_);
-        if (voidFuncs_.find(kc) != voidFuncs_.end())
-        {
-            auto& pair = voidFuncs_[kc];
-            pair.first = autoRepeat;
-        }
-        else
-        {
-            auto& pair = argFuncArgs_[kc];
-            pair.first = autoRepeat;
-        }
+        funcs_[kc].first = autoRepeat;
     }
 
     return rtn;
@@ -266,20 +243,9 @@ void _RegisterGHMPrivateWin::handleEvent_()
             if (hotkeyIdToKc_.find(hotkeyId) != hotkeyIdToKc_.end())
             {
                 auto& kc = hotkeyIdToKc_[hotkeyId];
-                if (voidFuncs_.find(kc) != voidFuncs_.end())
-                {
-                    auto& voidFunc = voidFuncs_[kc].second;
-                    if (voidFunc)
-                        voidFunc();
-                }
-                else
-                {
-                    auto& argFuncArg = argFuncArgs_[kc].second;
-                    auto& func = argFuncArg.first;
-                    auto& arg = argFuncArg.second;
-                    if (func)
-                        func(arg);
-                }
+                auto& func = funcs_[kc].second;
+                if (func)
+                    func();
             }
         }
 

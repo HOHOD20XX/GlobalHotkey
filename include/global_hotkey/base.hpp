@@ -2,10 +2,6 @@
 #define GLOBAL_HOTKEY_BASE_HPP
 
 #include <cstddef>          // size_t
-#include <functional>       // hash
-#include <string>           // string
-#include <unordered_map>    // unordered_map
-#include <utility>          // pair
 
 #ifdef _MSVC_LANG
     #define _GLOBAL_HOTKEY_CPPVERS     _MSVC_LANG
@@ -46,17 +42,6 @@
 
 namespace gbhk
 {
-
-using Arg           = void*;
-using VoidFunc      = void (*)();
-using ArgFunc       = void (*)(Arg);
-using ArgFuncArg    = std::pair<ArgFunc, Arg>;
-
-using String        = std::string;
-template<typename T1, typename T2>
-using Pair          = std::pair<T1, T2>;
-template<typename Key, typename Value, typename Hash = std::hash<Key>>
-using Map           = std::unordered_map<Key, Value, Hash>;
 
 constexpr size_t _DEFAULT_CYCLE_TIME        = 10;
 constexpr size_t _DEFAULT_DEBOUNCED_TIME    = 0;

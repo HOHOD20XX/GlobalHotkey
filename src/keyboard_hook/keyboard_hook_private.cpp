@@ -2,8 +2,6 @@
 
 #include "keyboard_hook_private.hpp"
 
-#define HAS_KEY_LISTENER(x, nativeKey, state) (x.find(nativeKey) != x.end() && x.at(nativeKey).first == state)
-
 namespace gbhk
 {
 
@@ -11,10 +9,10 @@ namespace kbhook
 {
 
 std::mutex _KeyboardHookPrivate::mtx_;
-Map<int, Pair<KeyState, VoidFunc>> _KeyboardHookPrivate::voidFuncs_;
-Map<int, Pair<KeyState, ArgFuncArg>> _KeyboardHookPrivate::argFuncArgs_;
-KeyEventCallback _KeyboardHookPrivate::keyPressedCallback_    = nullptr;
-KeyEventCallback _KeyboardHookPrivate::keyReleasedCallback_   = nullptr;
+std::unordered_map<_KeyboardHookPrivate::Combine, std::function<void()>, _KeyboardHookPrivate::Combine::Hash>
+_KeyboardHookPrivate::funcs_;
+void (*_KeyboardHookPrivate::keyPressedCallback_)(int)      = nullptr;
+void (*_KeyboardHookPrivate::keyReleasedCallback_)(int)     = nullptr;
 
 _KeyboardHookPrivate::_KeyboardHookPrivate() :
     isRunning_(false)
@@ -22,60 +20,58 @@ _KeyboardHookPrivate::_KeyboardHookPrivate() :
 
 _KeyboardHookPrivate::~_KeyboardHookPrivate() = default;
 
-int _KeyboardHookPrivate::addKeyListener(int nativeKey, KeyState state, VoidFunc func)
+int _KeyboardHookPrivate::addKeyListener(int nativeKey, KeyState state, const std::function<void()>& func)
 {
-    LOCK_MUTEX(mtx_);
+    if (!func)                              return RC_INVALID_VALUE;
+    if (hasKeyListener(nativeKey, state))   return RC_EXIST_SAME_VALUE;
 
-    if (hasKeyListener(nativeKey, state))
-        return RC_EXIST_SAME_VALUE;
-    voidFuncs_.insert({ nativeKey, { state, func } });
+    LOCK_MUTEX(mtx_);
+    funcs_.insert({ { nativeKey, state }, func });
     return RC_SUCCESS;
 }
 
-int _KeyboardHookPrivate::addKeyListener(int nativeKey, KeyState state, ArgFunc func, Arg arg)
+int _KeyboardHookPrivate::addKeyListener(int nativeKey, KeyState state, std::function<void()>&& func)
 {
-    LOCK_MUTEX(mtx_);
+    if (!func)                              return RC_INVALID_VALUE;
+    if (hasKeyListener(nativeKey, state))   return RC_EXIST_SAME_VALUE;
 
-    if (hasKeyListener(nativeKey, state))
-        return RC_EXIST_SAME_VALUE;
-    argFuncArgs_.insert({ nativeKey, { state, { func, arg } } });
+    LOCK_MUTEX(mtx_);
+    funcs_.insert({ { nativeKey, state }, std::move(func) });
     return RC_SUCCESS;
 }
 
 int _KeyboardHookPrivate::removeKeyListener(int nativeKey, KeyState state)
 {
-    LOCK_MUTEX(mtx_);
+    if (!hasKeyListener(nativeKey, state))
+        return RC_NO_SPECIFIED_VALUE;
 
-    if (HAS_KEY_LISTENER(voidFuncs_, nativeKey, state))
-    {
-        voidFuncs_.erase(nativeKey);
-        return RC_SUCCESS;
-    }
-    if (HAS_KEY_LISTENER(argFuncArgs_, nativeKey, state))
-    {
-        argFuncArgs_.erase(nativeKey);
-        return RC_SUCCESS;
-    }
-    return RC_NO_SPECIFIED_VALUE;
+    LOCK_MUTEX(mtx_);
+    funcs_.erase({ nativeKey, state });
+    return RC_SUCCESS;
 }
 
 int _KeyboardHookPrivate::removeAllKeyListener()
 {
     LOCK_MUTEX(mtx_);
-    voidFuncs_.clear();
-    argFuncArgs_.clear();
+    funcs_.clear();
     return RC_SUCCESS;
 }
 
-int _KeyboardHookPrivate::setKeyPressedEvent(KeyEventCallback func)
+int _KeyboardHookPrivate::setKeyPressedEvent(void (*func)(int))
 {
+    if (func == nullptr)
+        return RC_INVALID_VALUE;
+
     LOCK_MUTEX(mtx_);
     keyPressedCallback_ = func;
     return RC_SUCCESS;
 }
 
-int _KeyboardHookPrivate::setKeyReleasedEvent(KeyEventCallback func)
+int _KeyboardHookPrivate::setKeyReleasedEvent(void (*func)(int))
 {
+    if (func == nullptr)
+        return RC_INVALID_VALUE;
+
     LOCK_MUTEX(mtx_);
     keyReleasedCallback_ = func;
     return RC_SUCCESS;
@@ -98,7 +94,7 @@ int _KeyboardHookPrivate::unsetKeyReleasedEvent()
 bool _KeyboardHookPrivate::hasKeyListener(int nativeKey, KeyState state) const
 {
     LOCK_MUTEX(mtx_);
-    return HAS_KEY_LISTENER(voidFuncs_, nativeKey, state) || HAS_KEY_LISTENER(argFuncArgs_, nativeKey, state);
+    return funcs_.find({ nativeKey, state }) != funcs_.end();
 }
 
 bool _KeyboardHookPrivate::isRunning() const

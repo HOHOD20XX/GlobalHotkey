@@ -35,41 +35,28 @@ int main()
     std::cout << "Press " << hotkey3.toString(true) << " To Exit!" << std::endl;
 
     auto rtn = hotkeyManager.start();
-    if (rtn != gbhk::RC_SUCCESS)
-    {
-        THROW_RT_ERR("Failed to start the hotkey: ", rtn);
-    }
+    if (rtn != gbhk::RC_SUCCESS)    THROW_RT_ERR("Failed to start the hotkey: ", rtn);
 
     rtn = hotkeyManager.add(hotkey1, []()
     {
         std::cout << "hotkey1 triggered" << std::endl;
     });
-    if (rtn != gbhk::RC_SUCCESS)
-    {
-        THROW_RT_ERR("Failed to add the hotkey: ", rtn);
-    }
+    if (rtn != gbhk::RC_SUCCESS)    THROW_RT_ERR("Failed to add the hotkey: ", rtn);
 
     rtn = hotkeyManager.add(hotkey2, []()
     {
         std::cout << "hotkey2 triggered" << std::endl;
     }, true);
-    if (rtn != gbhk::RC_SUCCESS)
-    {
-        THROW_RT_ERR("Failed to add the hotkey: ", rtn);
-    }
+    if (rtn != gbhk::RC_SUCCESS)    THROW_RT_ERR("Failed to add the hotkey: ", rtn);
 
     std::atomic<bool> shouldClose(false);
-    rtn = hotkeyManager.add(hotkey3, [](void* shouldClose)
+    rtn = hotkeyManager.add(hotkey3, [&]()
     {
         std::cout << "hotkey3 triggered" << std::endl;
         std::cout << "exiting..." << std::endl;
-
-        *static_cast<std::atomic<bool>*>(shouldClose) = true;
-    }, &shouldClose);
-    if (rtn != gbhk::RC_SUCCESS)
-    {
-        THROW_RT_ERR("Failed to add the hotkey: ", rtn);
-    }
+        shouldClose = true;
+    });
+    if (rtn != gbhk::RC_SUCCESS)    THROW_RT_ERR("Failed to add the hotkey: ", rtn);
 
 #if defined(GLOBAL_HOTKEY_EXAMPLE_USE_HOOK) && defined(_GLOBAL_HOTKEY_WIN)
     MSG msg = {0};
@@ -91,10 +78,7 @@ int main()
 #endif // GLOBAL_HOTKEY_EXAMPLE_USE_HOOK && _GLOBAL_HOTKEY_WIN
 
     rtn = hotkeyManager.end();
-    if (rtn != gbhk::RC_SUCCESS)
-    {
-        THROW_RT_ERR("Failed to end the hotkey: ", rtn);
-    }
+    if (rtn != gbhk::RC_SUCCESS)    THROW_RT_ERR("Failed to end the hotkey: ", rtn);
 
     std::cout << "Success to exit." << std::endl;
 

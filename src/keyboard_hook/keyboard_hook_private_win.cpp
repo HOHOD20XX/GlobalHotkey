@@ -59,43 +59,30 @@ LRESULT WINAPI LowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
     if (nCode == HC_ACTION)
     {
         KBDLLHOOKSTRUCT* p = (KBDLLHOOKSTRUCT*) lParam;
-        auto key = p->vkCode;
+        int nativeKey = p->vkCode;
+        int state = 0;
 
         LOCK_MUTEX(_KeyboardHookPrivate::mtx_);
 
         if (wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN)
         {
             if (KBHP::keyPressedCallback_)
-                KBHP::keyPressedCallback_(key);
+                KBHP::keyPressedCallback_(nativeKey);
+            state = KS_PRESSED;
         }
         else if (wParam == WM_KEYUP || wParam == WM_SYSKEYUP)
         {
             if (KBHP::keyReleasedCallback_)
-                KBHP::keyReleasedCallback_(key);
+                KBHP::keyReleasedCallback_(nativeKey);
+            state = KS_RELEASED;
         }
 
-        if (KBHP::voidFuncs_.find(key) != KBHP::voidFuncs_.end())
+        KBHP::Combine combine(nativeKey, static_cast<KeyState>(state));
+        if (KBHP::funcs_.find(combine) != KBHP::funcs_.end())
         {
-            bool keydownExec = (KBHP::voidFuncs_[key].first == KS_PRESSED) &&
-                               (wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN);
-            bool keyupExec = (KBHP::voidFuncs_[key].first == KS_RELEASED) &&
-                             (wParam == WM_KEYUP || wParam == WM_SYSKEYUP);
-
-            auto& func = KBHP::voidFuncs_[key].second;
-            if ((keydownExec || keyupExec) && func)
+            auto& func = KBHP::funcs_[combine];
+            if (func)
                 func();
-        }
-        else if (KBHP::argFuncArgs_.find(key) != KBHP::argFuncArgs_.end())
-        {
-            bool keydownExec = (KBHP::argFuncArgs_[key].first == KS_PRESSED) &&
-                               (wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN);
-            bool keyupExec = (KBHP::argFuncArgs_[key].first == KS_RELEASED) &&
-                             (wParam == WM_KEYUP || wParam == WM_SYSKEYUP);
-
-            auto& func = KBHP::argFuncArgs_[key].second.first;
-            auto& arg = KBHP::argFuncArgs_[key].second.second;
-            if ((keydownExec || keyupExec) && func)
-                func(arg);
         }
     }
 

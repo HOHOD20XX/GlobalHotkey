@@ -3,7 +3,8 @@
 
 #ifndef GLOBAL_HOTKEY_DISABLE_HOOK
 
-#include <memory>   // unique_ptr
+#include <functional>   // function
+#include <memory>       // unique_ptr
 
 #include "base.hpp"
 
@@ -15,13 +16,11 @@ namespace kbhook
 
 enum KeyState
 {
-    KS_PRESSED,
-    KS_RELEASED
+    KS_PRESSED  = 0x01,
+    KS_RELEASED = 0x02
 };
 
 class _KeyboardHookPrivate;
-
-using KeyEventCallback = void (*)(int);
 
 class GBHK_API KeyboardHook final
 {
@@ -33,12 +32,12 @@ public:
 
     int start();
     int end();
-    int addKeyListener(int nativeKey, KeyState state, VoidFunc func);
-    int addKeyListener(int nativeKey, KeyState state, ArgFunc func, Arg arg);
+    int addKeyListener(int nativeKey, KeyState state, const std::function<void()>& func);
+    int addKeyListener(int nativeKey, KeyState state, std::function<void()>&& func);
     int removeKeyListener(int nativeKey, KeyState state);
     int removeAllKeyListener();
-    int setKeyPressedEvent(KeyEventCallback func);
-    int setKeyReleasedEvent(KeyEventCallback func);
+    int setKeyPressedEvent(void (*func)(int));
+    int setKeyReleasedEvent(void (*func)(int));
     int unsetKeyPressedEvent();
     int unsetKeyReleasedEvent();
 

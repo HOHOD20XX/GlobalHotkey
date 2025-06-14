@@ -2,6 +2,31 @@
     "version": 3,
     "configurePresets": [
         {
+            "name": "disable-register",
+            "displayName": "Disable Register",
+            "cacheVariables": {
+                "GBHK_DISABLE_REGISTER": "ON",
+                "GBHK_EXAMPLE_USE_HOOK": "ON"
+            },
+            "binaryDir": "${sourceDir}/build/${presetName}"
+        },
+        {
+            "name": "disable-hook",
+            "displayName": "Disable Hook",
+            "cacheVariables": {
+                "GBHK_DISABLE_HOOK": "ON"
+            },
+            "binaryDir": "${sourceDir}/build/${presetName}"
+        },
+        {
+            "name": "example-use-hook",
+            "displayName": "Example Use Hook",
+            "cacheVariables": {
+                "GBHK_EXAMPLE_USE_HOOK": "ON"
+            },
+            "binaryDir": "${sourceDir}/build/${presetName}"
+        },
+        {
             "name": "msvc-2022",
             "displayName": "MSVC 2022",
             "generator": "Visual Studio 17 2022",

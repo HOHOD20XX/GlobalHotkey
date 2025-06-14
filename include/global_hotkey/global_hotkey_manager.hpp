@@ -1,6 +1,9 @@
 #ifndef GLOBAL_HOTKEY_GLOBAL_HOTKEY_MANAGER_HPP
 #define GLOBAL_HOTKEY_GLOBAL_HOTKEY_MANAGER_HPP
 
+#include <functional>   // function
+#include <memory>       // unique_ptr
+
 #include "key_combination.hpp"
 
 namespace gbhk
@@ -24,9 +27,9 @@ public:
     /// @brief Add a hotkey to the global hotkey manager.
     /// @param autoRepeat Whether the hotkey should be auto-repeated when held down.
     /// @return A #ReturnCode or a platfrom-specific error code.
-    int add(const KeyCombination& kc, VoidFunc func, bool autoRepeat = false);
+    int add(const KeyCombination& kc, const std::function<void()>& func, bool autoRepeat = false);
     /// @overload
-    int add(const KeyCombination& kc, ArgFunc func, Arg arg, bool autoRepeat = false);
+    int add(const KeyCombination& kc, std::function<void()>&& func, bool autoRepeat = false);
     /// @brief Remove a hotkey from the global hotkey manager.
     /// @return A #ReturnCode or a platfrom-specific error code.
     int remove(const KeyCombination& kc);
@@ -46,10 +49,10 @@ public:
     bool isRunning() const;
 
 protected:
-    explicit GlobalHotkeyManager(_GlobalHotkeyManagerPrivate* p);
+    explicit GlobalHotkeyManager(std::unique_ptr<_GlobalHotkeyManagerPrivate> p);
     virtual ~GlobalHotkeyManager();
 
-    _GlobalHotkeyManagerPrivate* p_ = nullptr;
+    std::unique_ptr<_GlobalHotkeyManagerPrivate> p_;
 };
 
 } // namespace gbhk

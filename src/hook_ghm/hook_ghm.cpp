@@ -14,14 +14,15 @@ HookGHM& HookGHM::getInstance()
 }
 
 HookGHM::HookGHM() :
-    GlobalHotkeyManager(new _HookGHMPrivate())
+    GlobalHotkeyManager(std::unique_ptr<_GlobalHotkeyManagerPrivate>(new _HookGHMPrivate()))
 {}
 
 HookGHM::~HookGHM() = default;
 
 int HookGHM::setDebouncedTime(size_t milliseconds)
 {
-    return dynamic_cast<_HookGHMPrivate*>(p_)->setDebouncedTime(milliseconds);
+    auto p = p_.get();
+    return dynamic_cast<_HookGHMPrivate*>(p)->setDebouncedTime(milliseconds);
 }
 
 } // namespace gbhk

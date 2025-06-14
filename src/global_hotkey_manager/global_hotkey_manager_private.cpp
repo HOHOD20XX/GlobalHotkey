@@ -19,19 +19,15 @@ int _GlobalHotkeyManagerPrivate::setCycleTime(size_t milliseconds)
 bool _GlobalHotkeyManagerPrivate::has(const KeyCombination& kc) const
 {
     LOCK_MUTEX(mtx_);
-    return voidFuncs_.find(kc) != voidFuncs_.end() || argFuncArgs_.find(kc) != argFuncArgs_.end();
+    return funcs_.find(kc) != funcs_.end();
 }
 
 bool _GlobalHotkeyManagerPrivate::isAutoRepeat(const KeyCombination& kc) const
 {
     LOCK_MUTEX(mtx_);
-
-    if (voidFuncs_.find(kc) != voidFuncs_.end())
-        return voidFuncs_.at(kc).first;
-    else if (argFuncArgs_.find(kc) != argFuncArgs_.end())
-        return argFuncArgs_.at(kc).first;
-    else
-        return false;
+    if (funcs_.find(kc) != funcs_.end())
+        return funcs_.at(kc).first;
+    return false;
 }
 
 bool _GlobalHotkeyManagerPrivate::isRunning() const

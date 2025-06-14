@@ -49,8 +49,8 @@ int _HookGHMPrivate::start()
 
 int _HookGHMPrivate::end()
 {
-    if (!isRunning_)                    return RC_SUCCESS;
-    if (CUR_TH_ID == workThreadId_)     return RC_END_GHM_IN_WRONG_THREAD;
+    if (!isRunning_)                return RC_SUCCESS;
+    if (CUR_TH_ID == workThreadId_) return RC_END_GHM_IN_WRONG_THREAD;
 
     shouldClose_ = true;
     while (isRunning_)
@@ -64,98 +64,65 @@ int _HookGHMPrivate::end()
     return RC_SUCCESS;
 }
 
-int _HookGHMPrivate::add(const KeyCombination& kc, VoidFunc func, bool autoRepeat)
+int _HookGHMPrivate::add(const KeyCombination& kc, const std::function<void()>& func, bool autoRepeat)
 {
-    if (!kc.isValid() || func == nullptr)   return RC_INVALID_VALUE;
-    if (has(kc))                            return RC_EXIST_SAME_VALUE;
+    if (!kc.isValid() || !func)     return RC_INVALID_VALUE;
+    if (has(kc))                    return RC_EXIST_SAME_VALUE;
 
     LOCK_MUTEX(mtx_);
-    voidFuncs_.insert({ kc, { autoRepeat, func } });
+    funcs_.insert({ kc, { autoRepeat, func } });
     return RC_SUCCESS;
 }
 
-int _HookGHMPrivate::add(const KeyCombination& kc, ArgFunc func, Arg arg, bool autoRepeat)
+int _HookGHMPrivate::add(const KeyCombination& kc, std::function<void()>&& func, bool autoRepeat)
 {
-    if (!kc.isValid() || func == nullptr)   return RC_INVALID_VALUE;
-    if (has(kc))                            return RC_EXIST_SAME_VALUE;
+    if (!kc.isValid() || !func)     return RC_INVALID_VALUE;
+    if (has(kc))                    return RC_EXIST_SAME_VALUE;
 
     LOCK_MUTEX(mtx_);
-    argFuncArgs_.insert({ kc, { autoRepeat, { func, arg } } });
+    funcs_.insert({ kc, { autoRepeat, std::move(func) } });
     return RC_SUCCESS;
 }
 
 int _HookGHMPrivate::remove(const KeyCombination& kc)
 {
-    LOCK_MUTEX(mtx_);
-
-    if (voidFuncs_.find(kc) != voidFuncs_.end())
-        voidFuncs_.erase(kc);
-    else if (argFuncArgs_.find(kc) != argFuncArgs_.end())
-        argFuncArgs_.erase(kc);
-    else
+    if (!has(kc))
         return RC_NO_SPECIFIED_VALUE;
 
+    LOCK_MUTEX(mtx_);
+    funcs_.erase(kc);
     return RC_SUCCESS;
 }
 
 int _HookGHMPrivate::removeAll()
 {
     LOCK_MUTEX(mtx_);
-    voidFuncs_.clear();
-    argFuncArgs_.clear();
+    funcs_.clear();
     return RC_SUCCESS;
 }
 
 int _HookGHMPrivate::replace(const KeyCombination& oldKc, const KeyCombination& newKc)
 {
     if (!newKc.isValid())   return RC_INVALID_VALUE;
-    if (oldKc == newKc)     return RC_NO_CHANGED_VALUE;
+    if (!has(oldKc))        return RC_NO_SPECIFIED_VALUE;
+    if (has(newKc))         return RC_EXIST_SAME_VALUE;
+
+    if (oldKc == newKc)
+        return RC_SUCCESS;
 
     LOCK_MUTEX(mtx_);
-
-    if (voidFuncs_.find(oldKc) != voidFuncs_.end())
-    {
-        auto& pair = voidFuncs_[oldKc];
-        voidFuncs_.erase(oldKc);
-        voidFuncs_.insert({ newKc, pair });
-    }
-    else if (argFuncArgs_.find(oldKc) != argFuncArgs_.end())
-    {
-        auto& pair = argFuncArgs_[oldKc];
-        argFuncArgs_.erase(oldKc);
-        argFuncArgs_.insert({ newKc, pair });
-    }
-    else
-    {
-        return RC_NO_SPECIFIED_VALUE;
-    }
-
+    funcs_[newKc] = std::move(funcs_[oldKc]);
+    funcs_.erase(oldKc);
     return RC_SUCCESS;
 }
 
 int _HookGHMPrivate::setAutoRepeat(const KeyCombination& kc, bool autoRepeat)
 {
-    LOCK_MUTEX(mtx_);
-
-    if (voidFuncs_.find(kc) != voidFuncs_.end())
-    {
-        auto& pair = voidFuncs_[kc];
-        if (pair.first == autoRepeat)
-            return RC_NO_CHANGED_VALUE;
-        pair.first = autoRepeat;
-    }
-    else if (argFuncArgs_.find(kc) != argFuncArgs_.end())
-    {
-        auto& pair = argFuncArgs_[kc];
-        if (pair.first == autoRepeat)
-            return RC_NO_CHANGED_VALUE;
-        pair.first = autoRepeat;
-    }
-    else
-    {
+    if (!has(kc))
         return RC_NO_SPECIFIED_VALUE;
-    }
 
+    LOCK_MUTEX(mtx_);
+    funcs_[kc].first = autoRepeat;
     return RC_SUCCESS;
 }
 
@@ -186,26 +153,15 @@ void _HookGHMPrivate::work_()
 
         if (!isDebouncing)
         {
-            LOCK_MUTEX(mtx_);
-
-            if (voidFuncs_.find(kc) != voidFuncs_.end())
+            if (has(kc))
             {
-                auto& pair = voidFuncs_[kc];
+                LOCK_MUTEX(mtx_);
+                auto& pair = funcs_[kc];
                 auto& autoRepeat = pair.first;
                 auto& func = pair.second;
-                bool canExec = (func != nullptr) && (kc != prevKc || autoRepeat);
+                bool canExec = func && (kc != prevKc || autoRepeat);
                 if (canExec)
                     func();
-            }
-            else if (argFuncArgs_.find(kc) != argFuncArgs_.end())
-            {
-                auto& pair = argFuncArgs_[kc];
-                auto& autoRepeat = pair.first;
-                auto& func = pair.second.first;
-                auto& arg = pair.second.second;
-                bool canExec = (func != nullptr) && (kc != prevKc || autoRepeat);
-                if (canExec)
-                    func(arg);
             }
 
             prevKc = kc;

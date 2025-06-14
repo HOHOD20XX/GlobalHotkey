@@ -1,6 +1,9 @@
 #ifndef GLOBAL_HOTKEY_KEY_HPP
 #define GLOBAL_HOTKEY_KEY_HPP
 
+#include <initializer_list> // initializer_list
+#include <string>           // string
+
 #include "base.hpp"
 
 namespace gbhk
@@ -20,6 +23,7 @@ enum ModifierFlag : int
     MODI_OPTION         = MODI_ALT      // The Alt key on MacOS.
 };
 
+// To avoid conflicts with macro definitions, the KeyFlag naming style different from other enums in this library.
 enum KeyFlag : int
 {
     // Number keys.
@@ -285,13 +289,13 @@ private:
     int i_ = 0;
 };
 
-GBHK_API String modifiersString(const Modifiers& modifiers, bool isPrettySpace = false) noexcept;
+GBHK_API std::string modifiersString(const Modifiers& modifiers, bool isPrettySpace = false) noexcept;
 
-GBHK_API String keyString(const Key& key) noexcept;
+GBHK_API std::string keyString(const Key& key) noexcept;
 
-GBHK_API Modifiers getModifiersFromString(const String& str) noexcept;
+GBHK_API Modifiers getModifiersFromString(const std::string& str) noexcept;
 
-GBHK_API Key getKeyFromString(const String& str) noexcept;
+GBHK_API Key getKeyFromString(const std::string& str) noexcept;
 
 GBHK_API Modifiers getModifiersFromNative(int nativeModifiers) noexcept;
 

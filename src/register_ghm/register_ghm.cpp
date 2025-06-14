@@ -21,11 +21,11 @@ RegisterGHM& RegisterGHM::getInstance()
 
 RegisterGHM::RegisterGHM() :
 #ifdef _GLOBAL_HOTKEY_WIN
-    GlobalHotkeyManager(new _RegisterGHMPrivateWin())
+    GlobalHotkeyManager(std::unique_ptr<_GlobalHotkeyManagerPrivate>(new _RegisterGHMPrivateWin()))
 #elif defined(_GLOBAL_HOTKEY_MAC)
-    GlobalHotkeyManager(new _RegisterGHMPrivateMac())
+    GlobalHotkeyManager(std::unique_ptr<_GlobalHotkeyManagerPrivate>(new _RegisterGHMPrivateMac()))
 #elif defined(_GLOBAL_HOTKEY_LINUX)
-    GlobalHotkeyManager(new _RegisterGHMPrivateLinux())
+    GlobalHotkeyManager(std::unique_ptr<_GlobalHotkeyManagerPrivate>(new _RegisterGHMPrivateLinux()))
 #endif // _GLOBAL_HOTKEY_WIN
 {}
 

@@ -20,8 +20,8 @@ public:
 
     int start() override;
     int end() override;
-    int add(const KeyCombination& kc, VoidFunc func, bool autoRepeat) override;
-    int add(const KeyCombination& kc, ArgFunc func, Arg arg, bool autoRepeat) override;
+    int add(const KeyCombination& kc, const std::function<void()>& func, bool autoRepeat) override;
+    int add(const KeyCombination& kc, std::function<void()>&& func, bool autoRepeat) override;
     int remove(const KeyCombination& kc) override;
     int removeAll() override;
     int replace(const KeyCombination& oldKc, const KeyCombination& newKc) override;
@@ -87,8 +87,8 @@ private:
     std::atomic<int> taskResult_;
     std::atomic<int> hotkeyIndex_;
 
-    Map<int, KeyCombination> hotkeyIdToKc_;
-    Map<KeyCombination, int, KeyCombination::Hash> kcToHotkeyId_;
+    std::unordered_map<int, KeyCombination> hotkeyIdToKc_;
+    std::unordered_map<KeyCombination, int> kcToHotkeyId_;
 };
 
 } // namespace gbhk

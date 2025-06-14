@@ -10,7 +10,7 @@
 namespace gbhk
 {
 
-static String modifiersStringHelper(ModifierFlag flag) noexcept
+static std::string modifiersStringHelper(ModifierFlag flag) noexcept
 {
     switch (flag)
     {
@@ -35,10 +35,10 @@ static String modifiersStringHelper(ModifierFlag flag) noexcept
     }
 }
 
-GBHK_API String modifiersString(const Modifiers& modifiers, bool isPrettySpace) noexcept
+GBHK_API std::string modifiersString(const Modifiers& modifiers, bool isPrettySpace) noexcept
 {
-    String rslt;
-    String separator = isPrettySpace ? " + " : "+";
+    std::string rslt;
+    std::string separator = isPrettySpace ? " + " : "+";
 
     if (modifiers.has(MODI_META))
         rslt += modifiersStringHelper(MODI_META);
@@ -52,7 +52,7 @@ GBHK_API String modifiersString(const Modifiers& modifiers, bool isPrettySpace) 
     return rslt;
 }
 
-GBHK_API String keyString(const Key& key) noexcept
+GBHK_API std::string keyString(const Key& key) noexcept
 {
     switch (key)
     {
@@ -208,7 +208,7 @@ GBHK_API String keyString(const Key& key) noexcept
 }
 
 // Check if two strings are equal, ignoring case and spaces and underscores.
-static bool isEqualStr(const String& str1, const String& str2) noexcept
+static bool isEqualStr(const std::string& str1, const std::string& str2) noexcept
 {
     int i = 0, j = 0;
     while (i < str1.size() || j < str2.size())
@@ -231,7 +231,7 @@ static bool isEqualStr(const String& str1, const String& str2) noexcept
     return true;
 }
 
-static int getModifiersFromStringHelper(const String& str) noexcept
+static int getModifiersFromStringHelper(const std::string& str) noexcept
 {
     if (isEqualStr(str, "win") || isEqualStr(str, "command") || isEqualStr(str, "super"))
         return MODI_META;
@@ -244,18 +244,18 @@ static int getModifiersFromStringHelper(const String& str) noexcept
     return 0;
 }
 
-GBHK_API Modifiers getModifiersFromString(const String& str) noexcept
+GBHK_API Modifiers getModifiersFromString(const std::string& str) noexcept
 {
     std::stringstream ss;
     ss << str;
     Modifiers rslt;
-    String s;
+    std::string s;
     while (std::getline(ss, s, '+'))
         rslt.add(getModifiersFromStringHelper(s));
     return rslt;
 }
 
-GBHK_API Key getKeyFromString(const String& str) noexcept
+GBHK_API Key getKeyFromString(const std::string& str) noexcept
 {
     if (str.empty())
         return Key();

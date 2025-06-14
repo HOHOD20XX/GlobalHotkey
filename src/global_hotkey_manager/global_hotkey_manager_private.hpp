@@ -1,9 +1,11 @@
 #ifndef GLOBAL_HOTKEY_GLOBAL_HOTKEY_MANAGER_PRIVATE_HPP
 #define GLOBAL_HOTKEY_GLOBAL_HOTKEY_MANAGER_PRIVATE_HPP
 
-#include <atomic>   // atomic
-#include <mutex>    // mutex, lock_guard
-#include <thread>   // thread, thread::id
+#include <atomic>           // atomic
+#include <functional>       // function
+#include <mutex>            // mutex, lock_guard
+#include <thread>           // thread, thread::id
+#include <unordered_map>    // unordered_map
 
 #include <global_hotkey/base.hpp>
 #include <global_hotkey/return_code.hpp>
@@ -23,8 +25,8 @@ public:
 
     virtual int start() = 0;
     virtual int end() = 0;
-    virtual int add(const KeyCombination& kc, VoidFunc func, bool autoRepeat = false) = 0;
-    virtual int add(const KeyCombination& kc, ArgFunc func, Arg arg, bool autoRepeat = false) = 0;
+    virtual int add(const KeyCombination& kc, const std::function<void()>& func, bool autoRepeat = false) = 0;
+    virtual int add(const KeyCombination& kc, std::function<void()>&& func, bool autoRepeat = false) = 0;
     virtual int remove(const KeyCombination& kc) = 0;
     virtual int removeAll() = 0;
     virtual int replace(const KeyCombination& oldKc, const KeyCombination& newKc) = 0;
@@ -42,8 +44,8 @@ protected:
 
     std::thread workThread_;
     std::thread::id workThreadId_;
-    Map<KeyCombination, Pair<bool, VoidFunc>, KeyCombination::Hash> voidFuncs_;
-    Map<KeyCombination, Pair<bool, ArgFuncArg>, KeyCombination::Hash> argFuncArgs_;
+
+    std::unordered_map<KeyCombination, std::pair<bool, std::function<void()>>> funcs_;
 };
 
 } // namespace gbhk

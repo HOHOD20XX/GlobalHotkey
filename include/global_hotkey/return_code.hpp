@@ -1,7 +1,7 @@
 #ifndef GLOBAL_HOTKEY_RETURN_CODE_HPP
 #define GLOBAL_HOTKEY_RETURN_CODE_HPP
 
-#include <string>   // to_string
+#include <string>   // string, to_string
 
 #include "base.hpp"
 
@@ -29,12 +29,11 @@ enum ReturnCode : int
     RC_INVALID_VALUE                = 0x20 | _RC_MASK,
     RC_EXIST_SAME_VALUE             = 0x21 | _RC_MASK,
     RC_NO_SPECIFIED_VALUE           = 0x22 | _RC_MASK,
-    RC_NO_CHANGED_VALUE             = 0x23 | _RC_MASK,
 
     RC_PERMISSION_DENIED            = 0x30 | _RC_MASK
 };
 
-inline String returnCodeMessage(int rc) noexcept
+inline std::string returnCodeMessage(int rc) noexcept
 {
     switch (rc)
     {
@@ -54,8 +53,6 @@ inline String returnCodeMessage(int rc) noexcept
             return "Already exist same value";
         case RC_NO_SPECIFIED_VALUE:
             return "The specified value is not exist";
-        case RC_NO_CHANGED_VALUE:
-            return "No any value was changed";
         case RC_PERMISSION_DENIED:
             return "Permission denied";
         default:

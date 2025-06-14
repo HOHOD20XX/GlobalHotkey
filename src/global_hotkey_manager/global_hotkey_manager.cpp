@@ -5,15 +5,11 @@
 namespace gbhk
 {
 
-GlobalHotkeyManager::GlobalHotkeyManager(_GlobalHotkeyManagerPrivate* p)
-    : p_(p)
+GlobalHotkeyManager::GlobalHotkeyManager(std::unique_ptr<_GlobalHotkeyManagerPrivate> p)
+    : p_(std::move(p))
 {}
 
-GlobalHotkeyManager::~GlobalHotkeyManager()
-{
-    delete p_;
-    p_ = nullptr;
-}
+GlobalHotkeyManager::~GlobalHotkeyManager() = default;
 
 int GlobalHotkeyManager::start()
 { return p_->start(); }
@@ -21,11 +17,11 @@ int GlobalHotkeyManager::start()
 int GlobalHotkeyManager::end()
 { return p_->end(); }
 
-int GlobalHotkeyManager::add(const KeyCombination& kc, VoidFunc func, bool autoRepeat)
+int GlobalHotkeyManager::add(const KeyCombination& kc, const std::function<void()>& func, bool autoRepeat)
 { return p_->add(kc, func, autoRepeat); }
 
-int GlobalHotkeyManager::add(const KeyCombination& kc, ArgFunc func, Arg arg, bool autoRepeat)
-{ return p_->add(kc, func, arg, autoRepeat); }
+int GlobalHotkeyManager::add(const KeyCombination& kc, std::function<void()>&& func, bool autoRepeat)
+{ return p_->add(kc, std::move(func), autoRepeat); }
 
 int GlobalHotkeyManager::remove(const KeyCombination& kc)
 { return p_->remove(kc); }
