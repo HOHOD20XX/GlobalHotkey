@@ -30,65 +30,17 @@ int _HookGHMPrivate::start()
         return RC_SUCCESS;
 
     auto& keyboardHook = kbhook::KeyboardHook::getInstance();
-    keyboardHook.setKeyPressedEvent(&pressedKeyCallback_);
-    keyboardHook.setKeyReleasedEvent(&releasedKeyCallback_);
     int ec = keyboardHook.start();
     if (ec != RC_SUCCESS)
         return ec;
+    keyboardHook.setKeyPressedEvent(&pressedKeyCallback_);
+    keyboardHook.setKeyReleasedEvent(&releasedKeyCallback_);
 
-    isRunning_ = true;
     workThread_ = std::thread([=]()
     {
+        isRunning_ = true;
         workThreadId_ = CUR_TH_ID;
-
-        TimedSleeper ts;
-        KeyCombination prevKc;
-        auto prevExecTime = NOWTP;
-        while (!shouldClose_)
-        {
-            ts.resetStartTime();
-
-            KeyCombination kc(pressedModi_, pressedKey_);
-
-            bool isDebouncing = true;
-            bool isInvalidDebouncedTime = debouncedTime_ == 0;
-            bool isOnlyModiHasDiff =  kc.modifiers() != prevKc.modifiers() && kc.key() == prevKc.key();
-            bool isPrevModiContainsCurModi = prevKc.modifiers().has(kc.modifiers());
-            bool isInDebouncedTime = NOWTP - prevExecTime < std::chrono::milliseconds(debouncedTime_);
-            if (isInvalidDebouncedTime || !isOnlyModiHasDiff || !isPrevModiContainsCurModi || !isInDebouncedTime)
-                isDebouncing = false;
-
-            if (!isDebouncing)
-            {
-                LOCK_MUTEX(mtx_);
-
-                if (voidFuncs_.find(kc) != voidFuncs_.end())
-                {
-                    auto& pair = voidFuncs_[kc];
-                    auto& autoRepeat = pair.first;
-                    auto& func = pair.second;
-                    bool canExec = (func != nullptr) && (kc != prevKc || autoRepeat);
-                    if (canExec)
-                        func();
-                }
-                else if (argFuncArgs_.find(kc) != argFuncArgs_.end())
-                {
-                    auto& pair = argFuncArgs_[kc];
-                    auto& autoRepeat = pair.first;
-                    auto& func = pair.second.first;
-                    auto& arg = pair.second.second;
-                    bool canExec = (func != nullptr) && (kc != prevKc || autoRepeat);
-                    if (canExec)
-                        func(arg);
-                }
-
-                prevKc = kc;
-                prevExecTime = NOWTP;
-            }
-
-            ts.sleepUntilElapsed(cycleTime_);
-        }
-
+        work_();
         isRunning_ = false;
     });
     workThread_.detach();
@@ -211,6 +163,57 @@ int _HookGHMPrivate::setDebouncedTime(size_t milliseconds)
 {
     debouncedTime_ = milliseconds;
     return RC_SUCCESS;
+}
+
+void _HookGHMPrivate::work_()
+{
+    TimedSleeper ts;
+    KeyCombination prevKc;
+    auto prevExecTime = NOWTP;
+    while (!shouldClose_)
+    {
+        ts.resetStartTime();
+
+        KeyCombination kc(pressedModi_, pressedKey_);
+
+        bool isDebouncing = true;
+        bool isInvalidDebouncedTime = debouncedTime_ == 0;
+        bool isOnlyModiHasDiff =  kc.modifiers() != prevKc.modifiers() && kc.key() == prevKc.key();
+        bool isPrevModiContainsCurModi = prevKc.modifiers().has(kc.modifiers());
+        bool isInDebouncedTime = NOWTP - prevExecTime < std::chrono::milliseconds(debouncedTime_);
+        if (isInvalidDebouncedTime || !isOnlyModiHasDiff || !isPrevModiContainsCurModi || !isInDebouncedTime)
+            isDebouncing = false;
+
+        if (!isDebouncing)
+        {
+            LOCK_MUTEX(mtx_);
+
+            if (voidFuncs_.find(kc) != voidFuncs_.end())
+            {
+                auto& pair = voidFuncs_[kc];
+                auto& autoRepeat = pair.first;
+                auto& func = pair.second;
+                bool canExec = (func != nullptr) && (kc != prevKc || autoRepeat);
+                if (canExec)
+                    func();
+            }
+            else if (argFuncArgs_.find(kc) != argFuncArgs_.end())
+            {
+                auto& pair = argFuncArgs_[kc];
+                auto& autoRepeat = pair.first;
+                auto& func = pair.second.first;
+                auto& arg = pair.second.second;
+                bool canExec = (func != nullptr) && (kc != prevKc || autoRepeat);
+                if (canExec)
+                    func(arg);
+            }
+
+            prevKc = kc;
+            prevExecTime = NOWTP;
+        }
+
+        ts.sleepUntilElapsed(cycleTime_);
+    }
 }
 
 void _HookGHMPrivate::pressedKeyCallback_(int nativeKey)

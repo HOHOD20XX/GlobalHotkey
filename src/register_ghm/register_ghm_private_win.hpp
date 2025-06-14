@@ -68,6 +68,8 @@ private:
     };
 
     void work_();
+    void handleEvent_();
+
     int end_();
     int add_(const KeyCombination& kc, bool autoRepeat);
     int remove_(const KeyCombination& kc);

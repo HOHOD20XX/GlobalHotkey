@@ -23,50 +23,11 @@ int _RegisterGHMPrivateWin::start()
     if (isRunning_)
         return RC_SUCCESS;
 
-    isRunning_ = true;
     workThread_ = std::thread([=]()
     {
+        isRunning_ = true;
         workThreadId_ = CUR_TH_ID;
-
-        TimedSleeper ts;
-        while (!shouldClose_)
-        {
-            ts.resetStartTime();
-
-            Task tsk = getTask_();
-            if (tsk.op != Task::NONE)
-            {
-                switch (tsk.op)
-                {
-                    case Task::ADD:
-                        taskResult_ = add_(tsk.add.kc, tsk.add.autoRepeat);
-                        break;
-                    case Task::REMOVE:
-                        taskResult_ = remove_(tsk.remove.kc);
-                        break;
-                    case Task::REMOVE_ALL:
-                        taskResult_ = removeAll_();
-                        break;
-                    case Task::REPLACE:
-                        taskResult_ = replace_(tsk.replace.oldKc, tsk.replace.newKc);
-                        break;
-                    case Task::SET_AUTO_REPEAT:
-                        taskResult_ = setAutoRepeat_(tsk.setAutoRepeat.kc, tsk.setAutoRepeat.autoRepeat);
-                        break;
-                    case Task::END:
-                        taskResult_ = end_();
-                        break;
-                    default:
-                        break;
-                }
-                taskFinished_ = true;
-            }
-
-            work_();
-
-            ts.sleepUntilElapsed(cycleTime_);
-        }
-
+        work_();
         isRunning_ = false;
     });
     workThread_.detach();
@@ -253,6 +214,48 @@ int _RegisterGHMPrivateWin::setAutoRepeat(const KeyCombination& kc, bool autoRep
 }
 
 void _RegisterGHMPrivateWin::work_()
+{
+    TimedSleeper ts;
+    while (!shouldClose_)
+    {
+        ts.resetStartTime();
+
+        Task tsk = getTask_();
+        if (tsk.op != Task::NONE)
+        {
+            switch (tsk.op)
+            {
+                case Task::ADD:
+                    taskResult_ = add_(tsk.add.kc, tsk.add.autoRepeat);
+                    break;
+                case Task::REMOVE:
+                    taskResult_ = remove_(tsk.remove.kc);
+                    break;
+                case Task::REMOVE_ALL:
+                    taskResult_ = removeAll_();
+                    break;
+                case Task::REPLACE:
+                    taskResult_ = replace_(tsk.replace.oldKc, tsk.replace.newKc);
+                    break;
+                case Task::SET_AUTO_REPEAT:
+                    taskResult_ = setAutoRepeat_(tsk.setAutoRepeat.kc, tsk.setAutoRepeat.autoRepeat);
+                    break;
+                case Task::END:
+                    taskResult_ = end_();
+                    break;
+                default:
+                    break;
+            }
+            taskFinished_ = true;
+        }
+
+        handleEvent_();
+
+        ts.sleepUntilElapsed(cycleTime_);
+    }
+}
+
+void _RegisterGHMPrivateWin::handleEvent_()
 {
     MSG msg = {0};
     while (::PeekMessageA(&msg, NULL, 0, 0, PM_REMOVE) != 0)

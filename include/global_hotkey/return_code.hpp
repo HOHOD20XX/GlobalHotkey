@@ -29,7 +29,9 @@ enum ReturnCode : int
     RC_INVALID_VALUE                = 0x20 | _RC_MASK,
     RC_EXIST_SAME_VALUE             = 0x21 | _RC_MASK,
     RC_NO_SPECIFIED_VALUE           = 0x22 | _RC_MASK,
-    RC_NO_CHANGED_VALUE             = 0x23 | _RC_MASK
+    RC_NO_CHANGED_VALUE             = 0x23 | _RC_MASK,
+
+    RC_PERMISSION_DENIED            = 0x30 | _RC_MASK
 };
 
 inline String returnCodeMessage(int rc) noexcept
@@ -54,6 +56,8 @@ inline String returnCodeMessage(int rc) noexcept
             return "The specified value is not exist";
         case RC_NO_CHANGED_VALUE:
             return "No any value was changed";
+        case RC_PERMISSION_DENIED:
+            return "Permission denied";
         default:
             return "Unknown return code: " + std::to_string(rc);
     }

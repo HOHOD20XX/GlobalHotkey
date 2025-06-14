@@ -8,7 +8,7 @@
 namespace gbhk
 {
 
-class _HookGHMPrivate : public _GlobalHotkeyManagerPrivate
+class _HookGHMPrivate final : public _GlobalHotkeyManagerPrivate
 {
 public:
     _HookGHMPrivate();
@@ -24,7 +24,9 @@ public:
     int setAutoRepeat(const KeyCombination& kc, bool autoRepeat) override;
     int setDebouncedTime(size_t milliseconds);
 
-protected:
+private:
+    void work_();
+
     static void pressedKeyCallback_(int nativeKey);
     static void releasedKeyCallback_(int nativeKey);
 

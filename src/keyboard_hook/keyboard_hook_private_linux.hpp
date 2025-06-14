@@ -28,7 +28,8 @@ public:
     int end() override;
 
 private:
-    void handleKeyEvent_(int state, int key) const;
+    void handleEvent_(int state, int key) const;
+    void work_();
 
     std::atomic<bool> shouldClose_;
     std::thread workThread_;

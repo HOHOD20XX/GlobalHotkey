@@ -1,8 +1,8 @@
 #ifndef GLOBAL_HOTKEY_BASE_HPP
 #define GLOBAL_HOTKEY_BASE_HPP
 
-#include <functional>       // hash
 #include <cstddef>          // size_t
+#include <functional>       // hash
 #include <string>           // string
 #include <unordered_map>    // unordered_map
 #include <utility>          // pair

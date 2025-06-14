@@ -62,7 +62,8 @@ GBHK_API Key getKeyFromNative(int nativeKey) noexcept
         // Whitespace keys.
         case KEY_TAB:                   return Key_Tab;
         case KEY_SPACE:                 return Key_Space;
-        case KEY_ENTER:                 return Key_Enter;
+        case KEY_ENTER:                 // Fallthrough.
+        case KEY_KPENTER:               return Key_Enter;
 
         // Navigation keys.
         case KEY_HOME:                  return Key_Home;
@@ -136,7 +137,7 @@ GBHK_API Key getKeyFromNative(int nativeKey) noexcept
         case KEY_NEXTSONG:              return Key_Media_Next;
         case KEY_PREVIOUSSONG:          return Key_Media_Previous;
         case KEY_PLAYPAUSE:             return Key_Media_Play_Pause;
-        case KEY_STOPCD:                return Key_Media_Stop;    // Need to check.
+        case KEY_STOPCD:                return Key_Media_Stop;
 
         // Volume keys.
         case KEY_VOLUMEUP:              return Key_Volume_Up;
@@ -153,7 +154,7 @@ GBHK_API Key getKeyFromNative(int nativeKey) noexcept
         case KEY_MENU:                  return Key_Menu;
 
         // OEM keys.
-        case KEY_GRAVE:                 return Key_Left_Quote;      // Need to check.
+        case KEY_GRAVE:                 return Key_Left_Quote;
         case KEY_MINUS:                 return Key_Minus;
         case KEY_EQUAL:                 return Key_Equal;
         case KEY_LEFTBRACE:             return Key_Left_Bracket;
@@ -308,7 +309,7 @@ GBHK_API int getNativeKey(const Key& key) noexcept
         case Key_Media_Next:            return KEY_NEXTSONG;
         case Key_Media_Previous:        return KEY_PREVIOUSSONG;
         case Key_Media_Play_Pause:      return KEY_PLAYPAUSE;
-        case Key_Media_Stop:            return KEY_STOPCD;    // Need to check.
+        case Key_Media_Stop:            return KEY_STOPCD;
 
         // Volume keys.
         case Key_Volume_Up:             return KEY_VOLUMEUP;
@@ -325,7 +326,7 @@ GBHK_API int getNativeKey(const Key& key) noexcept
         case Key_Menu:                  return KEY_MENU;
 
         // OEM keys.
-        case Key_Left_Quote:            return KEY_GRAVE;      // Need to check.
+        case Key_Left_Quote:            return KEY_GRAVE;
         case Key_Minus:                 return KEY_MINUS;
         case Key_Equal:                 return KEY_EQUAL;
         case Key_Left_Bracket:          return KEY_LEFTBRACE;

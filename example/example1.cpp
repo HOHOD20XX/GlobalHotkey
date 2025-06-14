@@ -1,7 +1,6 @@
 #include <atomic>       // atomic
 #include <iostream>     // cout, endl
 #include <stdexcept>    // runtime_error
-#include <string>       // to_string()
 
 #include <global_hotkey/global_hotkey.hpp>
 
@@ -15,7 +14,7 @@
     #endif // _GLOBAL_HOTKEY_WIN
 #endif // GLOBAL_HOTKEY_EXAMPLE_USE_HOOK
 
-#define THROW_RT_ERR(errmsg, code) throw std::runtime_error(errmsg + std::to_string(code))
+#define THROW_RT_ERR(errmsg, code) throw std::runtime_error(errmsg + gbhk::returnCodeMessage(code))
 
 int main()
 {

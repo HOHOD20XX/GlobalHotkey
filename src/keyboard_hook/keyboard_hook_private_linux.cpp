@@ -5,8 +5,8 @@
 #ifdef _GLOBAL_HOTKEY_LINUX
 
 #include <fcntl.h>      // open
-#include <unistd.h>     // close
 #include <sys/stat.h>   // stat
+#include <unistd.h>     // getuid, close
 
 #include <global_hotkey/utility.hpp>
 
@@ -20,6 +20,11 @@ constexpr const char* EVDEV_FILE_PREFIX = "/dev/input/event";
 constexpr int KEY_RELEASED = 0;
 constexpr int KEY_PRESSED = 1;
 constexpr int KEY_HELD = 2;
+
+static bool isRootPermission()
+{
+    return ::getuid() == 0;
+}
 
 static bool isFileExists(const String& fileName)
 {
@@ -51,8 +56,8 @@ _KeyboardHookPrivateLinux::~_KeyboardHookPrivateLinux()
 
 int _KeyboardHookPrivateLinux::start()
 {
-    if (isRunning_)
-        return RC_SUCCESS;
+    if (isRunning_)             return RC_SUCCESS;
+    if (!isRootPermission())    return RC_PERMISSION_DENIED;
 
     int evdevIndex = 0;
     while (true)
@@ -75,26 +80,9 @@ int _KeyboardHookPrivateLinux::start()
         }
     }
 
-    isRunning_ = true;
     workThread_ = std::thread([=]() {
-        while (!shouldClose_)
-        {
-            for (auto& device : devices_)
-            {
-                libevdev* dev = device.second;
-                input_event ev;
-                if (libevdev_next_event(dev, LIBEVDEV_READ_FLAG_NORMAL, &ev) == 0)
-                {
-                    if (ev.type == EV_KEY)
-                    {
-                        int state = ev.value;
-                        int code = ev.code;
-                        handleKeyEvent_(state, code);
-                    }
-                }
-            }
-        }
-
+        isRunning_ = true;
+        work_();
         isRunning_ = false;
     });
     workThread_.detach();
@@ -104,6 +92,9 @@ int _KeyboardHookPrivateLinux::start()
 
 int _KeyboardHookPrivateLinux::end()
 {
+    if (!isRunning_)
+        return RC_SUCCESS;
+
     shouldClose_ = true;
     while (isRunning_)
         gbhk::yield();
@@ -116,13 +107,14 @@ int _KeyboardHookPrivateLinux::end()
         ::close(fd);
         ::libevdev_free(dev);
     }
+    devices_.clear();
 
     _KeyboardHookPrivate::resetStaticMember_();
 
     return RC_SUCCESS;
 }
 
-void _KeyboardHookPrivateLinux::handleKeyEvent_(int state, int key) const
+void _KeyboardHookPrivateLinux::handleEvent_(int state, int key) const
 {
     LOCK_MUTEX(mtx_);
 
@@ -159,6 +151,27 @@ void _KeyboardHookPrivateLinux::handleKeyEvent_(int state, int key) const
         auto& arg = argFuncArgs_[key].second.second;
         if ((keydownExec || keyupExec) && func)
             func(arg);
+    }
+}
+
+void _KeyboardHookPrivateLinux::work_()
+{
+    while (!shouldClose_)
+    {
+        for (auto& device : devices_)
+        {
+            libevdev* dev = device.second;
+            input_event ev;
+            if (libevdev_next_event(dev, LIBEVDEV_READ_FLAG_NORMAL, &ev) == 0)
+            {
+                if (ev.type == EV_KEY)
+                {
+                    int state = ev.value;
+                    int code = ev.code;
+                    handleEvent_(state, code);
+                }
+            }
+        }
     }
 }
 
