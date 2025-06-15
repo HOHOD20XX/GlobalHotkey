@@ -99,7 +99,7 @@ int _KeyboardHookPrivateLinux::end()
     shouldClose_ = true;
     std::unique_lock<std::mutex> lock(mtx_);
     cvIsRunning_.wait(lock, [this]() { return !isRunning_; });
-    lock_.unlock();
+    lock.unlock();
     shouldClose_ = false;
 
     for (auto& device : devices_)
