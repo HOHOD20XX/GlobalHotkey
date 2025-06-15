@@ -207,7 +207,7 @@ GBHK_API std::string keyString(const Key& key) noexcept
     }
 }
 
-// Check if two strings are equal, ignoring case and spaces and underscores.
+// Check if two strings are equal, ignoring case, spaces and underscores.
 static bool isEqualStr(const std::string& str1, const std::string& str2) noexcept
 {
     int i = 0, j = 0;
