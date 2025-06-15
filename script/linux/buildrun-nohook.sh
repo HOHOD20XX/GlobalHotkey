@@ -4,7 +4,7 @@ cd ../../
 cmake --preset=disable-hook
 cd ./build/disable-register
 make
-cd ./example1
+cd ./example
 ./example1.exe
 
 cd $current_dir
