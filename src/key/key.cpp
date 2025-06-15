@@ -233,7 +233,7 @@ static bool isEqualStr(const std::string& str1, const std::string& str2) noexcep
 
 static int getModifiersFromStringHelper(const std::string& str) noexcept
 {
-    if (isEqualStr(str, "win") || isEqualStr(str, "command") || isEqualStr(str, "super"))
+    if (isEqualStr(str, "win") || isEqualStr(str, "windows") || isEqualStr(str, "command") || isEqualStr(str, "super"))
         return MODI_META;
     if (isEqualStr(str, "ctrl") || isEqualStr(str, "control"))
         return MODI_CTRL;
