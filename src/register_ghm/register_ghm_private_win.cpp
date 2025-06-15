@@ -24,11 +24,12 @@ int _RegisterGHMPrivateWin::start()
         return RC_SUCCESS;
 
     isRunning_ = true;
-    workThread_ = std::thread([=]()
+    workThread_ = std::thread([this]()
     {
         workThreadId_ = CUR_TH_ID;
         work_();
         isRunning_ = false;
+        cvIsRunning_.notify_all();
     });
     workThread_.detach();
     return RC_SUCCESS;
@@ -45,20 +46,23 @@ int _RegisterGHMPrivateWin::end()
     int rtn = waitTask_();
 
     shouldClose_ = true;
-    while (isRunning_)
-        yield();
+
+    std::unique_lock<std::mutex> lock(mtx_);
+    cvIsRunning_.wait(lock, [this]() { return !isRunning_; });
+    lock.unlock();
+
     shouldClose_ = false;
     workThreadId_ = std::thread::id();
-    funcs_.clear();
+    fns_.clear();
 
     return rtn;
 }
 
-int _RegisterGHMPrivateWin::add(const KeyCombination& kc, const std::function<void()>& func, bool autoRepeat)
+int _RegisterGHMPrivateWin::add(const KeyCombination& kc, const std::function<void()>& fn, bool autoRepeat)
 {
     if (!isRunning_)                    return RC_ARR_GHM_IN_WRONG_TIME;
     if (CUR_TH_ID == workThreadId_)     return RC_ARR_GHM_IN_WRONG_THREAD;
-    if (!kc.isValid() || !func)         return RC_INVALID_VALUE;
+    if (!kc.isValid() || !fn)           return RC_INVALID_VALUE;
     if (has(kc))                        return RC_EXIST_SAME_VALUE;
 
     Task tsk;
@@ -70,18 +74,18 @@ int _RegisterGHMPrivateWin::add(const KeyCombination& kc, const std::function<vo
     int rtn = waitTask_();
     if (rtn == RC_SUCCESS)
     {
-        LOCK_MUTEX(mtx_);
-        funcs_.insert({ kc, { autoRepeat, func } });
+        std::lock_guard<std::mutex> lock(mtx_);
+        fns_.insert({ kc, { autoRepeat, fn } });
     }
 
     return rtn;
 }
 
-int _RegisterGHMPrivateWin::add(const KeyCombination& kc, std::function<void()>&& func, bool autoRepeat)
+int _RegisterGHMPrivateWin::add(const KeyCombination& kc, std::function<void()>&& fn, bool autoRepeat)
 {
     if (!isRunning_)                    return RC_ARR_GHM_IN_WRONG_TIME;
     if (CUR_TH_ID == workThreadId_)     return RC_ARR_GHM_IN_WRONG_THREAD;
-    if (!kc.isValid() || !func)         return RC_INVALID_VALUE;
+    if (!kc.isValid() || !fn)           return RC_INVALID_VALUE;
     if (has(kc))                        return RC_EXIST_SAME_VALUE;
 
     Task tsk;
@@ -93,8 +97,8 @@ int _RegisterGHMPrivateWin::add(const KeyCombination& kc, std::function<void()>&
     int rtn = waitTask_();
     if (rtn == RC_SUCCESS)
     {
-        LOCK_MUTEX(mtx_);
-        funcs_.insert({ kc, { autoRepeat, std::move(func) } });
+        std::lock_guard<std::mutex> lock(mtx_);
+        fns_.insert({ kc, { autoRepeat, std::move(fn) } });
     }
 
     return rtn;
@@ -114,8 +118,8 @@ int _RegisterGHMPrivateWin::remove(const KeyCombination& kc)
     int rtn = waitTask_();
     if (rtn == RC_SUCCESS)
     {
-        LOCK_MUTEX(mtx_);
-        funcs_.erase(kc);
+        std::lock_guard<std::mutex> lock(mtx_);
+        fns_.erase(kc);
     }
 
     return rtn;
@@ -133,8 +137,8 @@ int _RegisterGHMPrivateWin::removeAll()
     int rtn = waitTask_();
     if (rtn == RC_SUCCESS)
     {
-        LOCK_MUTEX(mtx_);
-        funcs_.clear();
+        std::lock_guard<std::mutex> lock(mtx_);
+        fns_.clear();
     }
 
     return rtn;
@@ -160,9 +164,9 @@ int _RegisterGHMPrivateWin::replace(const KeyCombination& oldKc, const KeyCombin
     int rtn = waitTask_();
     if (rtn == RC_SUCCESS)
     {
-        LOCK_MUTEX(mtx_);
-        funcs_[newKc] = std::move(funcs_[oldKc]);
-        funcs_.erase(oldKc);
+        std::lock_guard<std::mutex> lock(mtx_);
+        fns_[newKc] = std::move(fns_[oldKc]);
+        fns_.erase(oldKc);
     }
 
     return rtn;
@@ -183,8 +187,8 @@ int _RegisterGHMPrivateWin::setAutoRepeat(const KeyCombination& kc, bool autoRep
     int rtn = waitTask_();
     if (rtn == RC_SUCCESS)
     {
-        LOCK_MUTEX(mtx_);
-        funcs_[kc].first = autoRepeat;
+        std::lock_guard<std::mutex> lock(mtx_);
+        fns_[kc].first = autoRepeat;
     }
 
     return rtn;
@@ -224,6 +228,7 @@ void _RegisterGHMPrivateWin::work_()
                     break;
             }
             taskFinished_ = true;
+            cvTaskFinished_.notify_all();
         }
 
         handleEvent_();
@@ -243,9 +248,9 @@ void _RegisterGHMPrivateWin::handleEvent_()
             if (hotkeyIdToKc_.find(hotkeyId) != hotkeyIdToKc_.end())
             {
                 auto& kc = hotkeyIdToKc_[hotkeyId];
-                auto& func = funcs_[kc].second;
-                if (func)
-                    func();
+                auto& fn = fns_[kc].second;
+                if (fn)
+                    fn();
             }
         }
 
@@ -365,7 +370,7 @@ int _RegisterGHMPrivateWin::setAutoRepeat_(const KeyCombination& kc, bool autoRe
 
 void _RegisterGHMPrivateWin::setTask_(const Task& task)
 {
-    LOCK_MUTEX(mtx_);
+    std::lock_guard<std::mutex> lock(mtx_);
     task_ = task;
     hasTask_ = true;
     taskFinished_ = false;
@@ -375,7 +380,7 @@ _RegisterGHMPrivateWin::Task _RegisterGHMPrivateWin::getTask_()
 {
     if (hasTask_)
     {
-        LOCK_MUTEX(mtx_);
+        std::lock_guard<std::mutex> lock(mtx_);
         hasTask_ = false;
         return task_;
     }
@@ -385,10 +390,10 @@ _RegisterGHMPrivateWin::Task _RegisterGHMPrivateWin::getTask_()
     }
 }
 
-int _RegisterGHMPrivateWin::waitTask_() const
+int _RegisterGHMPrivateWin::waitTask_()
 {
-    while (!taskFinished_)
-        yield();
+    std::unique_lock<std::mutex> lock(mtx_);
+    cvTaskFinished_.wait(lock, [this]() { return taskFinished_.load(); });
     return taskResult_;
 }
 

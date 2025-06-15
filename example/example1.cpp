@@ -1,6 +1,8 @@
-#include <atomic>       // atomic
-#include <iostream>     // cout, endl
-#include <stdexcept>    // runtime_error
+#include <atomic>               // atomic
+#include <condition_variable>   // condition_variable
+#include <iostream>             // cout, endl
+#include <mutex>                // mutex
+#include <stdexcept>            // runtime_error
 
 #include <global_hotkey/global_hotkey.hpp>
 
@@ -49,32 +51,34 @@ int main()
     }, true);
     if (rtn != gbhk::RC_SUCCESS)    THROW_RT_ERR("Failed to add the hotkey: ", rtn);
 
+    std::mutex mtx;
+    std::condition_variable cv;
     std::atomic<bool> shouldClose(false);
     rtn = hotkeyManager.add(hotkey3, [&]()
     {
         std::cout << "hotkey3 triggered" << std::endl;
         std::cout << "exiting..." << std::endl;
         shouldClose = true;
+        cv.notify_all();
     });
     if (rtn != gbhk::RC_SUCCESS)    THROW_RT_ERR("Failed to add the hotkey: ", rtn);
 
 #if defined(GLOBAL_HOTKEY_EXAMPLE_USE_HOOK) && defined(_GLOBAL_HOTKEY_WIN)
     MSG msg = {0};
+    gbhk::TimedSleeper ts;
     while (!shouldClose)
     {
-        if (::PeekMessageA(&msg, NULL, WM_KEYFIRST, WM_KEYLAST, PM_REMOVE) != 0)
+        ts.resetStartTime();
+        while (::PeekMessageA(&msg, NULL, WM_KEYFIRST, WM_KEYLAST, PM_REMOVE) != 0)
         {
             ::TranslateMessage(&msg);
             ::DispatchMessageA(&msg);
         }
-
-        gbhk::yield();
+        ts.sleepUntilElapsed(10);
     }
 #else
-    while (!shouldClose)
-    {
-        gbhk::yield();
-    }
+    std::unique_lock<std::mutex> lock(mtx);
+    cv.wait(lock, [&]() { return shouldClose.load(); });
 #endif // GLOBAL_HOTKEY_EXAMPLE_USE_HOOK && _GLOBAL_HOTKEY_WIN
 
     rtn = hotkeyManager.end();

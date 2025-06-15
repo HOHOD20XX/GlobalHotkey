@@ -18,15 +18,15 @@ int _GlobalHotkeyManagerPrivate::setCycleTime(size_t milliseconds)
 
 bool _GlobalHotkeyManagerPrivate::has(const KeyCombination& kc) const
 {
-    LOCK_MUTEX(mtx_);
-    return funcs_.find(kc) != funcs_.end();
+    std::lock_guard<std::mutex> lock(mtx_);
+    return fns_.find(kc) != fns_.end();
 }
 
 bool _GlobalHotkeyManagerPrivate::isAutoRepeat(const KeyCombination& kc) const
 {
-    LOCK_MUTEX(mtx_);
-    if (funcs_.find(kc) != funcs_.end())
-        return funcs_.at(kc).first;
+    std::lock_guard<std::mutex> lock(mtx_);
+    if (fns_.find(kc) != fns_.end())
+        return fns_.at(kc).first;
     return false;
 }
 

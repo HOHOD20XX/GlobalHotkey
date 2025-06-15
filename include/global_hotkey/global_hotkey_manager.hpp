@@ -27,9 +27,9 @@ public:
     /// @brief Add a hotkey to the global hotkey manager.
     /// @param autoRepeat Whether the hotkey should be auto-repeated when held down.
     /// @return A #ReturnCode or a platfrom-specific error code.
-    int add(const KeyCombination& kc, const std::function<void()>& func, bool autoRepeat = false);
+    int add(const KeyCombination& kc, const std::function<void()>& fn, bool autoRepeat = false);
     /// @overload
-    int add(const KeyCombination& kc, std::function<void()>&& func, bool autoRepeat = false);
+    int add(const KeyCombination& kc, std::function<void()>&& fn, bool autoRepeat = false);
     /// @brief Remove a hotkey from the global hotkey manager.
     /// @return A #ReturnCode or a platfrom-specific error code.
     int remove(const KeyCombination& kc);

@@ -62,7 +62,7 @@ LRESULT WINAPI LowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
         int nativeKey = p->vkCode;
         int state = 0;
 
-        LOCK_MUTEX(_KeyboardHookPrivate::mtx_);
+        std::lock_guard<std::mutex> lock(KBHP::mtx_);
 
         if (wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN)
         {
@@ -78,11 +78,11 @@ LRESULT WINAPI LowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
         }
 
         KBHP::Combine combine(nativeKey, static_cast<KeyState>(state));
-        if (KBHP::funcs_.find(combine) != KBHP::funcs_.end())
+        if (KBHP::fns_.find(combine) != KBHP::fns_.end())
         {
-            auto& func = KBHP::funcs_[combine];
-            if (func)
-                func();
+            auto& fn = KBHP::fns_[combine];
+            if (fn)
+                fn();
         }
     }
 

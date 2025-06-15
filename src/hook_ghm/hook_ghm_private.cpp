@@ -37,11 +37,12 @@ int _HookGHMPrivate::start()
     keyboardHook.setKeyReleasedEvent(&releasedKeyCallback_);
 
     isRunning_ = true;
-    workThread_ = std::thread([=]()
+    workThread_ = std::thread([this]()
     {
         workThreadId_ = CUR_TH_ID;
         work_();
         isRunning_ = false;
+        cvIsRunning_.notify_all();
     });
     workThread_.detach();
     return RC_SUCCESS;
@@ -53,8 +54,11 @@ int _HookGHMPrivate::end()
     if (CUR_TH_ID == workThreadId_) return RC_END_GHM_IN_WRONG_THREAD;
 
     shouldClose_ = true;
-    while (isRunning_)
-        yield();
+
+    std::unique_lock<std::mutex> lock(mtx_);
+    cvIsRunning_.wait(lock, [this]() { return !isRunning_; });
+    lock.unlock();
+
     shouldClose_ = false;
     pressedModi_ = 0;
     pressedKey_ = 0;
@@ -64,23 +68,23 @@ int _HookGHMPrivate::end()
     return RC_SUCCESS;
 }
 
-int _HookGHMPrivate::add(const KeyCombination& kc, const std::function<void()>& func, bool autoRepeat)
+int _HookGHMPrivate::add(const KeyCombination& kc, const std::function<void()>& fn, bool autoRepeat)
 {
-    if (!kc.isValid() || !func)     return RC_INVALID_VALUE;
+    if (!kc.isValid() || !fn)       return RC_INVALID_VALUE;
     if (has(kc))                    return RC_EXIST_SAME_VALUE;
 
-    LOCK_MUTEX(mtx_);
-    funcs_.insert({ kc, { autoRepeat, func } });
+    std::lock_guard<std::mutex> lock(mtx_);
+    fns_.insert({ kc, { autoRepeat, fn } });
     return RC_SUCCESS;
 }
 
-int _HookGHMPrivate::add(const KeyCombination& kc, std::function<void()>&& func, bool autoRepeat)
+int _HookGHMPrivate::add(const KeyCombination& kc, std::function<void()>&& fn, bool autoRepeat)
 {
-    if (!kc.isValid() || !func)     return RC_INVALID_VALUE;
+    if (!kc.isValid() || !fn)       return RC_INVALID_VALUE;
     if (has(kc))                    return RC_EXIST_SAME_VALUE;
 
-    LOCK_MUTEX(mtx_);
-    funcs_.insert({ kc, { autoRepeat, std::move(func) } });
+    std::lock_guard<std::mutex> lock(mtx_);
+    fns_.insert({ kc, { autoRepeat, std::move(fn) } });
     return RC_SUCCESS;
 }
 
@@ -89,15 +93,15 @@ int _HookGHMPrivate::remove(const KeyCombination& kc)
     if (!has(kc))
         return RC_NO_SPECIFIED_VALUE;
 
-    LOCK_MUTEX(mtx_);
-    funcs_.erase(kc);
+    std::lock_guard<std::mutex> lock(mtx_);
+    fns_.erase(kc);
     return RC_SUCCESS;
 }
 
 int _HookGHMPrivate::removeAll()
 {
-    LOCK_MUTEX(mtx_);
-    funcs_.clear();
+    std::lock_guard<std::mutex> lock(mtx_);
+    fns_.clear();
     return RC_SUCCESS;
 }
 
@@ -110,9 +114,9 @@ int _HookGHMPrivate::replace(const KeyCombination& oldKc, const KeyCombination& 
     if (oldKc == newKc)
         return RC_SUCCESS;
 
-    LOCK_MUTEX(mtx_);
-    funcs_[newKc] = std::move(funcs_[oldKc]);
-    funcs_.erase(oldKc);
+    std::lock_guard<std::mutex> lock(mtx_);
+    fns_[newKc] = std::move(fns_[oldKc]);
+    fns_.erase(oldKc);
     return RC_SUCCESS;
 }
 
@@ -121,8 +125,8 @@ int _HookGHMPrivate::setAutoRepeat(const KeyCombination& kc, bool autoRepeat)
     if (!has(kc))
         return RC_NO_SPECIFIED_VALUE;
 
-    LOCK_MUTEX(mtx_);
-    funcs_[kc].first = autoRepeat;
+    std::lock_guard<std::mutex> lock(mtx_);
+    fns_[kc].first = autoRepeat;
     return RC_SUCCESS;
 }
 
@@ -155,13 +159,13 @@ void _HookGHMPrivate::work_()
         {
             if (has(kc))
             {
-                LOCK_MUTEX(mtx_);
-                auto& pair = funcs_[kc];
+                std::lock_guard<std::mutex> lock(mtx_);
+                auto& pair = fns_[kc];
                 auto& autoRepeat = pair.first;
-                auto& func = pair.second;
-                bool canExec = func && (kc != prevKc || autoRepeat);
+                auto& fn = pair.second;
+                bool canExec = fn && (kc != prevKc || autoRepeat);
                 if (canExec)
-                    func();
+                    fn();
             }
 
             prevKc = kc;

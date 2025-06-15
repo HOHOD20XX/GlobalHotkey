@@ -27,10 +27,6 @@ private:
     std::unique_ptr<_TimedSleeperPrivate> p_;
 };
 
-GBHK_API void sleep(size_t milliseconds);
-
-GBHK_API void yield();
-
 } // namespace gbhk
 
 #endif // !GLOBAL_HOTKEY_UTILITY_HPP

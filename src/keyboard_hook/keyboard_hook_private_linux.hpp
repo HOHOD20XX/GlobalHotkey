@@ -7,8 +7,9 @@
 
 #ifdef _GLOBAL_HOTKEY_LINUX
 
-#include <thread>    // thread
-#include <vector>    // vector
+#include <condition_variable>   // condition_variable
+#include <thread>               // thread
+#include <vector>               // vector
 
 #include <libevdev/libevdev.h>
 
@@ -31,6 +32,7 @@ private:
     void handleEvent_(int nativeKey, int state) const;
     void work_();
 
+    std::condition_variable cvIsRunning_;
     std::atomic<bool> shouldClose_;
     std::thread workThread_;
 

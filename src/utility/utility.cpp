@@ -28,14 +28,4 @@ size_t TimedSleeper::elapsedTime() const
     return p_->elapsedTime();
 }
 
-GBHK_API void sleep(size_t milliseconds)
-{
-    std::this_thread::sleep_for(std::chrono::milliseconds(milliseconds));
-}
-
-GBHK_API void yield()
-{
-    std::this_thread::yield();
-}
-
 } // namespace gbhk

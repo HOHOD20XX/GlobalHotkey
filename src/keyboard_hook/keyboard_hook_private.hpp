@@ -3,14 +3,13 @@
 
 #ifndef GLOBAL_HOTKEY_DISABLE_HOOK
 
-#include <atomic>           // atomic
-#include <mutex>            // mutex, lock_guard
-#include <unordered_map>    // unordered_map
+#include <atomic>               // atomic
+#include <functional>           // function
+#include <mutex>                // mutex, lock_guard, unique_lock
+#include <unordered_map>        // unordered_map
 
 #include <global_hotkey/keyboard_hook.hpp>
 #include <global_hotkey/return_code.hpp>
-
-#define LOCK_MUTEX(mtx) std::lock_guard<std::mutex> lock(mtx)
 
 namespace gbhk
 {
@@ -26,12 +25,12 @@ public:
 
     virtual int start() = 0;
     virtual int end() = 0;
-    int addKeyListener(int nativeKey, KeyState state, const std::function<void()>& func);
-    int addKeyListener(int nativeKey, KeyState state, std::function<void()>&& func);
+    int addKeyListener(int nativeKey, KeyState state, const std::function<void()>& fn);
+    int addKeyListener(int nativeKey, KeyState state, std::function<void()>&& fn);
     int removeKeyListener(int nativeKey, KeyState state);
     int removeAllKeyListener();
-    int setKeyPressedEvent(void (*func)(int));
-    int setKeyReleasedEvent(void (*func)(int));
+    int setKeyPressedEvent(void (*fn)(int));
+    int setKeyReleasedEvent(void (*fn)(int));
     int unsetKeyPressedEvent();
     int unsetKeyReleasedEvent();
 
@@ -66,7 +65,7 @@ protected:
     void resetStaticMember_();
 
     static std::mutex mtx_;
-    static std::unordered_map<Combine, std::function<void()>, Combine::Hash> funcs_;
+    static std::unordered_map<Combine, std::function<void()>, Combine::Hash> fns_;
     static void (*keyPressedCallback_)(int);
     static void (*keyReleasedCallback_)(int);
 

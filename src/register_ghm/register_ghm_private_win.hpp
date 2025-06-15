@@ -20,8 +20,8 @@ public:
 
     int start() override;
     int end() override;
-    int add(const KeyCombination& kc, const std::function<void()>& func, bool autoRepeat) override;
-    int add(const KeyCombination& kc, std::function<void()>&& func, bool autoRepeat) override;
+    int add(const KeyCombination& kc, const std::function<void()>& fn, bool autoRepeat) override;
+    int add(const KeyCombination& kc, std::function<void()>&& fn, bool autoRepeat) override;
     int remove(const KeyCombination& kc) override;
     int removeAll() override;
     int replace(const KeyCombination& oldKc, const KeyCombination& newKc) override;
@@ -79,10 +79,11 @@ private:
 
     void setTask_(const Task& task);
     Task getTask_();
-    int waitTask_() const;
+    int waitTask_();
 
     Task task_;
     std::atomic<bool> hasTask_;
+    std::condition_variable cvTaskFinished_;
     std::atomic<bool> taskFinished_;
     std::atomic<int> taskResult_;
     std::atomic<int> hotkeyIndex_;

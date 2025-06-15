@@ -17,11 +17,11 @@ int GlobalHotkeyManager::start()
 int GlobalHotkeyManager::end()
 { return p_->end(); }
 
-int GlobalHotkeyManager::add(const KeyCombination& kc, const std::function<void()>& func, bool autoRepeat)
-{ return p_->add(kc, func, autoRepeat); }
+int GlobalHotkeyManager::add(const KeyCombination& kc, const std::function<void()>& fn, bool autoRepeat)
+{ return p_->add(kc, fn, autoRepeat); }
 
-int GlobalHotkeyManager::add(const KeyCombination& kc, std::function<void()>&& func, bool autoRepeat)
-{ return p_->add(kc, std::move(func), autoRepeat); }
+int GlobalHotkeyManager::add(const KeyCombination& kc, std::function<void()>&& fn, bool autoRepeat)
+{ return p_->add(kc, std::move(fn), autoRepeat); }
 
 int GlobalHotkeyManager::remove(const KeyCombination& kc)
 { return p_->remove(kc); }

@@ -40,11 +40,11 @@ int KeyboardHook::start()
 int KeyboardHook::end()
 { return p_->end(); }
 
-int KeyboardHook::addKeyListener(int nativeKey, KeyState state, const std::function<void()>& func)
-{ return p_->addKeyListener(nativeKey, state, func); }
+int KeyboardHook::addKeyListener(int nativeKey, KeyState state, const std::function<void()>& fn)
+{ return p_->addKeyListener(nativeKey, state, fn); }
 
-int KeyboardHook::addKeyListener(int nativeKey, KeyState state, std::function<void()>&& func)
-{ return p_->addKeyListener(nativeKey, state, std::move(func)); }
+int KeyboardHook::addKeyListener(int nativeKey, KeyState state, std::function<void()>&& fn)
+{ return p_->addKeyListener(nativeKey, state, std::move(fn)); }
 
 int KeyboardHook::removeKeyListener(int nativeKey, KeyState state)
 { return p_->removeKeyListener(nativeKey, state); }
@@ -52,11 +52,11 @@ int KeyboardHook::removeKeyListener(int nativeKey, KeyState state)
 int KeyboardHook::removeAllKeyListener()
 { return p_->removeAllKeyListener(); }
 
-int KeyboardHook::setKeyPressedEvent(void (*func)(int))
-{ return p_->setKeyPressedEvent(func); }
+int KeyboardHook::setKeyPressedEvent(void (*fn)(int))
+{ return p_->setKeyPressedEvent(fn); }
 
-int KeyboardHook::setKeyReleasedEvent(void (*func)(int))
-{ return p_->setKeyReleasedEvent(func); }
+int KeyboardHook::setKeyReleasedEvent(void (*fn)(int))
+{ return p_->setKeyReleasedEvent(fn); }
 
 int KeyboardHook::unsetKeyPressedEvent()
 { return p_->unsetKeyPressedEvent(); }

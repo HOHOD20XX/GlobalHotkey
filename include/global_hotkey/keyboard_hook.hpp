@@ -32,12 +32,12 @@ public:
 
     int start();
     int end();
-    int addKeyListener(int nativeKey, KeyState state, const std::function<void()>& func);
-    int addKeyListener(int nativeKey, KeyState state, std::function<void()>&& func);
+    int addKeyListener(int nativeKey, KeyState state, const std::function<void()>& fn);
+    int addKeyListener(int nativeKey, KeyState state, std::function<void()>&& fn);
     int removeKeyListener(int nativeKey, KeyState state);
     int removeAllKeyListener();
-    int setKeyPressedEvent(void (*func)(int));
-    int setKeyReleasedEvent(void (*func)(int));
+    int setKeyPressedEvent(void (*fn)(int));
+    int setKeyReleasedEvent(void (*fn)(int));
     int unsetKeyPressedEvent();
     int unsetKeyReleasedEvent();
 

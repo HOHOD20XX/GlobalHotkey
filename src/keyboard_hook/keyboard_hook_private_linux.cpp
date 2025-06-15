@@ -81,9 +81,10 @@ int _KeyboardHookPrivateLinux::start()
     }
 
     isRunning_ = true;
-    workThread_ = std::thread([=]() {
+    workThread_ = std::thread([this]() {
         work_();
         isRunning_ = false;
+        cvIsRunning_.notify_all();
     });
     workThread_.detach();
 
@@ -96,8 +97,9 @@ int _KeyboardHookPrivateLinux::end()
         return RC_SUCCESS;
 
     shouldClose_ = true;
-    while (isRunning_)
-        gbhk::yield();
+    std::unique_lock<std::mutex> lock(mtx_);
+    cvIsRunning_.wait(lock, [this]() { return !isRunning_; });
+    lock_.unlock();
     shouldClose_ = false;
 
     for (auto& device : devices_)
@@ -116,7 +118,7 @@ int _KeyboardHookPrivateLinux::end()
 
 void _KeyboardHookPrivateLinux::handleEvent_(int nativeKey, int state) const
 {
-    LOCK_MUTEX(mtx_);
+    std::lock_guard<std::mutex> lock(mtx_);
 
     int ks = 0;
     if (state == KEY_PRESSED)
@@ -133,11 +135,11 @@ void _KeyboardHookPrivateLinux::handleEvent_(int nativeKey, int state) const
     }
 
     Combine combine(nativeKey, static_cast<KeyState>(ks));
-    if (funcs_.find(combine) != funcs_.end())
+    if (fns_.find(combine) != fns_.end())
     {
-        auto& func = funcs_[combine];
-        if (func)
-            func();
+        auto& fn = fns_[combine];
+        if (fn)
+            fn();
     }
 }
 
