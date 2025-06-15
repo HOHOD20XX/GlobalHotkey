@@ -5,6 +5,6 @@ cmake --preset=disable-hook
 cd ./build/disable-register
 make
 cd ./example
-./example1.exe
+./example1
 
 cd $current_dir
