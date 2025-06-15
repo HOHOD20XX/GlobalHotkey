@@ -25,30 +25,6 @@
                 "GBHK_EXAMPLE_USE_HOOK": "ON"
             },
             "binaryDir": "${sourceDir}/build/${presetName}"
-        },
-        {
-            "name": "msvc-2022",
-            "displayName": "MSVC 2022",
-            "generator": "Visual Studio 17 2022",
-            "binaryDir": "${sourceDir}/build/${presetName}"
-        },
-        {
-            "name": "mingw-debug",
-            "displayName": "MinGW Debug",
-            "generator": "MinGW Makefiles",
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug"
-            },
-            "binaryDir": "${sourceDir}/build/${presetName}"
-        },
-        {
-            "name": "mingw-release",
-            "displayName": "MinGW Release",
-            "generator": "MinGW Makefiles",
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Release"
-            },
-            "binaryDir": "${sourceDir}/build/${presetName}"
         }
     ]
 }

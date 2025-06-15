@@ -26,14 +26,14 @@ static bool isRootPermission()
     return ::getuid() == 0;
 }
 
-static bool isFileExists(const String& fileName)
+static bool isFileExists(const std::string& fileName)
 {
     struct stat s;
     return ::stat(fileName.c_str(), &s) == 0;
 }
 
 /// @return A file descripitor.
-static int getLibevdevFromFile(const String& fileName, libevdev** dev)
+static int getLibevdevFromFile(const std::string& fileName, libevdev** dev)
 {
     int fd = ::open(fileName.c_str(), O_RDONLY | O_NONBLOCK);
     if (fd >= 0)
@@ -62,7 +62,7 @@ int _KeyboardHookPrivateLinux::start()
     int evdevIndex = 0;
     while (true)
     {
-        String evdevFileName = String(EVDEV_FILE_PREFIX) + std::to_string(evdevIndex);
+        std::string evdevFileName = EVDEV_FILE_PREFIX + std::to_string(evdevIndex);
         if (isFileExists(evdevFileName))
         {
             libevdev* dev = nullptr;

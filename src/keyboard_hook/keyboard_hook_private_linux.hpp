@@ -36,7 +36,7 @@ private:
     std::atomic<bool> shouldClose_;
     std::thread workThread_;
 
-    std::vector<Pair<int, libevdev*>> devices_;
+    std::vector<std::pair<int, libevdev*>> devices_;
 };
 
 } // namespace kbhook
