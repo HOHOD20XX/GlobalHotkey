@@ -5,6 +5,6 @@ cmake --preset=disable-register
 cd ./build/disable-register
 make
 cd ./example
-./example1
+sudo ./example1
 
 cd $current_dir
