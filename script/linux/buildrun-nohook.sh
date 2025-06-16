@@ -2,7 +2,7 @@ current_dir=$(pwd)
 
 cd ../../
 cmake --preset=disable-hook
-cd ./build/disable-register
+cd ./build/disable-hook
 make
 cd ./example
 ./example1
