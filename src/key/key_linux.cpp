@@ -150,7 +150,7 @@ GBHK_API Key getKeyFromNative(int nativeKey) noexcept
         case KEY_SCROLLLOCK:            return Key_Scroll_Lock;
 
         // Misc keys.
-        case KEY_SELECTIVE_SCREENSHOT:  return Key_Print_Screen;    // Need to check.
+        case KEY_PRINT:                 return Key_Print_Screen;    // Need to check.
         case KEY_MENU:                  return Key_Menu;
 
         // OEM keys.
@@ -322,7 +322,7 @@ GBHK_API int getNativeKey(const Key& key) noexcept
         case Key_Scroll_Lock:           return KEY_SCROLLLOCK;
 
         // Misc keys.
-        case Key_Print_Screen:          return KEY_SELECTIVE_SCREENSHOT;    // Need to check.
+        case Key_Print_Screen:          return KEY_PRINT;    // Need to check.
         case Key_Menu:                  return KEY_MENU;
 
         // OEM keys.

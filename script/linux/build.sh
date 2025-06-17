@@ -1,5 +1,6 @@
 current_dir=$(pwd)
 
+sudo apt install libevdev-dev
 cd ../../
 cmake -B ./build/lib -DCMAKE_BUILD_TYPE=Debug -DGBHK_BUILD_EXAMPLE=OFF
 make -C ./build/lib

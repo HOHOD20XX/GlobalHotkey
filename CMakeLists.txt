@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.12)
+cmake_minimum_required(VERSION 3.25)
 
 project(GlobalHotkey LANGUAGES CXX)
 
@@ -21,7 +21,7 @@ endif()
 if(NOT DEFINED GBHK_MASTER_PROJECT)
     if(CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
         set(GBHK_MASTER_PROJECT ON)
-    else ()
+    else()
         set(GBHK_MASTER_PROJECT OFF)
     endif()
 endif()
@@ -65,7 +65,6 @@ endif()
 
 find_package(Threads REQUIRED)
 
-
 if(GBHK_BUILD_SHARED)
     add_library(global_hotkey SHARED ${SRC})
     target_compile_definitions(global_hotkey PUBLIC GLOBAL_HOTKEY_BUILD_SHARED)
@@ -85,10 +84,8 @@ target_link_libraries(global_hotkey PRIVATE Threads::Threads)
 
 if(LINUX)
     message(STATUS "${GBHK_MSG_PREFIX} Linux platform detected")
-
     find_path(LIBEVDEV_INCLUDE_DIR libevdev/libevdev.h PATHS /usr/include /usr/include/libevdev-1.0)
     find_library(LIBEVDEV_LIBRARY NAMES evdev PATHS /usr/lib /usr/lib/x86_64-linux-gnu)
-
     if(LIBEVDEV_INCLUDE_DIR AND LIBEVDEV_LIBRARY)
         message(STATUS "${GBHK_MSG_PREFIX} Found libevdev: ${LIBEVDEV_LIBRARY}")
         include_directories(${LIBEVDEV_INCLUDE_DIR})
