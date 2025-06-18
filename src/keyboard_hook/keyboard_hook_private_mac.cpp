@@ -10,6 +10,23 @@ namespace gbhk
 namespace kbhook
 {
 
+_KeyboardHookPrivateMac::_KeyboardHookPrivateMac() = default;
+
+_KeyboardHookPrivateMac::~_KeyboardHookPrivateMac()
+{
+    end();
+}
+
+int _KeyboardHookPrivateMac::start()
+{
+
+}
+
+int _KeyboardHookPrivateMac::end()
+{
+
+}
+
 } // namespace kbhook
 
 } // namespace gbhk

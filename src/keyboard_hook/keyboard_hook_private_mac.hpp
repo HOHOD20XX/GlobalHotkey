@@ -19,7 +19,8 @@ public:
     _KeyboardHookPrivateMac();
     ~_KeyboardHookPrivateMac();
 
-protected:
+    int start() override;
+    int end() override;
 
 private:
 };
