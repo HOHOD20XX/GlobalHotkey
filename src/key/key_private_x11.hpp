@@ -1,0 +1,23 @@
+#ifndef GLOBAL_HOTKEY_KEY_PRIVATE_X11_HPP
+#define GLOBAL_HOTKEY_KEY_PRIVATE_X11_HPP
+
+#include <global_hotkey/key.hpp>
+
+#ifdef _GLOBAL_HOTKEY_LINUX
+
+namespace gbhk
+{
+
+int x11Modifiers(const Modifiers& modifiers) noexcept;
+
+int x11Key(const Key& key) noexcept;
+
+Modifiers getModifiersFromX11Modifiers(int x11Modifiers) noexcept;
+
+Key getKeyFromX11Key(int x11Key) noexcept;
+
+}
+
+#endif // _GLOBAL_HOTKEY_LINUX
+
+#endif // !GLOBAL_HOTKEY_KEY_PRIVATE_X11_HPP

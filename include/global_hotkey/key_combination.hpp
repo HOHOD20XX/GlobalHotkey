@@ -25,10 +25,6 @@ public:
     { return modifiers_; }
     constexpr inline Key key() const noexcept
     { return key_; }
-    inline int nativeModifiers() const noexcept
-    { return getNativeModifiers(modifiers_); }
-    inline int nativeKey() const noexcept
-    { return getNativeKey(key_); }
 
 #if _GLOBAL_HOTKEY_CPPVERS >= 201703L
     // In C++17, constexpr member functions are no longer implicitly const.

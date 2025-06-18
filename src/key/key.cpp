@@ -321,24 +321,40 @@ GBHK_API Key getKeyFromString(const std::string& str) noexcept
     if (isEqualStr(str, "f24"))                 return Key_F24;
 
     // Numpad number keys.
-    if (isEqualStr(str, "numpad 0"))            return Key_Numpad_0;
-    if (isEqualStr(str, "numpad 1"))            return Key_Numpad_1;
-    if (isEqualStr(str, "numpad 2"))            return Key_Numpad_2;
-    if (isEqualStr(str, "numpad 3"))            return Key_Numpad_3;
-    if (isEqualStr(str, "numpad 4"))            return Key_Numpad_4;
-    if (isEqualStr(str, "numpad 5"))            return Key_Numpad_5;
-    if (isEqualStr(str, "numpad 6"))            return Key_Numpad_6;
-    if (isEqualStr(str, "numpad 7"))            return Key_Numpad_7;
-    if (isEqualStr(str, "numpad 8"))            return Key_Numpad_8;
-    if (isEqualStr(str, "numpad 9"))            return Key_Numpad_9;
+    if (isEqualStr(str, "numpad 0") || isEqualStr(str, "keypad 0"))
+        return Key_Numpad_0;
+    if (isEqualStr(str, "numpad 1") || isEqualStr(str, "keypad 1"))
+        return Key_Numpad_1;
+    if (isEqualStr(str, "numpad 2") || isEqualStr(str, "keypad 2"))
+        return Key_Numpad_2;
+    if (isEqualStr(str, "numpad 3") || isEqualStr(str, "keypad 3"))
+        return Key_Numpad_3;
+    if (isEqualStr(str, "numpad 4") || isEqualStr(str, "keypad 4"))
+        return Key_Numpad_4;
+    if (isEqualStr(str, "numpad 5") || isEqualStr(str, "keypad 5"))
+        return Key_Numpad_5;
+    if (isEqualStr(str, "numpad 6") || isEqualStr(str, "keypad 6"))
+        return Key_Numpad_6;
+    if (isEqualStr(str, "numpad 7") || isEqualStr(str, "keypad 7"))
+        return Key_Numpad_7;
+    if (isEqualStr(str, "numpad 8") || isEqualStr(str, "keypad 8"))
+        return Key_Numpad_8;
+    if (isEqualStr(str, "numpad 9") || isEqualStr(str, "keypad 9"))
+        return Key_Numpad_9;
 
     // Numpad operator keys.
-    if (isEqualStr(str, "numpad add"))          return Key_Numpad_Add;
-    if (isEqualStr(str, "numpad subtract"))     return Key_Numpad_Subtract;
-    if (isEqualStr(str, "numpad multiply"))     return Key_Numpad_Multiply;
-    if (isEqualStr(str, "numpad divide"))       return Key_Numpad_Divide;
-    if (isEqualStr(str, "numpad decimal"))      return Key_Numpad_Decimal;
-    if (isEqualStr(str, "numpad separator"))    return Key_Numpad_Separator;
+    if (isEqualStr(str, "numpad add") || isEqualStr(str, "keypad add"))
+        return Key_Numpad_Add;
+    if (isEqualStr(str, "numpad subtract") || isEqualStr(str, "keypad subtract"))
+        return Key_Numpad_Subtract;
+    if (isEqualStr(str, "numpad multiply") || isEqualStr(str, "keypad multiply"))
+        return Key_Numpad_Multiply;
+    if (isEqualStr(str, "numpad divide") || isEqualStr(str, "keypad divide"))
+        return Key_Numpad_Divide;
+    if (isEqualStr(str, "numpad decimal") || isEqualStr(str, "keypad decimal"))
+        return Key_Numpad_Decimal;
+    if (isEqualStr(str, "numpad separator") || isEqualStr(str, "keypad separator"))
+        return Key_Numpad_Separator;
 
     // Applications keys.
     if (isEqualStr(str, "esc") || isEqualStr(str, "escape"))
@@ -374,7 +390,7 @@ GBHK_API Key getKeyFromString(const std::string& str) noexcept
         return Key_Scroll_Lock;
 
     // Misc keys.
-    if (isEqualStr(str, "print screen") || isEqualStr(str, "prtsc"))
+    if (isEqualStr(str, "print screen") || isEqualStr(str, "prtsc") || isEqualStr(str, "print"))
         return Key_Print_Screen;
     if (isEqualStr(str, "menu"))                return Key_Menu;
 

@@ -297,14 +297,6 @@ GBHK_API Modifiers getModifiersFromString(const std::string& str) noexcept;
 
 GBHK_API Key getKeyFromString(const std::string& str) noexcept;
 
-GBHK_API Modifiers getModifiersFromNative(int nativeModifiers) noexcept;
-
-GBHK_API Key getKeyFromNative(int nativeKey) noexcept;
-
-GBHK_API int getNativeModifiers(const Modifiers& modifiers) noexcept;
-
-GBHK_API int getNativeKey(const Key& key) noexcept;
-
 }
 
 #endif // !GLOBAL_HOTKEY_KEY_HPP

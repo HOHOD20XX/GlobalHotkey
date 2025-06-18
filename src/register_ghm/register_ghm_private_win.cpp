@@ -6,6 +6,8 @@
 
 #include <global_hotkey/utility.hpp>
 
+#include "../key/key_private.hpp"
+
 namespace gbhk
 {
 
@@ -266,9 +268,9 @@ int _RegisterGHMPrivateWin::end_()
 
 int _RegisterGHMPrivateWin::add_(const KeyCombination& kc, bool autoRepeat)
 {
-    int nativeModifiers = kc.nativeModifiers();
-    nativeModifiers |= (!autoRepeat ? MOD_NOREPEAT : 0);
-    if (::RegisterHotKey(NULL, hotkeyIndex_, nativeModifiers, kc.nativeKey()))
+    int modi = nativeModifiers(kc.modifiers());
+    modi |= (!autoRepeat ? MOD_NOREPEAT : 0);
+    if (::RegisterHotKey(NULL, hotkeyIndex_, modi, nativeKey(kc.key())))
     {
         hotkeyIdToKc_.insert({ hotkeyIndex_, kc });
         kcToHotkeyId_.insert({ kc, hotkeyIndex_ });
@@ -322,9 +324,9 @@ int _RegisterGHMPrivateWin::replace_(const KeyCombination& oldKc, const KeyCombi
         hotkeyIdToKc_.erase(hotkeyId);
         kcToHotkeyId_.erase(oldKc);
 
-        int nativeModifiers = newKc.nativeModifiers();
-        nativeModifiers |= (!autoRepeat ? MOD_NOREPEAT : 0);
-        if (::RegisterHotKey(NULL, hotkeyId, nativeModifiers, newKc.nativeKey()) != 0)
+        int modi = nativeModifiers(newKc.modifiers());
+        modi |= (!autoRepeat ? MOD_NOREPEAT : 0);
+        if (::RegisterHotKey(NULL, hotkeyId, modi, nativeKey(newKc.key())) != 0)
         {
             hotkeyIdToKc_.insert({ hotkeyId, newKc });
             kcToHotkeyId_.insert({ newKc, hotkeyId });
@@ -349,9 +351,9 @@ int _RegisterGHMPrivateWin::setAutoRepeat_(const KeyCombination& kc, bool autoRe
         hotkeyIdToKc_.erase(hotkeyId);
         kcToHotkeyId_.erase(kc);
 
-        int nativeModifiers = kc.nativeModifiers();
-        nativeModifiers |= (!autoRepeat ? MOD_NOREPEAT : 0);
-        if (::RegisterHotKey(NULL, hotkeyId, nativeModifiers, kc.nativeKey()) != 0)
+        int modi = nativeModifiers(kc.modifiers());
+        modi |= (!autoRepeat ? MOD_NOREPEAT : 0);
+        if (::RegisterHotKey(NULL, hotkeyId, modi, nativeKey(kc.key())) != 0)
         {
             hotkeyIdToKc_.insert({ hotkeyId, kc });
             kcToHotkeyId_.insert({ kc, hotkeyId });

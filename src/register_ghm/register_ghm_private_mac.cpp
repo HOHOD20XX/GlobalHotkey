@@ -4,6 +4,10 @@
 
 #ifdef _GLOBAL_HOTKEY_MAC
 
+#include <global_hotkey/utility.hpp>
+
+#include "../key/key_private.hpp"
+
 namespace gbhk
 {
 

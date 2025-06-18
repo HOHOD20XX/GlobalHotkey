@@ -7,6 +7,8 @@
 #include <global_hotkey/keyboard_hook.hpp>
 #include <global_hotkey/utility.hpp>
 
+#include "../key/key_private.hpp"
+
 #define NOWTP std::chrono::steady_clock::now()
 
 namespace gbhk
@@ -178,7 +180,7 @@ void _HookGHMPrivate::work_()
 
 void _HookGHMPrivate::pressedKeyCallback_(int nativeKey)
 {
-    auto key = getKeyFromNative(nativeKey);
+    auto key = getKeyFromNativeKey(nativeKey);
     if (key == Key_Modi_Meta || key == Key_Modi_Meta_Left || key == Key_Modi_Meta_Right)
         pressedModi_ = pressedModi_.load().add(MODI_META);
     else if (key == Key_Modi_Ctrl || key == Key_Modi_Ctrl_Left || key == Key_Modi_Ctrl_Right)
@@ -193,7 +195,7 @@ void _HookGHMPrivate::pressedKeyCallback_(int nativeKey)
 
 void _HookGHMPrivate::releasedKeyCallback_(int nativeKey)
 {
-    auto key = getKeyFromNative(nativeKey);
+    auto key = getKeyFromNativeKey(nativeKey);
     if (key == Key_Modi_Meta || key == Key_Modi_Meta_Left || key == Key_Modi_Meta_Right)
         pressedModi_ = pressedModi_.load().remove(MODI_META);
     else if (key == Key_Modi_Ctrl || key == Key_Modi_Ctrl_Left || key == Key_Modi_Ctrl_Right)

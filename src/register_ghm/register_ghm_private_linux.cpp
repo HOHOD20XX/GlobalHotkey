@@ -4,6 +4,10 @@
 
 #ifdef _GLOBAL_HOTKEY_LINUX
 
+#include <global_hotkey/utility.hpp>
+
+#include "../key/key_private_x11.hpp"
+
 namespace gbhk
 {
 
