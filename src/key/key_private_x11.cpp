@@ -136,7 +136,6 @@ int x11Key(const Key& key) noexcept
         // Application keys.
         case Key_Escape:                return XK_Escape;
         case Key_Pause:                 return XK_Pause;
-        case Key_Play:                  return XK_Play; // Need to check.
         case Key_Help:                  return XK_Help;
 
         // Media keys.
@@ -319,14 +318,13 @@ Key getKeyFromX11Key(int x11Key) noexcept
         // Application keys.
         case XK_Escape:                return Key_Escape;
         case XK_Pause:                 return Key_Pause;
-        case XK_Play:                  return Key_Play; // Need to check.
         case XK_Help:                  return Key_Help;
 
         // Media keys.
-        // ...
+        // Not supported.
 
         // Volume keys.
-        // ...
+        // Not supported.
 
         // Lock keys.
         case XK_Caps_Lock:             return Key_Caps_Lock;

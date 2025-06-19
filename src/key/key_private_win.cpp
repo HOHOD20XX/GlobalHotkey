@@ -98,7 +98,6 @@ int nativeKey(const Key& key) noexcept
         // Applications keys.
         case Key_Escape:            return VK_ESCAPE;
         case Key_Pause:             return VK_PAUSE;
-        case Key_Play:              return VK_PLAY;
         case Key_Help:              return VK_HELP;
 
         // Media keys.
@@ -244,7 +243,6 @@ Key getKeyFromNativeKey(int nativeKey) noexcept
         // Applications keys.
         case VK_ESCAPE:             return Key_Escape;
         case VK_PAUSE:              return Key_Pause;
-        case VK_PLAY:               return Key_Play;
         case VK_HELP:               return Key_Help;
 
         // Media keys.

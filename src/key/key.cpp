@@ -166,7 +166,6 @@ GBHK_API std::string keyString(const Key& key) noexcept
         // Applications keys.
         case Key_Escape:            return "Esc";
         case Key_Pause:             return "Pause";
-        case Key_Play:              return "Play";
         case Key_Help:              return "Help";
 
         // Media keys.
@@ -360,7 +359,6 @@ GBHK_API Key getKeyFromString(const std::string& str) noexcept
     if (isEqualStr(str, "esc") || isEqualStr(str, "escape"))
         return Key_Escape;
     if (isEqualStr(str, "pause"))               return Key_Pause;
-    if (isEqualStr(str, "play"))                return Key_Play;
     if (isEqualStr(str, "help"))                return Key_Help;
 
     // Media keys.

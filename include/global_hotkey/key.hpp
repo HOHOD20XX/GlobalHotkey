@@ -136,7 +136,6 @@ enum KeyFlag : int
     // Applications keys.
     Key_Escape,
     Key_Pause,              // Not is MEDIA_PLAY_PAUSE.
-    Key_Play,               // Not is MEDIA_PLAY_PAUSE. Maybe be removed in future.
     Key_Help,
 
     // Media keys.
@@ -190,6 +189,8 @@ enum KeyFlag : int
     Key_Modi_Shift_Right,
 
     // Alias.
+    Key_Grave               = Key_Left_Quote,
+
     Key_Modi_Option         = Key_Modi_Alt,
     Key_Modi_Option_Left    = Key_Modi_Alt_Left,
     Key_Modi_Option_Right   = Key_Modi_Alt_Right
