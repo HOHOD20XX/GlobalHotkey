@@ -7,6 +7,9 @@
 
 #ifdef _GLOBAL_HOTKEY_WIN
 
+#include <condition_variable>   // condition_variable
+#include <thread>               // thread
+
 #include <windows.h>
 
 namespace gbhk
@@ -25,7 +28,15 @@ public:
     int end() override;
 
 private:
+    void messageLoop_();
+
     friend LRESULT LowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam);
+
+    std::condition_variable cvIsRunning_;
+    std::condition_variable cvIsThreadFinished_;
+    std::atomic<bool> isThreadFinished_;
+    std::atomic<bool> shouldClose_;
+    std::thread workThread_;
 
     HHOOK hhook_ = nullptr;
 };

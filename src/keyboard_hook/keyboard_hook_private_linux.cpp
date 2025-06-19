@@ -45,8 +45,8 @@ static int getLibevdevFromFile(const std::string& fileName, libevdev** dev)
     return fd;
 }
 
-_KeyboardHookPrivateLinux::_KeyboardHookPrivateLinux()
-    : shouldClose_(false)
+_KeyboardHookPrivateLinux::_KeyboardHookPrivateLinux() :
+    shouldClose_(false)
 {}
 
 _KeyboardHookPrivateLinux::~_KeyboardHookPrivateLinux()

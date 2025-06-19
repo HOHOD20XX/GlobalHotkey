@@ -6,16 +6,6 @@
 
 #include <global_hotkey/global_hotkey.hpp>
 
-#ifdef GLOBAL_HOTKEY_EXAMPLE_USE_HOOK
-    #ifdef _GLOBAL_HOTKEY_WIN
-        #include <windows.h>    // Window event loop.
-    #elif defined(_GLOBAL_HOTKEY_MAC)
-        // TODO
-    #elif defined(_GLOBAL_HOTKEY_LINUX)
-        // TODO
-    #endif // _GLOBAL_HOTKEY_WIN
-#endif // GLOBAL_HOTKEY_EXAMPLE_USE_HOOK
-
 #define THROW_RT_ERR(errmsg, code) throw std::runtime_error(errmsg + gbhk::returnCodeMessage(code))
 
 int main()
@@ -63,23 +53,8 @@ int main()
     });
     if (rtn != gbhk::RC_SUCCESS)    THROW_RT_ERR("Failed to add the hotkey: ", rtn);
 
-#if defined(GLOBAL_HOTKEY_EXAMPLE_USE_HOOK) && defined(_GLOBAL_HOTKEY_WIN)
-    MSG msg = {0};
-    gbhk::TimedSleeper ts;
-    while (!shouldClose)
-    {
-        ts.resetStartTime();
-        while (::PeekMessageA(&msg, NULL, WM_KEYFIRST, WM_KEYLAST, PM_REMOVE) != 0)
-        {
-            ::TranslateMessage(&msg);
-            ::DispatchMessageA(&msg);
-        }
-        ts.sleepUntilElapsed(10);
-    }
-#else
     std::unique_lock<std::mutex> lock(mtx);
-    cv.wait(lock, [&]() { return shouldClose.load(); });
-#endif // GLOBAL_HOTKEY_EXAMPLE_USE_HOOK && _GLOBAL_HOTKEY_WIN
+    cv.wait(lock, [&shouldClose]() { return shouldClose.load(); });
 
     rtn = hotkeyManager.end();
     if (rtn != gbhk::RC_SUCCESS)    THROW_RT_ERR("Failed to end the hotkey: ", rtn);

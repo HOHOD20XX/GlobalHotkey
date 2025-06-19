@@ -14,7 +14,9 @@ namespace kbhook
 
 LRESULT WINAPI LowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam);
 
-_KeyboardHookPrivateWin::_KeyboardHookPrivateWin() = default;
+_KeyboardHookPrivateWin::_KeyboardHookPrivateWin() :
+    isThreadFinished_(false), shouldClose_(false)
+{}
 
 _KeyboardHookPrivateWin::~_KeyboardHookPrivateWin()
 {
@@ -26,16 +28,35 @@ int _KeyboardHookPrivateWin::start()
     if (isRunning_)
         return RC_SUCCESS;
 
-    hhook_ = ::SetWindowsHookExA(WH_KEYBOARD_LL, &LowLevelKeyboardProc, NULL, 0);
-    if (hhook_)
-    {
-        isRunning_ = true;
-        return RC_SUCCESS;
-    }
-    else
-    {
-        return ::GetLastError();
-    }
+    int rtn = RC_SUCCESS;
+    isRunning_ = true;
+    workThread_ = std::thread([this, &rtn]() {
+        hhook_ = ::SetWindowsHookExA(WH_KEYBOARD_LL, &LowLevelKeyboardProc, NULL, 0);
+        if (hhook_)
+        {
+            isThreadFinished_ = true;
+            cvIsThreadFinished_.notify_all();
+
+            messageLoop_();
+            isRunning_ = false;
+            cvIsRunning_.notify_all();
+        }
+        else
+        {
+            isThreadFinished_ = true;
+            cvIsThreadFinished_.notify_all();
+
+            rtn = ::GetLastError();
+            isRunning_ = false;
+        }
+    });
+    workThread_.detach();
+
+    std::unique_lock<std::mutex> lock(mtx_);
+    cvIsThreadFinished_.wait(lock, [this]() { return isThreadFinished_.load(); });
+    isThreadFinished_ = false;
+
+    return rtn;
 }
 
 int _KeyboardHookPrivateWin::end()
@@ -47,11 +68,29 @@ int _KeyboardHookPrivateWin::end()
     if (::UnhookWindowsHookEx(hhook_) == 0)
         rtn = ::GetLastError();
 
+    shouldClose_ = true;
+    std::unique_lock<std::mutex> lock(mtx_);
+    cvIsRunning_.wait(lock, [this]() {return !isRunning_; });
+    lock.unlock();
+    shouldClose_ = false;
+
     _KeyboardHookPrivate::resetStaticMember_();
     hhook_ = nullptr;
-    isRunning_ = false;
 
     return rtn;
+}
+
+void _KeyboardHookPrivateWin::messageLoop_()
+{
+    MSG msg = {0};
+    while (!shouldClose_)
+    {
+        while (::PeekMessageA(&msg, NULL, WM_KEYFIRST, WM_KEYLAST, PM_REMOVE) != 0)
+        {
+            ::TranslateMessage(&msg);
+            ::DispatchMessageA(&msg);
+        }
+    }
 }
 
 LRESULT WINAPI LowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)

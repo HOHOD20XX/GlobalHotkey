@@ -5,8 +5,8 @@
 namespace gbhk
 {
 
-GlobalHotkeyManager::GlobalHotkeyManager(std::unique_ptr<_GlobalHotkeyManagerPrivate> p)
-    : p_(std::move(p))
+GlobalHotkeyManager::GlobalHotkeyManager(std::unique_ptr<_GlobalHotkeyManagerPrivate> p) :
+    p_(std::move(p))
 {}
 
 GlobalHotkeyManager::~GlobalHotkeyManager() = default;
