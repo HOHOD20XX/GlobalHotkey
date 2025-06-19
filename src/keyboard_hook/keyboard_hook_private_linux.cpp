@@ -8,8 +8,6 @@
 #include <sys/stat.h>   // stat
 #include <unistd.h>     // getuid, close
 
-#include <global_hotkey/utility.hpp>
-
 namespace gbhk
 {
 
