@@ -1,3 +1,5 @@
+#ifndef GLOBAL_HOTKEY_DISABLE_REGISTER
+
 #include "key_private_x11.hpp"
 
 #ifdef _GLOBAL_HOTKEY_LINUX
@@ -366,3 +368,5 @@ Key getKeyFromX11Key(int x11Key) noexcept
 } // namespace gbhk
 
 #endif  // _GLOBAL_HOTKEY_LINUX
+
+#endif // !GLOBAL_HOTKEY_DISABLE_REGISTER

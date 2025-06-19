@@ -1,6 +1,8 @@
 #ifndef GLOBAL_HOTKEY_KEY_PRIVATE_X11_HPP
 #define GLOBAL_HOTKEY_KEY_PRIVATE_X11_HPP
 
+#ifndef GLOBAL_HOTKEY_DISABLE_REGISTER
+
 #include <global_hotkey/key.hpp>
 
 #ifdef _GLOBAL_HOTKEY_LINUX
@@ -19,5 +21,7 @@ Key getKeyFromX11Key(int x11Key) noexcept;
 }
 
 #endif // _GLOBAL_HOTKEY_LINUX
+
+#endif // !GLOBAL_HOTKEY_DISABLE_REGISTER
 
 #endif // !GLOBAL_HOTKEY_KEY_PRIVATE_X11_HPP
