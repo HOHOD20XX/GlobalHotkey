@@ -11,8 +11,11 @@
 
 #define NOWTP std::chrono::steady_clock::now()
 
+
 namespace gbhk
 {
+
+static std::mutex dummyMtx;
 
 std::atomic<Modifiers> _HookGHMPrivate::pressedModi_(0);
 std::atomic<Key> _HookGHMPrivate::pressedKey_(0);
@@ -55,19 +58,21 @@ int _HookGHMPrivate::end()
     if (!isRunning_)                return RC_SUCCESS;
     if (CUR_TH_ID == workThreadId_) return RC_END_GHM_IN_WRONG_THREAD;
 
-    shouldClose_ = true;
+    auto& keyboardHook = kbhook::KeyboardHook::getInstance();
+    int ec = keyboardHook.end();
 
-    std::unique_lock<std::mutex> lock(mtx_);
+    shouldClose_ = true;
+    std::unique_lock<std::mutex> lock(dummyMtx);
     cvIsRunning_.wait(lock, [this]() { return !isRunning_; });
     lock.unlock();
-
     shouldClose_ = false;
+
     pressedModi_ = 0;
     pressedKey_ = 0;
     workThreadId_ = std::thread::id();
     removeAll();
 
-    return RC_SUCCESS;
+    return ec;
 }
 
 int _HookGHMPrivate::add(const KeyCombination& kc, const std::function<void()>& fn, bool autoRepeat)

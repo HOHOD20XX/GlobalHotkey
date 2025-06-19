@@ -11,6 +11,8 @@
 namespace gbhk
 {
 
+static std::mutex dummyMtx;
+
 _RegisterGHMPrivateWin::_RegisterGHMPrivateWin() :
     hasTask_(false), taskFinished_(false), taskResult_(RC_SUCCESS), hotkeyIndex_(0)
 {}
@@ -49,7 +51,7 @@ int _RegisterGHMPrivateWin::end()
 
     shouldClose_ = true;
 
-    std::unique_lock<std::mutex> lock(mtx_);
+    std::unique_lock<std::mutex> lock(dummyMtx);
     cvIsRunning_.wait(lock, [this]() { return !isRunning_; });
     lock.unlock();
 
@@ -394,8 +396,9 @@ _RegisterGHMPrivateWin::Task _RegisterGHMPrivateWin::getTask_()
 
 int _RegisterGHMPrivateWin::waitTask_()
 {
-    std::unique_lock<std::mutex> lock(mtx_);
+    std::unique_lock<std::mutex> lock(dummyMtx);
     cvTaskFinished_.wait(lock, [this]() { return taskFinished_.load(); });
+    lock.unlock();
     return taskResult_;
 }
 

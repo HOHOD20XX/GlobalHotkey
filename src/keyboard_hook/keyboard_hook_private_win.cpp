@@ -12,6 +12,8 @@ namespace gbhk
 namespace kbhook
 {
 
+static std::mutex dummyMtx;
+
 LRESULT WINAPI LowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam);
 
 _KeyboardHookPrivateWin::_KeyboardHookPrivateWin() :
@@ -38,22 +40,26 @@ int _KeyboardHookPrivateWin::start()
             cvIsThreadFinished_.notify_all();
 
             messageLoop_();
+            if (::UnhookWindowsHookEx(hhook_) == 0)
+                ::GetLastError();
+
             isRunning_ = false;
             cvIsRunning_.notify_all();
         }
         else
         {
-            isThreadFinished_ = true;
-            cvIsThreadFinished_.notify_all();
-
             rtn = ::GetLastError();
             isRunning_ = false;
+
+            isThreadFinished_ = true;
+            cvIsThreadFinished_.notify_all();
         }
     });
     workThread_.detach();
 
-    std::unique_lock<std::mutex> lock(mtx_);
+    std::unique_lock<std::mutex> lock(dummyMtx);
     cvIsThreadFinished_.wait(lock, [this]() { return isThreadFinished_.load(); });
+    lock.unlock();
     isThreadFinished_ = false;
 
     return rtn;
@@ -64,12 +70,8 @@ int _KeyboardHookPrivateWin::end()
     if (!isRunning_)
         return RC_SUCCESS;
 
-    int rtn = RC_SUCCESS;
-    if (::UnhookWindowsHookEx(hhook_) == 0)
-        rtn = ::GetLastError();
-
     shouldClose_ = true;
-    std::unique_lock<std::mutex> lock(mtx_);
+    std::unique_lock<std::mutex> lock(dummyMtx);
     cvIsRunning_.wait(lock, [this]() {return !isRunning_; });
     lock.unlock();
     shouldClose_ = false;
@@ -77,7 +79,7 @@ int _KeyboardHookPrivateWin::end()
     _KeyboardHookPrivate::resetStaticMember_();
     hhook_ = nullptr;
 
-    return rtn;
+    return RC_SUCCESS;
 }
 
 void _KeyboardHookPrivateWin::messageLoop_()

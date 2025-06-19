@@ -16,6 +16,8 @@ namespace gbhk
 namespace kbhook
 {
 
+static std::mutex dummyMtx;
+
 constexpr const char* EVDEV_FILE_PREFIX = "/dev/input/event";
 constexpr int KEY_RELEASED = 0;
 constexpr int KEY_PRESSED = 1;
@@ -97,7 +99,7 @@ int _KeyboardHookPrivateLinux::end()
         return RC_SUCCESS;
 
     shouldClose_ = true;
-    std::unique_lock<std::mutex> lock(mtx_);
+    std::unique_lock<std::mutex> lock(dummyMtx);
     cvIsRunning_.wait(lock, [this]() { return !isRunning_; });
     lock.unlock();
     shouldClose_ = false;
