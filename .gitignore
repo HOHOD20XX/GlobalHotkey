@@ -7,5 +7,5 @@
 
 .vscode/
 build/
-misc/
+tmp/
 temp/
