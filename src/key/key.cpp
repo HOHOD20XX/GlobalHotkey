@@ -15,23 +15,23 @@ static std::string modifiersStringHelper(ModifierFlag flag) noexcept
     switch (flag)
     {
     #ifdef _GLOBAL_HOTKEY_WIN
-        case MODI_META:     return "Win";
+        case META:      return "Win";
     #elif defined(_GLOBAL_HOTKEY_MAC)
-        case MODI_META:     return "Command";
+        case META:      return "Command";
     #elif defined(_GLOBAL_HOTKEY_LINUX)
-        case MODI_META:     return "Super";
+        case META:      return "Super";
     #endif // _GLOBAL_HOTKEY_WIN
 
-        case MODI_CTRL:     return "Ctrl";
+        case CTRL:      return "Ctrl";
 
     #ifdef _GLOBAL_HOTKEY_MAC
-        case MODI_ALT:      return "Option";
+        case ALT:       return "Option";
     #else
-        case MODI_ALT:      return "Alt";
+        case ALT:       return "Alt";
     #endif // _GLOBAL_HOTKEY_MAC
 
-        case MODI_SHIFT:    return "Shift";
-        default:            return "";
+        case SHIFT:     return "Shift";
+        default:        return "";
     }
 }
 
@@ -40,14 +40,14 @@ GBHK_API std::string modifiersString(const Modifiers& modifiers, bool isPrettySp
     std::string rslt;
     std::string separator = isPrettySpace ? " + " : "+";
 
-    if (modifiers.has(MODI_META))
-        rslt += modifiersStringHelper(MODI_META);
-    if (modifiers.has(MODI_CTRL))
-        rslt += (!rslt.empty() ? separator : "") + modifiersStringHelper(MODI_CTRL);
-    if (modifiers.has(MODI_ALT))
-        rslt += (!rslt.empty() ? separator : "") + modifiersStringHelper(MODI_ALT);
-    if (modifiers.has(MODI_SHIFT))
-        rslt += (!rslt.empty() ? separator : "") + modifiersStringHelper(MODI_SHIFT);
+    if (modifiers.has(META))
+        rslt += modifiersStringHelper(META);
+    if (modifiers.has(CTRL))
+        rslt += (!rslt.empty() ? separator : "") + modifiersStringHelper(CTRL);
+    if (modifiers.has(ALT))
+        rslt += (!rslt.empty() ? separator : "") + modifiersStringHelper(ALT);
+    if (modifiers.has(SHIFT))
+        rslt += (!rslt.empty() ? separator : "") + modifiersStringHelper(SHIFT);
 
     return rslt;
 }
@@ -233,13 +233,13 @@ static bool isEqualStr(const std::string& str1, const std::string& str2) noexcep
 static int getModifiersFromStringHelper(const std::string& str) noexcept
 {
     if (isEqualStr(str, "win") || isEqualStr(str, "windows") || isEqualStr(str, "command") || isEqualStr(str, "super"))
-        return MODI_META;
+        return META;
     if (isEqualStr(str, "ctrl") || isEqualStr(str, "control"))
-        return MODI_CTRL;
+        return CTRL;
     if (isEqualStr(str, "alt") || isEqualStr(str, "option"))
-        return MODI_ALT;
+        return ALT;
     if (isEqualStr(str, "shift"))
-        return MODI_SHIFT;
+        return SHIFT;
     return 0;
 }
 

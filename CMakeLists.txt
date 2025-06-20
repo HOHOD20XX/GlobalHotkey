@@ -9,27 +9,6 @@ if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release)
 endif()
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
-file(GLOB_RECURSE SRC
-     src/global_hotkey_manager/*.cpp
-     src/hook_ghm/*.cpp
-     src/key_combination/*.cpp
-     src/utility/*.cpp
-     src/key/key.cpp
-     src/keyboard_hook/keyboard_hook.cpp
-     src/keyboard_hook/keyboard_hook_private.cpp
-     src/register_ghm/register_ghm.cpp
-     src/register_ghm/register_ghm_private.cpp)
-
-if(WIN32)
-    file(GLOB_RECURSE SRC ${SRC} src/*win*.cpp)
-elseif(APPLE)
-    file(GLOB_RECURSE SRC ${SRC} src/*mac*.cpp)
-elseif(LINUX)
-    file(GLOB_RECURSE SRC ${SRC} src/*linux*.cpp)
-    file(GLOB_RECURSE SRC ${SRC} src/*x11*.cpp)
-endif()
-
 set(GBHK_MSG_PREFIX "[GlobalHotkey]")
 
 if(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
@@ -74,6 +53,27 @@ endif()
 
 if(GBHK_DISABLE_HOOK AND GBHK_DISABLE_REGISTER)
     message(FATAL_ERROR "${GBHK_MSG_PREFIX} Cannot set Both GBHK_DISABLE_HOOK and GBHK_DISABLE_REGISTER to ON")
+endif()
+
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+file(GLOB_RECURSE SRC
+     src/global_hotkey_manager/*.cpp
+     src/hook_global_hotkey_manager/*.cpp
+     src/key_combination/*.cpp
+     src/utility/*.cpp
+     src/key/key.cpp
+     src/keyboard_hook_manager/keyboard_hook_manager.cpp
+     src/keyboard_hook_manager/kbhm_private.cpp
+     src/register_global_hotkey_manager/register_global_hotkey_manager.cpp
+     src/register_global_hotkey_manager/register_ghm_private.cpp)
+
+if(WIN32)
+    file(GLOB_RECURSE SRC ${SRC} src/*win*.cpp)
+elseif(APPLE)
+    file(GLOB_RECURSE SRC ${SRC} src/*mac*.cpp)
+elseif(LINUX)
+    file(GLOB_RECURSE SRC ${SRC} src/*linux*.cpp)
+    file(GLOB_RECURSE SRC ${SRC} src/*x11*.cpp)
 endif()
 
 find_package(Threads REQUIRED)

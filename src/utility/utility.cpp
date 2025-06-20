@@ -7,25 +7,17 @@
 namespace gbhk
 {
 
-TimedSleeper::TimedSleeper() :
-    p_(new _TimedSleeperPrivate())
-{}
+TimedSleeper::TimedSleeper() : ptr(new _TimedSleeperPrivate()) {}
 
 TimedSleeper::~TimedSleeper() = default;
 
 void TimedSleeper::resetStartTime()
-{
-    p_->resetStartTime();
-}
+{ ptr->resetStartTime(); }
 
 void TimedSleeper::sleepUntilElapsed(size_t milliseconds) const
-{
-    p_->sleepUntilElapsed(milliseconds);
-}
+{ ptr->sleepUntilElapsed(milliseconds); }
 
 size_t TimedSleeper::elapsedTime() const
-{
-    return p_->elapsedTime();
-}
+{ return ptr->elapsedTime(); }
 
 } // namespace gbhk

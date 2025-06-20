@@ -6,8 +6,8 @@
 // License: GPL-3.0
 
 #include "base.hpp"
-#include "hook_ghm.hpp"
-#include "register_ghm.hpp"
+#include "hook_global_hotkey_manager.hpp"
+#include "register_global_hotkey_manager.hpp"
 #include "return_code.hpp"
 #include "utility.hpp"
 

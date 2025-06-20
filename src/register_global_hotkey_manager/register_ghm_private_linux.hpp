@@ -7,6 +7,9 @@
 
 #ifdef _GLOBAL_HOTKEY_LINUX
 
+#include <X11/Xlib.h>
+#include <X11/Xutil.h>
+
 namespace gbhk
 {
 
@@ -16,16 +19,19 @@ public:
     _RegisterGHMPrivateLinux();
     ~_RegisterGHMPrivateLinux();
 
-    int start() override;
-    int end() override;
-    int add(const KeyCombination& kc, const std::function<void()>& fn, bool autoRepeat) override;
-    int add(const KeyCombination& kc, std::function<void()>&& fn, bool autoRepeat) override;
-    int remove(const KeyCombination& kc) override;
-    int removeAll() override;
-    int replace(const KeyCombination& oldKc, const KeyCombination& newKc) override;
-    int setAutoRepeat(const KeyCombination& kc, bool autoRepeat) override;
-
 private:
+    int doBeforeLoop() override;
+    int doAfterLoop() override;
+
+    void work() override;
+    int workOfEnd() override;
+    int workOfAdd(const KeyCombination& kc, bool autoRepeat) override;
+    int workOfRemove(const KeyCombination& kc) override;
+    int workOfRemoveAll() override;
+    int workOfReplace(const KeyCombination& oldKc, const KeyCombination& newKc) override;
+    int workOfSetAutoRepeat(const KeyCombination& kc, bool autoRepeat) override;
+
+    Display* display;
 };
 
 } // namespace gbhk

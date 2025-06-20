@@ -16,16 +16,14 @@ public:
     _RegisterGHMPrivateMac();
     ~_RegisterGHMPrivateMac();
 
-    int start() override;
-    int end() override;
-    int add(const KeyCombination& kc, const std::function<void()>& fn, bool autoRepeat) override;
-    int add(const KeyCombination& kc, std::function<void()>&& fn, bool autoRepeat) override;
-    int remove(const KeyCombination& kc) override;
-    int removeAll() override;
-    int replace(const KeyCombination& oldKc, const KeyCombination& newKc) override;
-    int setAutoRepeat(const KeyCombination& kc, bool autoRepeat) override;
-
 private:
+    void work() override;
+    int workOfEnd() override;
+    int workOfAdd(const KeyCombination& kc, bool autoRepeat) override;
+    int workOfRemove(const KeyCombination& kc) override;
+    int workOfRemoveAll() override;
+    int workOfReplace(const KeyCombination& oldKc, const KeyCombination& newKc) override;
+    int workOfSetAutoRepeat(const KeyCombination& kc, bool autoRepeat) override;
 };
 
 } // namespace gbhk

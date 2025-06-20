@@ -16,4 +16,4 @@ Key getKeyFromNativeKey(int nativeKey) noexcept;
 
 } // namespace gbhk
 
-#endif // !GLOBAL_HOTKEY_KEY_PRIVATE_WIN_HPP
+#endif // !GLOBAL_HOTKEY_KEY_PRIVATE_HPP

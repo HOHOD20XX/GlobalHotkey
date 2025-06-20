@@ -10,13 +10,13 @@ namespace gbhk
 int nativeModifiers(const Modifiers& modifiers) noexcept
 {
     int rslt = 0;
-    if (modifiers.has(MODI_META))
+    if (modifiers.has(META))
         rslt |= MOD_WIN;
-    if (modifiers.has(MODI_CTRL))
+    if (modifiers.has(CTRL))
         rslt |= MOD_CONTROL;
-    if (modifiers.has(MODI_ALT))
+    if (modifiers.has(ALT))
         rslt |= MOD_ALT;
-    if (modifiers.has(MODI_SHIFT))
+    if (modifiers.has(SHIFT))
         rslt |= MOD_SHIFT;
     return rslt;
 }
@@ -135,18 +135,18 @@ int nativeKey(const Key& key) noexcept
         case Key_Angle_Bracket:     return VK_OEM_102;
 
         // Modifier keys.
-        case Key_Modi_Meta:         return 0;   // Not supported.
-        case Key_Modi_Meta_Left:    return VK_LWIN;
-        case Key_Modi_Meta_Right:   return VK_RWIN;
-        case Key_Modi_Ctrl:         return VK_CONTROL;
-        case Key_Modi_Ctrl_Left:    return VK_LCONTROL;
-        case Key_Modi_Ctrl_Right:   return VK_RCONTROL;
-        case Key_Modi_Alt:          return VK_MENU;
-        case Key_Modi_Alt_Left:     return VK_LMENU;
-        case Key_Modi_Alt_Right:    return VK_RMENU;
-        case Key_Modi_Shift:        return VK_SHIFT;
-        case Key_Modi_Shift_Left:   return VK_LSHIFT;
-        case Key_Modi_Shift_Right:  return VK_RSHIFT;
+        case Key_Mod_Meta:          return 0;   // Not supported.
+        case Key_Mod_Meta_Left:     return VK_LWIN;
+        case Key_Mod_Meta_Right:    return VK_RWIN;
+        case Key_Mod_Ctrl:          return VK_CONTROL;
+        case Key_Mod_Ctrl_Left:     return VK_LCONTROL;
+        case Key_Mod_Ctrl_Right:    return VK_RCONTROL;
+        case Key_Mod_Alt:           return VK_MENU;
+        case Key_Mod_Alt_Left:      return VK_LMENU;
+        case Key_Mod_Alt_Right:     return VK_RMENU;
+        case Key_Mod_Shift:         return VK_SHIFT;
+        case Key_Mod_Shift_Left:    return VK_LSHIFT;
+        case Key_Mod_Shift_Right:   return VK_RSHIFT;
 
         default:                    return 0;
     }
@@ -156,13 +156,13 @@ Modifiers getModifiersFromNativeModifiers(int nativeModifiers) noexcept
 {
     Modifiers rslt;
     if (nativeModifiers & MOD_WIN)
-        rslt.add(MODI_META);
+        rslt.add(META);
     if (nativeModifiers & MOD_CONTROL)
-        rslt.add(MODI_CTRL);
+        rslt.add(CTRL);
     if (nativeModifiers & MOD_ALT)
-        rslt.add(MODI_ALT);
+        rslt.add(ALT);
     if (nativeModifiers & MOD_SHIFT)
-        rslt.add(MODI_SHIFT);
+        rslt.add(SHIFT);
     return rslt;
 }
 
@@ -280,17 +280,17 @@ Key getKeyFromNativeKey(int nativeKey) noexcept
         case VK_OEM_102:            return Key_Angle_Bracket;
 
         // Modifier keys.
-        case VK_LWIN:               return Key_Modi_Meta_Left;
-        case VK_RWIN:               return Key_Modi_Meta_Right;
-        case VK_CONTROL:            return Key_Modi_Ctrl;
-        case VK_LCONTROL:           return Key_Modi_Ctrl_Left;
-        case VK_RCONTROL:           return Key_Modi_Ctrl_Right;
-        case VK_MENU:               return Key_Modi_Alt;
-        case VK_LMENU:              return Key_Modi_Alt_Left;
-        case VK_RMENU:              return Key_Modi_Alt_Right;
-        case VK_SHIFT:              return Key_Modi_Shift;
-        case VK_LSHIFT:             return Key_Modi_Shift_Left;
-        case VK_RSHIFT:             return Key_Modi_Shift_Right;
+        case VK_LWIN:               return Key_Mod_Meta_Left;
+        case VK_RWIN:               return Key_Mod_Meta_Right;
+        case VK_CONTROL:            return Key_Mod_Ctrl;
+        case VK_LCONTROL:           return Key_Mod_Ctrl_Left;
+        case VK_RCONTROL:           return Key_Mod_Ctrl_Right;
+        case VK_MENU:               return Key_Mod_Alt;
+        case VK_LMENU:              return Key_Mod_Alt_Left;
+        case VK_RMENU:              return Key_Mod_Alt_Right;
+        case VK_SHIFT:              return Key_Mod_Shift;
+        case VK_LSHIFT:             return Key_Mod_Shift_Left;
+        case VK_RSHIFT:             return Key_Mod_Shift_Right;
 
         default:                    return Key();
     }

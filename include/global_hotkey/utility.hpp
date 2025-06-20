@@ -24,7 +24,7 @@ public:
     size_t elapsedTime() const;
 
 private:
-    std::unique_ptr<_TimedSleeperPrivate> p_;
+    std::unique_ptr<_TimedSleeperPrivate> ptr;
 };
 
 } // namespace gbhk

@@ -1,4 +1,3 @@
-#include <functional>   // hash
 #include <sstream>      // stringstream
 #include <string>       // to_string
 
@@ -22,13 +21,13 @@ KeyCombination KeyCombination::fromString(const std::string& str) noexcept
         {
             auto key = getKeyFromString(s);
             if (key.isValid())
-                rslt.key_ = key;
+                rslt.ky = key;
             else
                 return rslt;
         }
         else
         {
-            rslt.modifiers_.add(modi);
+            rslt.mod.add(modi);
         }
     }
 
@@ -40,10 +39,10 @@ std::string KeyCombination::toString(bool isPrettySpace, bool showKeyValue) cons
     std::string rslt;
     std::string separator = isPrettySpace ? " + " : "+";
 
-    rslt += modifiersString(modifiers_, isPrettySpace);
-    rslt += (!rslt.empty() ? separator : "") + keyString(key_);
+    rslt += modifiersString(mod, isPrettySpace);
+    rslt += (!rslt.empty() ? separator : "") + keyString(ky);
     if (showKeyValue)
-        rslt += " (" + std::to_string(key_) + ")";
+        rslt += " (" + std::to_string(ky) + ")";
 
     return rslt;
 }

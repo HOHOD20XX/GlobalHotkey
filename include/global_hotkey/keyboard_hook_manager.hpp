@@ -1,5 +1,5 @@
-#ifndef GLOBAL_HOTKEY_KEYBOARD_HOOK_HPP
-#define GLOBAL_HOTKEY_KEYBOARD_HOOK_HPP
+#ifndef GLOBAL_HOTKEY_KEYBOARD_HOOK_MANAGER_HPP
+#define GLOBAL_HOTKEY_KEYBOARD_HOOK_MANAGER_HPP
 
 #ifndef GLOBAL_HOTKEY_DISABLE_HOOK
 
@@ -20,35 +20,33 @@ enum KeyState
     KS_RELEASED = 0x02
 };
 
-class _KeyboardHookPrivate;
+class _KBHMPrivate;
 
-class GBHK_API KeyboardHook final
+class GBHK_API KeyboardHookManager final
 {
 public:
-    KeyboardHook(const KeyboardHook&) = delete;
-    KeyboardHook& operator=(const KeyboardHook&) = delete;
+    KeyboardHookManager(const KeyboardHookManager&) = delete;
+    KeyboardHookManager& operator=(const KeyboardHookManager&) = delete;
 
-    static KeyboardHook& getInstance();
+    static KeyboardHookManager& getInstance();
 
     int start();
     int end();
     int addKeyListener(int nativeKey, KeyState state, const std::function<void()>& fn);
-    int addKeyListener(int nativeKey, KeyState state, std::function<void()>&& fn);
     int removeKeyListener(int nativeKey, KeyState state);
     int removeAllKeyListener();
     int setKeyPressedEvent(void (*fn)(int));
     int setKeyReleasedEvent(void (*fn)(int));
     int unsetKeyPressedEvent();
     int unsetKeyReleasedEvent();
-
     bool hasKeyListener(int nativeKey, KeyState state) const;
     bool isRunning() const;
 
 private:
-    KeyboardHook();
-    ~KeyboardHook();
+    KeyboardHookManager();
+    ~KeyboardHookManager();
 
-    std::unique_ptr<_KeyboardHookPrivate> p_;
+    std::unique_ptr<_KBHMPrivate> ptr;
 };
 
 } // namespace kbhook
@@ -57,4 +55,4 @@ private:
 
 #endif // !GLOBAL_HOTKEY_DISABLE_HOOK
 
-#endif // !GLOBAL_HOTKEY_KEYBOARD_HOOK_HPP
+#endif // !GLOBAL_HOTKEY_KEYBOARD_HOOK_MANAGER_HPP

@@ -1,6 +1,6 @@
+#include <cstdio>               // printf
 #include <atomic>               // atomic
 #include <condition_variable>   // condition_variable
-#include <iostream>             // cout, endl
 #include <mutex>                // mutex
 #include <stdexcept>            // runtime_error
 
@@ -8,58 +8,69 @@
 
 #define THROW_RT_ERR(errmsg, code) throw std::runtime_error(errmsg + gbhk::returnCodeMessage(code))
 
+void hotkeyTriggered1()
+{
+    printf("Hotkey 1 be triggered\n");
+}
+
+void hotkeyTriggered2()
+{
+    printf("Hotkey 2 be triggered\n");
+}
+
 int main()
 {
 #ifdef GLOBAL_HOTKEY_EXAMPLE_USE_HOOK
-    gbhk::GlobalHotkeyManager& hotkeyManager = gbhk::HookGHM::getInstance();
+    gbhk::GlobalHotkeyManager& ghm = gbhk::HookGlobalHotkeyManager::getInstance();
 #else
-    gbhk::GlobalHotkeyManager& hotkeyManager = gbhk::RegisterGHM::getInstance();
+    gbhk::GlobalHotkeyManager& ghm = gbhk::RegisterGlobalHotkeyManager::getInstance();
 #endif // GLOBAL_HOTKEY_EXAMPLE_USE_HOOK
 
-    gbhk::KeyCombination hotkey1(gbhk::MODI_CTRL, 'J');
-    gbhk::KeyCombination hotkey2(gbhk::MODI_CTRL | gbhk::MODI_SHIFT, 'J');
-    gbhk::KeyCombination hotkey3(gbhk::MODI_CTRL | gbhk::MODI_SHIFT, gbhk::Key_Delete);
+    gbhk::KeyCombination hotkey1(gbhk::CTRL, 'J');
+    gbhk::KeyCombination hotkey2(gbhk::CTRL | gbhk::SHIFT, 'J');
+    gbhk::KeyCombination hotkey3(gbhk::CTRL | gbhk::SHIFT, gbhk::Key_Delete);
 
-    std::cout << "The Hotkeys: " << "\n"
-              << hotkey1.toString(true) << "\n"
-              << hotkey2.toString(true) << "\n"
-              << std::endl;
-    std::cout << "Press " << hotkey3.toString(true) << " To Exit!" << std::endl;
+    printf("Hotkeys:\n1: %s\n2: %s\n3: %s\n",
+           hotkey1.toString(true).c_str(),
+           hotkey2.toString(true).c_str(),
+           hotkey3.toString(true).c_str());
+    printf("Press the hotkey 3 to exit.\n\n");
 
-    auto rtn = hotkeyManager.start();
-    if (rtn != gbhk::RC_SUCCESS)    THROW_RT_ERR("Failed to start the hotkey: ", rtn);
+    int rc = ghm.start();
+    if (rc != gbhk::RC_SUCCESS)
+        THROW_RT_ERR("Failed to start the Global Hotkey Manager: ", rc);
 
-    rtn = hotkeyManager.add(hotkey1, []()
-    {
-        std::cout << "hotkey1 triggered" << std::endl;
-    });
-    if (rtn != gbhk::RC_SUCCESS)    THROW_RT_ERR("Failed to add the hotkey: ", rtn);
+    rc = ghm.add(hotkey1, &hotkeyTriggered1);
+    if (rc != gbhk::RC_SUCCESS)
+        THROW_RT_ERR("Failed to add the hotkey 1: ", rc);
 
-    rtn = hotkeyManager.add(hotkey2, []()
-    {
-        std::cout << "hotkey2 triggered" << std::endl;
-    }, true);
-    if (rtn != gbhk::RC_SUCCESS)    THROW_RT_ERR("Failed to add the hotkey: ", rtn);
+    // The hotkey 2 is auto repeat.
+    rc = ghm.add(hotkey2, &hotkeyTriggered2, true);
+    if (rc != gbhk::RC_SUCCESS)
+        THROW_RT_ERR("Failed to add the hotkey 2: ", rc);
 
-    std::mutex mtx;
-    std::condition_variable cv;
     std::atomic<bool> shouldClose(false);
-    rtn = hotkeyManager.add(hotkey3, [&]()
+    std::condition_variable cv;
+    rc = ghm.add(hotkey3, [&]()
     {
-        std::cout << "hotkey3 triggered" << std::endl;
-        std::cout << "exiting..." << std::endl;
+        printf("Hotkey 3 be triggered\n");
+        printf("Exiting...\n");
         shouldClose = true;
         cv.notify_all();
     });
-    if (rtn != gbhk::RC_SUCCESS)    THROW_RT_ERR("Failed to add the hotkey: ", rtn);
+    if (rc != gbhk::RC_SUCCESS)
+        THROW_RT_ERR("Failed to add the hotkey: ", rc);
 
-    std::unique_lock<std::mutex> lock(mtx);
-    cv.wait(lock, [&shouldClose]() { return shouldClose.load(); });
+    std::mutex dummyMtx;
+    std::unique_lock<std::mutex> lock(dummyMtx);
+    cv.wait(lock, [&]() { return shouldClose.load(); });
+    lock.unlock();
 
-    rtn = hotkeyManager.end();
-    if (rtn != gbhk::RC_SUCCESS)    THROW_RT_ERR("Failed to end the hotkey: ", rtn);
-
-    std::cout << "Success to exit." << std::endl;
+    rc = ghm.end();
+    // The follow code forever not throw exception actually.
+    if (rc != gbhk::RC_SUCCESS)
+        THROW_RT_ERR("Failed to end the Global Hotkey Manager: ", rc);
+    printf("The Global Hotkey Manager is ended\n");
 
     return 0;
 }

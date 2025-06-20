@@ -44,7 +44,6 @@ namespace gbhk
 {
 
 constexpr size_t _DEFAULT_CYCLE_TIME        = 10;
-constexpr size_t _DEFAULT_DEBOUNCED_TIME    = 0;
 
 } // namespace gbhk
 

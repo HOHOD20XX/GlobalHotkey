@@ -22,8 +22,8 @@ enum ReturnCode : int
 {
     RC_SUCCESS                      = 0x00 | _RC_MASK,
 
-    RC_ARR_GHM_IN_WRONG_TIME        = 0x10 | _RC_MASK,
-    RC_ARR_GHM_IN_WRONG_THREAD      = 0x11 | _RC_MASK,
+    RC_CHANGE_GH_IN_WRONG_TIME      = 0x10 | _RC_MASK,
+    RC_CHANGE_GH_IN_WRONG_THREAD    = 0x11 | _RC_MASK,
     RC_END_GHM_IN_WRONG_THREAD      = 0x12 | _RC_MASK,
 
     RC_INVALID_VALUE                = 0x20 | _RC_MASK,
@@ -39,11 +39,11 @@ inline std::string returnCodeMessage(int rc) noexcept
     {
         case RC_SUCCESS:
             return "Success";
-        case RC_ARR_GHM_IN_WRONG_TIME:
-            return "Add, remove or replace global hotkey for the Global Hotkey Manager, " \
+        case RC_CHANGE_GH_IN_WRONG_TIME:
+            return "Add, remove, replace and other change for global hotkey in Global Hotkey Manager, " \
                    "but GHM is not running yet";
-        case RC_ARR_GHM_IN_WRONG_THREAD:
-            return "Add, remove or replace global hotkey for the Global Hotkey Manager, " \
+        case RC_CHANGE_GH_IN_WRONG_THREAD:
+            return "Add, remove, replace and other change for global hotkey in Global Hotkey Manager, " \
                    "but the caller is in the same thread as GHM's work thread";
         case RC_END_GHM_IN_WRONG_THREAD:
             return "End the Global Hotkey Manager in the same thread as GHM's work thread";
