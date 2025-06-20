@@ -1,3 +1,11 @@
+*.o
+*.exe
+*.lib
+*.dll
+*.a
+*.so
+
 .vscode/
 build/
 misc/
+temp/
