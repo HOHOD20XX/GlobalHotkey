@@ -17,8 +17,8 @@ public:
     ~_HookGHMPrivate();
 
 private:
-    static void pressedKeyCallback(int nativeKey);
-    static void releasedKeyCallback(int nativeKey);
+    static void keyPressedCallback(int nativeKey);
+    static void keyReleasedCallback(int nativeKey);
 
     static std::atomic<Modifiers> pressedMod;
     static std::atomic<Key> pressedKey;

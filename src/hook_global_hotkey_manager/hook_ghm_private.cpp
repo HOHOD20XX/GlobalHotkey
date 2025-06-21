@@ -16,7 +16,7 @@ _HookGHMPrivate::_HookGHMPrivate() : kbhm(kbhook::KeyboardHookManager::getInstan
 
 _HookGHMPrivate::~_HookGHMPrivate() { end(); }
 
-void _HookGHMPrivate::pressedKeyCallback(int nativeKey)
+void _HookGHMPrivate::keyPressedCallback(int nativeKey)
 {
     auto key = getKeyFromNativeKey(nativeKey);
     if (key == Key_Mod_Meta || key == Key_Mod_Meta_Left || key == Key_Mod_Meta_Right)
@@ -31,7 +31,7 @@ void _HookGHMPrivate::pressedKeyCallback(int nativeKey)
         pressedKey = key;
 }
 
-void _HookGHMPrivate::releasedKeyCallback(int nativeKey)
+void _HookGHMPrivate::keyReleasedCallback(int nativeKey)
 {
     auto key = getKeyFromNativeKey(nativeKey);
     if (key == Key_Mod_Meta || key == Key_Mod_Meta_Left || key == Key_Mod_Meta_Right)
@@ -51,8 +51,8 @@ int _HookGHMPrivate::specializedStart()
     int rc = kbhm.start();
     if (rc != RC_SUCCESS)
         return rc;
-    kbhm.setKeyPressedEvent(&pressedKeyCallback);
-    kbhm.setKeyReleasedEvent(&releasedKeyCallback);
+    kbhm.setKeyPressedEvent(&keyPressedCallback);
+    kbhm.setKeyReleasedEvent(&keyReleasedCallback);
     return RC_SUCCESS;
 }
 
@@ -68,15 +68,12 @@ int _HookGHMPrivate::specializedEnd()
 void _HookGHMPrivate::eachCycleDo()
 {
     KeyCombination kc(pressedMod, pressedKey);
-    if (has(kc))
-    {
-        auto& pair = getValue(kc);
-        auto& autoRepeat = pair.first;
-        auto& fn = pair.second;
-        bool shouldInvoke = fn && (kc != prevKc || autoRepeat);
-        if (shouldInvoke)
-            fn();
-    }
+    auto pair = getValue(kc);
+    auto& autoRepeat = pair.first;
+    auto& fn = pair.second;
+    bool shouldInvoke = fn && (kc != prevKc || autoRepeat);
+    if (shouldInvoke)
+        fn();
     prevKc = kc;
 }
 

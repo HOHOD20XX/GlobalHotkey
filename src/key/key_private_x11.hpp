@@ -12,11 +12,11 @@ namespace gbhk
 
 int x11Modifiers(const Modifiers& modifiers) noexcept;
 
-int x11Key(const Key& key) noexcept;
+int x11Keysym(const Key& key) noexcept;
 
 Modifiers getModifiersFromX11Modifiers(int x11Modifiers) noexcept;
 
-Key getKeyFromX11Key(int x11Key) noexcept;
+Key getKeyFromX11Keysym(int x11Keysym) noexcept;
 
 }
 

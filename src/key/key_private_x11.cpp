@@ -24,7 +24,7 @@ int x11Modifiers(const Modifiers& modifiers) noexcept
     return rslt;
 }
 
-int x11Key(const Key& key) noexcept
+int x11Keysym(const Key& key) noexcept
 {
     switch (key)
     {
@@ -206,9 +206,9 @@ Modifiers getModifiersFromX11Modifiers(int x11Modifiers) noexcept
     return rslt;
 }
 
-Key getKeyFromX11Key(int x11Key) noexcept
+Key getKeyFromX11Keysym(int x11Keysym) noexcept
 {
-    switch (x11Key)
+    switch (x11Keysym)
     {
         // Number keys.
         case XK_0:                      return Key_0;

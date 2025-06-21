@@ -26,7 +26,7 @@ void _RegisterGHMPrivateWin::work()
             if (hotkeyIdToKc.find(hotkeyId) != hotkeyIdToKc.end())
             {
                 auto& kc = hotkeyIdToKc[hotkeyId];
-                auto& fn = getValue(kc).second;
+                auto fn = getValue(kc).second;
                 if (fn)
                     fn();
             }

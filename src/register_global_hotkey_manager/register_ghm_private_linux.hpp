@@ -8,7 +8,6 @@
 #ifdef _GLOBAL_HOTKEY_LINUX
 
 #include <X11/Xlib.h>
-#include <X11/Xutil.h>
 
 namespace gbhk
 {
@@ -20,6 +19,19 @@ public:
     ~_RegisterGHMPrivateLinux();
 
 private:
+    class ErrorHandler
+    {
+    public:
+        ErrorHandler();
+        ~ErrorHandler();
+
+        static int errorCode;
+
+    private:
+        static int handleError(Display* display, XErrorEvent* error);
+        static XErrorHandler prevXErrorHandler;
+    };
+
     int doBeforeLoop() override;
     int doAfterLoop() override;
 
@@ -31,7 +43,15 @@ private:
     int workOfReplace(const KeyCombination& oldKc, const KeyCombination& newKc) override;
     int workOfSetAutoRepeat(const KeyCombination& kc, bool autoRepeat) override;
 
-    Display* display;
+    void keyPressedCallback(int x11Keycode, int x11Modifiers);
+    void keyReleasedCallback(int x11Keycode, int x11Modifiers);
+
+    static std::unordered_map<int, int> keycodeTokeysym;
+
+    KeyCombination prevKc;
+    KeyCombination currKc;
+    Display* display = nullptr;
+    XEvent event = {0};
 };
 
 } // namespace gbhk

@@ -175,6 +175,14 @@ bool _GHMPrivate::isRunning() const
     return running;
 }
 
+std::vector<KeyCombination> _GHMPrivate::getAllKeyCombination() const
+{
+    std::vector<KeyCombination> rslt;
+    for (const auto& var : fns)
+        rslt.emplace_back(var.first);
+    return rslt;
+}
+
 void _GHMPrivate::workLoop()
 {
     TimedSleeper ts;
@@ -191,8 +199,11 @@ bool _GHMPrivate::isInWorkThread() const
     return std::this_thread::get_id() == workThreadId;
 }
 
-const std::pair<bool, std::function<void()>>& _GHMPrivate::getValue(const KeyCombination& kc) const
+std::pair<bool, std::function<void()>> _GHMPrivate::getValue(const KeyCombination& kc) const
 {
+    if (!kc.isValid() || !has(kc))
+        return std::pair<bool, std::function<void()>>();
+
     std::lock_guard<std::mutex> lock(mtx);
     return fns.at(kc);
 }
