@@ -22,13 +22,13 @@ public:
     ~_KBHMPrivateWin();
 
 private:
+    static LRESULT LowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam);
+
     int specializedEnd() override;
     int doBeforeLoop() override;
     int doAfterLoop() override;
 
     void eachCycleDo() override;
-
-    friend LRESULT LowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam);
 
     MSG msg = {0};
     HHOOK hhook = nullptr;
