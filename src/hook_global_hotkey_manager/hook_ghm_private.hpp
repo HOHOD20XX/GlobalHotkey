@@ -16,17 +16,18 @@ public:
     _HookGHMPrivate();
     ~_HookGHMPrivate();
 
+protected:
+    int specializedStart() override;
+    int specializedEnd() override;
+
+    void eachCycleDo() override;
+
 private:
     static void keyPressedCallback(int nativeKey);
     static void keyReleasedCallback(int nativeKey);
 
     static std::atomic<Modifiers> pressedMod;
     static std::atomic<Key> pressedKey;
-
-    int specializedStart() override;
-    int specializedEnd() override;
-
-    void eachCycleDo() override;
 
     KeyCombination prevKc;
     kbhook::KeyboardHookManager& kbhm;

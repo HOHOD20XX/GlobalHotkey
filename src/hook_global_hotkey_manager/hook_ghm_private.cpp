@@ -16,36 +16,6 @@ _HookGHMPrivate::_HookGHMPrivate() : kbhm(kbhook::KeyboardHookManager::getInstan
 
 _HookGHMPrivate::~_HookGHMPrivate() { end(); }
 
-void _HookGHMPrivate::keyPressedCallback(int nativeKey)
-{
-    auto key = getKeyFromNativeKey(nativeKey);
-    if (key == Key_Mod_Meta || key == Key_Mod_Meta_Left || key == Key_Mod_Meta_Right)
-        pressedMod = pressedMod.load().add(META);
-    else if (key == Key_Mod_Ctrl || key == Key_Mod_Ctrl_Left || key == Key_Mod_Ctrl_Right)
-        pressedMod = pressedMod.load().add(CTRL);
-    else if (key == Key_Mod_Alt || key == Key_Mod_Alt_Left || key == Key_Mod_Alt_Right)
-        pressedMod = pressedMod.load().add(ALT);
-    else if (key == Key_Mod_Shift || key == Key_Mod_Shift_Left || key == Key_Mod_Shift_Right)
-        pressedMod = pressedMod.load().add(SHIFT);
-    else
-        pressedKey = key;
-}
-
-void _HookGHMPrivate::keyReleasedCallback(int nativeKey)
-{
-    auto key = getKeyFromNativeKey(nativeKey);
-    if (key == Key_Mod_Meta || key == Key_Mod_Meta_Left || key == Key_Mod_Meta_Right)
-        pressedMod = pressedMod.load().remove(META);
-    else if (key == Key_Mod_Ctrl || key == Key_Mod_Ctrl_Left || key == Key_Mod_Ctrl_Right)
-        pressedMod = pressedMod.load().remove(CTRL);
-    else if (key == Key_Mod_Alt || key == Key_Mod_Alt_Left || key == Key_Mod_Alt_Right)
-        pressedMod = pressedMod.load().remove(ALT);
-    else if (key == Key_Mod_Shift || key == Key_Mod_Shift_Left || key == Key_Mod_Shift_Right)
-        pressedMod = pressedMod.load().remove(SHIFT);
-    else
-        pressedKey = 0;
-}
-
 int _HookGHMPrivate::specializedStart()
 {
     int rc = kbhm.start();
@@ -75,6 +45,36 @@ void _HookGHMPrivate::eachCycleDo()
     if (shouldInvoke)
         fn();
     prevKc = kc;
+}
+
+void _HookGHMPrivate::keyPressedCallback(int nativeKey)
+{
+    auto key = getKeyFromNativeKey(nativeKey);
+    if (key == Key_Mod_Meta || key == Key_Mod_Meta_Left || key == Key_Mod_Meta_Right)
+        pressedMod = pressedMod.load().add(META);
+    else if (key == Key_Mod_Ctrl || key == Key_Mod_Ctrl_Left || key == Key_Mod_Ctrl_Right)
+        pressedMod = pressedMod.load().add(CTRL);
+    else if (key == Key_Mod_Alt || key == Key_Mod_Alt_Left || key == Key_Mod_Alt_Right)
+        pressedMod = pressedMod.load().add(ALT);
+    else if (key == Key_Mod_Shift || key == Key_Mod_Shift_Left || key == Key_Mod_Shift_Right)
+        pressedMod = pressedMod.load().add(SHIFT);
+    else
+        pressedKey = key;
+}
+
+void _HookGHMPrivate::keyReleasedCallback(int nativeKey)
+{
+    auto key = getKeyFromNativeKey(nativeKey);
+    if (key == Key_Mod_Meta || key == Key_Mod_Meta_Left || key == Key_Mod_Meta_Right)
+        pressedMod = pressedMod.load().remove(META);
+    else if (key == Key_Mod_Ctrl || key == Key_Mod_Ctrl_Left || key == Key_Mod_Ctrl_Right)
+        pressedMod = pressedMod.load().remove(CTRL);
+    else if (key == Key_Mod_Alt || key == Key_Mod_Alt_Left || key == Key_Mod_Alt_Right)
+        pressedMod = pressedMod.load().remove(ALT);
+    else if (key == Key_Mod_Shift || key == Key_Mod_Shift_Left || key == Key_Mod_Shift_Right)
+        pressedMod = pressedMod.load().remove(SHIFT);
+    else
+        pressedKey = 0;
 }
 
 } // namespace gbhk

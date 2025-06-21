@@ -150,14 +150,6 @@ bool _KBHMPrivate::isRunning() const
     return running;
 }
 
-void _KBHMPrivate::workLoop()
-{
-    while (!shouldClose)
-    {
-        eachCycleDo();
-    }
-}
-
 int _KBHMPrivate::specializedStart() { return RC_SUCCESS; }
 
 int _KBHMPrivate::specializedEnd() { return RC_SUCCESS; }
@@ -165,6 +157,14 @@ int _KBHMPrivate::specializedEnd() { return RC_SUCCESS; }
 int _KBHMPrivate::doBeforeLoop() { return RC_SUCCESS; }
 
 int _KBHMPrivate::doAfterLoop() { return RC_SUCCESS; }
+
+void _KBHMPrivate::workLoop()
+{
+    while (!shouldClose)
+    {
+        eachCycleDo();
+    }
+}
 
 } // namespace kbhook
 

@@ -18,7 +18,7 @@ public:
     _RegisterGHMPrivateWin();
     ~_RegisterGHMPrivateWin();
 
-private:
+protected:
     void work() override;
     int workOfEnd() override;
     int workOfAdd(const KeyCombination& kc, bool autoRepeat) override;
@@ -27,6 +27,7 @@ private:
     int workOfReplace(const KeyCombination& oldKc, const KeyCombination& newKc) override;
     int workOfSetAutoRepeat(const KeyCombination& kc, bool autoRepeat) override;
 
+private:
     MSG msg = {0};
     std::atomic<int> hotkeyIndex;
     std::unordered_map<int, KeyCombination> hotkeyIdToKc;

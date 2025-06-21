@@ -19,8 +19,10 @@ public:
     _KBHMPrivateMac();
     ~_KBHMPrivateMac();
 
-private:
+protected:
     void eachCycleDo() override;
+
+private:
 };
 
 } // namespace kbhook

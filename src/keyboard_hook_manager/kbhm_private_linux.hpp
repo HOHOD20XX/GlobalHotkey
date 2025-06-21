@@ -23,12 +23,13 @@ public:
     _KBHMPrivateLinux();
     ~_KBHMPrivateLinux();
 
-private:
+protected:
     int specializedStart() override;
     int specializedEnd() override;
 
     void eachCycleDo() override;
 
+private:
     void handleKeyEvent(int nativeKey, int state);
 
     std::vector<std::pair<int, libevdev*>> devices;

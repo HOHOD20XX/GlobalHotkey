@@ -16,7 +16,7 @@ public:
     _RegisterGHMPrivateMac();
     ~_RegisterGHMPrivateMac();
 
-private:
+protected:
     void work() override;
     int workOfEnd() override;
     int workOfAdd(const KeyCombination& kc, bool autoRepeat) override;
@@ -24,6 +24,8 @@ private:
     int workOfRemoveAll() override;
     int workOfReplace(const KeyCombination& oldKc, const KeyCombination& newKc) override;
     int workOfSetAutoRepeat(const KeyCombination& kc, bool autoRepeat) override;
+
+private:
 };
 
 } // namespace gbhk

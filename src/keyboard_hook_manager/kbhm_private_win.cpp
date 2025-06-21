@@ -16,6 +16,37 @@ _KBHMPrivateWin::_KBHMPrivateWin() = default;
 
 _KBHMPrivateWin::~_KBHMPrivateWin() { end(); }
 
+int _KBHMPrivateWin::specializedEnd()
+{
+    msg = {0};
+    hhook = nullptr;
+    return RC_SUCCESS;
+}
+
+int _KBHMPrivateWin::doBeforeLoop()
+{
+    hhook = SetWindowsHookExA(WH_KEYBOARD_LL, &_KBHMPrivateWin::LowLevelKeyboardProc, NULL, 0);;
+    if (hhook)
+        return RC_SUCCESS;
+    else
+        return GetLastError();
+}
+
+int _KBHMPrivateWin::doAfterLoop()
+{
+    UnhookWindowsHookEx(hhook);
+    return RC_SUCCESS;
+}
+
+void _KBHMPrivateWin::eachCycleDo()
+{
+    while (PeekMessageA(&msg, NULL, WM_KEYFIRST, WM_KEYLAST, PM_REMOVE) != 0)
+    {
+        TranslateMessage(&msg);
+        DispatchMessageA(&msg);
+    }
+}
+
 LRESULT WINAPI _KBHMPrivateWin::LowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
 {
     if (nCode == HC_ACTION)
@@ -49,37 +80,6 @@ LRESULT WINAPI _KBHMPrivateWin::LowLevelKeyboardProc(int nCode, WPARAM wParam, L
     }
 
     return CallNextHookEx(NULL, nCode, wParam, lParam);
-}
-
-int _KBHMPrivateWin::specializedEnd()
-{
-    msg = {0};
-    hhook = nullptr;
-    return RC_SUCCESS;
-}
-
-int _KBHMPrivateWin::doBeforeLoop()
-{
-    hhook = SetWindowsHookExA(WH_KEYBOARD_LL, &_KBHMPrivateWin::LowLevelKeyboardProc, NULL, 0);;
-    if (hhook)
-        return RC_SUCCESS;
-    else
-        return GetLastError();
-}
-
-int _KBHMPrivateWin::doAfterLoop()
-{
-    UnhookWindowsHookEx(hhook);
-    return RC_SUCCESS;
-}
-
-void _KBHMPrivateWin::eachCycleDo()
-{
-    while (PeekMessageA(&msg, NULL, WM_KEYFIRST, WM_KEYLAST, PM_REMOVE) != 0)
-    {
-        TranslateMessage(&msg);
-        DispatchMessageA(&msg);
-    }
 }
 
 } // namespace kbhook

@@ -18,6 +18,18 @@ public:
     _RegisterGHMPrivateLinux();
     ~_RegisterGHMPrivateLinux();
 
+protected:
+    int doBeforeLoop() override;
+    int doAfterLoop() override;
+
+    void work() override;
+    int workOfEnd() override;
+    int workOfAdd(const KeyCombination& kc, bool autoRepeat) override;
+    int workOfRemove(const KeyCombination& kc) override;
+    int workOfRemoveAll() override;
+    int workOfReplace(const KeyCombination& oldKc, const KeyCombination& newKc) override;
+    int workOfSetAutoRepeat(const KeyCombination& kc, bool autoRepeat) override;
+
 private:
     class ErrorHandler
     {
@@ -31,17 +43,6 @@ private:
         static int handleError(Display* display, XErrorEvent* error);
         static XErrorHandler prevXErrorHandler;
     };
-
-    int doBeforeLoop() override;
-    int doAfterLoop() override;
-
-    void work() override;
-    int workOfEnd() override;
-    int workOfAdd(const KeyCombination& kc, bool autoRepeat) override;
-    int workOfRemove(const KeyCombination& kc) override;
-    int workOfRemoveAll() override;
-    int workOfReplace(const KeyCombination& oldKc, const KeyCombination& newKc) override;
-    int workOfSetAutoRepeat(const KeyCombination& kc, bool autoRepeat) override;
 
     void keyPressedCallback(int x11Keycode, int x11Modifiers);
     void keyReleasedCallback(int x11Keycode, int x11Modifiers);
