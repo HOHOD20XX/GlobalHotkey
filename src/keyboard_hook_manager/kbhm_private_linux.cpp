@@ -98,10 +98,10 @@ void _KBHMPrivateLinux::eachCycleDo()
         int rc = libevdev_next_event(dev, LIBEVDEV_READ_FLAG_NORMAL, &event);
         if (rc == LIBEVDEV_READ_STATUS_SUCCESS)
         {
-            if (ev.type == EV_KEY)
+            if (event.type == EV_KEY)
             {
-                int keyCode = ev.code;
-                int keyState = ev.value;
+                int keyCode = event.code;
+                int keyState = event.value;
                 handleKeyEvent(keyCode, keyState);
             }
         }
