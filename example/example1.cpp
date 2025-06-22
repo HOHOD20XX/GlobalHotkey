@@ -54,7 +54,6 @@ int main()
     rc = ghm.add(hotkey3, [&]()
     {
         printf("Hotkey 3 be triggered\n");
-        printf("Exiting...\n");
         shouldClose = true;
         cv.notify_all();
     });
@@ -66,6 +65,7 @@ int main()
     cv.wait(lock, [&]() { return shouldClose.load(); });
     lock.unlock();
 
+    printf("Ending...\n");
     rc = ghm.end();
     // The follow code forever not throw exception actually.
     if (rc != gbhk::RC_SUCCESS)
