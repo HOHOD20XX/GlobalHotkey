@@ -39,6 +39,7 @@ public:
     int setKeyReleasedEvent(void (*fn)(int));
     int unsetKeyPressedEvent();
     int unsetKeyReleasedEvent();
+    void setCycleTime(size_t milliseconds);
     bool hasKeyListener(int nativeKey, KeyState state) const;
     bool isRunning() const;
 

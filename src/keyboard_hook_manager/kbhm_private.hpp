@@ -32,6 +32,7 @@ public:
     int setKeyReleasedEvent(void (*fn)(int));
     int unsetKeyPressedEvent();
     int unsetKeyReleasedEvent();
+    void setCycleTime(size_t milliseconds);
     bool hasKeyListener(int nativeKey, KeyState state) const;
     bool isRunning() const;
 
@@ -71,6 +72,7 @@ private:
     std::atomic<bool> doBeforeLoopFinished;
     std::atomic<bool> shouldClose;
     std::atomic<bool> running;
+    std::atomic<size_t> cycleTime;
 
     std::thread workThread;
 };

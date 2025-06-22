@@ -3,6 +3,7 @@
 #include "kbhm_private.hpp"
 
 #include <global_hotkey/return_code.hpp>
+#include <global_hotkey/utility.hpp>
 
 namespace gbhk
 {
@@ -15,7 +16,9 @@ std::unordered_map<_KBHMPrivate::Combine, std::function<void()>> _KBHMPrivate::f
 void (*_KBHMPrivate::keyPressedCallback)(int)    = nullptr;
 void (*_KBHMPrivate::keyReleasedCallback)(int)   = nullptr;
 
-_KBHMPrivate::_KBHMPrivate() : doBeforeLoopFinished(false), shouldClose(false), running(false) {}
+_KBHMPrivate::_KBHMPrivate() :
+    doBeforeLoopFinished(false), shouldClose(false), running(false), cycleTime(_DEFAULT_KEYBOARD_HOOK_CYCLE_TIME)
+{}
 
 _KBHMPrivate::~_KBHMPrivate() = default;
 
@@ -138,6 +141,11 @@ int _KBHMPrivate::unsetKeyReleasedEvent()
     return RC_SUCCESS;
 }
 
+void _KBHMPrivate::setCycleTime(size_t milliseconds)
+{
+    cycleTime = milliseconds;
+}
+
 bool _KBHMPrivate::hasKeyListener(int nativeKey, KeyState state) const
 {
     std::lock_guard<std::mutex> lock(mtx);
@@ -160,9 +168,12 @@ int _KBHMPrivate::doAfterLoop() { return RC_SUCCESS; }
 
 void _KBHMPrivate::workLoop()
 {
+    TimedSleeper ts;
     while (!shouldClose)
     {
+        ts.resetStartTime();
         eachCycleDo();
+        ts.sleepUntilElapsed(cycleTime);
     }
 }
 

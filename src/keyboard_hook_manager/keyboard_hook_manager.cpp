@@ -61,6 +61,9 @@ int KeyboardHookManager::unsetKeyPressedEvent()
 int KeyboardHookManager::unsetKeyReleasedEvent()
 { return ptr->unsetKeyReleasedEvent(); }
 
+void KeyboardHookManager::setCycleTime(size_t milliseconds)
+{ return ptr->setCycleTime(milliseconds); }
+
 } // namespace kbhook
 
 } // namespace gbhk

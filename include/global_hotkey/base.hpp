@@ -43,7 +43,8 @@
 namespace gbhk
 {
 
-constexpr size_t _DEFAULT_CYCLE_TIME        = (1000 / 30);
+constexpr size_t _DEFAULT_CYCLE_TIME = (1000 / 30);
+constexpr size_t _DEFAULT_KEYBOARD_HOOK_CYCLE_TIME = 10;
 
 } // namespace gbhk
 
