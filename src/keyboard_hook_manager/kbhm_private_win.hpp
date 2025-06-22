@@ -32,7 +32,7 @@ private:
     static LRESULT LowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam);
 
     MSG msg = {0};
-    HHOOK hhook = nullptr;
+    HHOOK hhook = NULL;
 };
 
 } // namespace kbhook

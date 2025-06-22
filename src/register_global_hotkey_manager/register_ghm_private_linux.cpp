@@ -33,7 +33,7 @@ int _RegisterGHMPrivateLinux::doAfterLoop()
     keycodeTokeysym.clear();
     prevKc = KeyCombination();
     currKc = KeyCombination();
-    display = nullptr;
+    display = NULL;
     event = {0};
 
     return eh.errorCode;

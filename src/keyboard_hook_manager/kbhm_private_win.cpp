@@ -19,7 +19,7 @@ _KBHMPrivateWin::~_KBHMPrivateWin() { end(); }
 int _KBHMPrivateWin::specializedEnd()
 {
     msg = {0};
-    hhook = nullptr;
+    hhook = NULL;
     return RC_SUCCESS;
 }
 

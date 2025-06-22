@@ -51,7 +51,7 @@ private:
 
     KeyCombination prevKc;
     KeyCombination currKc;
-    Display* display = nullptr;
+    Display* display = NULL;
     XEvent event = {0};
 };
 
