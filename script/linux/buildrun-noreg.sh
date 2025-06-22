@@ -3,7 +3,7 @@ current_dir=$(pwd)
 cd ../../
 cmake --preset=disable-register
 cd ./build/disable-register
-make
+make -j
 cd ./example
 sudo ./example1
 

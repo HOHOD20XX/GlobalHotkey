@@ -3,7 +3,7 @@ set "current_dir=%cd%"
 cd ../../
 cmake --preset=disable-register
 cd build/disable-register
-make
+make -j
 cd example
 example1.exe
 
