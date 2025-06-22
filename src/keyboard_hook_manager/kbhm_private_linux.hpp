@@ -32,6 +32,7 @@ protected:
 private:
     void handleKeyEvent(int nativeKey, int state);
 
+    input_event event = {0};
     std::vector<std::pair<int, libevdev*>> devices;
 };
 

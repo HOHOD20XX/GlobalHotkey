@@ -84,6 +84,7 @@ int _KBHMPrivateLinux::specializedEnd()
         close(fd);
         libevdev_free(dev);
     }
+    event = {0};
     devices.clear();
 
     return RC_SUCCESS;
@@ -94,8 +95,8 @@ void _KBHMPrivateLinux::eachCycleDo()
     for (auto& device : devices)
     {
         libevdev* dev = device.second;
-        input_event ev;
-        if (libevdev_next_event(dev, LIBEVDEV_READ_FLAG_NORMAL, &ev) == 0)
+        int rc = libevdev_next_event(dev, LIBEVDEV_READ_FLAG_NORMAL, &event);
+        if (rc == LIBEVDEV_READ_STATUS_SUCCESS)
         {
             if (ev.type == EV_KEY)
             {
