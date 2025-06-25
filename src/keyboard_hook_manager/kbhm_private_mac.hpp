@@ -7,6 +7,9 @@
 
 #ifdef _GLOBAL_HOTKEY_MAC
 
+#include <CoreFoundation/CoreFoundation.h>
+#include <CoreGraphics/CGEvent.h>
+
 namespace gbhk
 {
 
@@ -20,9 +23,16 @@ public:
     ~_KBHMPrivateMac();
 
 protected:
+    int specializedEnd() override;
+    int doBeforeLoop() override;
     void eachCycleDo() override;
 
 private:
+    static CGEventRef keyboardCallback(CGEventTapProxy proxy, CGEventType type, CGEventRef event, void* data);
+
+    CFRunLoopRef runLoop = NULL;
+    CFMachPortRef eventTap = NULL;
+    CFRunLoopSourceRef runLoopSource = NULL;
 };
 
 } // namespace kbhook

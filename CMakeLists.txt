@@ -100,15 +100,55 @@ target_link_libraries(${TARGET_NAME} PRIVATE Threads::Threads)
 if(WIN32)
     message(STATUS "${GBHK_MSG_PREFIX} Windows platform detected")
     set(CMAKE_STATIC_LIBRARY_SUFFIX ".lib")
+
+    # TODO: Add the checker for GBHK_DISABLE_XXX, keep the same as others.
+endif()
+
+if(APPLE)
+    message(STATUS "${GBHK_MSG_PREFIX} Apple platform detected")
+
+    if(NOT GBHK_DISABLE_REGISTER)
+        # Pass.
+    endif()
+
+    if(NOT GBHK_DISABLE_HOOK)
+        # For CF_XXX
+        find_library(COREFOUNDATION_LIBRARY CoreFoundation)
+        if(COREFOUNDATION_LIBRARY)
+            message(STATUS "${GBHK_MSG_PREFIX} Found CoreFoundation: ${COREFOUNDATION_LIBRARY}")
+            target_link_libraries(${TARGET_NAME} PRIVATE ${COREFOUNDATION_LIBRARY})
+        else()
+            message(FATAL_ERROR "${GBHK_MSG_PREFIX} Not found CoreFoundation")
+        endif()
+
+        # For CG_XXX
+        find_library(COREGRAPHICS_LIBRARY CoreGraphics)
+        if(COREGRAPHICS_LIBRARY)
+            message(STATUS "${GBHK_MSG_PREFIX} Found CoreGraphics: ${COREGRAPHICS_LIBRARY}")
+            target_link_libraries(${TARGET_NAME} PRIVATE ${COREGRAPHICS_LIBRARY})
+        else()
+            message(FATAL_ERROR "${GBHK_MSG_PREFIX} Not found CoreGraphics")
+        endif()
+
+        # For AXIsProcessTrustedWithOptions.
+        # Maybe removed in future.
+        find_library(AX_LIBRARY ApplicationServices)
+        if(AX_LIBRARY)
+            message(STATUS "${GBHK_MSG_PREFIX} Found ApplicationServices: ${AX_LIBRARY}")
+            target_link_libraries(${TARGET_NAME} PRIVATE ${AX_LIBRARY})
+        else()
+            message(STATUS "${GBHK_MSG_PREFIX}Not found ApplicationServices")
+        endif()
+    endif()
 endif()
 
 if(LINUX)
     message(STATUS "${GBHK_MSG_PREFIX} Linux platform detected")
 
-    if (NOT GBHK_DISABLE_REGISTER)
+    if(NOT GBHK_DISABLE_REGISTER)
         find_path(X11_INCLUDE_DIR X11/Xlib.h PATHS usr/include)
         find_library(X11_LIBRARY NAMES X11 PATHS /usr/lib /usr/lib/x86_64-linux-gnu)
-        if (X11_INCLUDE_DIR AND X11_LIBRARY)
+        if(X11_INCLUDE_DIR AND X11_LIBRARY)
             message(STATUS "${GBHK_MSG_PREFIX} Found X11: ${X11_LIBRARY}")
             include_directories(${X11_INCLUDE_DIR})
             target_link_libraries(${TARGET_NAME} PRIVATE ${X11_LIBRARY})
@@ -117,7 +157,7 @@ if(LINUX)
         endif()
     endif()
 
-    if (NOT GBHK_DISABLE_HOOK)
+    if(NOT GBHK_DISABLE_HOOK)
         find_path(EVDEV_INCLUDE_DIR libevdev/libevdev.h PATHS /usr/include /usr/include/libevdev-1.0)
         find_library(EVDEV_LIBRARY NAMES evdev PATHS /usr/lib /usr/lib/x86_64-linux-gnu)
         if(EVDEV_INCLUDE_DIR AND EVDEV_LIBRARY)

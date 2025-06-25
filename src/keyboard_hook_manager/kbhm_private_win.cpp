@@ -16,13 +16,6 @@ _KBHMPrivateWin::_KBHMPrivateWin() = default;
 
 _KBHMPrivateWin::~_KBHMPrivateWin() { end(); }
 
-int _KBHMPrivateWin::specializedEnd()
-{
-    msg = {0};
-    hhook = NULL;
-    return RC_SUCCESS;
-}
-
 int _KBHMPrivateWin::doBeforeLoop()
 {
     hhook = SetWindowsHookExA(WH_KEYBOARD_LL, &_KBHMPrivateWin::LowLevelKeyboardProc, NULL, 0);;
@@ -35,6 +28,8 @@ int _KBHMPrivateWin::doBeforeLoop()
 int _KBHMPrivateWin::doAfterLoop()
 {
     UnhookWindowsHookEx(hhook);
+    msg = {0};
+    hhook = NULL;
     return RC_SUCCESS;
 }
 

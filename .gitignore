@@ -5,6 +5,8 @@
 *.a
 *.so
 
+.DS_Store
+
 .vscode/
 build/
 tmp/

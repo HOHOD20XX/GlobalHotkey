@@ -22,7 +22,6 @@ public:
     ~_KBHMPrivateWin();
 
 protected:
-    int specializedEnd() override;
     int doBeforeLoop() override;
     int doAfterLoop() override;
 

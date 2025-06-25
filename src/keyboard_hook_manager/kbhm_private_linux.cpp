@@ -51,6 +51,9 @@ _KBHMPrivateLinux::~_KBHMPrivateLinux() { end(); }
 
 int _KBHMPrivateLinux::specializedStart()
 {
+    if (!isRootPermission())
+        return RC_PERMISSION_DENIED;
+
     int evdevIndex = 0;
     while (true)
     {

@@ -62,15 +62,15 @@ int _KBHMPrivate::end()
 {
     if (!running)                           return RC_SUCCESS;
 
+    // Always is RC_SUCCESS
+    int rc = specializedEnd();
+
     shouldClose = true;
     std::mutex dummyMtx;
     std::unique_lock<std::mutex> lock(dummyMtx);
     cvRunning.wait(lock, [this]() { return !running; });
     lock.unlock();
     shouldClose = false;
-
-    // Always is RC_SUCCESS
-    int rc = specializedEnd();
 
     fns.clear();
 
