@@ -32,6 +32,7 @@ void _RegisterGHMPrivateWin::work()
     // Force the system to create the message queue.
     PeekMessageA(&msg, NULL, WM_USER, WM_USER, PM_NOREMOVE);
     // Indicate the worker thread is created successfully after create the message queue.
+    // This can ensure that the `PostThreadMessage` is called only when the message queue exists.
     setSuccessRunning();
     // Retrieves only messages on the current thread's message queue whose hwnd value is NULL.
     // In this case the thread message as posted by `PostThreadMessage`.
