@@ -25,6 +25,7 @@ protected:
     int unregisterHotkey(const KeyCombination& kc) override;
 
 private:
+    // The follow function be executed in worker thread.
     void invoke(WPARAM wParam, LPARAM lParam);
     int nativeRegisterHotkey(WPARAM wParam, LPARAM lParam);
     int nativeUnregisterHotkey(WPARAM wParam, LPARAM lParam);

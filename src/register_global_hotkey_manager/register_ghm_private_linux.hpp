@@ -38,6 +38,7 @@ private:
         static XErrorHandler prevXErrorHandler;
     };
 
+    // The follow function be executed in worker thread.
     void invoke(const KeyCombination& prevKc, const KeyCombination& currKc);
     int nativeRegisterHotkey(const KeyCombination& kc);
     int nativeUnregisterHotkey(const KeyCombination& kc);
