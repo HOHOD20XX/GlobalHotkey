@@ -29,7 +29,7 @@ int nativeKey(const Key& key) noexcept
         case Key_8:                     return KEY_8;
         case Key_9:                     return KEY_9;
 
-        // Ascii alpha keys.
+        // ASCII letter keys.
         case Key_A:                     return KEY_A;
         case Key_B:                     return KEY_B;
         case Key_C:                     return KEY_C;
@@ -204,7 +204,7 @@ Key getKeyFromNativeKey(int nativeKey) noexcept
         case KEY_8:                     return Key_8;
         case KEY_9:                     return Key_9;
 
-        // Ascii alpha keys.
+        // ASCII letter keys.
         case KEY_A:                     return Key_A;
         case KEY_B:                     return Key_B;
         case KEY_C:                     return Key_C;

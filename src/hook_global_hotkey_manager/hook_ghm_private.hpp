@@ -17,10 +17,11 @@ public:
     ~_HookGHMPrivate();
 
 protected:
-    int specializedStart() override;
-    int specializedEnd() override;
-
-    void eachCycleDo() override;
+    int doBeforeThreadStart() override;
+    int doBeforeThreadEnd() override;
+    void work() override;
+    int registerHotkey(const KeyCombination& kc, bool autoRepeat);
+    int unregisterHotkey(const KeyCombination& kc);
 
 private:
     static void keyPressedCallback(int nativeKey);
@@ -29,7 +30,8 @@ private:
     static std::atomic<Modifiers> pressedMod;
     static std::atomic<Key> pressedKey;
 
-    KeyCombination prevKc;
+    std::atomic<bool> shouldClose;
+
     kbhook::KeyboardHookManager& kbhm;
 };
 

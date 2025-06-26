@@ -19,16 +19,19 @@ public:
     ~_RegisterGHMPrivateWin();
 
 protected:
+    int doBeforeThreadEnd() override;
     void work() override;
-    int workOfEnd() override;
-    int workOfAdd(const KeyCombination& kc, bool autoRepeat) override;
-    int workOfRemove(const KeyCombination& kc) override;
-    int workOfRemoveAll() override;
-    int workOfReplace(const KeyCombination& oldKc, const KeyCombination& newKc) override;
-    int workOfSetAutoRepeat(const KeyCombination& kc, bool autoRepeat) override;
+    int registerHotkey(const KeyCombination& kc, bool autoRepeat) override;
+    int unregisterHotkey(const KeyCombination& kc) override;
 
 private:
-    MSG msg = {0};
+    void invoke(WPARAM wParam, LPARAM lParam);
+    int nativeRegisterHotkey(WPARAM wParam, LPARAM lParam);
+    int nativeUnregisterHotkey(WPARAM wParam, LPARAM lParam);
+
+    std::atomic<DWORD> workerThreadId;
+    std::condition_variable cvReturned;
+    std::atomic<int> rc;
     std::atomic<int> hotkeyIndex;
     std::unordered_map<int, KeyCombination> hotkeyIdToKc;
     std::unordered_map<KeyCombination, int> kcToHotkeyId;

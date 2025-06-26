@@ -21,6 +21,9 @@ public:
 
     constexpr inline Modifiers modifiers() const noexcept { return mod; }
     constexpr inline Key key() const noexcept { return ky; }
+    static constexpr inline KeyCombination fromCombinedValue(int64_t value) noexcept
+    { return KeyCombination(int32_t(value >> 32), int32_t(value)); }
+    constexpr inline int64_t combinedValue() const noexcept { return (int64_t(mod) << 32) | (int64_t(ky) << 0); }
 
 #if _GLOBAL_HOTKEY_CPPVERS >= 201703L
     // In C++17, constexpr member functions are no longer implicitly const.
@@ -31,6 +34,7 @@ public:
     inline void setKey(const Key& key) noexcept { ky = key; }
 #endif // _GLOBAL_HOTKEY_CPPVERS >= 201703L
 
+    /// @brief Check whether contains at least one valid modifier and a valid key value.
     constexpr inline bool isValid() const noexcept { return mod.isValid() && ky.isValid(); }
 
     friend constexpr inline bool operator==(const KeyCombination& lhs, const KeyCombination& rhs) noexcept
@@ -55,9 +59,7 @@ struct hash<gbhk::KeyCombination>
 {
     size_t operator()(const gbhk::KeyCombination& obj) const noexcept
     {
-        size_t h1 = std::hash<int>()(obj.mod);
-        size_t h2 = std::hash<int>()(obj.ky);
-        return h1 ^ (h2 << 1);
+        return std::hash<int64_t>()(obj.combinedValue());
     }
 };
 

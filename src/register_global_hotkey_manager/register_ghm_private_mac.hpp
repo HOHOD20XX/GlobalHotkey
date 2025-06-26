@@ -17,13 +17,11 @@ public:
     ~_RegisterGHMPrivateMac();
 
 protected:
+    int doBeforeThreadStart() override;
+    int doBeforeThreadEnd() override;
     void work() override;
-    int workOfEnd() override;
-    int workOfAdd(const KeyCombination& kc, bool autoRepeat) override;
-    int workOfRemove(const KeyCombination& kc) override;
-    int workOfRemoveAll() override;
-    int workOfReplace(const KeyCombination& oldKc, const KeyCombination& newKc) override;
-    int workOfSetAutoRepeat(const KeyCombination& kc, bool autoRepeat) override;
+    int registerHotkey(const KeyCombination& kc, bool autoRepeat) override;
+    int unregisterHotkey(const KeyCombination& kc) override;
 
 private:
 };

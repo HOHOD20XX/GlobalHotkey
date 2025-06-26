@@ -1,13 +1,25 @@
+# Object Files
 *.o
-*.exe
-*.lib
-*.dll
-*.a
-*.so
+*.obj
 
+# Librarys & Executables
+*.a
+*.lib
+*.so
+*.dll
+*.out
+*.exe
+*.app
+
+# PDB Files
+*.pdb
+
+# MacOS Folder Config
 .DS_Store
 
+# Folders
 .vscode/
+.tmp/
 build/
 tmp/
 temp/

@@ -5,58 +5,139 @@
 #ifdef _GLOBAL_HOTKEY_LINUX
 
 #include <global_hotkey/return_code.hpp>
-#include <global_hotkey/utility.hpp>
 
 #include "../key/key_private_x11.hpp"
+
+#define REGISTER_ATOM_NAME "Register"
+#define UNREGISTER_ATOM_NAME "Unregister"
+#define REGISTER_ATOM(display) XInternAtom(display, REGISTER_ATOM_NAME, False);
+#define UNREGISTER_ATOM(display) XInternAtom(display, UNREGISTER_ATOM_NAME, False);
 
 namespace gbhk
 {
 
 std::unordered_map<int, int> _RegisterGHMPrivateLinux::keycodeTokeysym;
 
-_RegisterGHMPrivateLinux::_RegisterGHMPrivateLinux() = default;
+_RegisterGHMPrivateLinux::_RegisterGHMPrivateLinux() : rc(RC_NOT_USED) {}
 
 _RegisterGHMPrivateLinux::~_RegisterGHMPrivateLinux() { end(); }
 
-int _RegisterGHMPrivateLinux::doBeforeLoop()
+int _RegisterGHMPrivateLinux::doBeforeThreadEnd()
 {
     ErrorHandler eh;
-    display = XOpenDisplay(NULL);
-    return eh.errorCode;
-}
-
-int _RegisterGHMPrivateLinux::doAfterLoop()
-{
-    ErrorHandler eh;
-    XCloseDisplay(display);
-
-    keycodeTokeysym.clear();
-    prevKc = KeyCombination();
-    currKc = KeyCombination();
-    display = NULL;
-    event = {0};
-
+    Window rootWindow = DefaultRootWindow(display);
+    XDestroyWindow(display, rootWindow);
     return eh.errorCode;
 }
 
 void _RegisterGHMPrivateLinux::work()
 {
-    while (XPending(display))
+    ErrorHandler eh;
+    display = XOpenDisplay(NULL);
+    if (eh.errorCode != RC_SUCCESS)
     {
-        XNextEvent(display, &event);
-        switch (event.type)
+        setFailedRunning(eh.errorCode);
+        return;
+    }
+
+    Window rootWindow = DefaultRootWindow(display);
+    auto mask = KeyPressMask | KeyReleaseMask | StructureNotifyMask;
+    XSelectInput(display, rootWindow, mask);
+    setSuccessRunning();
+
+    KeyCombination prevKc;
+    KeyCombination currKc;
+    XEvent event = {0};
+    while (true)
+    {
+        XPeekEvent(display, &event);
+        if (event.type == KeyPress || event.type == KeyRelease)
         {
-            case KeyPress:
-                keyPressedCallback(event.xkey.keycode, event.xkey.state);
-                break;
-            case KeyRelease:
-                keyReleasedCallback(event.xkey.keycode, event.xkey.state);
-                break;
-            default:
-                break;
+            if (event.type == KeyPress)
+                currKc = keyPressedCallback(currKc, event.xkey.keycode, event.xkey.state);
+            else
+                currKc = keyReleasedCallback(currKc, event.xkey.keycode, event.xkey.state);
+
+            invoke(prevKc, currKc);
+        }
+        else if (event.type == ClientMessage)
+        {
+            if (event.xclient.message_type == REGISTER_ATOM)
+            {
+                auto value = event.xclient.data.l[0];
+                rc = nativeRegisterHotkey(KeyCombination::fromCombinedValue(value));
+                cvReturned.notify_one();
+            }
+            else if (event.xclient.message_type == UNREGISTER_ATOM)
+            {
+                auto value = event.xclient.data.l[0];
+                rc = nativeUnregisterHotkey(KeyCombination::fromCombinedValue(value));
+                cvReturned.notify_one();
+            }
+        }
+        else if (event.type == DestroyNotify)
+        {
+            break;
         }
     }
 
+    XCloseDisplay(display);
+    keycodeTokeysym.clear();
+    prevKc = KeyCombination();
+    currKc = KeyCombination();
+    display = NULL;
+}
+
+int _RegisterGHMPrivateLinux::registerHotkey(const KeyCombination& kc, bool autoRepeat)
+{
+    rc = RC_NOT_USED;
+
+    XEvent event;
+    event.type = ClientMessage;
+    Window rootWindow = DefaultRootWindow(display);
+    event.xclient.window = rootWindow;
+    event.xclient.message_type = REGISTER_ATOM;
+    event.xclient.format = 32;
+    event.xclient.data.l[0] = kc.combinedValue();
+
+    ErrorHandler eh;
+    XSendEvent(display, rootWindow, False, NoEventMask, &event);
+    if (eh.errorCode == RC_SUCCESS)
+    {
+        std::mutex dummyLock;
+        std::unique_lock<std::mutex> lock(dummyLock);
+        cvReturned.wait(lock, [this]() { return (rc != RC_NOT_USED); });
+        return rc;
+    }
+    return eh.errorCode;
+}
+
+int _RegisterGHMPrivateLinux::unregisterHotkey(const KeyCombination& kc)
+{
+    rc = RC_NOT_USED;
+
+    XEvent event;
+    event.type = ClientMessage;
+    Window rootWindow = DefaultRootWindow(display);
+    event.xclient.window = rootWindow;
+    event.xclient.message_type = UNREGISTER_ATOM;
+    event.xclient.format = 32;
+    event.xclient.data.l[0] = kc.combinedValue();
+
+    ErrorHandler eh;
+    XSendEvent(display, rootWindow, False, NoEventMask, &event);
+    if (eh.errorCode == RC_SUCCESS)
+    {
+        std::mutex dummyLock;
+        std::unique_lock<std::mutex> lock(dummyLock);
+        cvReturned.wait(lock, [this]() { return (rc != RC_NOT_USED); });
+        return rc;
+    }
+    return eh.errorCode;
+}
+
+void _RegisterGHMPrivateLinux::invoke(const KeyCombination& prevKc, const KeyCombination& currKc)
+{
     auto pair = getValue(currKc);
     auto& autoRepeat = pair.first;
     auto& fn = pair.second;
@@ -66,79 +147,43 @@ void _RegisterGHMPrivateLinux::work()
     prevKc = currKc;
 }
 
-int _RegisterGHMPrivateLinux::workOfEnd()
-{
-    return workOfRemoveAll();
-}
-
-int _RegisterGHMPrivateLinux::workOfAdd(const KeyCombination& kc, bool autoRepeat)
+int _RegisterGHMPrivateLinux::nativeRegisterHotkey(const KeyCombination& kc)
 {
     ErrorHandler eh;
 
     auto keysym = x11Keysym(kc.key());
-    auto keyCode = XKeysymToKeycode(display, keysym);
-    keycodeTokeysym[keyCode] = keysym;
+    auto keycode = XKeysymToKeycode(display, keysym);
+    keycodeTokeysym[keycode] = keysym;
     auto mod = x11Modifiers(kc.modifiers());
-    XGrabKey(display, keyCode, mod, DefaultRootWindow(display), True, GrabModeAsync, GrabModeAsync);
+    XGrabKey(display, keycode, mod, DefaultRootWindow(display), True, GrabModeAsync, GrabModeAsync);
     XSync(display, False);
 
     return eh.errorCode;
 }
 
-int _RegisterGHMPrivateLinux::workOfRemove(const KeyCombination& kc)
+int _RegisterGHMPrivateLinux::nativeUnregisterHotkey(const KeyCombination& kc)
 {
-    ErrorHandler eh;
-
-    auto keyCode = XKeysymToKeycode(display, x11Keysym(kc.key()));
+    auto keycode = XKeysymToKeycode(display, x11Keysym(kc.key()));
     auto mod = x11Modifiers(kc.modifiers());
-    XUngrabKey(display, keyCode, mod, DefaultRootWindow(display));
+    XUngrabKey(display, keycode, mod, DefaultRootWindow(display));
     XSync(display, False);
-
-    // Always is RC_SUCCESS actually.
-    return eh.errorCode;
-}
-
-int _RegisterGHMPrivateLinux::workOfRemoveAll()
-{
-    auto kcs = getAllKeyCombination();
-    for (const auto& kc : kcs)
-        int rc = workOfRemove(kc);
     return RC_SUCCESS;
 }
 
-int _RegisterGHMPrivateLinux::workOfReplace(const KeyCombination& oldKc, const KeyCombination& newKc)
+KeyCombination _RegisterGHMPrivateLinux::keyPressedCallback(int x11Keycode, int x11Modifiers)
 {
-    bool autoRepeat = isAutoRepeat(oldKc);
-    int rc = workOfRemove(oldKc);
-    if (rc != RC_SUCCESS)
-        return rc;
-    rc = workOfAdd(newKc, autoRepeat);
-    return rc;
-}
-
-int _RegisterGHMPrivateLinux::workOfSetAutoRepeat(const KeyCombination& kc, bool autoRepeat)
-{
-    int rc = workOfRemove(kc);
-    if (rc != RC_SUCCESS)
-        return rc;
-    rc = workOfAdd(kc, autoRepeat);
-    return rc;
-}
-
-void _RegisterGHMPrivateLinux::keyPressedCallback(int x11Keycode, int x11Modifiers)
-{
+    auto mod = getModifiersFromX11Modifiers(x11Modifiers);
     auto keysym = keycodeTokeysym[x11Keycode];
     auto key = getKeyFromX11Keysym(keysym);
-    auto mod = getModifiersFromX11Modifiers(x11Modifiers);
-    currKc = {mod, key};
+    return {mod, key};
 }
 
-void _RegisterGHMPrivateLinux::keyReleasedCallback(int x11Keycode, int x11Modifiers)
+KeyCombination _RegisterGHMPrivateLinux::keyReleasedCallback(int x11Keycode, int x11Modifiers)
 {
-    currKc = KeyCombination();
+    return KeyCombination();
 }
 
-int _RegisterGHMPrivateLinux::ErrorHandler::errorCode = Success;
+int _RegisterGHMPrivateLinux::ErrorHandler::errorCode = RC_SUCCESS;
 XErrorHandler _RegisterGHMPrivateLinux::ErrorHandler::prevXErrorHandler;
 
 _RegisterGHMPrivateLinux::ErrorHandler::ErrorHandler()

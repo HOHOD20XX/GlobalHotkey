@@ -55,7 +55,7 @@ int main()
     {
         printf("Hotkey 3 be triggered\n");
         shouldClose = true;
-        cv.notify_all();
+        cv.notify_one();
     });
     if (rc != gbhk::RC_SUCCESS)
         THROW_RT_ERR("Failed to add the hotkey: ", rc);

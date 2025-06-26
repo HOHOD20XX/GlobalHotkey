@@ -19,16 +19,10 @@ public:
     ~_RegisterGHMPrivateLinux();
 
 protected:
-    int doBeforeLoop() override;
-    int doAfterLoop() override;
-
+    int doBeforeThreadEnd() override;
     void work() override;
-    int workOfEnd() override;
-    int workOfAdd(const KeyCombination& kc, bool autoRepeat) override;
-    int workOfRemove(const KeyCombination& kc) override;
-    int workOfRemoveAll() override;
-    int workOfReplace(const KeyCombination& oldKc, const KeyCombination& newKc) override;
-    int workOfSetAutoRepeat(const KeyCombination& kc, bool autoRepeat) override;
+    int registerHotkey(const KeyCombination& kc, bool autoRepeat) override;
+    int unregisterHotkey(const KeyCombination& kc) override;
 
 private:
     class ErrorHandler
@@ -44,15 +38,18 @@ private:
         static XErrorHandler prevXErrorHandler;
     };
 
-    void keyPressedCallback(int x11Keycode, int x11Modifiers);
-    void keyReleasedCallback(int x11Keycode, int x11Modifiers);
+    void invoke(const KeyCombination& prevKc, const KeyCombination& currKc);
+    int nativeRegisterHotkey(const KeyCombination& kc);
+    int nativeUnregisterHotkey(const KeyCombination& kc);
+
+    KeyCombination keyPressedCallback(int x11Keycode, int x11Modifiers);
+    KeyCombination keyReleasedCallback(int x11Keycode, int x11Modifiers);
 
     static std::unordered_map<int, int> keycodeTokeysym;
 
-    KeyCombination prevKc;
-    KeyCombination currKc;
+    std::condition_variable cvReturned;
+    std::atomic<int> rc;
     Display* display = NULL;
-    XEvent event = {0};
 };
 
 } // namespace gbhk

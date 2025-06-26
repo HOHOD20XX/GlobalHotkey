@@ -57,10 +57,9 @@ endif()
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 file(GLOB_RECURSE SRC
+     src/*.cpp
      src/global_hotkey_manager/*.cpp
      src/hook_global_hotkey_manager/*.cpp
-     src/key_combination/*.cpp
-     src/utility/*.cpp
      src/key/key.cpp
      src/keyboard_hook_manager/keyboard_hook_manager.cpp
      src/keyboard_hook_manager/kbhm_private.cpp

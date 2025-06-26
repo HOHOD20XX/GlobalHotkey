@@ -40,7 +40,7 @@ int x11Keysym(const Key& key) noexcept
         case Key_8:                     return XK_8;
         case Key_9:                     return XK_9;
 
-        // Ascii alpha keys.
+        // ASCII letter keys.
         case Key_A:                     return XK_A;
         case Key_B:                     return XK_B;
         case Key_C:                     return XK_C;
@@ -222,7 +222,7 @@ Key getKeyFromX11Keysym(int x11Keysym) noexcept
         case XK_8:                      return Key_8;
         case XK_9:                      return Key_9;
 
-        // Ascii alpha keys.
+        // ASCII letter keys.
         case XK_A:                      return Key_A;
         case XK_B:                      return Key_B;
         case XK_C:                      return Key_C;

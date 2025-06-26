@@ -24,8 +24,8 @@ public:
     ~_KBHMPrivateLinux();
 
 protected:
-    int specializedStart() override;
-    int specializedEnd() override;
+    int doBeforeThreadStart() override;
+    int doBeforeThreadEnd() override;
 
     void eachCycleDo() override;
 

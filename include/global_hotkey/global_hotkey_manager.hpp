@@ -3,6 +3,7 @@
 
 #include <functional>   // function
 #include <memory>       // unique_ptr
+#include <vector>       // vector
 
 #include "key_combination.hpp"
 
@@ -24,10 +25,10 @@ public:
     int removeAll();
     int replace(const KeyCombination& oldKc, const KeyCombination& newKc);
     int setAutoRepeat(const KeyCombination& kc, bool autoRepeat);
-    void setCycleTime(size_t milliseconds);
     bool has(const KeyCombination& kc) const;
     bool isAutoRepeat(const KeyCombination& kc) const;
     bool isRunning() const;
+    std::vector<KeyCombination> getAllKeyCombination() const;
 
 protected:
     explicit GlobalHotkeyManager(std::unique_ptr<_GHMPrivate> ptr);

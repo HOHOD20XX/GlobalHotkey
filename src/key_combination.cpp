@@ -16,8 +16,8 @@ KeyCombination KeyCombination::fromString(const std::string& str) noexcept
     std::string s;
     while (std::getline(ss, s, '+'))
     {
-        auto modi = getModifiersFromString(s);
-        if (!modi.isValid())
+        auto mod = getModifiersFromString(s);
+        if (!mod.isValid())
         {
             auto key = getKeyFromString(s);
             if (key.isValid())
@@ -27,7 +27,7 @@ KeyCombination KeyCombination::fromString(const std::string& str) noexcept
         }
         else
         {
-            rslt.mod.add(modi);
+            rslt.mod.add(mod);
         }
     }
 

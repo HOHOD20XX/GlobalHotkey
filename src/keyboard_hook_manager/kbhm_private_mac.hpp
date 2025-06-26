@@ -23,7 +23,7 @@ public:
     ~_KBHMPrivateMac();
 
 protected:
-    int specializedEnd() override;
+    int doBeforeThreadEnd() override;
     int doBeforeLoop() override;
     void eachCycleDo() override;
 

@@ -17,7 +17,7 @@ void (*_KBHMPrivate::keyPressedCallback)(int)    = nullptr;
 void (*_KBHMPrivate::keyReleasedCallback)(int)   = nullptr;
 
 _KBHMPrivate::_KBHMPrivate() :
-    doBeforeLoopFinished(false), shouldClose(false), running(false), cycleTime(_DEFAULT_KEYBOARD_HOOK_CYCLE_TIME)
+    doBeforeLoopFinished(false), shouldClose(false), running(false), cycleTime(10)
 {}
 
 _KBHMPrivate::~_KBHMPrivate() = default;
@@ -26,15 +26,15 @@ int _KBHMPrivate::start()
 {
     if (running)                            return RC_SUCCESS;
 
-    int rc = specializedStart();
+    int rc = doBeforeThreadStart();
     if (rc != RC_SUCCESS)
         return rc;
 
     running = true;
-    workThread = std::thread([this, &rc]() {
+    workerThread = std::thread([this, &rc]() {
         rc = doBeforeLoop();
         doBeforeLoopFinished = true;
-        cvDoBeforeLoopFinished.notify_all();
+        cvDoBeforeLoopFinished.notify_one();
         if (rc != RC_SUCCESS)
         {
             running = false;
@@ -45,9 +45,9 @@ int _KBHMPrivate::start()
 
         int rc2 = doAfterLoop();
         running = false;
-        cvRunning.notify_all();
+        cvRunning.notify_one();
     });
-    workThread.detach();
+    workerThread.detach();
 
     std::mutex dummyMtx;
     std::unique_lock<std::mutex> lock(dummyMtx);
@@ -63,7 +63,7 @@ int _KBHMPrivate::end()
     if (!running)                           return RC_SUCCESS;
 
     // Always is RC_SUCCESS
-    int rc = specializedEnd();
+    int rc = doBeforeThreadEnd();
 
     shouldClose = true;
     std::mutex dummyMtx;
@@ -158,9 +158,9 @@ bool _KBHMPrivate::isRunning() const
     return running;
 }
 
-int _KBHMPrivate::specializedStart() { return RC_SUCCESS; }
+int _KBHMPrivate::doBeforeThreadStart() { return RC_SUCCESS; }
 
-int _KBHMPrivate::specializedEnd() { return RC_SUCCESS; }
+int _KBHMPrivate::doBeforeThreadEnd() { return RC_SUCCESS; }
 
 int _KBHMPrivate::doBeforeLoop() { return RC_SUCCESS; }
 

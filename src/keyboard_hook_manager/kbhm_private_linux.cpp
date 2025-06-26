@@ -49,7 +49,7 @@ _KBHMPrivateLinux::_KBHMPrivateLinux() = default;
 
 _KBHMPrivateLinux::~_KBHMPrivateLinux() { end(); }
 
-int _KBHMPrivateLinux::specializedStart()
+int _KBHMPrivateLinux::doBeforeThreadStart()
 {
     if (!isRootPermission())
         return RC_PERMISSION_DENIED;
@@ -78,7 +78,7 @@ int _KBHMPrivateLinux::specializedStart()
     return RC_SUCCESS;
 }
 
-int _KBHMPrivateLinux::specializedEnd()
+int _KBHMPrivateLinux::doBeforeThreadEnd()
 {
     for (auto& device : devices)
     {

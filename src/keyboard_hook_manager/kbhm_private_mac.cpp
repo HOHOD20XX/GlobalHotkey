@@ -63,7 +63,7 @@ int _KBHMPrivateMac::doBeforeLoop()
     return RC_SUCCESS;
 }
 
-int _KBHMPrivateMac::specializedEnd()
+int _KBHMPrivateMac::doBeforeThreadEnd()
 {
     CFRelease(eventTap);
     CFRelease(runLoopSource);

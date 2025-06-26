@@ -1,7 +1,8 @@
 #ifndef GLOBAL_HOTKEY_BASE_HPP
 #define GLOBAL_HOTKEY_BASE_HPP
 
-#include <cstddef>          // size_t
+#include <cstddef>  // size_t
+#include <cstdint>
 
 #ifdef _MSVC_LANG
     #define _GLOBAL_HOTKEY_CPPVERS     _MSVC_LANG
@@ -20,7 +21,7 @@
     #if TARGET_OS_MAC
         #define _GLOBAL_HOTKEY_MAC
     #else
-        #error "Unsupported apple platform"
+        #error "Unsupported Apple platform"
     #endif // TARGET_OS_MAC
 #elif defined(__linux__)
     #define _GLOBAL_HOTKEY_LINUX
@@ -39,13 +40,5 @@
 #else
     #define GBHK_API __attribute__((visibility("default")))
 #endif // _GLOBAL_HOTKEY_WIN
-
-namespace gbhk
-{
-
-constexpr size_t _DEFAULT_CYCLE_TIME = (1000 / 30);
-constexpr size_t _DEFAULT_KEYBOARD_HOOK_CYCLE_TIME = 10;
-
-} // namespace gbhk
 
 #endif // !GLOBAL_HOTKEY_BASE_HPP

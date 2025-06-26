@@ -57,8 +57,8 @@ protected:
     static void (*keyPressedCallback)(int);
     static void (*keyReleasedCallback)(int);
 
-    virtual int specializedStart();
-    virtual int specializedEnd();
+    virtual int doBeforeThreadStart();
+    virtual int doBeforeThreadEnd();
 
     virtual int doBeforeLoop();
     virtual int doAfterLoop();
@@ -74,7 +74,7 @@ private:
     std::atomic<bool> running;
     std::atomic<size_t> cycleTime;
 
-    std::thread workThread;
+    std::thread workerThread;
 };
 
 } // namespace kbhook

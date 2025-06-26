@@ -5,6 +5,7 @@
 #include "../key/key_private.hpp"
 
 #include <global_hotkey/return_code.hpp>
+#include <global_hotkey/utility.hpp>
 
 namespace gbhk
 {
@@ -12,40 +13,61 @@ namespace gbhk
 std::atomic<Modifiers> _HookGHMPrivate::pressedMod(0);
 std::atomic<Key> _HookGHMPrivate::pressedKey(0);
 
-_HookGHMPrivate::_HookGHMPrivate() : kbhm(kbhook::KeyboardHookManager::getInstance()) {}
+_HookGHMPrivate::_HookGHMPrivate() :
+    shouldClose(false), kbhm(kbhook::KeyboardHookManager::getInstance())
+{}
 
 _HookGHMPrivate::~_HookGHMPrivate() { end(); }
 
-int _HookGHMPrivate::specializedStart()
+int _HookGHMPrivate::doBeforeThreadStart()
 {
     int rc = kbhm.start();
     if (rc != RC_SUCCESS)
         return rc;
     kbhm.setKeyPressedEvent(&keyPressedCallback);
     kbhm.setKeyReleasedEvent(&keyReleasedCallback);
+    shouldClose = false;
     return RC_SUCCESS;
 }
 
-int _HookGHMPrivate::specializedEnd()
+int _HookGHMPrivate::doBeforeThreadEnd()
 {
     int rc = kbhm.end();
+    shouldClose = true;
     pressedMod = 0;
     pressedKey = 0;
-    prevKc = KeyCombination();
     return rc;
 }
 
-void _HookGHMPrivate::eachCycleDo()
+void _HookGHMPrivate::work()
 {
-    KeyCombination kc(pressedMod, pressedKey);
-    auto pair = getValue(kc);
-    auto& autoRepeat = pair.first;
-    auto& fn = pair.second;
-    bool shouldInvoke = fn && (kc != prevKc || autoRepeat);
-    if (shouldInvoke)
-        fn();
-    prevKc = kc;
+    setSuccessRunning();
+
+    KeyCombination prevKc;
+    TimedSleeper ts;
+    while (!shouldClose)
+    {
+        ts.resetStartTime();
+
+        KeyCombination kc(pressedMod, pressedKey);
+        auto pair = getValue(kc);
+        auto& autoRepeat = pair.first;
+        auto& fn = pair.second;
+        bool shouldInvoke = fn && (kc != prevKc || autoRepeat);
+        if (shouldInvoke)
+            fn();
+        prevKc = kc;
+
+        ts.sleepUntilElapsed(10);
+    }
 }
+
+int _HookGHMPrivate::registerHotkey(const KeyCombination& kc, bool autoRepeat)
+{ return RC_SUCCESS; }
+
+int _HookGHMPrivate::unregisterHotkey(const KeyCombination& kc)
+{ return RC_SUCCESS; }
+
 
 void _HookGHMPrivate::keyPressedCallback(int nativeKey)
 {

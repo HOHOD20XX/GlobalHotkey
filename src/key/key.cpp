@@ -15,23 +15,23 @@ static std::string modifiersStringHelper(ModifierFlag flag) noexcept
     switch (flag)
     {
     #ifdef _GLOBAL_HOTKEY_WIN
-        case META:      return "Win";
+        case META:  return "Win";
     #elif defined(_GLOBAL_HOTKEY_MAC)
-        case META:      return "Command";
+        case META:  return "Command";
     #elif defined(_GLOBAL_HOTKEY_LINUX)
-        case META:      return "Super";
+        case META:  return "Super";
     #endif // _GLOBAL_HOTKEY_WIN
 
-        case CTRL:      return "Ctrl";
+        case CTRL:  return "Ctrl";
 
     #ifdef _GLOBAL_HOTKEY_MAC
-        case ALT:       return "Option";
+        case ALT:   return "Option";
     #else
-        case ALT:       return "Alt";
+        case ALT:   return "Alt";
     #endif // _GLOBAL_HOTKEY_MAC
 
-        case SHIFT:     return "Shift";
-        default:        return "";
+        case SHIFT: return "Shift";
+        default:    return "";
     }
 }
 
@@ -68,7 +68,7 @@ GBHK_API std::string keyString(const Key& key) noexcept
         case Key_8:                 return "8";
         case Key_9:                 return "9";
 
-        // Ascii alpha keys.
+        // ASCII letter keys.
         case Key_A:                 return "A";
         case Key_B:                 return "B";
         case Key_C:                 return "C";
@@ -206,10 +206,10 @@ GBHK_API std::string keyString(const Key& key) noexcept
     }
 }
 
-// Check if two strings are equal, ignoring case, spaces and underscores.
+// Check whether two strings is equal, ignoring case, spaces and underscores.
 static bool isEqualStr(const std::string& str1, const std::string& str2) noexcept
 {
-    int i = 0, j = 0;
+    size_t i = 0, j = 0;
     while (i < str1.size() || j < str2.size())
     {
         while (i < str1.size() && (IS_SPACE(str1[i]) || str1[i] == '_')) i++;

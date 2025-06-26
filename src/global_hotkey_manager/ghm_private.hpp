@@ -27,41 +27,57 @@ public:
     int removeAll();
     int replace(const KeyCombination& oldKc, const KeyCombination& newKc);
     int setAutoRepeat(const KeyCombination& kc, bool autoRepeat);
-    void setCycleTime(size_t milliseconds);
     bool has(const KeyCombination& kc) const;
     bool isAutoRepeat(const KeyCombination& kc) const;
     bool isRunning() const;
     std::vector<KeyCombination> getAllKeyCombination() const;
 
 protected:
-    bool isInWorkThread() const;
+    /// @brief Get the `autoRepeat` and `callback` values corresponding to the specified key combination.
+    /// @note Thread-safe.
     std::pair<bool, std::function<void()>> getValue(const KeyCombination& kc) const;
 
-    virtual int specializedStart();
-    virtual int specializedEnd();
-    virtual int specializedAdd(const KeyCombination& kc, const std::function<void()>& fn, bool autoRepeat);
-    virtual int specializedRemove(const KeyCombination& kc);
-    virtual int specializedRemoveAll();
-    virtual int specializedReplace(const KeyCombination& oldKc, const KeyCombination& newKc);
-    virtual int specializedSetAutoRepeat(const KeyCombination& kc, bool autoRepeat);
+    /// @brief Indicates the worker thread creation successfully.
+    void setSuccessRunning();
+    /// @brief Indicates the worker thread creation failed.
+    void setFailedRunning(int errorCode);
 
-    virtual int doBeforeLoop();
-    virtual int doAfterLoop();
-    virtual void eachCycleDo() = 0;
+    // Some interfaces for subclasses to specialize.
+
+    /// @note This function will be executed before the worker thread is created.
+    virtual int doBeforeThreadStart();
+    /// @note This function will be executed before the end of the worker thread.
+    /// @note Specifically, only when this function returns will the semaphore controlling
+    /// the thread's exit be changed to enable the thread to exit.
+    /// @note In fact, it should always return 'RC_SUCCESS'.
+    virtual int doBeforeThreadEnd();
+    /// @note The specific working logic of the worker thread.
+    /// @attention The `setSuccessRunning` or `setFailedRunning` must be called in the implementation
+    /// of this function to indicate whether the work started successfully.
+    virtual void work() = 0;
+    /// @note The specific logic of register hotkey.
+    virtual int registerHotkey(const KeyCombination& kc, bool autoRepeat) = 0;
+    /// @note The specific logic of unregister hotkey.
+    /// @note In fact, it should always return 'RC_SUCCESS'.
+    virtual int unregisterHotkey(const KeyCombination& kc) = 0;
 
 private:
-    void workLoop();
+    enum RunningState
+    {
+        RS_FREE,
+        RS_RUNNING,
+        RS_TERMINATE
+    };
+
+    bool isInWorkerThread() const;
 
     mutable std::mutex mtx;
-    std::condition_variable cvDoBeforeLoopFinished;
-    std::condition_variable cvRunning;
-    std::atomic<bool> doBeforeLoopFinished;
-    std::atomic<bool> shouldClose;
-    std::atomic<bool> running;
-    std::atomic<size_t> cycleTime;
+    std::condition_variable cvRunningState;
+    std::atomic<RunningState> runningState;
+    std::atomic<int> createThreadRc;
 
-    std::thread workThread;
-    std::thread::id workThreadId;
+    std::thread workerThread;
+    std::thread::id workerThreadId;
 
     std::unordered_map<KeyCombination, std::pair<bool, std::function<void()>>> fns;
 };

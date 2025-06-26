@@ -30,9 +30,6 @@ int GlobalHotkeyManager::replace(const KeyCombination& oldKc, const KeyCombinati
 int GlobalHotkeyManager::setAutoRepeat(const KeyCombination& kc, bool autoRepeat)
 { return ptr->setAutoRepeat(kc, autoRepeat); }
 
-void GlobalHotkeyManager::setCycleTime(size_t milliseconds)
-{ ptr->setCycleTime(milliseconds); }
-
 bool GlobalHotkeyManager::has(const KeyCombination& kc) const
 { return ptr->has(kc); }
 
@@ -41,5 +38,8 @@ bool GlobalHotkeyManager::isAutoRepeat(const KeyCombination& kc) const
 
 bool GlobalHotkeyManager::isRunning() const
 { return ptr->isRunning(); }
+
+std::vector<KeyCombination> GlobalHotkeyManager::getAllKeyCombination() const
+{ return ptr->getAllKeyCombination(); }
 
 } // namespace gbhk
