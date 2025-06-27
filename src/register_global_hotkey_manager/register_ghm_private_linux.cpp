@@ -4,17 +4,23 @@
 
 #ifdef _GLOBAL_HOTKEY_LINUX
 
+#include <poll.h>
+#include <sys/eventfd.h>
+#include <unistd.h>
+
 #include <global_hotkey/return_code.hpp>
 
 #include "../key/key_private_x11.hpp"
 
-#define REGISTER_ATOM_NAME "Register"
-#define UNREGISTER_ATOM_NAME "Unregister"
-#define REGISTER_ATOM(display) XInternAtom(display, REGISTER_ATOM_NAME, False);
-#define UNREGISTER_ATOM(display) XInternAtom(display, UNREGISTER_ATOM_NAME, False);
+#define ET_EXIT         1
+#define ET_REGISTER     2
+#define ET_UNREGISTER   3
 
 namespace gbhk
 {
+
+// 8 byte for `write` and `read` of the fd created by `eventfd`.
+using EventType = int64_t;
 
 std::unordered_map<int, int> _RegisterGHMPrivateLinux::keycodeTokeysym;
 
@@ -22,118 +28,125 @@ _RegisterGHMPrivateLinux::_RegisterGHMPrivateLinux() : rc(RC_NOT_USED) {}
 
 _RegisterGHMPrivateLinux::~_RegisterGHMPrivateLinux() { end(); }
 
+int _RegisterGHMPrivateLinux::doBeforeThreadStart()
+{
+    fd = eventfd(0, 0);
+    if (fd == -1)
+        return errno;
+    return RC_SUCCESS;
+}
+
 int _RegisterGHMPrivateLinux::doBeforeThreadEnd()
 {
-    ErrorHandler eh;
-    Window rootWindow = DefaultRootWindow(display);
-    XDestroyWindow(display, rootWindow);
-    return eh.errorCode;
+    EventType et = ET_EXIT;
+    auto ret = write(fd, &et, 8);
+    if (ret == -1)
+        return errno;
+    return RC_SUCCESS;
 }
 
 void _RegisterGHMPrivateLinux::work()
 {
     ErrorHandler eh;
-    display = XOpenDisplay(NULL);
+    Display* display = XOpenDisplay(NULL);
     if (eh.errorCode != RC_SUCCESS)
     {
         setFailedRunning(eh.errorCode);
         return;
     }
 
-    Window rootWindow = DefaultRootWindow(display);
-    auto mask = KeyPressMask | KeyReleaseMask | StructureNotifyMask;
-    XSelectInput(display, rootWindow, mask);
-    setSuccessRunning();
+    int x11Fd = ConnectionNumber(display);
+    pollfd fds[2];
+    fds[0].fd = x11Fd;
+    fds[0].events = POLLIN;
+    fds[1].fd = fd;
+    fds[1].events = POLLIN;
 
+    setSuccessRunning();
     KeyCombination prevKc;
     KeyCombination currKc;
     XEvent event = {0};
     while (true)
     {
-        XPeekEvent(display, &event);
-        if (event.type == KeyPress || event.type == KeyRelease)
-        {
-            if (event.type == KeyPress)
-                currKc = keyPressedCallback(currKc, event.xkey.keycode, event.xkey.state);
-            else
-                currKc = keyReleasedCallback(currKc, event.xkey.keycode, event.xkey.state);
+        int ret = poll(fds, 2, -1);
+        if (ret == -1)
+            continue;;
 
-            invoke(prevKc, currKc);
-        }
-        else if (event.type == ClientMessage)
+        // Get the XEvent.
+        if (fds[0].revents & POLLIN)
         {
-            if (event.xclient.message_type == REGISTER_ATOM)
+            while (XPending(display))
             {
-                auto value = event.xclient.data.l[0];
-                rc = nativeRegisterHotkey(KeyCombination::fromCombinedValue(value));
-                cvReturned.notify_one();
-            }
-            else if (event.xclient.message_type == UNREGISTER_ATOM)
-            {
-                auto value = event.xclient.data.l[0];
-                rc = nativeUnregisterHotkey(KeyCombination::fromCombinedValue(value));
-                cvReturned.notify_one();
+                XNextEvent(display, &event);
+                if (event.type == KeyPress)
+                    currKc = keyPressedCallback(event.xkey.keycode, event.xkey.state);
+                else if (event.type == KeyRelease)
+                    currKc = keyReleasedCallback(event.xkey.keycode, event.xkey.state);
+                invoke(prevKc, currKc);
+                prevKc = currKc;
             }
         }
-        else if (event.type == DestroyNotify)
+
+        // Get the Event.
+        if (fds[1].revents & POLLIN)
         {
-            break;
+            EventType et;
+            auto ret = read(fd, &et, 8);
+            if (ret != 8)
+                continue;
+
+            if (et == ET_EXIT)
+            {
+                break;
+            }
+            else if (et == ET_REGISTER)
+            {
+                rc = nativeRegisterHotkey(display, atomicKc);
+                cvReturned.notify_one();
+            }
+            else if (et == ET_UNREGISTER)
+            {
+                rc = nativeUnregisterHotkey(display, atomicKc);
+                cvReturned.notify_one();
+            }
         }
     }
 
     XCloseDisplay(display);
     keycodeTokeysym.clear();
-    prevKc = KeyCombination();
-    currKc = KeyCombination();
-    display = NULL;
+    close(fd);
 }
 
 int _RegisterGHMPrivateLinux::registerHotkey(const KeyCombination& kc, bool autoRepeat)
 {
     rc = RC_NOT_USED;
 
-    XEvent event;
-    event.type = ClientMessage;
-    Window rootWindow = DefaultRootWindow(display);
-    event.xclient.window = rootWindow;
-    event.xclient.message_type = REGISTER_ATOM;
-    event.xclient.format = 32;
-    event.xclient.data.l[0] = kc.combinedValue();
+    atomicKc = kc;
+    EventType et = ET_REGISTER;
+    auto ret = write(fd, &et, 8);
+    if (ret == -1)
+        return errno;
 
-    ErrorHandler eh;
-    XSendEvent(display, rootWindow, False, NoEventMask, &event);
-    if (eh.errorCode == RC_SUCCESS)
-    {
-        std::mutex dummyLock;
-        std::unique_lock<std::mutex> lock(dummyLock);
-        cvReturned.wait(lock, [this]() { return (rc != RC_NOT_USED); });
-        return rc;
-    }
-    return eh.errorCode;
+    std::mutex dummyLock;
+    std::unique_lock<std::mutex> lock(dummyLock);
+    cvReturned.wait(lock, [this]() { return (rc != RC_NOT_USED); });
+    return rc;
 }
 
 int _RegisterGHMPrivateLinux::unregisterHotkey(const KeyCombination& kc)
 {
     rc = RC_NOT_USED;
 
-    XEvent event;
-    event.type = ClientMessage;
-    Window rootWindow = DefaultRootWindow(display);
-    event.xclient.window = rootWindow;
-    event.xclient.message_type = UNREGISTER_ATOM;
-    event.xclient.format = 32;
-    event.xclient.data.l[0] = kc.combinedValue();
+    atomicKc = kc;
+    EventType et = ET_UNREGISTER;
+    auto ret = write(fd, &et, 8);
+    if (ret != 8)
+        return errno;
 
-    ErrorHandler eh;
-    XSendEvent(display, rootWindow, False, NoEventMask, &event);
-    if (eh.errorCode == RC_SUCCESS)
-    {
-        std::mutex dummyLock;
-        std::unique_lock<std::mutex> lock(dummyLock);
-        cvReturned.wait(lock, [this]() { return (rc != RC_NOT_USED); });
-        return rc;
-    }
-    return eh.errorCode;
+    std::mutex dummyLock;
+    std::unique_lock<std::mutex> lock(dummyLock);
+    cvReturned.wait(lock, [this]() { return (rc != RC_NOT_USED); });
+    return rc;
 }
 
 void _RegisterGHMPrivateLinux::invoke(const KeyCombination& prevKc, const KeyCombination& currKc)
@@ -144,10 +157,9 @@ void _RegisterGHMPrivateLinux::invoke(const KeyCombination& prevKc, const KeyCom
     bool shouldInvoke = fn && (currKc != prevKc || autoRepeat);
     if (shouldInvoke)
         fn();
-    prevKc = currKc;
 }
 
-int _RegisterGHMPrivateLinux::nativeRegisterHotkey(const KeyCombination& kc)
+int _RegisterGHMPrivateLinux::nativeRegisterHotkey(Display* display, const KeyCombination& kc)
 {
     ErrorHandler eh;
 
@@ -161,7 +173,7 @@ int _RegisterGHMPrivateLinux::nativeRegisterHotkey(const KeyCombination& kc)
     return eh.errorCode;
 }
 
-int _RegisterGHMPrivateLinux::nativeUnregisterHotkey(const KeyCombination& kc)
+int _RegisterGHMPrivateLinux::nativeUnregisterHotkey(Display* display, const KeyCombination& kc)
 {
     auto keycode = XKeysymToKeycode(display, x11Keysym(kc.key()));
     auto mod = x11Modifiers(kc.modifiers());

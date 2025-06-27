@@ -19,6 +19,7 @@ public:
     ~_RegisterGHMPrivateLinux();
 
 protected:
+    int doBeforeThreadStart() override;
     int doBeforeThreadEnd() override;
     void work() override;
     int registerHotkey(const KeyCombination& kc, bool autoRepeat) override;
@@ -38,9 +39,10 @@ private:
         static XErrorHandler prevXErrorHandler;
     };
 
+    // The follow functions only be called in worker thread.
     void invoke(const KeyCombination& prevKc, const KeyCombination& currKc);
-    int nativeRegisterHotkey(const KeyCombination& kc);
-    int nativeUnregisterHotkey(const KeyCombination& kc);
+    int nativeRegisterHotkey(Display* display, const KeyCombination& kc);
+    int nativeUnregisterHotkey(Display* display, const KeyCombination& kc);
 
     KeyCombination keyPressedCallback(int x11Keycode, int x11Modifiers);
     KeyCombination keyReleasedCallback(int x11Keycode, int x11Modifiers);
@@ -49,7 +51,8 @@ private:
 
     std::condition_variable cvReturned;
     std::atomic<int> rc;
-    Display* display = NULL;
+    std::atomic<KeyCombination> atomicKc;
+    int fd;
 };
 
 } // namespace gbhk

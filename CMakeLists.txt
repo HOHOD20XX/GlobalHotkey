@@ -75,8 +75,6 @@ elseif(LINUX)
     file(GLOB_RECURSE SRC ${SRC} src/*x11*.cpp)
 endif()
 
-find_package(Threads REQUIRED)
-
 set(TARGET_NAME global_hotkey)
 
 if(GBHK_BUILD_SHARED)
@@ -93,8 +91,6 @@ endif()
 if(GBHK_DISABLE_HOOK)
     target_compile_definitions(${TARGET_NAME} PUBLIC GLOBAL_HOTKEY_DISABLE_HOOK)
 endif()
-
-target_link_libraries(${TARGET_NAME} PRIVATE Threads::Threads)
 
 if(WIN32)
     message(STATUS "${GBHK_MSG_PREFIX} Windows platform detected")
@@ -168,6 +164,9 @@ if(LINUX)
         endif()
     endif()
 endif()
+
+find_package(Threads REQUIRED)
+target_link_libraries(${TARGET_NAME} PRIVATE Threads::Threads)
 
 set_target_properties(${TARGET_NAME} PROPERTIES DEBUG_POSTFIX d)
 
