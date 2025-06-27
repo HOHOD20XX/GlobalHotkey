@@ -210,7 +210,7 @@ public:
 
     constexpr inline bool has(ModifierFlag modifier) const noexcept { return (i & modifier) != 0; }
     constexpr inline bool has(Modifiers modifiers) const noexcept { return (i & modifiers.i) == modifiers.i; }
-    /// @brief Check whether at least one modifier bit-field is true.
+    /// @brief Check whether contains least one modifier.
     constexpr inline bool isValid() const noexcept
     { return (i & META) || (i & CTRL) || (i & ALT) || (i & SHIFT); }
 

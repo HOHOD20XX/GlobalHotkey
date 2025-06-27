@@ -34,7 +34,7 @@ public:
     inline void setKey(const Key& key) noexcept { ky = key; }
 #endif // _GLOBAL_HOTKEY_CPPVERS >= 201703L
 
-    /// @brief Check whether contains at least one valid modifier and a valid key value.
+    /// @brief Check whether contains at least one modifier and a valid key value.
     constexpr inline bool isValid() const noexcept { return mod.isValid() && ky.isValid(); }
 
     friend constexpr inline bool operator==(const KeyCombination& lhs, const KeyCombination& rhs) noexcept
