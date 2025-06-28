@@ -23,56 +23,81 @@ public:
     _KBHMPrivate();
     virtual ~_KBHMPrivate();
 
-    int start();
+    int run();
     int end();
-    int addKeyListener(int nativeKey, KeyState state, const std::function<void()>& fn);
-    int removeKeyListener(int nativeKey, KeyState state);
-    int removeAllKeyListener();
-    int setKeyPressedEvent(void (*fn)(int));
-    int setKeyReleasedEvent(void (*fn)(int));
-    int unsetKeyPressedEvent();
-    int unsetKeyReleasedEvent();
-    void setCycleTime(size_t milliseconds);
-    bool hasKeyListener(int nativeKey, KeyState state) const;
+    static int addKeyListener(int nativeKey, KeyState state, const std::function<void ()>& fn);
+    static int removeKeyListener(int nativeKey, KeyState state);
+    static int removeAllKeyListener();
+    static int setKeyPressedCallback(const std::function<void (int)>& fn);
+    static int setKeyReleasedCallback(const std::function<void (int)>& fn);
+    static int unsetKeyPressedCallback();
+    static int unsetKeyReleasedCallback();
+    static bool hasKeyListener(int nativeKey, KeyState state);
     bool isRunning() const;
 
 protected:
-    struct Combine
-    {
-        constexpr inline Combine() noexcept = default;
-        constexpr inline Combine(int nativeKey, KeyState state) noexcept : nativeKey(nativeKey), state(state) {}
+    /// @return Return a empty value if the `nativeKey` and `state` given is not exists or it is invalid
+    /// else return the `callback` value.
+    /// @note Thread-safe.
+    static std::function<void ()> getKeyListenerCallback(int nativeKey, KeyState state);
+    /// @note Thread-safe.
+    static std::function<void (int)> getKeyPressedCallback();
+    /// @note Thread-safe.
+    static std::function<void (int)> getKeyReleasedCallback();
 
-        int nativeKey   = 0;
-        int state       = 0;
+    /// @brief Indicates the worker thread running successfully.
+    /// @note The `runningRc` will be set to 'RC_SUCCESS`.
+    void setRunSuccess();
+    /// @brief Indicates the worker thread running failed.
+    /// @note The `runningRc` will be set to 'errorCode`.
+    void setRunFail(int errorCode);
 
-        friend constexpr inline bool operator==(const Combine& lhs, const Combine& rhs) noexcept
-        {
-            return lhs.nativeKey == rhs.nativeKey && lhs.state == rhs.state;
-        }
-    };
-    friend struct std::hash<Combine>;
+    // Some interfaces for subclasses to specialize.
 
-    static std::mutex mtx;
-    static std::unordered_map<Combine, std::function<void()>> fns;
-    static void (*keyPressedCallback)(int);
-    static void (*keyReleasedCallback)(int);
-
-    virtual int doBeforeThreadStart();
+    /// @note This function will be performed before the worker thread is running.
+    virtual int doBeforeThreadRun();
+    /// @note This function will be performed before the worker thread is end.
+    /// @note Specifically, only when this function returns will the semaphore controlling
+    /// the thread's end be changed to enable the thread to exit.
     virtual int doBeforeThreadEnd();
-
-    virtual int doBeforeLoop();
-    virtual int doAfterLoop();
-    virtual void eachCycleDo() = 0;
+    /// @note The specific working logic of the worker thread.
+    /// @attention The `setRunSuccess` or `setRunFail` must be called in the implementation
+    /// of this function to indicate whether the work running successfully.
+    virtual void work() = 0;
 
 private:
-    void workLoop();
+    struct Combination
+    {
+        constexpr inline Combination() noexcept = default;
+        constexpr inline Combination(int nativeKey, KeyState state) noexcept :
+            nativeKey(nativeKey), state(state) {}
 
-    std::condition_variable cvDoBeforeLoopFinished;
-    std::condition_variable cvRunning;
-    std::atomic<bool> doBeforeLoopFinished;
+        int nativeKey   = 0;
+        KeyState state  = KS_NONE;
+
+        friend constexpr inline bool operator==(const Combination& lhs, const Combination& rhs) noexcept
+        { return lhs.nativeKey == rhs.nativeKey && lhs.state == rhs.state; }
+    };
+    friend struct std::hash<Combination>;
+
+    enum RunningState
+    {
+        RS_FREE,
+        RS_RUNNING,
+        RS_TERMINATE
+    };
+
+    static bool isValidValue(int nativeKey, KeyState state);
+
+    static std::mutex mtx;
+    static std::unordered_map<Combination, std::function<void ()>> fns;
+    static std::function<void (int)> keyPressedCallback;
+    static std::function<void (int)> keyReleasedCallback;
+
+    std::condition_variable cvRunningState;
+    std::atomic<RunningState> runningState;
+    std::atomic<int> runningRc;
     std::atomic<bool> shouldClose;
-    std::atomic<bool> running;
-    std::atomic<size_t> cycleTime;
 
     std::thread workerThread;
 };
@@ -85,9 +110,9 @@ namespace std
 {
 
 template <>
-struct hash<gbhk::kbhook::_KBHMPrivate::Combine>
+struct hash<gbhk::kbhook::_KBHMPrivate::Combination>
 {
-    size_t operator()(const gbhk::kbhook::_KBHMPrivate::Combine& obj) const noexcept
+    size_t operator()(const gbhk::kbhook::_KBHMPrivate::Combination& obj) const noexcept
     {
         size_t h1 = std::hash<int>()(obj.nativeKey);
         size_t h2 = std::hash<int>()(obj.state);

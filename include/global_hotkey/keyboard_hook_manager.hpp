@@ -14,8 +14,9 @@ namespace gbhk
 namespace kbhook
 {
 
-enum KeyState
+enum KeyState : int
 {
+    KS_NONE     = 0x00,
     KS_PRESSED  = 0x01,
     KS_RELEASED = 0x02
 };
@@ -25,27 +26,25 @@ class _KBHMPrivate;
 class GBHK_API KeyboardHookManager final
 {
 public:
-    KeyboardHookManager(const KeyboardHookManager&) = delete;
-    KeyboardHookManager& operator=(const KeyboardHookManager&) = delete;
-
     static KeyboardHookManager& getInstance();
 
-    int start();
+    int run();
     int end();
-    int addKeyListener(int nativeKey, KeyState state, const std::function<void()>& fn);
+    int addKeyListener(int nativeKey, KeyState state, const std::function<void ()>& fn);
     int removeKeyListener(int nativeKey, KeyState state);
     int removeAllKeyListener();
-    int setKeyPressedEvent(void (*fn)(int));
-    int setKeyReleasedEvent(void (*fn)(int));
-    int unsetKeyPressedEvent();
-    int unsetKeyReleasedEvent();
-    void setCycleTime(size_t milliseconds);
+    int setKeyPressedCallback(const std::function<void (int)>& fn);
+    int setKeyReleasedCallback(const std::function<void (int)>& fn);
+    int unsetKeyPressedCallback();
+    int unsetKeyReleasedCallback();
     bool hasKeyListener(int nativeKey, KeyState state) const;
     bool isRunning() const;
 
 private:
     KeyboardHookManager();
     ~KeyboardHookManager();
+    KeyboardHookManager(const KeyboardHookManager&) = delete;
+    KeyboardHookManager& operator=(const KeyboardHookManager&) = delete;
 
     std::unique_ptr<_KBHMPrivate> ptr;
 };

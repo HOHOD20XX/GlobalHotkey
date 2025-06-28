@@ -3,7 +3,6 @@
 #include "kbhm_private.hpp"
 
 #include <global_hotkey/return_code.hpp>
-#include <global_hotkey/utility.hpp>
 
 namespace gbhk
 {
@@ -12,91 +11,83 @@ namespace kbhook
 {
 
 std::mutex _KBHMPrivate::mtx;
-std::unordered_map<_KBHMPrivate::Combine, std::function<void()>> _KBHMPrivate::fns;
-void (*_KBHMPrivate::keyPressedCallback)(int)    = nullptr;
-void (*_KBHMPrivate::keyReleasedCallback)(int)   = nullptr;
+std::unordered_map<_KBHMPrivate::Combination, std::function<void ()>> _KBHMPrivate::fns;
+std::function<void (int)> _KBHMPrivate::keyPressedCallback;
+std::function<void (int)> _KBHMPrivate::keyReleasedCallback;
 
 _KBHMPrivate::_KBHMPrivate() :
-    doBeforeLoopFinished(false), shouldClose(false), running(false), cycleTime(10)
+    runningState(RS_FREE),
+    runningRc(0),
+    shouldClose(false)
 {}
 
 _KBHMPrivate::~_KBHMPrivate() = default;
 
-int _KBHMPrivate::start()
+int _KBHMPrivate::run()
 {
-    if (running)                            return RC_SUCCESS;
+    if (isRunning())    return RC_SUCCESS;
 
-    int rc = doBeforeThreadStart();
+    int rc = doBeforeThreadRun();
     if (rc != RC_SUCCESS)
         return rc;
 
-    running = true;
-    workerThread = std::thread([this, &rc]() {
-        rc = doBeforeLoop();
-        doBeforeLoopFinished = true;
-        cvDoBeforeLoopFinished.notify_one();
-        if (rc != RC_SUCCESS)
-        {
-            running = false;
-            return;
-        }
-
-        workLoop();
-
-        int rc2 = doAfterLoop();
-        running = false;
-        cvRunning.notify_one();
+    workerThread = std::thread([this]() {
+        work();
+        runningState = RS_FREE;
+        cvRunningState.notify_one();
     });
     workerThread.detach();
 
     std::mutex dummyMtx;
     std::unique_lock<std::mutex> lock(dummyMtx);
-    cvDoBeforeLoopFinished.wait(lock, [this]() { return doBeforeLoopFinished.load(); });
+    cvRunningState.wait(lock, [this]() { return runningState != RS_FREE; });
     lock.unlock();
-    doBeforeLoopFinished = false;
 
-    return rc;
+    if (runningState == RS_TERMINATE)
+        runningState = RS_FREE;
+
+    return runningRc;
 }
 
 int _KBHMPrivate::end()
 {
-    if (!running)                           return RC_SUCCESS;
+    if (!isRunning())   return RC_SUCCESS;
 
-    // Always is RC_SUCCESS
+    {
+        std::lock_guard<std::mutex> lock(mtx);
+        fns.clear();
+        keyPressedCallback = nullptr;
+        keyReleasedCallback = nullptr;
+    }
     int rc = doBeforeThreadEnd();
 
     shouldClose = true;
     std::mutex dummyMtx;
     std::unique_lock<std::mutex> lock(dummyMtx);
-    cvRunning.wait(lock, [this]() { return !running; });
+    cvRunningState.wait(lock, [this]() { return runningState != RS_RUNNING; });
     lock.unlock();
-    shouldClose = false;
-
-    fns.clear();
 
     return rc;
 }
 
-int _KBHMPrivate::addKeyListener(int nativeKey, KeyState state, const std::function<void()>& fn)
+int _KBHMPrivate::addKeyListener(int nativeKey, KeyState state, const std::function<void ()>& fn)
 {
-    if (nativeKey == 0 || !fn)              return RC_INVALID_VALUE;
-    if (hasKeyListener(nativeKey, state))   return RC_EXIST_SAME_VALUE;
+    if (!isValidValue(nativeKey, state) || !fn) return RC_INVALID_VALUE;
+    if (hasKeyListener(nativeKey, state))       return RC_EXISTING_VALUE;
 
+    Combination comb(nativeKey, state);
     std::lock_guard<std::mutex> lock(mtx);
-    Combine combine(nativeKey, state);
-    fns[combine] = fn;
-
+    fns[comb] = fn;
     return RC_SUCCESS;
 }
 
 int _KBHMPrivate::removeKeyListener(int nativeKey, KeyState state)
 {
-    if (!hasKeyListener(nativeKey, state))  return RC_NO_SPECIFIED_VALUE;
+    if (!hasKeyListener(nativeKey, state))      return RC_NO_SUCH_VALUE;
 
+    Combination comb(nativeKey, state);
     std::lock_guard<std::mutex> lock(mtx);
-    Combine combine(nativeKey, state);
-    fns.erase(combine);
-
+    fns.erase(comb);
     return RC_SUCCESS;
 }
 
@@ -107,74 +98,96 @@ int _KBHMPrivate::removeAllKeyListener()
     return RC_SUCCESS;
 }
 
-int _KBHMPrivate::setKeyPressedEvent(void (*fn)(int))
+int _KBHMPrivate::setKeyPressedCallback(const std::function<void (int)>& fn)
 {
-    if (fn == nullptr)                      return RC_INVALID_VALUE;
+    if (!fn)    return RC_INVALID_VALUE;
 
     std::lock_guard<std::mutex> lock(mtx);
     keyPressedCallback = fn;
-
     return RC_SUCCESS;
 }
 
-int _KBHMPrivate::setKeyReleasedEvent(void (*fn)(int))
+int _KBHMPrivate::setKeyReleasedCallback(const std::function<void (int)>& fn)
 {
-    if (fn == nullptr)                      return RC_INVALID_VALUE;
+    if (!fn)     return RC_INVALID_VALUE;
 
     std::lock_guard<std::mutex> lock(mtx);
     keyReleasedCallback = fn;
-
     return RC_SUCCESS;
 }
 
-int _KBHMPrivate::unsetKeyPressedEvent()
+int _KBHMPrivate::unsetKeyPressedCallback()
 {
     std::lock_guard<std::mutex> lock(mtx);
     keyPressedCallback = nullptr;
     return RC_SUCCESS;
 }
 
-int _KBHMPrivate::unsetKeyReleasedEvent()
+int _KBHMPrivate::unsetKeyReleasedCallback()
 {
     std::lock_guard<std::mutex> lock(mtx);
     keyReleasedCallback = nullptr;
     return RC_SUCCESS;
 }
 
-void _KBHMPrivate::setCycleTime(size_t milliseconds)
+bool _KBHMPrivate::hasKeyListener(int nativeKey, KeyState state)
 {
-    cycleTime = milliseconds;
-}
-
-bool _KBHMPrivate::hasKeyListener(int nativeKey, KeyState state) const
-{
+    Combination comb(nativeKey, state);
     std::lock_guard<std::mutex> lock(mtx);
-    Combine combine(nativeKey, state);
-    return fns.find(combine) != fns.end();
+    return fns.find(comb) != fns.end();
 }
 
 bool _KBHMPrivate::isRunning() const
 {
-    return running;
+    return runningState == RS_RUNNING;
 }
 
-int _KBHMPrivate::doBeforeThreadStart() { return RC_SUCCESS; }
+std::function<void ()> _KBHMPrivate::getKeyListenerCallback(int nativeKey, KeyState state)
+{
+    if (!isValidValue(nativeKey, state))
+        return std::function<void ()>();
+
+    Combination comb(nativeKey, state);
+    std::lock_guard<std::mutex> lock(mtx);
+    const auto& it = fns.find(comb);
+    if (it == fns.end())
+        return std::function<void ()>();
+    return it->second;
+}
+
+std::function<void (int)> _KBHMPrivate::getKeyPressedCallback()
+{
+    std::lock_guard<std::mutex> lock(mtx);
+    return keyPressedCallback;
+}
+
+std::function<void (int)> _KBHMPrivate::getKeyReleasedCallback()
+{
+    std::lock_guard<std::mutex> lock(mtx);
+    return keyReleasedCallback;
+}
+
+void _KBHMPrivate::setRunSuccess()
+{
+    runningRc = RC_SUCCESS;
+    runningState = RS_RUNNING;
+    cvRunningState.notify_one();
+}
+
+void _KBHMPrivate::setRunFail(int errorCode)
+{
+    runningRc = errorCode;
+    runningState = RS_TERMINATE;
+    cvRunningState.notify_one();
+}
+
+int _KBHMPrivate::doBeforeThreadRun() { return RC_SUCCESS; }
 
 int _KBHMPrivate::doBeforeThreadEnd() { return RC_SUCCESS; }
 
-int _KBHMPrivate::doBeforeLoop() { return RC_SUCCESS; }
-
-int _KBHMPrivate::doAfterLoop() { return RC_SUCCESS; }
-
-void _KBHMPrivate::workLoop()
+bool _KBHMPrivate::isValidValue(int nativeKey, KeyState state)
 {
-    TimedSleeper ts;
-    while (!shouldClose)
-    {
-        ts.resetStartTime();
-        eachCycleDo();
-        ts.sleepUntilElapsed(cycleTime);
-    }
+    return nativeKey != 0 && state != KS_NONE;
 }
 
 } // namespace kbhook

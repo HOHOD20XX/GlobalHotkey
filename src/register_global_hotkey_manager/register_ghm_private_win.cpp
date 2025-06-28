@@ -8,13 +8,17 @@
 
 #include "../key/key_private.hpp"
 
-#define WM_REGISTER_HOTKEY (WM_USER + 1)
-#define WM_UNREGISTER_HOTKEY (WM_USER + 2)
+#define WM_REGISTER_HOTKEY      (WM_USER + 1)
+#define WM_UNREGISTER_HOTKEY    (WM_USER + 2)
 
 namespace gbhk
 {
 
-_RegisterGHMPrivateWin::_RegisterGHMPrivateWin() : workerThreadId(DWORD()), rc(RC_NOT_USED), hotkeyIndex(0) {}
+_RegisterGHMPrivateWin::_RegisterGHMPrivateWin() :
+    workerThreadId(DWORD()),
+    regUnregRc(0),
+    hotkeyIndex(0)
+{}
 
 _RegisterGHMPrivateWin::~_RegisterGHMPrivateWin() { end(); }
 
@@ -33,7 +37,7 @@ void _RegisterGHMPrivateWin::work()
     PeekMessageA(&msg, NULL, WM_USER, WM_USER, PM_NOREMOVE);
     // Indicate the worker thread is created successfully after create the message queue.
     // This can ensure that the `PostThreadMessage` is called only when the message queue exists.
-    setSuccessRunning();
+    setRunSuccess();
     // Retrieves only messages on the current thread's message queue whose hwnd value is NULL.
     // In this case the thread message as posted by `PostThreadMessage`.
     while (GetMessageA(&msg, HWND(-1), 0, 0) != 0)
@@ -44,13 +48,13 @@ void _RegisterGHMPrivateWin::work()
         }
         else if (msg.message == WM_REGISTER_HOTKEY)
         {
-            rc = nativeRegisterHotkey(msg.wParam, msg.lParam);
-            cvReturned.notify_one();
+            regUnregRc = nativeRegisterHotkey(msg.wParam, msg.lParam);
+            cvRegUnregRc.notify_one();
         }
         else if (msg.message == WM_UNREGISTER_HOTKEY)
         {
-            rc = nativeUnregisterHotkey(msg.wParam, msg.lParam);
-            cvReturned.notify_one();
+            regUnregRc = nativeUnregisterHotkey(msg.wParam, msg.lParam);
+            cvRegUnregRc.notify_one();
         }
         else if (msg.message == WM_DESTROY)
         {
@@ -58,8 +62,6 @@ void _RegisterGHMPrivateWin::work()
         }
     }
 
-    workerThreadId = DWORD();
-    rc = RC_NOT_USED;
     hotkeyIndex = 0;
     hotkeyIdToKc.clear();
     kcToHotkeyId.clear();
@@ -67,26 +69,37 @@ void _RegisterGHMPrivateWin::work()
 
 int _RegisterGHMPrivateWin::registerHotkey(const KeyCombination& kc, bool autoRepeat)
 {
-    rc = RC_NOT_USED;
-    if (PostThreadMessageA(workerThreadId, WM_REGISTER_HOTKEY, kc.combinedValue(), (LPARAM) autoRepeat) != 0)
+    // wParam store the value of native modifiers.
+    WPARAM wParam = nativeModifiers(kc.modifiers());
+    wParam |= (!autoRepeat ? MOD_NOREPEAT : 0);
+    // lParam store the value of native key code.
+    LPARAM lParam = nativeKey(kc.key());
+
+    regUnregRc = -1;
+    if (PostThreadMessageA(workerThreadId, WM_REGISTER_HOTKEY, wParam, lParam) != 0)
     {
         std::mutex dummyLock;
         std::unique_lock<std::mutex> lock(dummyLock);
-        cvReturned.wait(lock, [this]() { return (rc != RC_NOT_USED); });
-        return rc;
+        cvRegUnregRc.wait(lock, [this]() { return (regUnregRc != -1); });
+        return regUnregRc;
     }
     return GetLastError();
 }
 
 int _RegisterGHMPrivateWin::unregisterHotkey(const KeyCombination& kc)
 {
-    rc = RC_NOT_USED;
-    if (PostThreadMessageA(workerThreadId, WM_UNREGISTER_HOTKEY, kc.combinedValue(), LPARAM()) != 0)
+    // wParam store the value of native modifiers.
+    WPARAM wParam = nativeModifiers(kc.modifiers());
+    // lParam store the value of native key code.
+    LPARAM lParam = nativeKey(kc.key());
+
+    regUnregRc = -1;
+    if (PostThreadMessageA(workerThreadId, WM_UNREGISTER_HOTKEY, wParam, lParam) != 0)
     {
         std::mutex dummyLock;
         std::unique_lock<std::mutex> lock(dummyLock);
-        cvReturned.wait(lock, [this]() { return (rc != RC_NOT_USED); });
-        return rc;
+        cvRegUnregRc.wait(lock, [this]() { return (regUnregRc != -1); });
+        return regUnregRc;
     }
     return GetLastError();
 }
@@ -97,7 +110,7 @@ void _RegisterGHMPrivateWin::invoke(WPARAM wParam, LPARAM lParam)
     if (hotkeyIdToKc.find(hotkeyId) != hotkeyIdToKc.end())
     {
         auto& kc = hotkeyIdToKc[hotkeyId];
-        auto fn = getValue(kc).second;
+        auto fn = getPairValue(kc).second;
         if (fn)
             fn();
     }
@@ -105,12 +118,11 @@ void _RegisterGHMPrivateWin::invoke(WPARAM wParam, LPARAM lParam)
 
 int _RegisterGHMPrivateWin::nativeRegisterHotkey(WPARAM wParam, LPARAM lParam)
 {
-    KeyCombination kc = KeyCombination::fromCombinedValue(wParam);
-    bool autoRepeat = bool(lParam);
-    int mod = nativeModifiers(kc.modifiers());
-    mod |= (!autoRepeat ? MOD_NOREPEAT : 0);
+    Modifiers mod = getModifiersFromNativeModifiers(wParam);
+    Key key = getKeyFromNativeKey(lParam);
+    KeyCombination kc(mod, key);
 
-    if (RegisterHotKey(NULL, hotkeyIndex, mod, nativeKey(kc.key())) != 0)
+    if (RegisterHotKey(NULL, hotkeyIndex, wParam, lParam) != 0)
     {
         hotkeyIdToKc[hotkeyIndex] = kc;
         kcToHotkeyId[kc] = hotkeyIndex;
@@ -122,12 +134,18 @@ int _RegisterGHMPrivateWin::nativeRegisterHotkey(WPARAM wParam, LPARAM lParam)
 
 int _RegisterGHMPrivateWin::nativeUnregisterHotkey(WPARAM wParam, LPARAM lParam)
 {
-    KeyCombination kc = KeyCombination::fromCombinedValue(wParam);
+    Modifiers mod = getModifiersFromNativeModifiers(wParam);
+    Key key = getKeyFromNativeKey(lParam);
+    KeyCombination kc(mod, key);
+
     int hotkeyId = kcToHotkeyId[kc];
-    UnregisterHotKey(NULL, hotkeyId);
-    hotkeyIdToKc.erase(hotkeyId);
-    kcToHotkeyId.erase(kc);
-    return RC_SUCCESS;
+    if (UnregisterHotKey(NULL, hotkeyId) != 0)
+    {
+        hotkeyIdToKc.erase(hotkeyId);
+        kcToHotkeyId.erase(kc);
+        return RC_SUCCESS;
+    }
+    return GetLastError();
 }
 
 } // namespace gbhk

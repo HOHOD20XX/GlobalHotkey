@@ -7,7 +7,7 @@
 #elif defined(_GLOBAL_HOTKEY_MAC)
     #include "register_ghm_private_mac.hpp"
 #elif defined(_GLOBAL_HOTKEY_LINUX)
-    #include "register_ghm_private_linux.hpp"
+    #include "register_ghm_private_x11.hpp"
 #endif // _GLOBAL_HOTKEY_WIN
 
 namespace gbhk
@@ -25,7 +25,7 @@ RegisterGlobalHotkeyManager::RegisterGlobalHotkeyManager() :
 #elif defined(_GLOBAL_HOTKEY_MAC)
     GlobalHotkeyManager(std::unique_ptr<_GHMPrivate>(new _RegisterGHMPrivateMac()))
 #elif defined(_GLOBAL_HOTKEY_LINUX)
-    GlobalHotkeyManager(std::unique_ptr<_GHMPrivate>(new _RegisterGHMPrivateLinux()))
+    GlobalHotkeyManager(std::unique_ptr<_GHMPrivate>(new _RegisterGHMPrivateX11()))
 #endif // _GLOBAL_HOTKEY_WIN
 {}
 

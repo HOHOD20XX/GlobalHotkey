@@ -15,12 +15,9 @@ class _GHMPrivate;
 class GBHK_API GlobalHotkeyManager
 {
 public:
-    GlobalHotkeyManager(const GlobalHotkeyManager&) = delete;
-    GlobalHotkeyManager& operator=(const GlobalHotkeyManager&) = delete;
-
-    int start();
+    int run();
     int end();
-    int add(const KeyCombination& kc, const std::function<void()>& fn, bool autoRepeat = false);
+    int add(const KeyCombination& kc, const std::function<void ()>& fn, bool autoRepeat = false);
     int remove(const KeyCombination& kc);
     int removeAll();
     int replace(const KeyCombination& oldKc, const KeyCombination& newKc);
@@ -33,6 +30,8 @@ public:
 protected:
     explicit GlobalHotkeyManager(std::unique_ptr<_GHMPrivate> ptr);
     virtual ~GlobalHotkeyManager();
+    GlobalHotkeyManager(const GlobalHotkeyManager&) = delete;
+    GlobalHotkeyManager& operator=(const GlobalHotkeyManager&) = delete;
 
     std::unique_ptr<_GHMPrivate> ptr;
 };

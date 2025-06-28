@@ -2,10 +2,12 @@
 
 #include "hook_ghm_private.hpp"
 
-#include "../key/key_private.hpp"
+#include <chrono>   // chrono
+#include <thread>   // this_thread
 
 #include <global_hotkey/return_code.hpp>
-#include <global_hotkey/utility.hpp>
+
+#include "../key/key_private.hpp"
 
 namespace gbhk
 {
@@ -14,20 +16,25 @@ std::atomic<Modifiers> _HookGHMPrivate::pressedMod(0);
 std::atomic<Key> _HookGHMPrivate::pressedKey(0);
 
 _HookGHMPrivate::_HookGHMPrivate() :
-    shouldClose(false), kbhm(kbhook::KeyboardHookManager::getInstance())
+    shouldClose(false),
+    kbhm(kbhook::KeyboardHookManager::getInstance())
 {}
 
 _HookGHMPrivate::~_HookGHMPrivate() { end(); }
 
-int _HookGHMPrivate::doBeforeThreadStart()
+int _HookGHMPrivate::doBeforeThreadRun()
 {
-    int rc = kbhm.start();
+    int rc = kbhm.run();
     if (rc != RC_SUCCESS)
         return rc;
-    kbhm.setKeyPressedEvent(&keyPressedCallback);
-    kbhm.setKeyReleasedEvent(&keyReleasedCallback);
+    rc = kbhm.setKeyPressedCallback(&keyPressedCallback);
+    if (rc != RC_SUCCESS)
+        return rc;
+    rc = kbhm.setKeyReleasedCallback(&keyReleasedCallback);
+    if (rc != RC_SUCCESS)
+        return rc;
     shouldClose = false;
-    return RC_SUCCESS;
+    return rc;
 }
 
 int _HookGHMPrivate::doBeforeThreadEnd()
@@ -41,24 +48,25 @@ int _HookGHMPrivate::doBeforeThreadEnd()
 
 void _HookGHMPrivate::work()
 {
-    setSuccessRunning();
+    setRunSuccess();
 
     KeyCombination prevKc;
-    TimedSleeper ts;
+    std::chrono::steady_clock::time_point startTime;
     while (!shouldClose)
     {
-        ts.resetStartTime();
+        startTime = std::chrono::steady_clock::now();
 
-        KeyCombination kc(pressedMod, pressedKey);
-        auto pair = getValue(kc);
+        KeyCombination currKc(pressedMod, pressedKey);
+        auto pair = getPairValue(currKc);
         auto& autoRepeat = pair.first;
         auto& fn = pair.second;
-        bool shouldInvoke = fn && (kc != prevKc || autoRepeat);
+        bool shouldInvoke = fn && (currKc != prevKc || autoRepeat);
         if (shouldInvoke)
             fn();
-        prevKc = kc;
+        prevKc = currKc;
 
-        ts.sleepUntilElapsed(10);
+        auto targetTime = startTime + std::chrono::milliseconds(10);
+        std::this_thread::sleep_until(targetTime);
     }
 }
 
@@ -67,7 +75,6 @@ int _HookGHMPrivate::registerHotkey(const KeyCombination& kc, bool autoRepeat)
 
 int _HookGHMPrivate::unregisterHotkey(const KeyCombination& kc)
 { return RC_SUCCESS; }
-
 
 void _HookGHMPrivate::keyPressedCallback(int nativeKey)
 {

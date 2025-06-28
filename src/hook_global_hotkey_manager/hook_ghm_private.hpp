@@ -17,7 +17,7 @@ public:
     ~_HookGHMPrivate();
 
 protected:
-    int doBeforeThreadStart() override;
+    int doBeforeThreadRun() override;
     int doBeforeThreadEnd() override;
     void work() override;
     int registerHotkey(const KeyCombination& kc, bool autoRepeat);

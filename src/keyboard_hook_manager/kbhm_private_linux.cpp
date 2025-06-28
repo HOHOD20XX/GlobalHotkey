@@ -4,9 +4,10 @@
 
 #ifdef _GLOBAL_HOTKEY_LINUX
 
-#include <fcntl.h>      // open
-#include <sys/stat.h>   // stat
-#include <unistd.h>     // getuid, close
+#include <fcntl.h>          // open
+#include <poll.h>           // poll
+#include <sys/eventfd.h>    // eventfd
+#include <unistd.h>         // read, write, close
 
 #include <global_hotkey/return_code.hpp>
 
@@ -20,11 +21,6 @@ constexpr const char* EVDEV_FILE_PREFIX = "/dev/input/event";
 constexpr int KEY_RELEASED = 0;
 constexpr int KEY_PRESSED = 1;
 constexpr int KEY_HELD = 2;
-
-static bool isRootPermission()
-{
-    return getuid() == 0;
-}
 
 static bool isFileExists(const std::string& fileName)
 {
@@ -49,7 +45,7 @@ _KBHMPrivateLinux::_KBHMPrivateLinux() = default;
 
 _KBHMPrivateLinux::~_KBHMPrivateLinux() { end(); }
 
-int _KBHMPrivateLinux::doBeforeThreadStart()
+int _KBHMPrivateLinux::doBeforeThreadRun()
 {
     if (!isRootPermission())
         return RC_PERMISSION_DENIED;
@@ -129,7 +125,7 @@ void _KBHMPrivateLinux::handleKeyEvent(int nativeKey, int state)
         ks = KS_RELEASED;
     }
 
-    Combine combine(nativeKey, static_cast<KeyState>(ks));
+    Combination combine(nativeKey, static_cast<KeyState>(ks));
     if (fns.find(combine) != fns.end())
     {
         auto& fn = fns[combine];

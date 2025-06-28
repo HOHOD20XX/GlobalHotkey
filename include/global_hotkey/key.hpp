@@ -38,7 +38,7 @@ enum KeyFlag : int32_t
     Key_8       = 0x0038,
     Key_9       = 0x0039,
 
-    // Ascii alpha keys.
+    // ASCII letter keys.
     Key_A       = 0x0041,
     Key_B       = 0x0042,
     Key_C       = 0x0043,
@@ -205,8 +205,8 @@ public:
     constexpr inline Modifiers(const std::initializer_list<ModifierFlag>& modifiers) noexcept :
         i(initializerListHelper_(modifiers.begin(), modifiers.end())) {}
 
-    constexpr inline operator int32_t() const noexcept { return i; }
     constexpr inline int32_t value() const noexcept { return i; }
+    constexpr inline operator int32_t() const noexcept { return i; }
 
     constexpr inline bool has(ModifierFlag modifier) const noexcept { return (i & modifier) != 0; }
     constexpr inline bool has(Modifiers modifiers) const noexcept { return (i & modifiers.i) == modifiers.i; }
@@ -255,8 +255,8 @@ public:
     constexpr inline Key(char key) noexcept : i(toUpper_(key)) {}
     constexpr inline Key(int32_t key) noexcept : i(key) {}
 
-    constexpr inline operator int32_t() const noexcept { return i; }
     constexpr inline int32_t value() const noexcept { return i; }
+    constexpr inline operator int32_t() const noexcept { return i; }
 
     /// @brief Check whether the key value is not 0.
     constexpr inline bool isValid() const noexcept { return i != 0; }

@@ -23,9 +23,9 @@ public:
     ~_KBHMPrivateMac();
 
 protected:
+    int doBeforeThreadRun() override;
     int doBeforeThreadEnd() override;
-    int doBeforeLoop() override;
-    void eachCycleDo() override;
+    void work() override;
 
 private:
     static CGEventRef keyboardCallback(CGEventTapProxy proxy, CGEventType type, CGEventRef event, void* data);

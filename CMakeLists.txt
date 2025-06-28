@@ -32,15 +32,15 @@ else()
 endif()
 
 # Disable register hotkey manager option.
-option(GBHK_DISABLE_REGISTER "Disable register global hotkey manager" OFF)
+option(GBHK_DISABLE_REGISTER "Disable register Global Hotkey Manager" OFF)
 if(GBHK_DISABLE_REGISTER)
-    message(STATUS "${GBHK_MSG_PREFIX} Disable register global hotkey manager")
+    message(STATUS "${GBHK_MSG_PREFIX} Disable register Global Hotkey Manager")
 endif()
 
 # Disable hook hotkey manager option.
-option(GBHK_DISABLE_HOOK "Disable hook global hotkey manager" OFF)
+option(GBHK_DISABLE_HOOK "Disable hook Global Hotkey Manager" OFF)
 if(GBHK_DISABLE_HOOK)
-    message(STATUS "${GBHK_MSG_PREFIX} Disable hook global hotkey manager")
+    message(STATUS "${GBHK_MSG_PREFIX} Disable hook Global Hotkey Manager")
 endif()
 
 # Build example option.
@@ -57,10 +57,10 @@ endif()
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 file(GLOB_RECURSE SRC
-     src/*.cpp
      src/global_hotkey_manager/*.cpp
      src/hook_global_hotkey_manager/*.cpp
      src/key/key.cpp
+     src/key_combination/key_combination.cpp
      src/keyboard_hook_manager/keyboard_hook_manager.cpp
      src/keyboard_hook_manager/kbhm_private.cpp
      src/register_global_hotkey_manager/register_global_hotkey_manager.cpp
@@ -107,7 +107,6 @@ if(APPLE)
     endif()
 
     if(NOT GBHK_DISABLE_HOOK)
-        # For CF_XXX
         find_library(COREFOUNDATION_LIBRARY CoreFoundation)
         if(COREFOUNDATION_LIBRARY)
             message(STATUS "${GBHK_MSG_PREFIX} Found CoreFoundation: ${COREFOUNDATION_LIBRARY}")
@@ -116,23 +115,12 @@ if(APPLE)
             message(FATAL_ERROR "${GBHK_MSG_PREFIX} Not found CoreFoundation")
         endif()
 
-        # For CG_XXX
         find_library(COREGRAPHICS_LIBRARY CoreGraphics)
         if(COREGRAPHICS_LIBRARY)
             message(STATUS "${GBHK_MSG_PREFIX} Found CoreGraphics: ${COREGRAPHICS_LIBRARY}")
             target_link_libraries(${TARGET_NAME} PRIVATE ${COREGRAPHICS_LIBRARY})
         else()
             message(FATAL_ERROR "${GBHK_MSG_PREFIX} Not found CoreGraphics")
-        endif()
-
-        # For AXIsProcessTrustedWithOptions.
-        # Maybe removed in future.
-        find_library(AX_LIBRARY ApplicationServices)
-        if(AX_LIBRARY)
-            message(STATUS "${GBHK_MSG_PREFIX} Found ApplicationServices: ${AX_LIBRARY}")
-            target_link_libraries(${TARGET_NAME} PRIVATE ${AX_LIBRARY})
-        else()
-            message(STATUS "${GBHK_MSG_PREFIX}Not found ApplicationServices")
         endif()
     endif()
 endif()

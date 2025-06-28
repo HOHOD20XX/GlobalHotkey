@@ -15,6 +15,8 @@ class GBHK_API KeyCombination
 public:
     constexpr inline KeyCombination() noexcept = default;
     constexpr inline KeyCombination(const Modifiers& modifiers, const Key& key) noexcept : mod(modifiers), ky(key) {}
+    constexpr inline explicit KeyCombination(int64_t combinedValue) noexcept :
+        mod(int32_t(combinedValue >> 32)), ky(int32_t(combinedValue)) {}
 
     static KeyCombination fromString(const std::string& str) noexcept;
     std::string toString(bool isPrettySpace = false, bool showKeyValue = false) const noexcept;
@@ -24,6 +26,7 @@ public:
     static constexpr inline KeyCombination fromCombinedValue(int64_t value) noexcept
     { return KeyCombination(int32_t(value >> 32), int32_t(value)); }
     constexpr inline int64_t combinedValue() const noexcept { return (int64_t(mod) << 32) | (int64_t(ky) << 0); }
+    constexpr inline explicit operator int64_t() const noexcept { return combinedValue(); }
 
 #if _GLOBAL_HOTKEY_CPPVERS >= 201703L
     // In C++17, constexpr member functions are no longer implicitly const.
@@ -59,7 +62,9 @@ struct hash<gbhk::KeyCombination>
 {
     size_t operator()(const gbhk::KeyCombination& obj) const noexcept
     {
-        return std::hash<int64_t>()(obj.combinedValue());
+        size_t h1 = std::hash<int32_t>()(obj.mod);
+        size_t h2 = std::hash<int32_t>()(obj.ky);
+        return h1 ^ (h2 << 1);
     }
 };
 

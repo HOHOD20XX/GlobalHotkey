@@ -8,6 +8,7 @@
     #include "kbhm_private_mac.hpp"
 #elif defined(_GLOBAL_HOTKEY_LINUX)
     #include "kbhm_private_linux.hpp"
+#include "keyboard_hook_manager.hpp"
 #endif // _GLOBAL_HOTKEY_WIN
 
 namespace gbhk
@@ -34,13 +35,13 @@ KeyboardHookManager::KeyboardHookManager() :
 
 KeyboardHookManager::~KeyboardHookManager() = default;
 
-int KeyboardHookManager::start()
-{ return ptr->start(); }
+int KeyboardHookManager::run()
+{ return ptr->run(); }
 
 int KeyboardHookManager::end()
 { return ptr->end(); }
 
-int KeyboardHookManager::addKeyListener(int nativeKey, KeyState state, const std::function<void()>& fn)
+int KeyboardHookManager::addKeyListener(int nativeKey, KeyState state, const std::function<void ()>& fn)
 { return ptr->addKeyListener(nativeKey, state, fn); }
 
 int KeyboardHookManager::removeKeyListener(int nativeKey, KeyState state)
@@ -49,20 +50,23 @@ int KeyboardHookManager::removeKeyListener(int nativeKey, KeyState state)
 int KeyboardHookManager::removeAllKeyListener()
 { return ptr->removeAllKeyListener(); }
 
-int KeyboardHookManager::setKeyPressedEvent(void (*fn)(int))
-{ return ptr->setKeyPressedEvent(fn); }
+int KeyboardHookManager::setKeyPressedCallback(const std::function<void (int)>& fn)
+{ return ptr->setKeyPressedCallback(fn); }
 
-int KeyboardHookManager::setKeyReleasedEvent(void (*fn)(int))
-{ return ptr->setKeyReleasedEvent(fn); }
+int KeyboardHookManager::setKeyReleasedCallback(const std::function<void (int)>& fn)
+{ return ptr->setKeyReleasedCallback(fn); }
 
-int KeyboardHookManager::unsetKeyPressedEvent()
-{ return ptr->unsetKeyPressedEvent(); }
+int KeyboardHookManager::unsetKeyPressedCallback()
+{ return ptr->unsetKeyPressedCallback(); }
 
-int KeyboardHookManager::unsetKeyReleasedEvent()
-{ return ptr->unsetKeyReleasedEvent(); }
+int KeyboardHookManager::unsetKeyReleasedCallback()
+{ return ptr->unsetKeyReleasedCallback(); }
 
-void KeyboardHookManager::setCycleTime(size_t milliseconds)
-{ return ptr->setCycleTime(milliseconds); }
+bool KeyboardHookManager::hasKeyListener(int nativeKey, KeyState state) const
+{ return ptr->hasKeyListener(nativeKey, state); }
+
+bool KeyboardHookManager::isRunning() const
+{ return ptr->isRunning(); }
 
 } // namespace kbhook
 

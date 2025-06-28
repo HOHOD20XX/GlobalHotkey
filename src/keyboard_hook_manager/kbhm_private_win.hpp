@@ -22,16 +22,13 @@ public:
     ~_KBHMPrivateWin();
 
 protected:
-    int doBeforeLoop() override;
-    int doAfterLoop() override;
-
-    void eachCycleDo() override;
+    int doBeforeThreadEnd() override;
+    void work() override;
 
 private:
     static LRESULT LowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam);
 
-    MSG msg = {0};
-    HHOOK hhook = NULL;
+    std::atomic<DWORD> workerThreadId;
 };
 
 } // namespace kbhook

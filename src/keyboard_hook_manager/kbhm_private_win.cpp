@@ -16,30 +16,36 @@ _KBHMPrivateWin::_KBHMPrivateWin() = default;
 
 _KBHMPrivateWin::~_KBHMPrivateWin() { end(); }
 
-int _KBHMPrivateWin::doBeforeLoop()
+int _KBHMPrivateWin::doBeforeThreadEnd()
 {
-    hhook = SetWindowsHookExA(WH_KEYBOARD_LL, &_KBHMPrivateWin::LowLevelKeyboardProc, NULL, 0);;
-    if (hhook)
+    if (PostThreadMessageA(workerThreadId, WM_DESTROY, WPARAM(), LPARAM()) != 0)
         return RC_SUCCESS;
-    else
-        return GetLastError();
+    return GetLastError();
 }
 
-int _KBHMPrivateWin::doAfterLoop()
+void _KBHMPrivateWin::work()
 {
-    UnhookWindowsHookEx(hhook);
-    msg = {0};
-    hhook = NULL;
-    return RC_SUCCESS;
-}
+    HHOOK hhook = SetWindowsHookExA(WH_KEYBOARD_LL, &_KBHMPrivateWin::LowLevelKeyboardProc, NULL, 0);;
+    if (!hhook)
+        setRunFail(GetLastError());
 
-void _KBHMPrivateWin::eachCycleDo()
-{
-    while (PeekMessageA(&msg, NULL, WM_KEYFIRST, WM_KEYLAST, PM_REMOVE) != 0)
+    workerThreadId = GetCurrentThreadId();
+    MSG msg = {0};
+    // Force the system to create the message queue.
+    PeekMessageA(&msg, NULL, WM_USER, WM_USER, PM_NOREMOVE);
+    // Indicate the worker thread is created successfully after create the message queue.
+    // This can ensure that the `PostThreadMessage` is called only when the message queue exists.
+    setRunSuccess();
+    // Retrieves only messages on the current thread's message queue whose hwnd value is NULL.
+    // In this case the thread message as posted by `PostThreadMessage`.
+    setRunSuccess();
+    while (GetMessageA(&msg, HWND(-1), 0, 0) != 0)
     {
-        TranslateMessage(&msg);
-        DispatchMessageA(&msg);
+        if (msg.message == WM_DESTROY)
+            PostQuitMessage(0);
     }
+
+    UnhookWindowsHookEx(hhook);
 }
 
 LRESULT WINAPI _KBHMPrivateWin::LowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
@@ -48,30 +54,26 @@ LRESULT WINAPI _KBHMPrivateWin::LowLevelKeyboardProc(int nCode, WPARAM wParam, L
     {
         KBDLLHOOKSTRUCT* ptr = (KBDLLHOOKSTRUCT*) lParam;
         int nativeKey = ptr->vkCode;
-        int state = 0;
-
-        std::lock_guard<std::mutex> lock(mtx);
+        KeyState state = KS_NONE;
 
         if (wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN)
         {
+            auto keyPressedCallback = getKeyPressedCallback();
             if (keyPressedCallback)
                 keyPressedCallback(nativeKey);
             state = KS_PRESSED;
         }
         else if (wParam == WM_KEYUP || wParam == WM_SYSKEYUP)
         {
+            auto keyReleasedCallback = getKeyReleasedCallback();
             if (keyReleasedCallback)
                 keyReleasedCallback(nativeKey);
             state = KS_RELEASED;
         }
 
-        Combine combine(nativeKey, static_cast<KeyState>(state));
-        if (fns.find(combine) != fns.end())
-        {
-            auto& fn = fns[combine];
-            if (fn)
-                fn();
-        }
+        auto fn = getKeyListenerCallback(nativeKey, state);
+        if (fn)
+            fn();
     }
 
     return CallNextHookEx(NULL, nCode, wParam, lParam);

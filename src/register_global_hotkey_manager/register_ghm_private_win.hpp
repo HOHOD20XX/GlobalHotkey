@@ -31,8 +31,8 @@ private:
     int nativeUnregisterHotkey(WPARAM wParam, LPARAM lParam);
 
     std::atomic<DWORD> workerThreadId;
-    std::condition_variable cvReturned;
-    std::atomic<int> rc;
+    std::condition_variable cvRegUnregRc;
+    std::atomic<int> regUnregRc;
     std::atomic<int> hotkeyIndex;
     std::unordered_map<int, KeyCombination> hotkeyIdToKc;
     std::unordered_map<KeyCombination, int> kcToHotkeyId;

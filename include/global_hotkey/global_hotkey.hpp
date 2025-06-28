@@ -9,6 +9,5 @@
 #include "hook_global_hotkey_manager.hpp"
 #include "register_global_hotkey_manager.hpp"
 #include "return_code.hpp"
-#include "utility.hpp"
 
 #endif // !GLOBAL_HOTKEY_GLOBAL_HOTKEY_HPP

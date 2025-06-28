@@ -7,20 +7,21 @@ namespace gbhk
 {
 
 _GHMPrivate::_GHMPrivate() :
-    runningState(RS_FREE), createThreadRc(RC_NOT_USED), workerThreadId(std::thread::id())
+    runningState(RS_FREE),
+    runningRc(0),
+    workerThreadId(std::thread::id())
 {}
 
 _GHMPrivate::~_GHMPrivate() = default;
 
-int _GHMPrivate::start()
+int _GHMPrivate::run()
 {
     if (isRunning())            return RC_SUCCESS;
 
-    int rc = doBeforeThreadStart();
+    int rc = doBeforeThreadRun();
     if (rc != RC_SUCCESS)
         return rc;
 
-    createThreadRc = RC_NOT_USED;
     workerThread = std::thread([this]() {
         workerThreadId = std::this_thread::get_id();
         work();
@@ -32,6 +33,7 @@ int _GHMPrivate::start()
     std::mutex dummyMtx;
     std::unique_lock<std::mutex> lock(dummyMtx);
     cvRunningState.wait(lock, [this]() { return runningState != RS_FREE; });
+    lock.unlock();
 
     if (runningState == RS_TERMINATE)
     {
@@ -39,13 +41,13 @@ int _GHMPrivate::start()
         runningState = RS_FREE;
     }
 
-    return createThreadRc;
+    return runningRc;
 }
 
 int _GHMPrivate::end()
 {
     if (!isRunning())           return RC_SUCCESS;
-    if (isInWorkerThread())     return RC_END_GHM_IN_WRONG_THREAD;
+    if (isInWorkerThread())     return RC_BAD_THREAD;
 
     int rc = removeAll();
     rc = doBeforeThreadEnd();
@@ -55,18 +57,15 @@ int _GHMPrivate::end()
     cvRunningState.wait(lock, [this]() { return runningState != RS_RUNNING; });
     lock.unlock();
 
-    workerThreadId = std::thread::id();
-    fns.clear();
-
     return rc;
 }
 
-int _GHMPrivate::add(const KeyCombination& kc, const std::function<void()>& fn, bool autoRepeat)
+int _GHMPrivate::add(const KeyCombination& kc, const std::function<void ()>& fn, bool autoRepeat)
 {
-    if (!isRunning())           return RC_CHANGE_GH_IN_WRONG_TIME;
-    if (isInWorkerThread())     return RC_CHANGE_GH_IN_WRONG_THREAD;
+    if (!isRunning())           return RC_BAD_TIMING;
+    if (isInWorkerThread())     return RC_BAD_THREAD;
     if (!kc.isValid() || !fn)   return RC_INVALID_VALUE;
-    if (has(kc))                return RC_EXIST_SAME_VALUE;
+    if (has(kc))                return RC_EXISTING_VALUE;
 
     int rc = registerHotkey(kc, autoRepeat);
     if (rc != RC_SUCCESS)
@@ -75,14 +74,14 @@ int _GHMPrivate::add(const KeyCombination& kc, const std::function<void()>& fn, 
     std::lock_guard<std::mutex> lock(mtx);
     fns[kc] = {autoRepeat, fn};
 
-    return RC_SUCCESS;
+    return rc;
 }
 
 int _GHMPrivate::remove(const KeyCombination& kc)
 {
-    if (!isRunning())           return RC_CHANGE_GH_IN_WRONG_TIME;
-    if (isInWorkerThread())     return RC_CHANGE_GH_IN_WRONG_THREAD;
-    if (!has(kc))               return RC_NO_SPECIFIED_VALUE;
+    if (!isRunning())           return RC_BAD_TIMING;
+    if (isInWorkerThread())     return RC_BAD_THREAD;
+    if (!has(kc))               return RC_NO_SUCH_VALUE;
 
     int rc = unregisterHotkey(kc);
 
@@ -94,8 +93,8 @@ int _GHMPrivate::remove(const KeyCombination& kc)
 
 int _GHMPrivate::removeAll()
 {
-    if (!isRunning())           return RC_CHANGE_GH_IN_WRONG_TIME;
-    if (isInWorkerThread())     return RC_CHANGE_GH_IN_WRONG_THREAD;
+    if (!isRunning())           return RC_BAD_TIMING;
+    if (isInWorkerThread())     return RC_BAD_THREAD;
 
     int rc = RC_SUCCESS;
     for (const auto& var : fns)
@@ -109,16 +108,16 @@ int _GHMPrivate::removeAll()
 
 int _GHMPrivate::replace(const KeyCombination& oldKc, const KeyCombination& newKc)
 {
-    if (!isRunning())           return RC_CHANGE_GH_IN_WRONG_TIME;
-    if (isInWorkerThread())     return RC_CHANGE_GH_IN_WRONG_THREAD;
+    if (!isRunning())           return RC_BAD_TIMING;
+    if (isInWorkerThread())     return RC_BAD_THREAD;
     if (!newKc.isValid())       return RC_INVALID_VALUE;
-    if (!has(oldKc))            return RC_NO_SPECIFIED_VALUE;
-    if (has(newKc))             return RC_EXIST_SAME_VALUE;
+    if (!has(oldKc))            return RC_NO_SUCH_VALUE;
+    if (has(newKc))             return RC_EXISTING_VALUE;
 
     if (newKc == oldKc)
         return RC_SUCCESS;
 
-    auto value = getValue(oldKc);
+    auto value = getPairValue(oldKc);
     int rc = unregisterHotkey(oldKc);
     mtx.lock();
     fns.erase(oldKc);
@@ -131,34 +130,32 @@ int _GHMPrivate::replace(const KeyCombination& oldKc, const KeyCombination& newK
     std::lock_guard<std::mutex> lock(mtx);
     fns[newKc] = value;
 
-    return RC_SUCCESS;
+    return rc;
 }
 
 int _GHMPrivate::setAutoRepeat(const KeyCombination& kc, bool autoRepeat)
 {
-    if (!isRunning())           return RC_CHANGE_GH_IN_WRONG_TIME;
-    if (isInWorkerThread())     return RC_CHANGE_GH_IN_WRONG_THREAD;
-    if (!has(kc))               return RC_NO_SPECIFIED_VALUE;
+    if (!isRunning())           return RC_BAD_TIMING;
+    if (isInWorkerThread())     return RC_BAD_THREAD;
+    if (!has(kc))               return RC_NO_SUCH_VALUE;
 
-
-    auto value = getValue(kc);
+    auto value = getPairValue(kc);
     if (value.first == autoRepeat)
         return RC_SUCCESS;
+    value.first = autoRepeat;
 
     int rc = unregisterHotkey(kc);
     mtx.lock();
     fns.erase(kc);
     mtx.unlock();
-
     rc = registerHotkey(kc, autoRepeat);
     if (rc != RC_SUCCESS)
         return rc;
 
-    value.first = autoRepeat;
     std::lock_guard<std::mutex> lock(mtx);
     fns[kc] = value;
 
-    return RC_SUCCESS;
+    return rc;
 }
 
 bool _GHMPrivate::has(const KeyCombination& kc) const
@@ -188,30 +185,32 @@ std::vector<KeyCombination> _GHMPrivate::getAllKeyCombination() const
     return rslt;
 }
 
-std::pair<bool, std::function<void()>> _GHMPrivate::getValue(const KeyCombination& kc) const
+std::pair<bool, std::function<void ()>> _GHMPrivate::getPairValue(const KeyCombination& kc) const
 {
-    if (!kc.isValid() || !has(kc))
-        return std::pair<bool, std::function<void()>>();
-
+    if (!kc.isValid())
+        return std::pair<bool, std::function<void ()>>();
     std::lock_guard<std::mutex> lock(mtx);
-    return fns.at(kc);
+    const auto& it = fns.find(kc);
+    if (it == fns.end())
+        return std::pair<bool, std::function<void ()>>();
+    return it->second;
 }
 
-void _GHMPrivate::setSuccessRunning()
+void _GHMPrivate::setRunSuccess()
 {
-    createThreadRc = RC_SUCCESS;
+    runningRc = RC_SUCCESS;
     runningState = RS_RUNNING;
     cvRunningState.notify_one();
 }
 
-void _GHMPrivate::setFailedRunning(int errorCode)
+void _GHMPrivate::setRunFail(int errorCode)
 {
-    createThreadRc = errorCode;
+    runningRc = errorCode;
     runningState = RS_TERMINATE;
     cvRunningState.notify_one();
 }
 
-int _GHMPrivate::doBeforeThreadStart()
+int _GHMPrivate::doBeforeThreadRun()
 { return RC_SUCCESS; }
 
 int _GHMPrivate::doBeforeThreadEnd()

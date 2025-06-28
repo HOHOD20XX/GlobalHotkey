@@ -4,9 +4,6 @@
 
 #ifdef _GLOBAL_HOTKEY_MAC
 
-#include <unistd.h> // getuid
-#include <ApplicationServices/ApplicationServices.h>
-
 #include <global_hotkey/return_code.hpp>
 
 #include <iostream>
@@ -17,25 +14,12 @@ namespace gbhk
 namespace kbhook
 {
 
-static bool isRootPermission()
-{
-    return getuid() == 0;
-}
-
-static bool isAssistiveAccessible()
-{
-    return AXIsProcessTrustedWithOptions(NULL);
-}
-
 _KBHMPrivateMac::_KBHMPrivateMac() = default;
 
 _KBHMPrivateMac::~_KBHMPrivateMac() { end(); }
 
 int _KBHMPrivateMac::doBeforeLoop()
 {
-    if (!isRootPermission() || !isAssistiveAccessible())
-        return RC_PERMISSION_DENIED;
-
     runLoop = CFRunLoopGetCurrent();
 
     CGEventMask eventMask =

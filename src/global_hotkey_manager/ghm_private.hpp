@@ -20,9 +20,9 @@ public:
     _GHMPrivate();
     virtual ~_GHMPrivate();
 
-    int start();
+    int run();
     int end();
-    int add(const KeyCombination& kc, const std::function<void()>& fn, bool autoRepeat);
+    int add(const KeyCombination& kc, const std::function<void ()>& fn, bool autoRepeat);
     int remove(const KeyCombination& kc);
     int removeAll();
     int replace(const KeyCombination& oldKc, const KeyCombination& newKc);
@@ -33,32 +33,34 @@ public:
     std::vector<KeyCombination> getAllKeyCombination() const;
 
 protected:
-    /// @brief Get the `autoRepeat` and `callback` values corresponding to the specified key combination.
+    /// @brief Get the pair of `autoRepeat` and `callback` values corresponding to the specified key combination.
+    /// @return Return a empty pair if the key combination given is not exists or it is invalid
+    /// else return the pair of `autoRepeat` and `callback` values.
     /// @note Thread-safe.
-    std::pair<bool, std::function<void()>> getValue(const KeyCombination& kc) const;
+    std::pair<bool, std::function<void ()>> getPairValue(const KeyCombination& kc) const;
 
-    /// @brief Indicates the worker thread creation successfully.
-    void setSuccessRunning();
-    /// @brief Indicates the worker thread creation failed.
-    void setFailedRunning(int errorCode);
+    /// @brief Indicates the worker thread running successfully.
+    /// @note The `runningRc` will be set to 'RC_SUCCESS`.
+    void setRunSuccess();
+    /// @brief Indicates the worker thread running failed.
+    /// @note The `runningRc` will be set to 'errorCode`.
+    void setRunFail(int errorCode);
 
     // Some interfaces for subclasses to specialize.
 
-    /// @note This function will be executed before the worker thread is created.
-    virtual int doBeforeThreadStart();
-    /// @note This function will be executed before the end of the worker thread.
+    /// @note This function will be performed before the worker thread is running.
+    virtual int doBeforeThreadRun();
+    /// @note This function will be performed before the worker thread is end.
     /// @note Specifically, only when this function returns will the semaphore controlling
-    /// the thread's exit be changed to enable the thread to exit.
-    /// @note In fact, it should always return 'RC_SUCCESS'.
+    /// the thread's end be changed to enable the thread to exit.
     virtual int doBeforeThreadEnd();
     /// @note The specific working logic of the worker thread.
-    /// @attention The `setSuccessRunning` or `setFailedRunning` must be called in the implementation
-    /// of this function to indicate whether the work started successfully.
+    /// @attention The `setRunSuccess` or `setRunFail` must be called in the implementation
+    /// of this function to indicate whether the work running successfully.
     virtual void work() = 0;
     /// @note The specific logic of register hotkey.
     virtual int registerHotkey(const KeyCombination& kc, bool autoRepeat) = 0;
     /// @note The specific logic of unregister hotkey.
-    /// @note In fact, it should always return 'RC_SUCCESS'.
     virtual int unregisterHotkey(const KeyCombination& kc) = 0;
 
 private:
@@ -71,15 +73,15 @@ private:
 
     bool isInWorkerThread() const;
 
-    mutable std::mutex mtx;
     std::condition_variable cvRunningState;
     std::atomic<RunningState> runningState;
-    std::atomic<int> createThreadRc;
+    std::atomic<int> runningRc;
 
     std::thread workerThread;
     std::thread::id workerThreadId;
 
-    std::unordered_map<KeyCombination, std::pair<bool, std::function<void()>>> fns;
+    mutable std::mutex mtx;
+    std::unordered_map<KeyCombination, std::pair<bool, std::function<void ()>>> fns;
 };
 
 } // namespace gbhk

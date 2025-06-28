@@ -24,10 +24,9 @@ public:
     ~_KBHMPrivateLinux();
 
 protected:
-    int doBeforeThreadStart() override;
+    int doBeforeThreadRun() override;
     int doBeforeThreadEnd() override;
-
-    void eachCycleDo() override;
+    void work() override;
 
 private:
     void handleKeyEvent(int nativeKey, int state);
