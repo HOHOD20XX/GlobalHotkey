@@ -82,7 +82,7 @@ int main()
     rc = ghm.add(hotkey2, &hotkeyTriggered2, true);
     if (rc != gbhk::RC_SUCCESS)
         THROW_RT_ERR("Failed to add the hotkey 2: ", rc);
-    printf("Success to add the hotkey: [%s] (auto repeat)\n\n", hotkey2.toString().c_str());
+    printf("Success to add the hotkey: [%s] (auto repeat)\n", hotkey2.toString().c_str());
 
     std::atomic<bool> shouldClose(false);
     std::condition_variable cv;
@@ -95,7 +95,7 @@ int main()
     if (rc != gbhk::RC_SUCCESS)
         THROW_RT_ERR("Failed to add the hotkey: ", rc);
     printf("Success to add the hotkey: [%s]\n", hotkey3.toString().c_str());
-    printf("Press the [%s] to exit!\n", hotkey3.toString().c_str());
+    printf("Press the [%s] to exit!\n\n", hotkey3.toString().c_str());
 
     std::mutex dummyMtx;
     std::unique_lock<std::mutex> lock(dummyMtx);
