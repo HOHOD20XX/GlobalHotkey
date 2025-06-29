@@ -84,6 +84,13 @@ else()
     add_library(${TARGET_NAME} STATIC ${SRC})
 endif()
 
+set_target_properties(${TARGET_NAME}
+    PROPERTIES
+    ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
+    LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
+    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
+)
+
 if(GBHK_DISABLE_REGISTER)
     target_compile_definitions(${TARGET_NAME} PUBLIC GLOBAL_HOTKEY_DISABLE_REGISTER)
 endif()
