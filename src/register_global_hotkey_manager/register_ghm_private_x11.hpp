@@ -31,13 +31,10 @@ private:
     int nativeRegisterHotkey(Display* display);
     int nativeUnregisterHotkey(Display* display);
 
-    KeyCombination keyPressedCallback(int x11Keycode, int x11Modifiers);
-    KeyCombination keyReleasedCallback(int x11Keycode, int x11Modifiers);
-
     std::condition_variable cvRegUnregRc;
     std::atomic<int> regUnregRc;
     std::atomic<KeyCombination> regUnregKc;
-    int eventFd = 0;
+    int eventFd = -1;
 };
 
 } // namespace gbhk

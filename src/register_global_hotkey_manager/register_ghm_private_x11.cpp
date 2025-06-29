@@ -76,7 +76,7 @@ void _RegisterGHMPrivateX11::work()
     }
 
     int x11Fd = ConnectionNumber(display);
-    pollfd fds[2];
+    pollfd fds[2] = {};
     fds[0].fd = x11Fd;
     fds[0].events = POLLIN;
     fds[1].fd = eventFd;
@@ -99,12 +99,20 @@ void _RegisterGHMPrivateX11::work()
             {
                 XNextEvent(display, &event);
                 if (event.type == KeyPress)
-                    currKc = keyPressedCallback(event.xkey.keycode, event.xkey.state);
-                else if (event.type == KeyRelease)
-                    currKc = keyReleasedCallback(event.xkey.keycode, event.xkey.state);
-                invoke(prevKc, currKc);
-                prevKc = currKc;
+                {
+                    auto mod = getModifiersFromX11Modifiers(event.xkey.state);
+                    auto keysym = KeycodeToKeysym[event.xkey.keycode];
+                    auto key = getKeyFromX11Keysym(keysym);
+                    currKc = {mod, key};
+                }
+                else
+                {
+                    // event.type == KeyRelease
+                    currKc = {};
+                }
             }
+            invoke(prevKc, currKc);
+            prevKc = currKc;
         }
 
         // Get the My Event.
@@ -147,7 +155,7 @@ int _RegisterGHMPrivateX11::registerHotkey(const KeyCombination& kc, bool autoRe
 
     std::mutex dummyLock;
     std::unique_lock<std::mutex> lock(dummyLock);
-    cvRegUnregRc.wait(lock, [this]() { return (rc != -1); });
+    cvRegUnregRc.wait(lock, [this]() { return (regUnregRc != -1); });
     return regUnregRc;
 }
 
@@ -162,7 +170,7 @@ int _RegisterGHMPrivateX11::unregisterHotkey(const KeyCombination& kc)
 
     std::mutex dummyLock;
     std::unique_lock<std::mutex> lock(dummyLock);
-    cvRegUnregRc.wait(lock, [this]() { return (rc != -1); });
+    cvRegUnregRc.wait(lock, [this]() { return (regUnregRc != -1); });
     return regUnregRc;
 }
 
@@ -176,61 +184,48 @@ void _RegisterGHMPrivateX11::invoke(const KeyCombination& prevKc, const KeyCombi
         fn();
 }
 
-int _RegisterGHMPrivateX11::nativeRegisterHotkey(Display* display, const KeyCombination& kc)
+int _RegisterGHMPrivateX11::nativeRegisterHotkey(Display* display)
 {
     ErrorHandler eh;
 
-    auto keysym = x11Keysym(kc.key());
+    auto keysym = x11Keysym(regUnregKc.load().key());
     auto keycode = XKeysymToKeycode(display, keysym);
-    keycodeTokeysym[keycode] = keysym;
-    auto mod = x11Modifiers(kc.modifiers());
+    KeycodeToKeysym[keycode] = keysym;
+    auto mod = x11Modifiers(regUnregKc.load().modifiers());
     XGrabKey(display, keycode, mod, DefaultRootWindow(display), True, GrabModeAsync, GrabModeAsync);
     XSync(display, False);
 
     return eh.ec;
 }
 
-int _RegisterGHMPrivateX11::nativeUnregisterHotkey(Display* display, const KeyCombination& kc)
+int _RegisterGHMPrivateX11::nativeUnregisterHotkey(Display* display)
 {
     ErrorHandler eh;
 
-    auto keysym = x11Keysym(kc.key());
+    auto keysym = x11Keysym(regUnregKc.load().key());
     auto keycode = XKeysymToKeycode(display, keysym);
-    auto mod = x11Modifiers(kc.modifiers());
+    auto mod = x11Modifiers(regUnregKc.load().modifiers());
     XUngrabKey(display, keycode, mod, DefaultRootWindow(display));
     XSync(display, False);
 
     return eh.ec;
 }
 
-KeyCombination _RegisterGHMPrivateX11::keyPressedCallback(int x11Keycode, int x11Modifiers)
-{
-    auto mod = getModifiersFromX11Modifiers(x11Modifiers);
-    auto keysym = keycodeTokeysym[x11Keycode];
-    auto key = getKeyFromX11Keysym(keysym);
-    return {mod, key};
-}
+int ErrorHandler::ec = RC_SUCCESS;
+XErrorHandler ErrorHandler::prevXErrorHandler;
 
-KeyCombination _RegisterGHMPrivateX11::keyReleasedCallback(int x11Keycode, int x11Modifiers)
-{
-    return KeyCombination();
-}
-
-int _RegisterGHMPrivateX11::ErrorHandler::ec = RC_SUCCESS;
-XErrorHandler _RegisterGHMPrivateX11::ErrorHandler::prevXErrorHandler;
-
-_RegisterGHMPrivateX11::ErrorHandler::ErrorHandler()
+ErrorHandler::ErrorHandler()
 {
     ec = RC_SUCCESS;
     prevXErrorHandler = XSetErrorHandler(&ErrorHandler::handleError);
 }
 
-_RegisterGHMPrivateX11::ErrorHandler::~ErrorHandler()
+ErrorHandler::~ErrorHandler()
 {
     XSetErrorHandler(prevXErrorHandler);
 }
 
-int _RegisterGHMPrivateX11::ErrorHandler::handleError(Display* display, XErrorEvent* error)
+int ErrorHandler::handleError(Display* display, XErrorEvent* error)
 {
     if (error->error_code != Success)
         ec = error->error_code;
