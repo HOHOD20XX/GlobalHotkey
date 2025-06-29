@@ -4,10 +4,12 @@
 
 #ifdef _GLOBAL_HOTKEY_LINUX
 
-#include <fcntl.h>          // open
+#include <dirent.h>         // dirent,
+#include <fcntl.h>          // fcntl
 #include <poll.h>           // poll
 #include <sys/eventfd.h>    // eventfd
-#include <unistd.h>         // read, write, close
+#include <sys/ioctl.h>      // ioctl
+#include <unistd.h>         // read, write, open, close
 
 #include <global_hotkey/return_code.hpp>
 
@@ -17,7 +19,7 @@ namespace gbhk
 namespace kbhook
 {
 
-constexpr const char* EVDEV_FILE_PREFIX = "/dev/input/event";
+constexpr const char* EVDEV_DIR = "/dev/input/";
 constexpr int KEY_RELEASED = 0;
 constexpr int KEY_PRESSED = 1;
 constexpr int KEY_HELD = 2;
@@ -47,9 +49,10 @@ _KBHMPrivateLinux::~_KBHMPrivateLinux() { end(); }
 
 int _KBHMPrivateLinux::doBeforeThreadRun()
 {
-    if (!isRootPermission())
-        return RC_PERMISSION_DENIED;
-
+    DIR* dir = opendir(EVDEV_DIR);
+    if (dir == NULL)
+        return errno;
+    dirent* ent;
     int evdevIndex = 0;
     while (true)
     {
@@ -89,7 +92,7 @@ int _KBHMPrivateLinux::doBeforeThreadEnd()
     return RC_SUCCESS;
 }
 
-void _KBHMPrivateLinux::eachCycleDo()
+void _KBHMPrivateLinux::work()
 {
     for (auto& device : devices)
     {

@@ -47,7 +47,7 @@ _RegisterGHMPrivateX11::~_RegisterGHMPrivateX11() { end(); }
 
 int _RegisterGHMPrivateX11::doBeforeThreadRun()
 {
-    eventFd = eventfd(0, 0);
+    eventFd = eventfd(0, EFD_CLOEXEC | EFD_NONBLOCK);
     if (eventFd == -1)
         return errno;
     return RC_SUCCESS;
