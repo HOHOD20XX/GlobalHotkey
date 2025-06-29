@@ -28,7 +28,7 @@ protected:
 private:
     static LRESULT LowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam);
 
-    std::atomic<DWORD> workerThreadId;
+    DWORD workerThreadId = DWORD();
 };
 
 } // namespace kbhook

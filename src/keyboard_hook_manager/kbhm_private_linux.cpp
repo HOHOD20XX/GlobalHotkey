@@ -4,12 +4,17 @@
 
 #ifdef _GLOBAL_HOTKEY_LINUX
 
-#include <dirent.h>         // dirent,
-#include <fcntl.h>          // fcntl
+#include <vector>           // vector
+
+#include <dirent.h>         // dirent
+#include <fcntl.h>          // fcntl, open
+#include <linux/input.h>    // input_event
 #include <poll.h>           // poll
 #include <sys/eventfd.h>    // eventfd
+#include <sys/inotify.h>    // inotify
 #include <sys/ioctl.h>      // ioctl
-#include <unistd.h>         // read, write, open, close
+#include <sys/stat.h>       // stat
+#include <unistd.h>         // read, write, close
 
 #include <global_hotkey/return_code.hpp>
 
@@ -20,27 +25,29 @@ namespace kbhook
 {
 
 constexpr const char* EVDEV_DIR = "/dev/input/";
-constexpr int KEY_RELEASED = 0;
-constexpr int KEY_PRESSED = 1;
-constexpr int KEY_HELD = 2;
+constexpr int KEY_STATE_RELEASED = 0;
+constexpr int KEY_STATE_PRESSED = 1;
+constexpr int KEY_STATE_HELD = 2;
 
-static bool isFileExists(const std::string& fileName)
+/// @return Return true if the specified path is exists and it is a file else return false.
+static bool isCharacterDevice(const std::string& filename)
 {
-    struct stat s;
-    return stat(fileName.c_str(), &s) == 0;
+    struct stat st;
+    return (stat(filename.c_str(), &st) != -1 && S_ISCHR(st.st_mode));
+    return (stat(filename.c_str(), &st) != -1 && S_ISCHR(st.st_mode));
 }
 
-/// @return A file descripitor.
-static int getLibevdevFromFile(const std::string& fileName, libevdev** dev)
+/// @return Return true if the specified input device has `EV_KEY` event and has't `EV_REL` and `EV_ABS` event
+/// else return false.
+static bool isKeyboardDevice(int fd)
 {
-    int fd = open(fileName.c_str(), O_RDONLY | O_NONBLOCK);
-    if (fd >= 0)
-    {
-        int rc = libevdev_new_from_fd(fd, dev);
-        if (rc < 0)
-            close(fd);
-    }
-    return fd;
+    unsigned int evbit = 0;
+    if (ioctl(fd, EVIOCGBIT(0, sizeof(evbit)), &evbit) == -1)
+        return false;
+    bool hasKeyEvent = (evbit & (1 << EV_KEY)) != 0;
+    bool hastRelEvent = (evbit & (1 << EV_REL)) == 0;
+    bool hastAbsEvent = (evbit & (1 << EV_ABS)) == 0;
+    return hasKeyEvent && hastRelEvent && hastAbsEvent;
 }
 
 _KBHMPrivateLinux::_KBHMPrivateLinux() = default;
@@ -49,92 +56,135 @@ _KBHMPrivateLinux::~_KBHMPrivateLinux() { end(); }
 
 int _KBHMPrivateLinux::doBeforeThreadRun()
 {
-    DIR* dir = opendir(EVDEV_DIR);
-    if (dir == NULL)
+    // Set the `eventFd` to control the end of worker thread.
+    eventFd = eventfd(0, EFD_CLOEXEC | EFD_NONBLOCK);
+    if (eventFd == -1)
         return errno;
-    dirent* ent;
-    int evdevIndex = 0;
-    while (true)
-    {
-        std::string evdevFileName = EVDEV_FILE_PREFIX + std::to_string(evdevIndex);
-        if (isFileExists(evdevFileName))
-        {
-            libevdev* dev = nullptr;
-            int fd = getLibevdevFromFile(evdevFileName, &dev);
-            if (fd >= 0)
-            {
-                if (libevdev_has_event_type(dev, EV_KEY))
-                    devices.emplace_back(fd, dev);
-            }
-            evdevIndex++;
-        }
-        else
-        {
-            break;
-        }
-    }
+
+    // Set the `notifyFd` to watch the change of input devices.
+    notifyFd = inotify_init();
+    if (notifyFd == -1)
+        return errno;
+    int wd = inotify_add_watch(notifyFd, EVDEV_DIR, IN_CREATE | IN_DELETE);
+    if (wd == -1)
+        return errno;
 
     return RC_SUCCESS;
 }
 
 int _KBHMPrivateLinux::doBeforeThreadEnd()
 {
-    for (auto& device : devices)
-    {
-        int fd = device.first;
-        libevdev* dev = device.second;
-        close(fd);
-        libevdev_free(dev);
-    }
-    event = {0};
-    devices.clear();
-
+    int64_t ev = 1;
+    auto wrsize = write(eventFd, &ev, 8);
+    if (wrsize != 8)
+        return errno;
     return RC_SUCCESS;
 }
 
 void _KBHMPrivateLinux::work()
 {
-    for (auto& device : devices)
+    std::vector<pollfd> fds;
+    fds.reserve(10 + 2);
+
+    fds.emplace_back(pollfd{.fd = eventFd, .events = POLLIN, .revents = 0});
+    fds.emplace_back(pollfd{.fd = notifyFd, .events = POLLIN, .revents = 0});
+
+    // Traverse all input devices to obtain the FDs of input devices has `EV_KEY` event.
+    size_t evdevFdSize = 0;
     {
-        libevdev* dev = device.second;
-        int rc = libevdev_next_event(dev, LIBEVDEV_READ_FLAG_NORMAL, &event);
-        if (rc == LIBEVDEV_READ_STATUS_SUCCESS)
+        DIR* dir = opendir(EVDEV_DIR);
+        if (dir == NULL)
+            setRunFail(errno);
+        dirent* ent = readdir(dir);
+        while (ent != NULL)
         {
-            if (event.type == EV_KEY)
+            std::string filename = std::string(EVDEV_DIR) + ent->d_name;
+            if (isCharacterDevice(filename))
             {
-                int keyCode = event.code;
-                int keyState = event.value;
-                handleKeyEvent(keyCode, keyState);
+                int evdevFd = open(filename.c_str(), O_RDONLY | O_NONBLOCK);
+                if (evdevFd == -1)
+                    continue;
+                if (isKeyboardDevice(evdevFd))
+                {
+                    fds.emplace_back(pollfd{.fd = evdevFd, .events = POLLIN, .revents = 0});
+                    evdevFdSize++;
+                }
+                else
+                {
+                    close(evdevFd);
+                }
+            }
+            ent = readdir(dir);
+        }
+        closedir(dir);
+    }
+
+    setRunSuccess();
+    input_event inputEv = {0};
+    while (true)
+    {
+        int ret = poll(fds.data(), fds.size(), -1);
+        if (ret == -1)
+            continue;
+
+        // Exit event was detected.
+        if (fds[0].revents & POLLIN)
+        {
+            int64_t ev;
+            auto rdsize = read(eventFd, &ev, 8);
+            if (rdsize == 8)
+                break;
+        }
+
+        // The input devices has changed.
+        if (fds[1].revents & POLLIN)
+        {
+            // TODO
+        }
+
+        // Is input devices has event?
+        for (size_t i = evdevFdSize + 1; i >= 2; --i)
+        {
+            if (fds[i].revents & POLLIN)
+            {
+                auto rdsize = read(fds[i].fd, &inputEv, sizeof(input_event));
+                if (rdsize != sizeof(input_event))
+                    continue;
+                if (inputEv.type == EV_KEY)
+                {
+                    int nativeKey = inputEv.code;
+                    int keyState = inputEv.value;
+                    handleKeyEvent(nativeKey, keyState);
+                }
             }
         }
     }
+
+    for (const auto& fd : fds)
+        close(fd.fd);
 }
 
-void _KBHMPrivateLinux::handleKeyEvent(int nativeKey, int state)
+void _KBHMPrivateLinux::handleKeyEvent(int nativeKey, int keyState)
 {
-    std::lock_guard<std::mutex> lock(mtx);
-
-    int ks = 0;
-    if (state == KEY_PRESSED)
+    KeyState state = KS_NONE;
+    if (keyState == KEY_STATE_PRESSED)
     {
+        auto keyPressedCallback = getKeyPressedCallback();
         if (keyPressedCallback)
             keyPressedCallback(nativeKey);
-        ks = KS_PRESSED;
+        state = KS_PRESSED;
     }
-    else if (state == KEY_RELEASED)
+    else if (keyState == KEY_STATE_RELEASED)
     {
+        auto keyReleasedCallback = getKeyReleasedCallback();
         if (keyReleasedCallback)
             keyReleasedCallback(nativeKey);
-        ks = KS_RELEASED;
+        state = KS_RELEASED;
     }
 
-    Combination combine(nativeKey, static_cast<KeyState>(ks));
-    if (fns.find(combine) != fns.end())
-    {
-        auto& fn = fns[combine];
-        if (fn)
-            fn();
-    }
+    auto fn = getKeyListenerCallback(nativeKey, state);
+    if (fn)
+        fn();
 }
 
 } // namespace kbhook

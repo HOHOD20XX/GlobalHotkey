@@ -88,11 +88,11 @@ void _RegisterGHMPrivateX11::work()
     XEvent event = {0};
     while (true)
     {
-        auto ret = poll(fds, 2, -1);
+        int ret = poll(fds, 2, -1);
         if (ret == -1)
             continue;;
 
-        // Get the XEvent.
+        // XEvent was detected.
         if (fds[0].revents & POLLIN)
         {
             while (XPending(display))
@@ -115,7 +115,7 @@ void _RegisterGHMPrivateX11::work()
             prevKc = currKc;
         }
 
-        // Get the My Event.
+        // My event was detected.
         if (fds[1].revents & POLLIN)
         {
             EventType et;

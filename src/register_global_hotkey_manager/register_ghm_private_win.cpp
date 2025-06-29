@@ -15,7 +15,6 @@ namespace gbhk
 {
 
 _RegisterGHMPrivateWin::_RegisterGHMPrivateWin() :
-    workerThreadId(DWORD()),
     regUnregRc(0),
     hotkeyIndex(0)
 {}

@@ -8,7 +8,6 @@
     #include "kbhm_private_mac.hpp"
 #elif defined(_GLOBAL_HOTKEY_LINUX)
     #include "kbhm_private_linux.hpp"
-#include "keyboard_hook_manager.hpp"
 #endif // _GLOBAL_HOTKEY_WIN
 
 namespace gbhk

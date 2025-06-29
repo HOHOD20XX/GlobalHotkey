@@ -68,24 +68,21 @@ int main()
     gbhk::KeyCombination hotkey2(gbhk::CTRL | gbhk::SHIFT, 'J');
     gbhk::KeyCombination hotkey3(gbhk::CTRL | gbhk::SHIFT, gbhk::Key_Delete);
 
-    printf("Hotkeys:\n1: %s\n2: %s\n3: %s\n",
-           hotkey1.toString(true).c_str(),
-           hotkey2.toString(true).c_str(),
-           hotkey3.toString(true).c_str());
-    printf("Press the hotkey 3 to exit.\n\n");
-
     int rc = ghm.run();
     if (rc != gbhk::RC_SUCCESS)
         THROW_RT_ERR("Failed to run the Global Hotkey Manager: ", rc);
+    printf("Success to run the GHM\n");
 
     rc = ghm.add(hotkey1, &hotkeyTriggered1);
     if (rc != gbhk::RC_SUCCESS)
         THROW_RT_ERR("Failed to add the hotkey 1: ", rc);
+    printf("Success to add the hotkey: [%s]\n", hotkey1.toString().c_str());
 
     // The hotkey 2 is auto repeat.
     rc = ghm.add(hotkey2, &hotkeyTriggered2, true);
     if (rc != gbhk::RC_SUCCESS)
         THROW_RT_ERR("Failed to add the hotkey 2: ", rc);
+    printf("Success to add the hotkey: [%s] (auto repeat)\n\n", hotkey2.toString().c_str());
 
     std::atomic<bool> shouldClose(false);
     std::condition_variable cv;
@@ -97,6 +94,8 @@ int main()
     });
     if (rc != gbhk::RC_SUCCESS)
         THROW_RT_ERR("Failed to add the hotkey: ", rc);
+    printf("Success to add the hotkey: [%s]\n", hotkey3.toString().c_str());
+    printf("Press the [%s] to exit!\n", hotkey3.toString().c_str());
 
     std::mutex dummyMtx;
     std::unique_lock<std::mutex> lock(dummyMtx);

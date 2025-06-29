@@ -7,9 +7,7 @@
 
 #ifdef _GLOBAL_HOTKEY_LINUX
 
-#include <vector>   // vector
-
-#include <libevdev/libevdev.h>
+#include <unordered_set>    // unordered_set
 
 namespace gbhk
 {
@@ -29,10 +27,10 @@ protected:
     void work() override;
 
 private:
-    void handleKeyEvent(int nativeKey, int state);
+    void handleKeyEvent(int nativeKey, int keyState);
 
-    input_event event = {0};
-    std::vector<std::pair<int, libevdev*>> devices;
+    int eventFd = 0;
+    int notifyFd = 0;
 };
 
 } // namespace kbhook

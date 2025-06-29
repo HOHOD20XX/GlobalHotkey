@@ -102,15 +102,13 @@ endif()
 if(WIN32)
     message(STATUS "${GBHK_MSG_PREFIX} Windows platform detected")
     set(CMAKE_STATIC_LIBRARY_SUFFIX ".lib")
-
-    # TODO: Add the checker for GBHK_DISABLE_XXX, keep the same as others.
 endif()
 
 if(APPLE)
     message(STATUS "${GBHK_MSG_PREFIX} Apple platform detected")
 
     if(NOT GBHK_DISABLE_REGISTER)
-        # Pass.
+        # TODO
     endif()
 
     if(NOT GBHK_DISABLE_HOOK)
@@ -144,18 +142,6 @@ if(LINUX)
             target_link_libraries(${TARGET_NAME} PRIVATE ${X11_LIBRARY})
         else()
             message(FATAL_ERROR "${GBHK_MSG_PREFIX} Not found X11")
-        endif()
-    endif()
-
-    if(NOT GBHK_DISABLE_HOOK)
-        find_path(EVDEV_INCLUDE_DIR libevdev/libevdev.h PATHS /usr/include /usr/include/libevdev-1.0)
-        find_library(EVDEV_LIBRARY NAMES evdev PATHS /usr/lib /usr/lib/x86_64-linux-gnu)
-        if(EVDEV_INCLUDE_DIR AND EVDEV_LIBRARY)
-            message(STATUS "${GBHK_MSG_PREFIX} Found evdev: ${EVDEV_LIBRARY}")
-            include_directories(${EVDEV_INCLUDE_DIR})
-            target_link_libraries(${TARGET_NAME} PRIVATE ${EVDEV_LIBRARY})
-        else()
-            message(FATAL_ERROR "${GBHK_MSG_PREFIX} Not found evdev")
         endif()
     endif()
 endif()
