@@ -162,7 +162,7 @@ GBHK_API std::string keyString(const Key& key) noexcept
         case Key_Numpad_8:          return "Numpad 8";
         case Key_Numpad_9:          return "Numpad 9";
 
-        // Numpad operator keys.
+        // Numpad arithmetic keys.
         case Key_Numpad_Add:        return "Numpad Add";
         case Key_Numpad_Subtract:   return "Numpad Subtract";
         case Key_Numpad_Multiply:   return "Numpad Multiply";
@@ -367,7 +367,7 @@ GBHK_API Key getKeyFromString(const std::string& str) noexcept
     if (isEqualStr(str, "numpad 9") || isEqualStr(str, "keypad 9"))
         return Key_Numpad_9;
 
-    // Numpad operator keys.
+    // Numpad arithmetic keys.
     if (isEqualStr(str, "numpad add") || isEqualStr(str, "keypad add"))
         return Key_Numpad_Add;
     if (isEqualStr(str, "numpad subtract") || isEqualStr(str, "keypad subtract"))

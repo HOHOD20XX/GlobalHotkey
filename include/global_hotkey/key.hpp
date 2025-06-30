@@ -125,7 +125,7 @@ enum KeyFlag : int32_t
     Key_Numpad_8,
     Key_Numpad_9,
 
-    // Numpad operator keys.
+    // Numpad arithmetic keys.
     Key_Numpad_Add,         // '+' on numpad.
     Key_Numpad_Subtract,    // '-' on numpad.
     Key_Numpad_Multiply,    // '*' or '×' on numpad.

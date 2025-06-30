@@ -87,7 +87,7 @@ int nativeKey(const Key& key) noexcept
         case Key_Numpad_8:          return VK_NUMPAD8;
         case Key_Numpad_9:          return VK_NUMPAD9;
 
-        // Numpad operator keys.
+        // Numpad arithmetic keys.
         case Key_Numpad_Add:        return VK_ADD;
         case Key_Numpad_Subtract:   return VK_SUBTRACT;
         case Key_Numpad_Multiply:   return VK_MULTIPLY;
@@ -232,7 +232,7 @@ Key getKeyFromNativeKey(int nativeKey) noexcept
         case VK_NUMPAD8:            return Key_Numpad_8;
         case VK_NUMPAD9:            return Key_Numpad_9;
 
-        // Numpad operator keys.
+        // Numpad arithmetic keys.
         case VK_ADD:                return Key_Numpad_Add;
         case VK_SUBTRACT:           return Key_Numpad_Subtract;
         case VK_MULTIPLY:           return Key_Numpad_Multiply;

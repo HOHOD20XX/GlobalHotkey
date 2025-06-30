@@ -127,7 +127,7 @@ int x11Keysym(const Key& key) noexcept
         case Key_Numpad_8:          return XK_KP_8;
         case Key_Numpad_9:          return XK_KP_9;
 
-        // Numpad operator keys.
+        // Numpad arithmetic keys.
         case Key_Numpad_Add:        return XK_KP_Add;
         case Key_Numpad_Subtract:   return XK_KP_Subtract;
         case Key_Numpad_Multiply:   return XK_KP_Multiply;
@@ -309,7 +309,7 @@ Key getKeyFromX11Keysym(int x11Keysym) noexcept
         case XK_KP_8:               return Key_Numpad_8;
         case XK_KP_9:               return Key_Numpad_9;
 
-        // Numpad operator keys.
+        // Numpad arithmetic keys.
         case XK_KP_Add:             return Key_Numpad_Add;
         case XK_KP_Subtract:        return Key_Numpad_Subtract;
         case XK_KP_Multiply:        return Key_Numpad_Multiply;
