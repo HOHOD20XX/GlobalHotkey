@@ -18,7 +18,12 @@ _KBHMPrivateMac::_KBHMPrivateMac() = default;
 
 _KBHMPrivateMac::~_KBHMPrivateMac() { end(); }
 
-int _KBHMPrivateMac::doBeforeLoop()
+int _KBHMPrivateMac::doBeforeThreadEnd()
+{
+    CFRunLoopStop(runLoop);
+}
+
+void _KBHMPrivateMac::work()
 {
     runLoop = CFRunLoopGetCurrent();
 
@@ -26,52 +31,36 @@ int _KBHMPrivateMac::doBeforeLoop()
         CGEventMaskBit(kCGEventKeyDown) |
         CGEventMaskBit(kCGEventKeyUp) |
         CGEventMaskBit(kCGEventFlagsChanged);
-    eventTap = CGEventTapCreate(
+    CFMachPortRef eventTap = CGEventTapCreate(
         kCGHIDEventTap,
         kCGHeadInsertEventTap,
         kCGEventTapOptionDefault,
         eventMask,
-        &keyboardCallback,
+        &keyboardTapCallback,
         NULL);
 
     if (!eventTap)
     {
-        setRunFail();
+        // TODO: for error code.
+        setRunFail(-1);
         return;
     }
 
-    // TODO
-    // if (!eventTap)
-    // {
-    //     return RC_FAIL;
-    // }
-
-    runLoopSource = CFMachPortCreateRunLoopSource(kCFAllocatorDefault, eventTap, 0);
+    CFRunLoopSourceRef runLoopSource = CFMachPortCreateRunLoopSource(kCFAllocatorDefault, eventTap, 0);
     CFRunLoopAddSource(runLoop, runLoopSource, kCFRunLoopCommonModes);
     CGEventTapEnable(eventTap, true);
 
-    return RC_SUCCESS;
-}
+    CFRunLoopRun();
 
-int _KBHMPrivateMac::doBeforeThreadEnd()
-{
     CFRelease(eventTap);
     CFRelease(runLoopSource);
-    CFRunLoopStop(runLoop);
-
-    runLoop = NULL;
-    eventTap = NULL;
-    runLoopSource = NULL;
-
-    return RC_SUCCESS;
 }
 
-void _KBHMPrivateMac::eachCycleDo()
-{
-    CFRunLoopRun();
-}
-
-CGEventRef _KBHMPrivateMac::keyboardCallback(CGEventTapProxy proxy, CGEventType type, CGEventRef event, void* data)
+CGEventRef _KBHMPrivateMac::keyboardTapCallback(
+    CGEventTapProxy proxy,
+    CGEventType type,
+    CGEventRef event,
+    void* data)
 {
     if (type == kCGEventKeyDown)
     {

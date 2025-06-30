@@ -23,16 +23,17 @@ public:
     ~_KBHMPrivateMac();
 
 protected:
-    int doBeforeThreadRun() override;
     int doBeforeThreadEnd() override;
     void work() override;
 
 private:
-    static CGEventRef keyboardCallback(CGEventTapProxy proxy, CGEventType type, CGEventRef event, void* data);
+    static CGEventRef keyboardTapCallback(
+        CGEventTapProxy proxy,
+        CGEventType type,
+        CGEventRef event,
+        void* data);
 
     CFRunLoopRef runLoop = NULL;
-    CFMachPortRef eventTap = NULL;
-    CFRunLoopSourceRef runLoopSource = NULL;
 };
 
 } // namespace kbhook
