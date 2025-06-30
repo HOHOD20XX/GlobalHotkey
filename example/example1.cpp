@@ -66,7 +66,7 @@ int main()
 
     gbhk::KeyCombination hotkey1(gbhk::CTRL, 'J');
     gbhk::KeyCombination hotkey2(gbhk::CTRL | gbhk::SHIFT, 'J');
-    gbhk::KeyCombination hotkey3(gbhk::CTRL | gbhk::SHIFT, gbhk::Key_Delete);
+    gbhk::KeyCombination hotkey3(gbhk::CTRL | gbhk::SHIFT, gbhk::Key_Backspace);
 
     int rc = ghm.run();
     if (rc != gbhk::RC_SUCCESS)
