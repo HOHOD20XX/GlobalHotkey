@@ -169,7 +169,7 @@ void _KBHMPrivateLinux::work()
 void _KBHMPrivateLinux::handleKeyEvent(int nativeKey, int keyState)
 {
     KeyState state = KS_NONE;
-    if (keyState == KEY_STATE_PRESSED)
+    if (keyState == KEY_STATE_PRESSED || keyState == KEY_STATE_HELD)
     {
         auto keyPressedCallback = getKeyPressedCallback();
         if (keyPressedCallback)
