@@ -23,7 +23,7 @@ _RegisterGHMPrivateWin::~_RegisterGHMPrivateWin() { end(); }
 
 int _RegisterGHMPrivateWin::doBeforeThreadEnd()
 {
-    if (PostThreadMessageA(workerThreadId, WM_DESTROY, WPARAM(), LPARAM()) != 0)
+    if (PostThreadMessageA(workerThreadId, WM_DESTROY, 0, 0) != 0)
         return RC_SUCCESS;
     return GetLastError();
 }

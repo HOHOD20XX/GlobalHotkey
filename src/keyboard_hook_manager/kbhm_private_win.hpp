@@ -28,7 +28,7 @@ protected:
 private:
     static LRESULT LowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam);
 
-    DWORD workerThreadId = DWORD();
+    DWORD workerThreadId = 0;
 };
 
 } // namespace kbhook

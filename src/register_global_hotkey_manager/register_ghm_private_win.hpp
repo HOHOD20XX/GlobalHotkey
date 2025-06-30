@@ -30,7 +30,7 @@ private:
     int nativeRegisterHotkey(WPARAM wParam, LPARAM lParam);
     int nativeUnregisterHotkey(WPARAM wParam, LPARAM lParam);
 
-    DWORD workerThreadId = DWORD();
+    DWORD workerThreadId = 0;
     std::condition_variable cvRegUnregRc;
     std::atomic<int> regUnregRc;
     std::atomic<int> hotkeyIndex;

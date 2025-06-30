@@ -18,7 +18,7 @@ _KBHMPrivateWin::~_KBHMPrivateWin() { end(); }
 
 int _KBHMPrivateWin::doBeforeThreadEnd()
 {
-    if (PostThreadMessageA(workerThreadId, WM_DESTROY, WPARAM(), LPARAM()) != 0)
+    if (PostThreadMessageA(workerThreadId, WM_DESTROY, 0, 0) != 0)
         return RC_SUCCESS;
     return GetLastError();
 }
