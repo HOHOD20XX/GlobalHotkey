@@ -188,7 +188,7 @@ int x11Keysym(const Key& key) noexcept
         case Key_Mod_Shift_Left:    return XK_Shift_L;
         case Key_Mod_Shift_Right:   return XK_Shift_R;
 
-        default:                        return 0;
+        default:                    return 0;
     }
 }
 

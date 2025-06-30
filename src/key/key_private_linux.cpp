@@ -177,7 +177,7 @@ int nativeKey(const Key& key) noexcept
         case Key_Mod_Shift_Left:    return KEY_LEFTSHIFT;
         case Key_Mod_Shift_Right:   return KEY_RIGHTSHIFT;
 
-        default:                        return 0;
+        default:                    return 0;
     }
 }
 
