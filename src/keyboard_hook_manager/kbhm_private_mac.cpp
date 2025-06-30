@@ -34,6 +34,12 @@ int _KBHMPrivateMac::doBeforeLoop()
         &keyboardCallback,
         NULL);
 
+    if (!eventTap)
+    {
+        setRunFail();
+        return;
+    }
+
     // TODO
     // if (!eventTap)
     // {

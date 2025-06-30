@@ -93,7 +93,10 @@ void _KBHMPrivateLinux::work()
     {
         DIR* dir = opendir(EVDEV_DIR);
         if (dir == NULL)
+        {
             setRunFail(errno);
+            return;
+        }
         dirent* ent = readdir(dir);
         while (ent != NULL)
         {
