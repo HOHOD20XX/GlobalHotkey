@@ -2,6 +2,8 @@
 
 #include "hook_ghm_private.hpp"
 
+#include <queue>    // queue
+
 #include <global_hotkey/return_code.hpp>
 
 #include "../key/key_private.hpp"
@@ -42,8 +44,6 @@ _HookGHMPrivate::~_HookGHMPrivate() { end(); }
 int _HookGHMPrivate::doBeforeThreadRun()
 {
     clearEventQueue();
-    pressedMod = 0;
-    pressedKeys.clear();
 
     int rc = kbhm.run();
     if (rc != RC_SUCCESS)
@@ -63,6 +63,8 @@ void _HookGHMPrivate::work()
 {
     setRunSuccess();
     KeyCombination prevKc;
+    Modifiers pressedMod = 0;
+    Key pressedKey = 0;
     while (true)
     {
         Event ev = takeEvent();
@@ -74,7 +76,7 @@ void _HookGHMPrivate::work()
         Key key = ev.data;
         if (ev.type == ET_KEY_PRESSED)
         {
-            pressedKeys.insert(PriorityItem<Key>(key, pressedKeys.size()));
+            pressedKey = key;
             if (key == Key_Mod_Meta || key == Key_Mod_Meta_Left || key == Key_Mod_Meta_Right)
                 pressedMod = pressedMod.add(META);
             else if (key == Key_Mod_Ctrl || key == Key_Mod_Ctrl_Left || key == Key_Mod_Ctrl_Right)
@@ -87,7 +89,8 @@ void _HookGHMPrivate::work()
         // ev.type == ET_KEY_RELEASED
         else
         {
-            pressedKeys.erase(PriorityItem<Key>(key, 0));
+            if (pressedKey == key)
+                pressedKey = 0;
             if (key == Key_Mod_Meta || key == Key_Mod_Meta_Left || key == Key_Mod_Meta_Right)
                 pressedMod = pressedMod.remove(META);
             else if (key == Key_Mod_Ctrl || key == Key_Mod_Ctrl_Left || key == Key_Mod_Ctrl_Right)
@@ -98,7 +101,6 @@ void _HookGHMPrivate::work()
                 pressedMod = pressedMod.remove(SHIFT);
         }
 
-        Key pressedKey = *pressedKeys.crbegin();
         KeyCombination currKc(pressedMod, pressedKey);
         invoke(prevKc, currKc);
         prevKc = currKc;
@@ -124,7 +126,7 @@ void _HookGHMPrivate::invoke(const KeyCombination& prevKc, const KeyCombination&
 Event takeEvent()
 {
     std::unique_lock<std::mutex> lock(mtx);
-    cvHasEvent.wait(lock, [&]() { !eventQueue.empty(); });
+    cvHasEvent.wait(lock, []() { return !eventQueue.empty(); });
     Event ev = eventQueue.front();
     eventQueue.pop();
     return ev;
@@ -132,8 +134,10 @@ Event takeEvent()
 
 void pushEvent(const Event& event)
 {
-    std::lock_guard<std::mutex> lock(mtx);
-    eventQueue.push(event);
+    {
+        std::lock_guard<std::mutex> lock(mtx);
+        eventQueue.push(event);
+    }
     cvHasEvent.notify_one();
 }
 
