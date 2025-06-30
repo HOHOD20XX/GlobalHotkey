@@ -10,18 +10,6 @@
 namespace gbhk
 {
 
-template <typename T>
-struct PriorityItem
-{
-    PriorityItem(const T& item, size_t priority) : item(item), priority(priority) {}
-
-    friend constexpr inline bool operator<(const PriorityItem& lhs, const PriorityItem& rhs) noexcept
-    { return lhs.priority < rhs.priority; }
-
-    T item;
-    size_t priority;
-};
-
 class _HookGHMPrivate final : public _GHMPrivate
 {
 public:
