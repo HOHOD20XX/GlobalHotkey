@@ -141,7 +141,7 @@ void _KBHMPrivateLinux::work()
         // The input devices has changed.
         if (fds[1].revents & POLLIN)
         {
-            // TODO
+            // TODO: Handle the change of input devices.
         }
 
         // Is input devices has event?
