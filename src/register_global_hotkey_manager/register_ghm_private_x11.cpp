@@ -90,7 +90,7 @@ void _RegisterGHMPrivateX11::work()
     {
         int ret = poll(fds, 2, -1);
         if (ret == -1)
-            continue;;
+            continue;
 
         // XEvent was detected.
         if (fds[0].revents & POLLIN)
