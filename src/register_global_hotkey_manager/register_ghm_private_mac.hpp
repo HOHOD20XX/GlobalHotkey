@@ -24,7 +24,7 @@ protected:
     int unregisterHotkey(const KeyCombination& kc) override;
 
 private:
-    // void invoke()
+    // void invoke() const;
     // int nativeRegisterHotkey();
     // int nativeUnregisterHotkey();
 };

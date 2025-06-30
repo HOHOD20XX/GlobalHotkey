@@ -44,7 +44,7 @@ protected:
     int unregisterHotkey(const KeyCombination& kc);
 
 private:
-    void invoke(const KeyCombination& prevKc, const KeyCombination& currKc);
+    void invoke(const KeyCombination& prevKc, const KeyCombination& currKc) const;
 
     Modifiers pressedMod = 0;
     std::set<PriorityItem<Key>> pressedKeys;

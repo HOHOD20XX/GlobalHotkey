@@ -27,7 +27,7 @@ protected:
 
 private:
     // The follow functions only be called in worker thread.
-    void invoke(const KeyCombination& prevKc, const KeyCombination& currKc);
+    void invoke(const KeyCombination& prevKc, const KeyCombination& currKc) const;
     int nativeRegisterHotkey(Display* display);
     int nativeUnregisterHotkey(Display* display);
 

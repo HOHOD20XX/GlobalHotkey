@@ -26,7 +26,7 @@ protected:
 
 private:
     // The follow functions only be called in worker thread.
-    void invoke(WPARAM wParam, LPARAM lParam);
+    void invoke(WPARAM wParam, LPARAM lParam) const;
     int nativeRegisterHotkey(WPARAM wParam, LPARAM lParam);
     int nativeUnregisterHotkey(WPARAM wParam, LPARAM lParam);
 

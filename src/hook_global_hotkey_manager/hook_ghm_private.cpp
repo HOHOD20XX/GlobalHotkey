@@ -111,7 +111,7 @@ int _HookGHMPrivate::registerHotkey(const KeyCombination& kc, bool autoRepeat)
 int _HookGHMPrivate::unregisterHotkey(const KeyCombination& kc)
 { return RC_SUCCESS; }
 
-void _HookGHMPrivate::invoke(const KeyCombination& prevKc, const KeyCombination& currKc)
+void _HookGHMPrivate::invoke(const KeyCombination& prevKc, const KeyCombination& currKc) const
 {
     auto pair = getPairValue(currKc);
     auto& autoRepeat = pair.first;

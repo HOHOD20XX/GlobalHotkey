@@ -103,12 +103,12 @@ int _RegisterGHMPrivateWin::unregisterHotkey(const KeyCombination& kc)
     return GetLastError();
 }
 
-void _RegisterGHMPrivateWin::invoke(WPARAM wParam, LPARAM lParam)
+void _RegisterGHMPrivateWin::invoke(WPARAM wParam, LPARAM lParam) const
 {
     int hotkeyId = int(wParam);
     if (hotkeyIdToKc.find(hotkeyId) != hotkeyIdToKc.end())
     {
-        auto& kc = hotkeyIdToKc[hotkeyId];
+        auto& kc = hotkeyIdToKc.at(hotkeyId);
         auto fn = getPairValue(kc).second;
         if (fn)
             fn();

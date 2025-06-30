@@ -174,7 +174,7 @@ int _RegisterGHMPrivateX11::unregisterHotkey(const KeyCombination& kc)
     return regUnregRc;
 }
 
-void _RegisterGHMPrivateX11::invoke(const KeyCombination& prevKc, const KeyCombination& currKc)
+void _RegisterGHMPrivateX11::invoke(const KeyCombination& prevKc, const KeyCombination& currKc) const
 {
     auto pair = getPairValue(currKc);
     auto& autoRepeat = pair.first;
