@@ -7,6 +7,7 @@
 
 #ifdef _GLOBAL_HOTKEY_MAC
 
+#include <Carbon/Carbon.h>
 #include <CoreFoundation/CoreFoundation.h>
 #include <CoreGraphics/CGEvent.h>
 

@@ -4,6 +4,8 @@
 
 #ifdef _GLOBAL_HOTKEY_MAC
 
+#include <array>    // array
+
 #include <global_hotkey/return_code.hpp>
 
 namespace gbhk
@@ -11,6 +13,20 @@ namespace gbhk
 
 namespace kbhook
 {
+
+// TODO: Use error code instead of the current placeholder return codes (-1).
+
+constexpr int ModifierKeyCodeFirst = kVK_RightCommand;
+constexpr int ModifierKeyCodeLast = kVK_Function;
+constexpr int ModifierKeyCodeCount = ModifierKeyCodeLast - ModifierKeyCodeFirst + 1;
+
+#define GMSINDEX(keycode) ((keycode) - ModifierKeyCodeFirst)
+
+// The modifier key states.
+// True if the modifier key is pressed else false.
+std::array<bool, ModifierKeyCodeCount> ModifierStates;
+
+#define GMS(keycode) ModifierStates[GMSINDEX(keycode)]
 
 _KBHMPrivateMac::_KBHMPrivateMac() = default;
 
@@ -24,7 +40,8 @@ int _KBHMPrivateMac::doBeforeThreadEnd()
 
 void _KBHMPrivateMac::work()
 {
-    runLoop = CFRunLoopGetCurrent();
+    for (auto& modifierState : ModifierStates)
+        modifierState = false;
 
     CGEventMask eventMask =
         CGEventMaskBit(kCGEventKeyDown) |
@@ -37,18 +54,28 @@ void _KBHMPrivateMac::work()
         eventMask,
         &keyboardTapCallback,
         NULL);
-
     if (!eventTap)
     {
-        // TODO: for error code.
         setRunFail(-1);
         return;
     }
 
+    runLoop = CFRunLoopGetCurrent();
+    if (!runLoop)
+    {
+        setRunFail(-1);
+        return;
+    }
     CFRunLoopSourceRef runLoopSource = CFMachPortCreateRunLoopSource(kCFAllocatorDefault, eventTap, 0);
+    if (!runLoopSource)
+    {
+        setRunFail(-1);
+        return;
+    }
     CFRunLoopAddSource(runLoop, runLoopSource, kCFRunLoopCommonModes);
     CGEventTapEnable(eventTap, true);
 
+    setRunSuccess();
     CFRunLoopRun();
 
     CFRelease(eventTap);
@@ -61,20 +88,47 @@ CGEventRef _KBHMPrivateMac::keyboardTapCallback(
     CGEventRef event,
     void* data)
 {
+    CGKeyCode keyCode = CGEventGetIntegerValueField(event, kCGKeyboardEventKeycode);
+    KeyState state = KS_NONE;
     if (type == kCGEventKeyDown)
     {
-        CGKeyCode keycode = CGEventGetIntegerValueField(event, kCGKeyboardEventKeycode);
-        printf("Key Downed: %d\n", keycode);
+        auto keyPressedCallback = getKeyPressedCallback();
+        if (keyPressedCallback)
+            keyPressedCallback(keyCode);
+        state = KS_PRESSED;
     }
     else if (type == kCGEventKeyUp)
     {
-        CGKeyCode keycode = CGEventGetIntegerValueField(event, kCGKeyboardEventKeycode);
-        printf("Key Released: %d\n", keycode);
+        auto keyReleasedCallback = getKeyReleasedCallback();
+        if (keyReleasedCallback)
+            keyReleasedCallback(keyCode);
+        state = KS_RELEASED;
     }
     else if (type == kCGEventFlagsChanged)
     {
-        CGKeyCode keycode = CGEventGetIntegerValueField(event, kCGKeyboardEventKeycode);
-        printf("Key Flag Changed: %d\n", keycode);
+        auto& modifierState = GMS(keyCode);
+        // The modifier key has been pressed.
+        if (modifierState)
+        {
+            modifierState = false;
+            auto keyReleasedCallback = getKeyReleasedCallback();
+            if (keyReleasedCallback)
+                keyReleasedCallback(keyCode);
+            state = KS_RELEASED;
+        }
+        // The modifier key has been released.
+        else
+        {
+            modifierState = true;
+            auto keyPressedCallback = getKeyPressedCallback();
+            if (keyPressedCallback)
+                keyPressedCallback(keyCode);
+            state = KS_PRESSED;
+        }
+
+        auto fn = getKeyListenerCallback(keyCode, state);
+        if (fn)
+            fn();
     }
 
     return event;
