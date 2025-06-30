@@ -64,8 +64,6 @@ int _GHMPrivate::add(const KeyCombination& kc, const std::function<void ()>& fn,
 {
     if (!isRunning())           return RC_BAD_TIMING;
     if (isInWorkerThread())     return RC_BAD_THREAD;
-    if (!kc.isValid() || !fn)   return RC_INVALID_VALUE;
-    if (has(kc))                return RC_EXISTING_VALUE;
 
     int rc = registerHotkey(kc, autoRepeat);
     if (rc != RC_SUCCESS)
@@ -81,7 +79,6 @@ int _GHMPrivate::remove(const KeyCombination& kc)
 {
     if (!isRunning())           return RC_BAD_TIMING;
     if (isInWorkerThread())     return RC_BAD_THREAD;
-    if (!has(kc))               return RC_NO_SUCH_VALUE;
 
     int rc = unregisterHotkey(kc);
 
@@ -110,12 +107,7 @@ int _GHMPrivate::replace(const KeyCombination& oldKc, const KeyCombination& newK
 {
     if (!isRunning())           return RC_BAD_TIMING;
     if (isInWorkerThread())     return RC_BAD_THREAD;
-    if (!newKc.isValid())       return RC_INVALID_VALUE;
-    if (!has(oldKc))            return RC_NO_SUCH_VALUE;
-    if (has(newKc))             return RC_EXISTING_VALUE;
-
-    if (newKc == oldKc)
-        return RC_SUCCESS;
+    if (newKc == oldKc)         return RC_SUCCESS;
 
     auto value = getPairValue(oldKc);
     int rc = unregisterHotkey(oldKc);
@@ -137,7 +129,6 @@ int _GHMPrivate::setAutoRepeat(const KeyCombination& kc, bool autoRepeat)
 {
     if (!isRunning())           return RC_BAD_TIMING;
     if (isInWorkerThread())     return RC_BAD_THREAD;
-    if (!has(kc))               return RC_NO_SUCH_VALUE;
 
     auto value = getPairValue(kc);
     if (value.first == autoRepeat)
@@ -187,8 +178,6 @@ std::vector<KeyCombination> _GHMPrivate::getAllKeyCombination() const
 
 std::pair<bool, std::function<void ()>> _GHMPrivate::getPairValue(const KeyCombination& kc) const
 {
-    if (!kc.isValid())
-        return std::pair<bool, std::function<void ()>>();
     std::lock_guard<std::mutex> lock(mtx);
     const auto& it = fns.find(kc);
     if (it == fns.end())

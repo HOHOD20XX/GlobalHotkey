@@ -72,22 +72,15 @@ int _KBHMPrivate::end()
 
 int _KBHMPrivate::addKeyListener(int nativeKey, KeyState state, const std::function<void ()>& fn)
 {
-    if (!isValidValue(nativeKey, state) || !fn) return RC_INVALID_VALUE;
-    if (hasKeyListener(nativeKey, state))       return RC_EXISTING_VALUE;
-
-    Combination comb(nativeKey, state);
     std::lock_guard<std::mutex> lock(mtx);
-    fns[comb] = fn;
+    fns[{nativeKey, state}] = fn;
     return RC_SUCCESS;
 }
 
 int _KBHMPrivate::removeKeyListener(int nativeKey, KeyState state)
 {
-    if (!hasKeyListener(nativeKey, state))      return RC_NO_SUCH_VALUE;
-
-    Combination comb(nativeKey, state);
     std::lock_guard<std::mutex> lock(mtx);
-    fns.erase(comb);
+    fns.erase({nativeKey, state});
     return RC_SUCCESS;
 }
 
@@ -100,8 +93,6 @@ int _KBHMPrivate::removeAllKeyListener()
 
 int _KBHMPrivate::setKeyPressedCallback(const std::function<void (int)>& fn)
 {
-    if (!fn)    return RC_INVALID_VALUE;
-
     std::lock_guard<std::mutex> lock(mtx);
     keyPressedCallback = fn;
     return RC_SUCCESS;
@@ -109,8 +100,6 @@ int _KBHMPrivate::setKeyPressedCallback(const std::function<void (int)>& fn)
 
 int _KBHMPrivate::setKeyReleasedCallback(const std::function<void (int)>& fn)
 {
-    if (!fn)     return RC_INVALID_VALUE;
-
     std::lock_guard<std::mutex> lock(mtx);
     keyReleasedCallback = fn;
     return RC_SUCCESS;
@@ -132,9 +121,8 @@ int _KBHMPrivate::unsetKeyReleasedCallback()
 
 bool _KBHMPrivate::hasKeyListener(int nativeKey, KeyState state)
 {
-    Combination comb(nativeKey, state);
     std::lock_guard<std::mutex> lock(mtx);
-    return fns.find(comb) != fns.end();
+    return fns.find({nativeKey, state}) != fns.end();
 }
 
 bool _KBHMPrivate::isRunning() const
@@ -144,12 +132,8 @@ bool _KBHMPrivate::isRunning() const
 
 std::function<void ()> _KBHMPrivate::getKeyListenerCallback(int nativeKey, KeyState state)
 {
-    if (!isValidValue(nativeKey, state))
-        return std::function<void ()>();
-
-    Combination comb(nativeKey, state);
     std::lock_guard<std::mutex> lock(mtx);
-    const auto& it = fns.find(comb);
+    const auto& it = fns.find({nativeKey, state});
     if (it == fns.end())
         return std::function<void ()>();
     return it->second;

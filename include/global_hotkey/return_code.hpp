@@ -21,13 +21,8 @@ namespace gbhk
 enum ReturnCode : int
 {
     RC_SUCCESS              = 0x00 | _RC_MASK,
-
     RC_BAD_TIMING           = 0x10 | _RC_MASK,
     RC_BAD_THREAD           = 0x11 | _RC_MASK,
-
-    RC_INVALID_VALUE        = 0x20 | _RC_MASK,
-    RC_EXISTING_VALUE       = 0x21 | _RC_MASK,
-    RC_NO_SUCH_VALUE        = 0x22 | _RC_MASK
 };
 
 inline std::string returnCodeMessage(int rc) noexcept
@@ -43,12 +38,6 @@ inline std::string returnCodeMessage(int rc) noexcept
         case RC_BAD_THREAD:
             return "Add, remove, replace and other change for global hotkey in Global Hotkey Manager, " \
                    "but the caller is in the same thread as GHM's worker thread";
-        case RC_INVALID_VALUE:
-            return "A invalid value has been given";
-        case RC_EXISTING_VALUE:
-            return "Already exist same value";
-        case RC_NO_SUCH_VALUE:
-            return "The specified value is not exist";
         default:
             // Return values that depend on the platform or framework.
             return "Unknown return code: " + std::to_string(rc);
