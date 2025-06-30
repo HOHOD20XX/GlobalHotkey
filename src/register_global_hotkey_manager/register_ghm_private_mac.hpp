@@ -7,6 +7,9 @@
 
 #ifdef _GLOBAL_HOTKEY_MAC
 
+#include <Carbon/Carbon.h>
+#include <CoreFoundation/CoreFoundation.h>
+
 namespace gbhk
 {
 
@@ -24,9 +27,22 @@ protected:
     int unregisterHotkey(const KeyCombination& kc) override;
 
 private:
-    // void invoke() const;
-    // int nativeRegisterHotkey();
-    // int nativeUnregisterHotkey();
+    static void runLoopSourceCallback(void* data);
+    static OSStatus hotkeyEventHandler(EventHandlerCallRef handler, EventRef event, void* userData);
+
+    void invoke() const;
+    static int nativeRegisterHotkey();
+    static int nativeUnregisterHotkey();
+
+    static std::condition_variable cvRegUnregRc;
+    static std::atomic<int> regUnregRc;
+    static std::atomic<KeyCombination> regUnregKc;
+    static std::atomic<bool> regUnregAutoRepeat;
+    static std::unordered_map<KeyCombination, EventHotKeyRef> kcToHotkeyRef;
+
+    CFRunLoopSourceContext sourceContext = {0};
+    CFRunLoopSourceRef source = NULL;
+    CFRunLoopRef runLoop = NULL;
 };
 
 } // namespace gbhk
