@@ -53,7 +53,8 @@ void _KBHMPrivateMac::work()
         kCGEventTapOptionDefault,
         eventMask,
         &keyboardTapCallback,
-        NULL);
+        NULL
+    );
     if (!eventTap)
     {
         setRunFail(-1);
@@ -66,7 +67,8 @@ void _KBHMPrivateMac::work()
         setRunFail(-1);
         return;
     }
-    CFRunLoopSourceRef runLoopSource = CFMachPortCreateRunLoopSource(kCFAllocatorDefault, eventTap, 0);
+    CFRunLoopSourceRef runLoopSource =
+        CFMachPortCreateRunLoopSource(kCFAllocatorDefault, eventTap, 0);
     if (!runLoopSource)
     {
         setRunFail(-1);
@@ -88,7 +90,8 @@ CGEventRef _KBHMPrivateMac::keyboardTapCallback(
     CGEventRef event,
     void* data)
 {
-    CGKeyCode keyCode = CGEventGetIntegerValueField(event, kCGKeyboardEventKeycode);
+    CGKeyCode keyCode =
+        CGEventGetIntegerValueField(event, kCGKeyboardEventKeycode);
     KeyState state = KS_NONE;
     if (type == kCGEventKeyDown)
     {

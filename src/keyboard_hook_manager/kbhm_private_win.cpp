@@ -25,7 +25,7 @@ int _KBHMPrivateWin::doBeforeThreadEnd()
 
 void _KBHMPrivateWin::work()
 {
-    HHOOK hhook = SetWindowsHookExA(WH_KEYBOARD_LL, &_KBHMPrivateWin::LowLevelKeyboardProc, NULL, 0);;
+    HHOOK hhook = SetWindowsHookExA(WH_KEYBOARD_LL, &_KBHMPrivateWin::LowLevelKeyboardProc, NULL, 0);
     if (!hhook)
     {
         setRunFail(GetLastError());

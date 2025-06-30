@@ -4,8 +4,6 @@
 
 #ifdef _GLOBAL_HOTKEY_LINUX
 
-#include <vector>           // vector
-
 #include <dirent.h>         // dirent
 #include <fcntl.h>          // fcntl, open
 #include <linux/input.h>    // input_event
@@ -49,7 +47,10 @@ static bool isKeyboardDevice(int fd)
     return hasKeyEvent && hastRelEvent && hastAbsEvent;
 }
 
-_KBHMPrivateLinux::_KBHMPrivateLinux() = default;
+_KBHMPrivateLinux::_KBHMPrivateLinux()
+{
+    fds.reserve(10 + 2);
+}
 
 _KBHMPrivateLinux::~_KBHMPrivateLinux() { end(); }
 
@@ -68,6 +69,55 @@ int _KBHMPrivateLinux::doBeforeThreadRun()
     if (wd == -1)
         return errno;
 
+    fds.clear();
+    fds.emplace_back(pollfd{
+        .fd = eventFd,
+        .events = POLLIN,
+        .revents = 0
+    });
+    fds.emplace_back(pollfd{
+        .fd = notifyFd,
+        .events = POLLIN,
+        .revents = 0
+    });
+
+    // Traverse all input devices to obtain the FDs of input devices has `EV_KEY` event.
+    evdevFdSize = 0;
+    DIR* dir = opendir(EVDEV_DIR);
+    if (dir == NULL)
+    {
+        // Rollback.
+        close(eventFd);
+        close(notifyFd);
+        return errno;
+    }
+    dirent* ent = readdir(dir);
+    while (ent != NULL)
+    {
+        std::string filename = std::string(EVDEV_DIR) + ent->d_name;
+        if (isCharacterDevice(filename))
+        {
+            int evdevFd = open(filename.c_str(), O_RDONLY | O_NONBLOCK);
+            if (evdevFd == -1)
+                continue;
+            if (isKeyboardDevice(evdevFd))
+            {
+                fds.emplace_back(pollfd{
+                    .fd = evdevFd,
+                    .events = POLLIN,
+                    .revents = 0
+                });
+                evdevFdSize++;
+            }
+            else
+            {
+                close(evdevFd);
+            }
+        }
+        ent = readdir(dir);
+    }
+    closedir(dir);
+
     return RC_SUCCESS;
 }
 
@@ -82,45 +132,6 @@ int _KBHMPrivateLinux::doBeforeThreadEnd()
 
 void _KBHMPrivateLinux::work()
 {
-    std::vector<pollfd> fds;
-    fds.reserve(10 + 2);
-
-    fds.emplace_back(pollfd{.fd = eventFd, .events = POLLIN, .revents = 0});
-    fds.emplace_back(pollfd{.fd = notifyFd, .events = POLLIN, .revents = 0});
-
-    // Traverse all input devices to obtain the FDs of input devices has `EV_KEY` event.
-    size_t evdevFdSize = 0;
-    {
-        DIR* dir = opendir(EVDEV_DIR);
-        if (dir == NULL)
-        {
-            setRunFail(errno);
-            return;
-        }
-        dirent* ent = readdir(dir);
-        while (ent != NULL)
-        {
-            std::string filename = std::string(EVDEV_DIR) + ent->d_name;
-            if (isCharacterDevice(filename))
-            {
-                int evdevFd = open(filename.c_str(), O_RDONLY | O_NONBLOCK);
-                if (evdevFd == -1)
-                    continue;
-                if (isKeyboardDevice(evdevFd))
-                {
-                    fds.emplace_back(pollfd{.fd = evdevFd, .events = POLLIN, .revents = 0});
-                    evdevFdSize++;
-                }
-                else
-                {
-                    close(evdevFd);
-                }
-            }
-            ent = readdir(dir);
-        }
-        closedir(dir);
-    }
-
     setRunSuccess();
     input_event inputEv = {0};
     while (true)

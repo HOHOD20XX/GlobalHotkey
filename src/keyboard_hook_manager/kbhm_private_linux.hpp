@@ -7,6 +7,8 @@
 
 #ifdef _GLOBAL_HOTKEY_LINUX
 
+#include <vector>   // vector
+
 namespace gbhk
 {
 
@@ -27,8 +29,10 @@ protected:
 private:
     void handleKeyEvent(int nativeKey, int keyState);
 
+    size_t evdevFdSize = 0;
     int eventFd = 0;
     int notifyFd = 0;
+    std::vector<pollfd> fds;
 };
 
 } // namespace kbhook

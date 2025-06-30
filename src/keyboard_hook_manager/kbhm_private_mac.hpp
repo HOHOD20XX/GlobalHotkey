@@ -32,7 +32,8 @@ private:
         CGEventTapProxy proxy,
         CGEventType type,
         CGEventRef event,
-        void* data);
+        void* data
+    );
 
     CFRunLoopRef runLoop = NULL;
 };
