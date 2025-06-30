@@ -29,11 +29,10 @@ constexpr int KEY_STATE_RELEASED = 0;
 constexpr int KEY_STATE_PRESSED = 1;
 constexpr int KEY_STATE_HELD = 2;
 
-/// @return Return true if the specified path is exists and it is a file else return false.
+/// @return Return true if the specified path is exists and it is a character device else return false.
 static bool isCharacterDevice(const std::string& filename)
 {
     struct stat st;
-    return (stat(filename.c_str(), &st) != -1 && S_ISCHR(st.st_mode));
     return (stat(filename.c_str(), &st) != -1 && S_ISCHR(st.st_mode));
 }
 

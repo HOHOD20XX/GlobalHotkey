@@ -7,8 +7,6 @@
 
 #ifdef _GLOBAL_HOTKEY_LINUX
 
-#include <unordered_set>    // unordered_set
-
 namespace gbhk
 {
 
