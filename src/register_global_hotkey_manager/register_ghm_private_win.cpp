@@ -77,8 +77,8 @@ int _RegisterGHMPrivateWin::registerHotkey(const KeyCombination& kc, bool autoRe
     regUnregRc = -1;
     if (PostThreadMessageA(workerThreadId, WM_REGISTER_HOTKEY, wParam, lParam) != 0)
     {
-        std::mutex dummyLock;
-        std::unique_lock<std::mutex> lock(dummyLock);
+        std::mutex dummyMtx;
+        std::unique_lock<std::mutex> lock(dummyMtx);
         cvRegUnregRc.wait(lock, [this]() { return regUnregRc != -1; });
         return regUnregRc;
     }
@@ -95,8 +95,8 @@ int _RegisterGHMPrivateWin::unregisterHotkey(const KeyCombination& kc)
     regUnregRc = -1;
     if (PostThreadMessageA(workerThreadId, WM_UNREGISTER_HOTKEY, wParam, lParam) != 0)
     {
-        std::mutex dummyLock;
-        std::unique_lock<std::mutex> lock(dummyLock);
+        std::mutex dummyMtx;
+        std::unique_lock<std::mutex> lock(dummyMtx);
         cvRegUnregRc.wait(lock, [this]() { return regUnregRc != -1; });
         return regUnregRc;
     }

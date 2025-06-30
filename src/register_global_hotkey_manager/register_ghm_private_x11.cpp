@@ -153,8 +153,8 @@ int _RegisterGHMPrivateX11::registerHotkey(const KeyCombination& kc, bool autoRe
     if (wrsize != 8)
         return errno;
 
-    std::mutex dummyLock;
-    std::unique_lock<std::mutex> lock(dummyLock);
+    std::mutex dummyMtx;
+    std::unique_lock<std::mutex> lock(dummyMtx);
     cvRegUnregRc.wait(lock, [this]() { return regUnregRc != -1; });
     return regUnregRc;
 }
@@ -168,8 +168,8 @@ int _RegisterGHMPrivateX11::unregisterHotkey(const KeyCombination& kc)
     if (wrsize != 8)
         return errno;
 
-    std::mutex dummyLock;
-    std::unique_lock<std::mutex> lock(dummyLock);
+    std::mutex dummyMtx;
+    std::unique_lock<std::mutex> lock(dummyMtx);
     cvRegUnregRc.wait(lock, [this]() { return regUnregRc != -1; });
     return regUnregRc;
 }
