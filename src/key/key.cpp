@@ -7,30 +7,37 @@
 #define IS_ALNUM(c) std::isalnum(static_cast<unsigned char>(c))
 #define TO_UPPER(c) std::toupper(static_cast<unsigned char>(c))
 
+#ifdef _GLOBAL_HOTKEY_WIN
+    #define META_TEXT   "Win"
+    #define ALT_TEXT    "Alt"
+#elif defined(_GLOBAL_HOTKEY_MAC)
+    #define META_TEXT   "Command"
+    #define ALT_TEXT    "Option"
+#elif defined(_GLOBAL_HOTKEY_LINUX)
+    #define META_TEXT   "Super"
+    #define ALT_TEXT    "Alt"
+#else
+    #define META_TEXT   "Meta"
+    #define ALT_TEXT    "Alt"
+#endif // _GLOBAL_HOTKEY_WIN
+
+#define CTRL_TEXT   "Ctrl"
+#define SHIFT_TEXT  "Shift"
+
+#define LEFT_TEXT   "Left"
+#define RIGHT_TEXT  "Right"
+
 namespace gbhk
 {
 
-static std::string modifiersStringHelper(ModifierFlag flag) noexcept
+static std::string modifierFlagString(ModifierFlag flag) noexcept
 {
     switch (flag)
     {
-    #ifdef _GLOBAL_HOTKEY_WIN
-        case META:  return "Win";
-    #elif defined(_GLOBAL_HOTKEY_MAC)
-        case META:  return "Command";
-    #elif defined(_GLOBAL_HOTKEY_LINUX)
-        case META:  return "Super";
-    #endif // _GLOBAL_HOTKEY_WIN
-
-        case CTRL:  return "Ctrl";
-
-    #ifdef _GLOBAL_HOTKEY_MAC
-        case ALT:   return "Option";
-    #else
-        case ALT:   return "Alt";
-    #endif // _GLOBAL_HOTKEY_MAC
-
-        case SHIFT: return "Shift";
+        case META:  return META_TEXT;
+        case CTRL:  return CTRL_TEXT;
+        case ALT:   return ALT_TEXT;
+        case SHIFT: return SHIFT_TEXT;
         default:    return "";
     }
 }
@@ -41,13 +48,13 @@ GBHK_API std::string modifiersString(const Modifiers& modifiers, bool isPrettySp
     std::string separator = isPrettySpace ? " + " : "+";
 
     if (modifiers.has(META))
-        rslt += modifiersStringHelper(META);
+        rslt += modifierFlagString(META);
     if (modifiers.has(CTRL))
-        rslt += (!rslt.empty() ? separator : "") + modifiersStringHelper(CTRL);
+        rslt += (!rslt.empty() ? separator : "") + modifierFlagString(CTRL);
     if (modifiers.has(ALT))
-        rslt += (!rslt.empty() ? separator : "") + modifiersStringHelper(ALT);
+        rslt += (!rslt.empty() ? separator : "") + modifierFlagString(ALT);
     if (modifiers.has(SHIFT))
-        rslt += (!rslt.empty() ? separator : "") + modifiersStringHelper(SHIFT);
+        rslt += (!rslt.empty() ? separator : "") + modifierFlagString(SHIFT);
 
     return rslt;
 }
@@ -202,6 +209,20 @@ GBHK_API std::string keyString(const Key& key) noexcept
         case Key_Backslash:         return "\\";
         case Key_Angle_Bracket:     return "<>";
 
+        // Modifier keys.
+        case Key_Mod_Meta:          return META_TEXT;
+        case Key_Mod_Meta_Left:     return (LEFT_TEXT " " META_TEXT);
+        case Key_Mod_Meta_Right:    return (RIGHT_TEXT " " META_TEXT);
+        case Key_Mod_Ctrl:          return CTRL_TEXT;
+        case Key_Mod_Ctrl_Left:     return (LEFT_TEXT " " CTRL_TEXT);
+        case Key_Mod_Ctrl_Right:    return (RIGHT_TEXT " " CTRL_TEXT);
+        case Key_Mod_Alt:           return ALT_TEXT;
+        case Key_Mod_Alt_Left:      return (LEFT_TEXT " " ALT_TEXT);
+        case Key_Mod_Alt_Right:     return (RIGHT_TEXT " " ALT_TEXT);
+        case Key_Mod_Shift:         return SHIFT_TEXT;
+        case Key_Mod_Shift_Left:    return (LEFT_TEXT " " SHIFT_TEXT);
+        case Key_Mod_Shift_Right:   return (RIGHT_TEXT " " SHIFT_TEXT);
+
         default:                    return "";
     }
 }
@@ -230,9 +251,10 @@ static bool isEqualStr(const std::string& str1, const std::string& str2) noexcep
     return true;
 }
 
-static int getModifiersFromStringHelper(const std::string& str) noexcept
+static int getModifierFlagFromString(const std::string& str) noexcept
 {
-    if (isEqualStr(str, "win") || isEqualStr(str, "windows") || isEqualStr(str, "command") || isEqualStr(str, "super"))
+    if (isEqualStr(str, "win") || isEqualStr(str, "command") ||
+        isEqualStr(str, "super") || isEqualStr(str, "meta"))
         return META;
     if (isEqualStr(str, "ctrl") || isEqualStr(str, "control"))
         return CTRL;
@@ -250,7 +272,7 @@ GBHK_API Modifiers getModifiersFromString(const std::string& str) noexcept
     Modifiers rslt;
     std::string s;
     while (std::getline(ss, s, '+'))
-        rslt.add(getModifiersFromStringHelper(s));
+        rslt.add(getModifierFlagFromString(s));
     return rslt;
 }
 
@@ -405,6 +427,35 @@ GBHK_API Key getKeyFromString(const std::string& str) noexcept
     if (isEqualStr(str, "/"))                   return Key_Slash;
     if (isEqualStr(str, "\\"))                  return Key_Backslash;
     if (isEqualStr(str, "<>"))                  return Key_Angle_Bracket;
+
+    // Modifier keys.
+    if (isEqualStr(str, "win") || isEqualStr(str, "command") ||
+        isEqualStr(str, "super") || isEqualStr(str, "meta"))
+        return Key_Mod_Meta;
+    if (isEqualStr(str, "left win") || isEqualStr(str, "left command") ||
+        isEqualStr(str, "left super") || isEqualStr(str, "left meta"))
+        return Key_Mod_Meta_Left;
+    if (isEqualStr(str, "right win") || isEqualStr(str, "right command") ||
+        isEqualStr(str, "right super") || isEqualStr(str, "right meta"))
+        return Key_Mod_Meta_Right;
+    if (isEqualStr(str, "ctrl") || isEqualStr(str, "control"))
+        return Key_Mod_Ctrl;
+    if (isEqualStr(str, "left ctrl") || isEqualStr(str, "left control"))
+        return Key_Mod_Ctrl_Left;
+    if (isEqualStr(str, "right ctrl") || isEqualStr(str, "right control"))
+        return Key_Mod_Ctrl_Right;
+    if (isEqualStr(str, "alt") || isEqualStr(str, "option"))
+        return Key_Mod_Alt;
+    if (isEqualStr(str, "left alt") || isEqualStr(str, "left option"))
+        return Key_Mod_Alt_Left;
+    if (isEqualStr(str, "right alt") || isEqualStr(str, "right option"))
+        return Key_Mod_Alt_Right;
+    if (isEqualStr(str, "shift"))
+        return Key_Mod_Shift;
+    if (isEqualStr(str, "left shift"))
+        return Key_Mod_Shift_Left;
+    if (isEqualStr(str, "right shift"))
+        return Key_Mod_Shift_Right;
 
     return Key();
 }
