@@ -36,7 +36,7 @@ enum EventType : int64_t
     ET_UNREGISTER
 };
 
-static std::unordered_map<int, int> KeycodeToKeysym;
+static std::unordered_map<int, int> keycodeToKeysym;
 
 _RegisterGHMPrivateX11::_RegisterGHMPrivateX11() :
     regUnregRc(0),
@@ -101,7 +101,7 @@ void _RegisterGHMPrivateX11::work()
                 if (event.type == KeyPress)
                 {
                     auto mod = getModifiersFromX11Modifiers(event.xkey.state);
-                    auto keysym = KeycodeToKeysym[event.xkey.keycode];
+                    auto keysym = keycodeToKeysym[event.xkey.keycode];
                     auto key = getKeyFromX11Keysym(keysym);
                     currKc = {mod, key};
                 }
@@ -190,7 +190,7 @@ int _RegisterGHMPrivateX11::nativeRegisterHotkey(Display* display)
 
     auto keysym = x11Keysym(regUnregKc.load().key());
     auto keycode = XKeysymToKeycode(display, keysym);
-    KeycodeToKeysym[keycode] = keysym;
+    keycodeToKeysym[keycode] = keysym;
     auto mod = x11Modifiers(regUnregKc.load().modifiers());
     XGrabKey(display, keycode, mod, DefaultRootWindow(display), True, GrabModeAsync, GrabModeAsync);
     XSync(display, False);

@@ -16,17 +16,17 @@ namespace kbhook
 
 // TODO: Use error code instead of the current placeholder return codes (-1).
 
-constexpr int ModifierKeyCodeFirst = kVK_RightCommand;
-constexpr int ModifierKeyCodeLast = kVK_Function;
-constexpr int ModifierKeyCodeCount = ModifierKeyCodeLast - ModifierKeyCodeFirst + 1;
+constexpr int MODKC_FIRST = kVK_RightCommand;
+constexpr int MODKC_LAST = kVK_Function;
+constexpr int MODKC_COUNT = MODKC_LAST - MODKC_FIRST + 1;
 
-#define GMSINDEX(keycode) ((keycode) - ModifierKeyCodeFirst)
+#define GMSINDEX(keycode) ((keycode) - MODKC_FIRST)
 
 // The modifier key states.
 // True if the modifier key is pressed else false.
-std::array<bool, ModifierKeyCodeCount> ModifierStates;
+static std::array<bool, MODKC_COUNT> modifierStates;
 
-#define GMS(keycode) ModifierStates[GMSINDEX(keycode)]
+#define GMS(keycode) modifierStates[GMSINDEX(keycode)]
 
 _KBHMPrivateMac::_KBHMPrivateMac() = default;
 
@@ -40,7 +40,7 @@ int _KBHMPrivateMac::doBeforeThreadEnd()
 
 void _KBHMPrivateMac::work()
 {
-    for (auto& modifierState : ModifierStates)
+    for (auto& modifierState : modifierStates)
         modifierState = false;
 
     CGEventMask eventMask =
