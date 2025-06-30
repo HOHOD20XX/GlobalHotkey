@@ -41,7 +41,6 @@ void _KBHMPrivateWin::work()
     setRunSuccess();
     // Retrieves only messages on the current thread's message queue whose hwnd value is NULL.
     // In this case the thread message as posted by `PostThreadMessage`.
-    setRunSuccess();
     while (GetMessageA(&msg, HWND(-1), 0, 0) != 0)
     {
         if (msg.message == WM_DESTROY)
