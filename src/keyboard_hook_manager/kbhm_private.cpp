@@ -169,11 +169,6 @@ int _KBHMPrivate::doBeforeThreadRun() { return RC_SUCCESS; }
 
 int _KBHMPrivate::doBeforeThreadEnd() { return RC_SUCCESS; }
 
-bool _KBHMPrivate::isValidValue(int nativeKey, KeyState state)
-{
-    return nativeKey != 0 && state != KS_NONE;
-}
-
 } // namespace kbhook
 
 } // namespace gbhk

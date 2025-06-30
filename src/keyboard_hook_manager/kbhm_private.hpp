@@ -87,8 +87,6 @@ private:
         RS_TERMINATE
     };
 
-    static bool isValidValue(int nativeKey, KeyState state);
-
     static std::mutex mtx;
     static std::unordered_map<Combination, std::function<void ()>> fns;
     static std::function<void (int)> keyPressedCallback;
