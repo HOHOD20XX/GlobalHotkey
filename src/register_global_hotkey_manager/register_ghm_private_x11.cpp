@@ -155,7 +155,7 @@ int _RegisterGHMPrivateX11::registerHotkey(const KeyCombination& kc, bool autoRe
 
     std::mutex dummyLock;
     std::unique_lock<std::mutex> lock(dummyLock);
-    cvRegUnregRc.wait(lock, [this]() { return (regUnregRc != -1); });
+    cvRegUnregRc.wait(lock, [this]() { return regUnregRc != -1; });
     return regUnregRc;
 }
 
@@ -170,7 +170,7 @@ int _RegisterGHMPrivateX11::unregisterHotkey(const KeyCombination& kc)
 
     std::mutex dummyLock;
     std::unique_lock<std::mutex> lock(dummyLock);
-    cvRegUnregRc.wait(lock, [this]() { return (regUnregRc != -1); });
+    cvRegUnregRc.wait(lock, [this]() { return regUnregRc != -1; });
     return regUnregRc;
 }
 

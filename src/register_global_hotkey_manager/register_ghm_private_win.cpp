@@ -79,7 +79,7 @@ int _RegisterGHMPrivateWin::registerHotkey(const KeyCombination& kc, bool autoRe
     {
         std::mutex dummyLock;
         std::unique_lock<std::mutex> lock(dummyLock);
-        cvRegUnregRc.wait(lock, [this]() { return (regUnregRc != -1); });
+        cvRegUnregRc.wait(lock, [this]() { return regUnregRc != -1; });
         return regUnregRc;
     }
     return GetLastError();
@@ -97,7 +97,7 @@ int _RegisterGHMPrivateWin::unregisterHotkey(const KeyCombination& kc)
     {
         std::mutex dummyLock;
         std::unique_lock<std::mutex> lock(dummyLock);
-        cvRegUnregRc.wait(lock, [this]() { return (regUnregRc != -1); });
+        cvRegUnregRc.wait(lock, [this]() { return regUnregRc != -1; });
         return regUnregRc;
     }
     return GetLastError();
