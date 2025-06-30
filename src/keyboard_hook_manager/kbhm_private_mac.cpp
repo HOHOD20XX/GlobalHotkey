@@ -6,8 +6,6 @@
 
 #include <global_hotkey/return_code.hpp>
 
-#include <iostream>
-
 namespace gbhk
 {
 
@@ -21,6 +19,7 @@ _KBHMPrivateMac::~_KBHMPrivateMac() { end(); }
 int _KBHMPrivateMac::doBeforeThreadEnd()
 {
     CFRunLoopStop(runLoop);
+    return RC_SUCCESS;
 }
 
 void _KBHMPrivateMac::work()

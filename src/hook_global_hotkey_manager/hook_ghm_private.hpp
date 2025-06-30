@@ -20,8 +20,8 @@ protected:
     int doBeforeThreadRun() override;
     int doBeforeThreadEnd() override;
     void work() override;
-    int registerHotkey(const KeyCombination& kc, bool autoRepeat);
-    int unregisterHotkey(const KeyCombination& kc);
+    int registerHotkey(const KeyCombination& kc, bool autoRepeat) override;
+    int unregisterHotkey(const KeyCombination& kc) override;
 
 private:
     void invoke(const KeyCombination& prevKc, const KeyCombination& currKc) const;
