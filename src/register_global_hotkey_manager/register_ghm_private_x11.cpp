@@ -105,9 +105,9 @@ void _RegisterGHMPrivateX11::work()
                     auto key = getKeyFromX11Keysym(keysym);
                     currKc = {mod, key};
                 }
+                // event.type == KeyRelease
                 else
                 {
-                    // event.type == KeyRelease
                     currKc = {};
                 }
             }

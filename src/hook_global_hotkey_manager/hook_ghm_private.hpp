@@ -3,12 +3,32 @@
 
 #ifndef GLOBAL_HOTKEY_DISABLE_HOOK
 
+#include <set>      // set
+#include <queue>    // queue
+
 #include <global_hotkey/keyboard_hook_manager.hpp>
 
 #include "../global_hotkey_manager/ghm_private.hpp"
 
 namespace gbhk
 {
+
+template <typename T>
+struct PriorityItem
+{
+    PriorityItem(const T& item, size_t priority) : item(item), priority(priority) {}
+
+    constexpr inline operator T()() const noexcept { return item; }
+    friend constexpr inline bool operator<(const PriorityItem& lhs, const PriorityItem& rhs) noexcept
+    {
+        if (lhs.item == rhs.item)
+            return false;
+        return lhs.priority < rhs.priority;
+    }
+
+    T item;
+    int priority;
+};
 
 class _HookGHMPrivate final : public _GHMPrivate
 {
@@ -24,13 +44,10 @@ protected:
     int unregisterHotkey(const KeyCombination& kc);
 
 private:
-    static void keyPressedCallback(int nativeKey);
-    static void keyReleasedCallback(int nativeKey);
+    void invoke(const KeyCombination& prevKc, const KeyCombination& currKc);
 
-    static std::atomic<Modifiers> pressedMod;
-    static std::atomic<Key> pressedKey;
-
-    std::atomic<bool> shouldClose;
+    Modifiers pressedMod = 0;
+    std::set<PriorityItem<Key>> pressedKeys;
 
     kbhook::KeyboardHookManager& kbhm;
 };
