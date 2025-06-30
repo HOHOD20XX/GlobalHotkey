@@ -253,6 +253,9 @@ static bool isEqualStr(const std::string& str1, const std::string& str2) noexcep
 
 static int getModifierFlagFromString(const std::string& str) noexcept
 {
+    if (str.empty())
+        return 0;
+
     if (isEqualStr(str, "win") || isEqualStr(str, "command") ||
         isEqualStr(str, "super") || isEqualStr(str, "meta"))
         return META;
@@ -262,6 +265,7 @@ static int getModifierFlagFromString(const std::string& str) noexcept
         return ALT;
     if (isEqualStr(str, "shift"))
         return SHIFT;
+
     return 0;
 }
 
