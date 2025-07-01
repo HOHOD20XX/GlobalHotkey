@@ -13,6 +13,13 @@
 namespace gbhk
 {
 
+enum EventType
+{
+    ET_NONE = 0,
+    ET_REGISTER,
+    ET_UNREGISTER
+};
+
 class _RegisterGHMPrivateMac final : public _RegisterGHMPrivate
 {
 public:
@@ -27,7 +34,7 @@ protected:
     int unregisterHotkey(const KeyCombination& kc) override;
 
 private:
-    static void runLoopSourceCallback(void* data);
+    static void runLoopSourceCallback(void* info);
     static OSStatus hotkeyEventHandler(EventHandlerCallRef handler, EventRef event, void* userData);
 
     void invoke() const;
@@ -36,6 +43,7 @@ private:
 
     static std::condition_variable cvRegUnregRc;
     static std::atomic<int> regUnregRc;
+    static std::atomic<EventType> eventType;
     static std::atomic<KeyCombination> regUnregKc;
     static std::atomic<bool> regUnregAutoRepeat;
     static std::unordered_map<KeyCombination, EventHotKeyRef> kcToHotkeyRef;

@@ -11,14 +11,9 @@
 namespace gbhk
 {
 
-enum EventType
-{
-    ET_REGISTER = 1,
-    ET_UNREGISTER
-};
-
 std::condition_variable _RegisterGHMPrivateMac::cvRegUnregRc;
 std::atomic<int> _RegisterGHMPrivateMac::regUnregRc(0);
+std::atomic<EventType> _RegisterGHMPrivateMac::eventType(ET_NONE);
 std::atomic<KeyCombination> _RegisterGHMPrivateMac::regUnregKc;
 std::atomic<bool> _RegisterGHMPrivateMac::regUnregAutoRepeat(false);
 std::unordered_map<KeyCombination, EventHotKeyRef> _RegisterGHMPrivateMac::kcToHotkeyRef;
@@ -31,7 +26,7 @@ int _RegisterGHMPrivateMac::doBeforeThreadRun()
 {
     sourceContext = {
         .version = 0,
-        .info = NULL,
+        .info = &source,
         .retain = NULL,
         .release = NULL,
         .copyDescription = NULL,
@@ -39,7 +34,7 @@ int _RegisterGHMPrivateMac::doBeforeThreadRun()
         .hash = NULL,
         .schedule = NULL,
         .cancel = NULL,
-        .perform = &_RegisterGHMPrivateMac::runLoopSourceCallback,
+        .perform = &_RegisterGHMPrivateMac::runLoopSourceCallback
     };
     return RC_SUCCESS;
 }
@@ -91,26 +86,22 @@ void _RegisterGHMPrivateMac::work()
 int _RegisterGHMPrivateMac::registerHotkey(const KeyCombination& kc, bool autoRepeat)
 {
     regUnregRc = -1;
+    eventType = ET_REGISTER;
     regUnregKc = kc;
-    EventType et = ET_REGISTER;
-    sourceContext.info = &et;
-    printf("1\n");
     CFRunLoopSourceSignal(source);
     CFRunLoopWakeUp(runLoop);
-    printf("2\n");
+
     std::mutex dummyMtx;
     std::unique_lock<std::mutex> lock(dummyMtx);
     cvRegUnregRc.wait(lock, [this]() { return regUnregRc != -1; });
-    printf("3\n");
     return regUnregRc;
 }
 
 int _RegisterGHMPrivateMac::unregisterHotkey(const KeyCombination& kc)
 {
     regUnregRc = -1;
+    eventType = ET_UNREGISTER;
     regUnregKc = kc;
-    EventType et = ET_UNREGISTER;
-    sourceContext.info = &et;
     CFRunLoopSourceSignal(source);
     CFRunLoopWakeUp(runLoop);
 
@@ -120,27 +111,21 @@ int _RegisterGHMPrivateMac::unregisterHotkey(const KeyCombination& kc)
     return regUnregRc;
 }
 
-void _RegisterGHMPrivateMac::runLoopSourceCallback(void* data)
+void _RegisterGHMPrivateMac::runLoopSourceCallback(void* info)
 {
-    printf("ET Address: %llu\n", (unsigned long long)data);
-    printf("11\n");
-    if (data)
+    CFRunLoopSourceRef* sref = (CFRunLoopSourceRef*) info;
+    switch (eventType.load())
     {
-        EventType et = *(EventType*) (data);
-        printf("et: %d\n", et);
-        printf("12\n");
-        if (et == ET_REGISTER)
-        {
-            printf("13\n");
+        case ET_REGISTER:
             regUnregRc = nativeRegisterHotkey();
             cvRegUnregRc.notify_one();
-            printf("14\n");
-        }
-        else if (et == ET_UNREGISTER)
-        {
+            break;
+        case ET_UNREGISTER:
             regUnregRc = nativeUnregisterHotkey();
             cvRegUnregRc.notify_one();
-        }
+            break;
+        default:
+            break;
     }
 }
 
@@ -148,6 +133,7 @@ OSStatus _RegisterGHMPrivateMac::hotkeyEventHandler(EventHandlerCallRef handler,
 {
     if (GetEventClass(event) == kEventClassKeyboard)
     {
+        printf("Has Event");
         auto eventKind = GetEventKind(event);
         if (eventKind != kEventHotKeyPressed && eventKind != kEventHotKeyReleased)
             return noErr;
