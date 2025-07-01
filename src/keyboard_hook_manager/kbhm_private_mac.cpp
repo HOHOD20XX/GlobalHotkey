@@ -74,7 +74,7 @@ void _KBHMPrivateMac::work()
         setRunFail(-1);
         return;
     }
-    CFRunLoopAddSource(runLoop, runLoopSource, kCFRunLoopCommonModes);
+    CFRunLoopAddSource(runLoop, runLoopSource, kCFRunLoopDefaultMode);
     CGEventTapEnable(eventTap, true);
 
     setRunSuccess();
