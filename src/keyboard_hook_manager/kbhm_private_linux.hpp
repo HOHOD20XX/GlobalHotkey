@@ -7,6 +7,7 @@
 
 #ifdef _GLOBAL_HOTKEY_LINUX
 
+#include <poll.h>           // poll
 #include <vector>   // vector
 
 namespace gbhk

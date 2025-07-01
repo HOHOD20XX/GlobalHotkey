@@ -7,7 +7,6 @@
 #include <dirent.h>         // dirent
 #include <fcntl.h>          // fcntl, open
 #include <linux/input.h>    // input_event
-#include <poll.h>           // poll
 #include <sys/eventfd.h>    // eventfd
 #include <sys/inotify.h>    // inotify
 #include <sys/ioctl.h>      // ioctl
