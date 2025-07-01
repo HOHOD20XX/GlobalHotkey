@@ -145,7 +145,7 @@ OSStatus _RegisterGHMPrivateMac::hotkeyEventHandler(EventHandlerCallRef handler,
             kEventParamDirectObject,
             typeEventHotKeyID,
             NULL,
-            sizeof(hotkeyId),
+            sizeof(EventHotkeyID),
             NULL,
             &hotkeyId
         );

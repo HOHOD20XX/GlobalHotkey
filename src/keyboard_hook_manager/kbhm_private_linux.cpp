@@ -26,6 +26,13 @@ constexpr int KEY_STATE_RELEASED = 0;
 constexpr int KEY_STATE_PRESSED = 1;
 constexpr int KEY_STATE_HELD = 2;
 
+constexpr size_t BUF_ITEM_COUNT = 32;
+constexpr size_t INOTIFY_EV_BUF_SIZE = BUF_ITEM_COUNT * (sizeof(inotify_event) + NAME_MAX + 1);
+constexpr size_t INPUT_EV_BUF_SIZE = BUF_ITEM_COUNT * sizeof(input_event);
+
+static char INOTIFY_EV_BUF[INOTIFY_EV_BUF_SIZE] = {0};
+static char INPUT_EV_BUF[INPUT_EV_BUF_SIZE] = {0};
+
 /// @return Return true if the specified path is exists and it is a character device else return false.
 static bool isCharacterDevice(const std::string& filename)
 {
@@ -38,7 +45,7 @@ static bool isCharacterDevice(const std::string& filename)
 static bool isKeyboardDevice(int fd)
 {
     unsigned int evbit = 0;
-    if (ioctl(fd, EVIOCGBIT(0, sizeof(evbit)), &evbit) == -1)
+    if (ioctl(fd, EVIOCGBIT(0, sizeof(unsigned int)), &evbit) == -1)
         return false;
     bool hasKeyEvent = (evbit & (1 << EV_KEY)) != 0;
     bool hastRelEvent = (evbit & (1 << EV_REL)) == 0;
@@ -107,7 +114,6 @@ int _KBHMPrivateLinux::doBeforeThreadEnd()
 void _KBHMPrivateLinux::work()
 {
     setRunSuccess();
-    input_event inputEv = {0};
     while (true)
     {
         int ret = poll(pollFds.data(), pollFds.size(), -1);
@@ -126,21 +132,28 @@ void _KBHMPrivateLinux::work()
         // The input devices has changed.
         if (pollFds[1].revents & POLLIN)
         {
-            inotify_event ev;
-            auto rdsize = read(notifyFd, &ev, sizeof(inotify_event) + NAME_MAX + 1);
-            if (rdsize != sizeof(ev))
+            auto rdsize = read(notifyFd, INOTIFY_EV_BUF, INOTIFY_EV_BUF_SIZE);
+            if (rdsize <= 0)
                 continue;
 
-            if (ev.mask == IN_Q_OVERFLOW)
+            char* p = INOTIFY_EV_BUF;
+            while (p < INOTIFY_EV_BUF + rdsize)
             {
-                // Pass.
-                continue;
-            }
+                inotify_event* ev = (inotify_event*) p;
 
-            if (ev.mask == IN_CREATE)
-                addEvdevFd(ev.name);
-            else if (ev.mask == IN_DELETE)
-                removeEvdevFd(ev.name);
+                if (ev->mask == IN_Q_OVERFLOW)
+                {
+                    // Pass.
+                    continue;
+                }
+
+                if (ev->mask == IN_CREATE && ev->len > 0)
+                    addEvdevFd(ev->name);
+                else if (ev->mask == IN_DELETE && ev->len > 0)
+                    removeEvdevFd(ev->name);
+
+                p += sizeof(inotify_event) + ev->len;
+            }
         }
 
         // Is input devices has event?
@@ -148,14 +161,21 @@ void _KBHMPrivateLinux::work()
         {
             if (pollFds[i].revents & POLLIN)
             {
-                auto rdsize = read(pollFds[i].fd, &inputEv, sizeof(input_event));
-                if (rdsize != sizeof(input_event))
+                auto rdsize = read(pollFds[i].fd, INPUT_EV_BUF, INPUT_EV_BUF_SIZE);
+                if (rdsize <= 0)
                     continue;
-                if (inputEv.type == EV_KEY)
+
+                char* p = INPUT_EV_BUF;
+                while (p < INPUT_EV_BUF + rdsize)
                 {
-                    int nativeKey = inputEv.code;
-                    int keyState = inputEv.value;
-                    handleKeyEvent(nativeKey, keyState);
+                    input_event* ev = (input_event*) p;
+                    if (ev->type == EV_KEY)
+                    {
+                        int nativeKey = ev->code;
+                        int keyState = ev->value;
+                        handleKeyEvent(nativeKey, keyState);
+                    }
+                    p += sizeof(input_event);
                 }
             }
         }
