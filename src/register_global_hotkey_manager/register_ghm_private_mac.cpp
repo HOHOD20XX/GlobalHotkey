@@ -11,15 +11,9 @@
 namespace gbhk
 {
 
-enum EventType
-{
-    ET_REGISTER,
-    ET_UNREGISTER
-};
-
 std::condition_variable _RegisterGHMPrivateMac::cvRegUnregRc;
 std::atomic<int> _RegisterGHMPrivateMac::regUnregRc(0);
-std::atomic<int> _RegisterGHMPrivateMac::eventType(0);
+std::atomic<EventType> _RegisterGHMPrivateMac::eventType(ET_NONE);
 std::atomic<KeyCombination> _RegisterGHMPrivateMac::regUnregKc;
 std::unordered_map<KeyCombination, EventHotKeyRef> _RegisterGHMPrivateMac::kcToHotkeyRef;
 
@@ -60,15 +54,14 @@ void _RegisterGHMPrivateMac::work()
         return;
     }
 
-    EventTypeSpec eventTypeSpecs[2];
+    EventTypeSpec eventTypeSpecs[2] = {0};
     eventTypeSpecs[0].eventClass = kEventClassKeyboard;
     eventTypeSpecs[0].eventKind = kEventHotKeyPressed;
     eventTypeSpecs[1].eventClass = kEventClassKeyboard;
     eventTypeSpecs[1].eventKind = kEventHotKeyReleased;
     auto status = InstallApplicationEventHandler(
         &_RegisterGHMPrivateMac::hotkeyEventHandler,
-        2,
-        eventTypeSpecs,
+        2, eventTypeSpecs,
         NULL, NULL
     );
     if (status != noErr)
@@ -127,15 +120,15 @@ void _RegisterGHMPrivateMac::runLoopSourceCallback(void* info)
     {
         case ET_REGISTER:
             regUnregRc = nativeRegisterHotkey();
-            cvRegUnregRc.notify_one();
             break;
         case ET_UNREGISTER:
             regUnregRc = nativeUnregisterHotkey();
-            cvRegUnregRc.notify_one();
             break;
         default:
+            regUnregRc = RC_SUCCESS;
             break;
     }
+    cvRegUnregRc.notify_one();
 }
 
 OSStatus _RegisterGHMPrivateMac::hotkeyEventHandler(EventHandlerCallRef handler, EventRef event, void* userData)
@@ -187,10 +180,7 @@ int _RegisterGHMPrivateMac::nativeRegisterHotkey()
     UInt32 mod = (UInt32) nativeModifiers(kc.modifiers());
     UInt32 key = (UInt32) nativeKey(kc.key());
 
-    EventHotKeyID hotkeyId = {
-        .signature = (OSType) mod,
-        .id = key
-    };
+    EventHotKeyID hotkeyId = {(OSType) mod, key};
     EventHotKeyRef ref = 0;
     auto status = RegisterEventHotKey(
         key,

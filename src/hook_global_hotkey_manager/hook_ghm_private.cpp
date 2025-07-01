@@ -55,7 +55,7 @@ int _HookGHMPrivate::doBeforeThreadRun()
 
 int _HookGHMPrivate::doBeforeThreadEnd()
 {
-    pushEvent({.type = ET_EXIT});
+    pushEvent({ET_EXIT});
     return kbhm.end();
 }
 
@@ -151,13 +151,13 @@ void clearEventQueue()
 void keyPressedCallback(int nativeKey)
 {
     auto key = getKeyFromNativeKey(nativeKey);
-    pushEvent({.type = ET_KEY_PRESSED, .data = key});
+    pushEvent({ET_KEY_PRESSED, key});
 }
 
 void keyReleasedCallback(int nativeKey)
 {
     auto key = getKeyFromNativeKey(nativeKey);
-    pushEvent({.type = ET_KEY_RELEASED, .data = key});
+    pushEvent({ET_KEY_RELEASED, key});
 }
 
 } // namespace gbhk

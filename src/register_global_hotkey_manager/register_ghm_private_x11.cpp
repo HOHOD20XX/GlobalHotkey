@@ -76,11 +76,9 @@ void _RegisterGHMPrivateX11::work()
     }
 
     int x11Fd = ConnectionNumber(display);
-    pollfd fds[2] = {};
-    fds[0].fd = x11Fd;
-    fds[0].events = POLLIN;
-    fds[1].fd = eventFd;
-    fds[1].events = POLLIN;
+    pollfd fds[2] = {0};
+    fds[0] = pollfd{x11Fd, POLLIN};
+    fds[1] = pollfd(eventFd, POLLIN)
 
     setRunSuccess();
     KeyCombination prevKc;

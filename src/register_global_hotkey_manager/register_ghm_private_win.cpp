@@ -39,7 +39,7 @@ void _RegisterGHMPrivateWin::work()
     setRunSuccess();
     // Retrieves only messages on the current thread's message queue whose hwnd value is NULL.
     // In this case the thread message as posted by `PostThreadMessage`.
-    while (GetMessageA(&msg, HWND(-1), 0, 0) != 0)
+    while (GetMessageA(&msg, (HWND) -1, 0, 0) != 0)
     {
         if (msg.message == WM_HOTKEY)
         {
@@ -105,7 +105,7 @@ int _RegisterGHMPrivateWin::unregisterHotkey(const KeyCombination& kc)
 
 void _RegisterGHMPrivateWin::invoke(WPARAM wParam, LPARAM lParam) const
 {
-    int hotkeyId = int(wParam);
+    int hotkeyId = (int) wParam;
     if (hotkeyIdToKc.find(hotkeyId) != hotkeyIdToKc.end())
     {
         auto& kc = hotkeyIdToKc.at(hotkeyId);

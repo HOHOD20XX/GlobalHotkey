@@ -26,7 +26,7 @@ constexpr int MODKC_COUNT = MODKC_LAST - MODKC_FIRST + 1;
 // True if the modifier key is pressed else false.
 static std::array<bool, MODKC_COUNT> modifierStates;
 
-#define GMS(keycode) modifierStates[GMSINDEX(keycode)]
+#define GMS(keycode) (modifierStates[GMSINDEX(keycode)])
 
 _KBHMPrivateMac::_KBHMPrivateMac() = default;
 
@@ -52,7 +52,7 @@ void _KBHMPrivateMac::work()
         kCGHeadInsertEventTap,
         kCGEventTapOptionDefault,
         eventMask,
-        &keyboardTapCallback,
+        &_KBHMPrivateMac::keyboardTapCallback,
         NULL
     );
     if (!eventTap)
@@ -90,33 +90,33 @@ CGEventRef _KBHMPrivateMac::keyboardTapCallback(
     CGEventRef event,
     void* data)
 {
-    CGKeyCode keyCode =
+    CGKeyCode keycode =
         CGEventGetIntegerValueField(event, kCGKeyboardEventKeycode);
     KeyState state = KS_NONE;
     if (type == kCGEventKeyDown)
     {
         auto keyPressedCallback = getKeyPressedCallback();
         if (keyPressedCallback)
-            keyPressedCallback(keyCode);
+            keyPressedCallback(keycode);
         state = KS_PRESSED;
     }
     else if (type == kCGEventKeyUp)
     {
         auto keyReleasedCallback = getKeyReleasedCallback();
         if (keyReleasedCallback)
-            keyReleasedCallback(keyCode);
+            keyReleasedCallback(keycode);
         state = KS_RELEASED;
     }
     else if (type == kCGEventFlagsChanged)
     {
-        auto& modifierState = GMS(keyCode);
+        auto& modifierState = GMS(keycode);
         // The modifier key has been pressed.
         if (modifierState)
         {
             modifierState = false;
             auto keyReleasedCallback = getKeyReleasedCallback();
             if (keyReleasedCallback)
-                keyReleasedCallback(keyCode);
+                keyReleasedCallback(keycode);
             state = KS_RELEASED;
         }
         // The modifier key has been released.
@@ -125,11 +125,11 @@ CGEventRef _KBHMPrivateMac::keyboardTapCallback(
             modifierState = true;
             auto keyPressedCallback = getKeyPressedCallback();
             if (keyPressedCallback)
-                keyPressedCallback(keyCode);
+                keyPressedCallback(keycode);
             state = KS_PRESSED;
         }
 
-        auto fn = getKeyListenerCallback(keyCode, state);
+        auto fn = getKeyListenerCallback(keycode, state);
         if (fn)
             fn();
     }

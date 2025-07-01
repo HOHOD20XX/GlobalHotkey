@@ -16,7 +16,7 @@ public:
     constexpr inline KeyCombination() noexcept = default;
     constexpr inline KeyCombination(const Modifiers& modifiers, const Key& key) noexcept : mod(modifiers), ky(key) {}
     constexpr inline explicit KeyCombination(int64_t combinedValue) noexcept :
-        mod(int32_t(combinedValue >> 32)), ky(int32_t(combinedValue)) {}
+        mod((int32_t) (combinedValue >> 32)), ky((int32_t) combinedValue) {}
 
     static KeyCombination fromString(const std::string& str) noexcept;
     std::string toString(bool isPrettySpace = false, bool showKeyValue = false) const noexcept;
@@ -24,8 +24,8 @@ public:
     constexpr inline Modifiers modifiers() const noexcept { return mod; }
     constexpr inline Key key() const noexcept { return ky; }
     static constexpr inline KeyCombination fromCombinedValue(int64_t value) noexcept
-    { return KeyCombination(int32_t(value >> 32), int32_t(value)); }
-    constexpr inline int64_t combinedValue() const noexcept { return (int64_t(mod) << 32) | (int64_t(ky) << 0); }
+    { return KeyCombination((int32_t) (value >> 32), (int32_t) value); }
+    constexpr inline int64_t combinedValue() const noexcept { return ((int64_t) mod << 32) | ((int64_t) ky << 0); }
     constexpr inline explicit operator int64_t() const noexcept { return combinedValue(); }
 
 #if _GLOBAL_HOTKEY_CPPVERS >= 201703L

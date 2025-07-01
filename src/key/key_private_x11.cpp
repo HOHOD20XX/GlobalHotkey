@@ -361,7 +361,7 @@ Key getKeyFromX11Keysym(int x11Keysym) noexcept
         case XK_Shift_L:            return Key_Mod_Shift_Left;
         case XK_Shift_R:            return Key_Mod_Shift_Right;
 
-        default:                    return 0;
+        default:                    return Key();
     }
 }
 

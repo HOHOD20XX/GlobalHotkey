@@ -70,16 +70,8 @@ int _KBHMPrivateLinux::doBeforeThreadRun()
         return errno;
 
     fds.clear();
-    fds.emplace_back(pollfd{
-        .fd = eventFd,
-        .events = POLLIN,
-        .revents = 0
-    });
-    fds.emplace_back(pollfd{
-        .fd = notifyFd,
-        .events = POLLIN,
-        .revents = 0
-    });
+    fds.emplace_back(pollfd{eventFd, POLLIN});
+    fds.emplace_back(pollfd{notifyFd, POLLIN});
 
     // Traverse all input devices to obtain the FDs of input devices has `EV_KEY` event.
     evdevFdSize = 0;
@@ -102,11 +94,7 @@ int _KBHMPrivateLinux::doBeforeThreadRun()
                 continue;
             if (isKeyboardDevice(evdevFd))
             {
-                fds.emplace_back(pollfd{
-                    .fd = evdevFd,
-                    .events = POLLIN,
-                    .revents = 0
-                });
+                fds.emplace_back(pollfd{evdevFd, POLLIN});
                 evdevFdSize++;
             }
             else
