@@ -55,7 +55,7 @@ protected:
     /// the thread's end be changed to enable the thread to exit.
     virtual int doBeforeThreadEnd();
     /// @note The specific working logic of the worker thread.
-    /// @attention The `setRunSuccess` or `setRunFail` must be called in the implementation
+    /// @attention The `setRunSuccess` or `setRunFail` must be performed in the implementation
     /// of this function to indicate whether the work running successfully.
     virtual void work() = 0;
     /// @note The specific logic of register hotkey.
