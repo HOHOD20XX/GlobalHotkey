@@ -5,6 +5,7 @@
 
 #include "register_ghm_private.hpp"
 
+#define _GLOBAL_HOTKEY_MAC
 #ifdef _GLOBAL_HOTKEY_MAC
 
 #include <Carbon/Carbon.h>
@@ -12,13 +13,6 @@
 
 namespace gbhk
 {
-
-enum EventType
-{
-    ET_NONE = 0,
-    ET_REGISTER,
-    ET_UNREGISTER
-};
 
 class _RegisterGHMPrivateMac final : public _RegisterGHMPrivate
 {
@@ -43,9 +37,8 @@ private:
 
     static std::condition_variable cvRegUnregRc;
     static std::atomic<int> regUnregRc;
-    static std::atomic<EventType> eventType;
+    static std::atomic<int> eventType;
     static std::atomic<KeyCombination> regUnregKc;
-    static std::atomic<bool> regUnregAutoRepeat;
     static std::unordered_map<KeyCombination, EventHotKeyRef> kcToHotkeyRef;
 
     CFRunLoopSourceContext sourceContext = {0};

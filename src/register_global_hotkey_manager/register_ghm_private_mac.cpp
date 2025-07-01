@@ -11,11 +11,16 @@
 namespace gbhk
 {
 
+enum EventType
+{
+    ET_REGISTER,
+    ET_UNREGISTER
+};
+
 std::condition_variable _RegisterGHMPrivateMac::cvRegUnregRc;
 std::atomic<int> _RegisterGHMPrivateMac::regUnregRc(0);
-std::atomic<EventType> _RegisterGHMPrivateMac::eventType(ET_NONE);
+std::atomic<EventType> _RegisterGHMPrivateMac::eventType(0);
 std::atomic<KeyCombination> _RegisterGHMPrivateMac::regUnregKc;
-std::atomic<bool> _RegisterGHMPrivateMac::regUnregAutoRepeat(false);
 std::unordered_map<KeyCombination, EventHotKeyRef> _RegisterGHMPrivateMac::kcToHotkeyRef;
 
 _RegisterGHMPrivateMac::_RegisterGHMPrivateMac() = default;
@@ -47,14 +52,6 @@ int _RegisterGHMPrivateMac::doBeforeThreadEnd()
 
 void _RegisterGHMPrivateMac::work()
 {
-    source = CFRunLoopSourceCreate(NULL, 0, &sourceContext);
-    if (source == NULL)
-    {
-        // TODO: Need error code.
-        setRunFail(-1);
-        return;
-    }
-
     runLoop = CFRunLoopGetCurrent();
     if (runLoop == NULL)
     {
@@ -63,24 +60,32 @@ void _RegisterGHMPrivateMac::work()
         return;
     }
 
-    CFRunLoopAddSource(runLoop, source, kCFRunLoopDefaultMode);
-
-    EventTargetRef target = GetApplicationEventTarget();
-    if (target == NULL)
-    {
-        printf("ERROR\n");
-        setRunFail(-1);
-        return;
-    }
     EventTypeSpec eventTypeSpecs[2];
-    pressEventSpec.eventClass = kEventClassKeyboard;
-    pressEventSpec.eventKind = kEventHotKeyPressed;
-    auto status = InstallApplicationEventHandler(&_RegisterGHMPrivateMac::hotkeyEventHandler, 1, &pressEventSpec, NULL, NULL);
+    eventTypeSpecs[0].eventClass = kEventClassKeyboard;
+    eventTypeSpecs[0].eventKind = kEventHotKeyPressed;
+    eventTypeSpecs[1].eventClass = kEventClassKeyboard;
+    eventTypeSpecs[2].eventKind = kEventHotKeyReleased;
+    auto status = InstallApplicationEventHandler(
+        &_RegisterGHMPrivateMac::hotkeyEventHandler,
+        2,
+        eventTypeSpecs,
+        NULL,
+        NULL
+    );
     if (status != noErr)
     {
         setRunFail(status);
         return;
     }
+
+    source = CFRunLoopSourceCreate(NULL, 0, &sourceContext);
+    if (source == NULL)
+    {
+        // TODO: Need error code.
+        setRunFail(-1);
+        return;
+    }
+    CFRunLoopAddSource(runLoop, source, kCFRunLoopDefaultMode);
 
     setRunSuccess();
     CFRunLoopRun();
@@ -198,9 +203,6 @@ int _RegisterGHMPrivateMac::nativeRegisterHotkey()
         0,
         &ref
     );
-    printf("RegKeyCode: %d\n", hotkeyId.id);
-    printf("RegModifierCode: %d\n", hotkeyId.signature);
-    printf("Reg Status: %d\n", status);
     if (status != noErr)
         return status;
     kcToHotkeyRef[regUnregKc] = ref;
