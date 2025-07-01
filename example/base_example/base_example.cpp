@@ -44,12 +44,12 @@ static bool isPermissionAccessible()
     return true;
 }
 
-void hotkeyTriggered1()
+static void hotkeyTriggered1()
 {
     printf("Hotkey 1 be triggered\n");
 }
 
-void hotkeyTriggered2()
+static void hotkeyTriggered2()
 {
     printf("Hotkey 2 be triggered\n");
 }
