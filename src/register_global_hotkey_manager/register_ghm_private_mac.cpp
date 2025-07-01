@@ -65,12 +65,17 @@ void _RegisterGHMPrivateMac::work()
 
     CFRunLoopAddSource(runLoop, source, kCFRunLoopDefaultMode);
 
-    EventTypeSpec eventTypes[2] = {0};
-    eventTypes[0].eventClass = kEventClassKeyboard;
-    eventTypes[0].eventKind = kEventHotKeyPressed;
-    eventTypes[1].eventClass = kEventClassKeyboard;
-    eventTypes[1].eventKind = kEventHotKeyReleased;
-    auto status = InstallApplicationEventHandler(&hotkeyEventHandler, 2, eventTypes, NULL, NULL);
+    EventTargetRef target = GetApplicationEventTarget();
+    if (target == NULL)
+    {
+        printf("ERROR\n");
+        setRunFail(-1);
+        return;
+    }
+    EventTypeSpec eventTypeSpecs[2];
+    pressEventSpec.eventClass = kEventClassKeyboard;
+    pressEventSpec.eventKind = kEventHotKeyPressed;
+    auto status = InstallApplicationEventHandler(&_RegisterGHMPrivateMac::hotkeyEventHandler, 1, &pressEventSpec, NULL, NULL);
     if (status != noErr)
     {
         setRunFail(status);
@@ -131,6 +136,7 @@ void _RegisterGHMPrivateMac::runLoopSourceCallback(void* info)
 
 OSStatus _RegisterGHMPrivateMac::hotkeyEventHandler(EventHandlerCallRef handler, EventRef event, void* userData)
 {
+    printf("Event Class: %d, Kind: %d\n", GetEventClass(event), GetEventKind(event));
     if (GetEventClass(event) == kEventClassKeyboard)
     {
         printf("Has Event");
@@ -175,19 +181,26 @@ void _RegisterGHMPrivateMac::invoke() const
 
 int _RegisterGHMPrivateMac::nativeRegisterHotkey()
 {
+    KeyCombination kc = regUnregKc;
+    UInt32 mod = (UInt32) nativeModifiers(kc.modifiers());
+    UInt32 key = (UInt32) nativeKey(kc.key());
+
     EventHotKeyID hotkeyId = {
-        .signature = OSType(regUnregKc.load().modifiers()),
-        .id = UInt32(regUnregKc.load().key())
+        .signature = (OSType) mod,
+        .id = key
     };
-    EventHotKeyRef ref;
+    EventHotKeyRef ref = 0;
     auto status = RegisterEventHotKey(
-        hotkeyId.id,
-        hotkeyId.signature,
+        key,
+        mod,
         hotkeyId,
         GetApplicationEventTarget(),
         0,
         &ref
     );
+    printf("RegKeyCode: %d\n", hotkeyId.id);
+    printf("RegModifierCode: %d\n", hotkeyId.signature);
+    printf("Reg Status: %d\n", status);
     if (status != noErr)
         return status;
     kcToHotkeyRef[regUnregKc] = ref;

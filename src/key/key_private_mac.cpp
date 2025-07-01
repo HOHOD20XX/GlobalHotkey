@@ -11,9 +11,9 @@ int nativeModifiers(const Modifiers& modifiers) noexcept
 {
     int rslt = 0;
     if (modifiers.has(META))
-        rslt |= cmdKey;
-    if (modifiers.has(CTRL))
         rslt |= controlKey;
+    if (modifiers.has(CTRL))
+        rslt |= cmdKey;
     if (modifiers.has(ALT))
         rslt |= optionKey;
     if (modifiers.has(SHIFT))
