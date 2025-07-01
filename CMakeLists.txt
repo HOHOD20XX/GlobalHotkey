@@ -58,21 +58,47 @@ endif()
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 file(GLOB_RECURSE SRC
      src/global_hotkey_manager/*.cpp
-     src/hook_global_hotkey_manager/*.cpp
      src/key/key.cpp
-     src/key_combination/key_combination.cpp
-     src/keyboard_hook_manager/keyboard_hook_manager.cpp
-     src/keyboard_hook_manager/kbhm_private.cpp
-     src/register_global_hotkey_manager/register_global_hotkey_manager.cpp
-     src/register_global_hotkey_manager/register_ghm_private.cpp)
+     src/key_combination/key_combination.cpp)
 
 if(WIN32)
-    file(GLOB_RECURSE SRC ${SRC} src/*win*.cpp)
+    file(GLOB_RECURSE SRC ${SRC} src/key/*win*.cpp)
 elseif(APPLE)
-    file(GLOB_RECURSE SRC ${SRC} src/*mac*.cpp)
+    file(GLOB_RECURSE SRC ${SRC} src/key/*mac*.cpp)
 elseif(LINUX)
-    file(GLOB_RECURSE SRC ${SRC} src/*linux*.cpp)
-    file(GLOB_RECURSE SRC ${SRC} src/*x11*.cpp)
+    if(NOT GBHK_DISABLE_REGISTER)
+        file(GLOB_RECURSE SRC ${SRC} src/key/*x11*.cpp)
+    endif()
+    if(NOT GBHK_DISABLE_HOOK)
+        file(GLOB_RECURSE SRC ${SRC} src/key/*linux*.cpp)
+    endif()
+endif()
+
+if(NOT GBHK_DISABLE_REGISTER)
+    set(SRC ${SRC}
+         src/register_global_hotkey_manager/register_global_hotkey_manager.cpp
+         src/register_global_hotkey_manager/register_ghm_private.cpp)
+    if(WIN32)
+        file(GLOB_RECURSE SRC ${SRC} src/register_global_hotkey_manager/*win*.cpp)
+    elseif(APPLE)
+        file(GLOB_RECURSE SRC ${SRC} src/register_global_hotkey_manager/*mac*.cpp)
+    elseif(LINUX)
+        file(GLOB_RECURSE SRC ${SRC} src/register_global_hotkey_manager/*x11*.cpp)
+     endif()
+endif()
+
+if(NOT GBHK_DISABLE_HOOK)
+    file(GLOB_RECURSE SRC ${SRC} src/hook_global_hotkey_manager/*.cpp)
+    set(SRC ${SRC}
+         src/keyboard_hook_manager/keyboard_hook_manager.cpp
+         src/keyboard_hook_manager/kbhm_private.cpp)
+    if(WIN32)
+        file(GLOB_RECURSE SRC ${SRC} src/keyboard_hook_manager/*win*.cpp)
+    elseif(APPLE)
+        file(GLOB_RECURSE SRC ${SRC} src/keyboard_hook_manager/*mac*.cpp)
+    elseif(LINUX)
+        file(GLOB_RECURSE SRC ${SRC} src/keyboard_hook_manager/*linux*.cpp)
+     endif()
 endif()
 
 set(TARGET_NAME global_hotkey)
