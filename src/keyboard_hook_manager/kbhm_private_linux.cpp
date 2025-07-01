@@ -48,7 +48,7 @@ static bool isKeyboardDevice(int fd)
 
 _KBHMPrivateLinux::_KBHMPrivateLinux()
 {
-    fds.reserve(10 + 2);
+    pollFds.reserve(10 + otherFdCount);
 }
 
 _KBHMPrivateLinux::~_KBHMPrivateLinux() { end(); }
@@ -68,12 +68,14 @@ int _KBHMPrivateLinux::doBeforeThreadRun()
     if (wd == -1)
         return errno;
 
-    fds.clear();
-    fds.emplace_back(pollfd{eventFd, POLLIN});
-    fds.emplace_back(pollfd{notifyFd, POLLIN});
+    evdevFdCount = 0;
+    pollFds.clear();
+    evdevFdNameFdMap.clear();
+
+    pollFds.emplace_back(pollfd{eventFd, POLLIN});
+    pollFds.emplace_back(pollfd{notifyFd, POLLIN});
 
     // Traverse all input devices to obtain the FDs of input devices has `EV_KEY` event.
-    evdevFdSize = 0;
     DIR* dir = opendir(EVDEV_DIR);
     if (dir == NULL)
     {
@@ -85,22 +87,7 @@ int _KBHMPrivateLinux::doBeforeThreadRun()
     dirent* ent = readdir(dir);
     while (ent != NULL)
     {
-        std::string filename = std::string(EVDEV_DIR) + ent->d_name;
-        if (isCharacterDevice(filename))
-        {
-            int evdevFd = open(filename.c_str(), O_RDONLY | O_NONBLOCK);
-            if (evdevFd == -1)
-                continue;
-            if (isKeyboardDevice(evdevFd))
-            {
-                fds.emplace_back(pollfd{evdevFd, POLLIN});
-                evdevFdSize++;
-            }
-            else
-            {
-                close(evdevFd);
-            }
-        }
+        addEvdevFd(ent->d_name);
         ent = readdir(dir);
     }
     closedir(dir);
@@ -123,12 +110,12 @@ void _KBHMPrivateLinux::work()
     input_event inputEv = {0};
     while (true)
     {
-        int ret = poll(fds.data(), fds.size(), -1);
+        int ret = poll(pollFds.data(), pollFds.size(), -1);
         if (ret == -1)
             continue;
 
         // Exit event was detected.
-        if (fds[0].revents & POLLIN)
+        if (pollFds[0].revents & POLLIN)
         {
             int64_t ev;
             auto rdsize = read(eventFd, &ev, 8);
@@ -137,17 +124,31 @@ void _KBHMPrivateLinux::work()
         }
 
         // The input devices has changed.
-        if (fds[1].revents & POLLIN)
+        if (pollFds[1].revents & POLLIN)
         {
-            // TODO: Handle the change of input devices.
+            inotify_event ev;
+            auto rdsize = read(notifyFd, &ev, sizeof(inotify_event) + NAME_MAX + 1);
+            if (rdsize != sizeof(ev))
+                continue;
+
+            if (ev.mask == IN_Q_OVERFLOW)
+            {
+                // Pass.
+                continue;
+            }
+
+            if (ev.mask == IN_CREATE)
+                addEvdevFd(ev.name);
+            else if (ev.mask == IN_DELETE)
+                removeEvdevFd(ev.name);
         }
 
         // Is input devices has event?
-        for (size_t i = evdevFdSize + 1; i >= 2; --i)
+        for (size_t i = evdevFdCount + 1; i >= otherFdCount; --i)
         {
-            if (fds[i].revents & POLLIN)
+            if (pollFds[i].revents & POLLIN)
             {
-                auto rdsize = read(fds[i].fd, &inputEv, sizeof(input_event));
+                auto rdsize = read(pollFds[i].fd, &inputEv, sizeof(input_event));
                 if (rdsize != sizeof(input_event))
                     continue;
                 if (inputEv.type == EV_KEY)
@@ -160,7 +161,7 @@ void _KBHMPrivateLinux::work()
         }
     }
 
-    for (const auto& fd : fds)
+    for (const auto& fd : pollFds)
         close(fd.fd);
 }
 
@@ -185,6 +186,50 @@ void _KBHMPrivateLinux::handleKeyEvent(int nativeKey, int keyState)
     auto fn = getKeyListenerCallback(nativeKey, state);
     if (fn)
         fn();
+}
+
+void _KBHMPrivateLinux::addEvdevFd(const std::string& name)
+{
+    if (name.empty())
+        return;
+
+    std::string filename = EVDEV_DIR + name;
+    if (isCharacterDevice(filename))
+    {
+        int evdevFd = open(filename.c_str(), O_RDONLY | O_NONBLOCK);
+        if (evdevFd == -1)
+            return;
+
+        if (isKeyboardDevice(evdevFd))
+        {
+            pollFds.emplace_back(pollfd{evdevFd, POLLIN});
+            evdevFdNameFdMap[name] = evdevFd;
+            evdevFdCount++;
+        }
+        else
+        {
+            close(evdevFd);
+        }
+    }
+}
+
+void _KBHMPrivateLinux::removeEvdevFd(const std::string& name)
+{
+    if (evdevFdNameFdMap.find(name) == evdevFdNameFdMap.end())
+        return;
+
+    int evdevFd = evdevFdNameFdMap[name];
+    for (auto it = pollFds.begin(); it != pollFds.end(); ++it)
+    {
+        if (it->fd == evdevFd)
+        {
+            close(it->fd);
+            pollFds.erase(it);
+            evdevFdNameFdMap.erase(name);
+            evdevFdCount--;
+            return;
+        }
+    }
 }
 
 } // namespace kbhook

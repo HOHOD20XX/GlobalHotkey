@@ -7,8 +7,9 @@
 
 #ifdef _GLOBAL_HOTKEY_LINUX
 
-#include <poll.h>           // poll
+#include <poll.h>   // poll
 #include <vector>   // vector
+#include <string>   // string and the specialization of hash for string.
 
 namespace gbhk
 {
@@ -29,11 +30,16 @@ protected:
 
 private:
     void handleKeyEvent(int nativeKey, int keyState);
+    void addEvdevFd(const std::string& name);
+    void removeEvdevFd(const std::string& name);
 
-    size_t evdevFdSize = 0;
+    static constexpr size_t otherFdCount = 2;
+
+    size_t evdevFdCount = 0;
     int eventFd = 0;
     int notifyFd = 0;
-    std::vector<pollfd> fds;
+    std::vector<pollfd> pollFds;
+    std::unordered_map<std::string, int> evdevFdNameFdMap;
 };
 
 } // namespace kbhook

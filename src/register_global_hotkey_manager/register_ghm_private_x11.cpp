@@ -76,9 +76,9 @@ void _RegisterGHMPrivateX11::work()
     }
 
     int x11Fd = ConnectionNumber(display);
-    pollfd fds[2] = {0};
-    fds[0] = pollfd{x11Fd, POLLIN};
-    fds[1] = pollfd{eventFd, POLLIN};
+    pollfd pollFds[2] = {0};
+    pollFds[0] = pollfd{x11Fd, POLLIN};
+    pollFds[1] = pollfd{eventFd, POLLIN};
 
     setRunSuccess();
     KeyCombination prevKc;
@@ -86,12 +86,12 @@ void _RegisterGHMPrivateX11::work()
     XEvent event = {0};
     while (true)
     {
-        int ret = poll(fds, 2, -1);
+        int ret = poll(pollFds, 2, -1);
         if (ret == -1)
             continue;
 
         // XEvent was detected.
-        if (fds[0].revents & POLLIN)
+        if (pollFds[0].revents & POLLIN)
         {
             while (XPending(display))
             {
@@ -114,7 +114,7 @@ void _RegisterGHMPrivateX11::work()
         }
 
         // My event was detected.
-        if (fds[1].revents & POLLIN)
+        if (pollFds[1].revents & POLLIN)
         {
             EventType et;
             auto rdsize = read(eventFd, &et, 8);
