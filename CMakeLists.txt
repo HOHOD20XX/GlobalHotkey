@@ -45,11 +45,6 @@ endif()
 
 # Build example option.
 option(GBHK_BUILD_EXAMPLE "Build example" ${GBHK_MASTER_PROJECT})
-if(GBHK_BUILD_EXAMPLE)
-    message(STATUS "${GBHK_MSG_PREFIX} Build example")
-else()
-    message(STATUS "${GBHK_MSG_PREFIX} Not build example")
-endif()
 
 if(GBHK_DISABLE_HOOK AND GBHK_DISABLE_REGISTER)
     message(FATAL_ERROR "${GBHK_MSG_PREFIX} Cannot set Both GBHK_DISABLE_HOOK and GBHK_DISABLE_REGISTER to ON")
@@ -179,5 +174,6 @@ set_target_properties(${TARGET_NAME} PROPERTIES DEBUG_POSTFIX d)
 add_library(global_hotkey::global_hotkey ALIAS ${TARGET_NAME})
 
 if(GBHK_BUILD_EXAMPLE)
+    message(STATUS "${GBHK_MSG_PREFIX} Build example")
     add_subdirectory(example)
 endif()
