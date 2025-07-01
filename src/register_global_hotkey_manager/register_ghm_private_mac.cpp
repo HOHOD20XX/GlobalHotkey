@@ -64,7 +64,7 @@ void _RegisterGHMPrivateMac::work()
     eventTypeSpecs[0].eventClass = kEventClassKeyboard;
     eventTypeSpecs[0].eventKind = kEventHotKeyPressed;
     eventTypeSpecs[1].eventClass = kEventClassKeyboard;
-    eventTypeSpecs[2].eventKind = kEventHotKeyReleased;
+    eventTypeSpecs[1].eventKind = kEventHotKeyReleased;
     auto status = InstallApplicationEventHandler(
         &_RegisterGHMPrivateMac::hotkeyEventHandler,
         2,
