@@ -16,10 +16,7 @@ static int nativeRegisterHotkey(UInt32 mod, UInt32 key)
         0,
         &ref
     );
-    if (status != noErr)
-        return status;
-    kcToHotkeyRef[regUnregKc] = ref;
-    return RC_SUCCESS;
+    return status;
 }
 
 static OSStatus hotkeyEventHandler(EventHandlerCallRef handler, EventRef event, void* userData)
@@ -62,6 +59,8 @@ static OSStatus hotkeyEventHandler(EventHandlerCallRef handler, EventRef event, 
     return noErr;
 }
 
+static CFRunLoopRef runLoop = NULL;
+
 int main()
 {
     runLoop = CFRunLoopGetCurrent();
@@ -72,7 +71,7 @@ int main()
     eventTypeSpecs[1].eventClass = kEventClassKeyboard;
     eventTypeSpecs[1].eventKind = kEventHotKeyReleased;
     auto status = InstallApplicationEventHandler(
-        &_RegisterGHMPrivateMac::hotkeyEventHandler,
+        &hotkeyEventHandler,
         2,
         eventTypeSpecs,
         NULL,
@@ -81,7 +80,8 @@ int main()
 
     UInt32 mod = 256;    // 'cmdKey'
     UInt32 key = 38;    // 'J'
-    int rc = nativeRegisterHotkey();
+    int rc = nativeRegisterHotkey(mod, key);
+    printf("Register: %d\n", rc);
 
     CFRunLoopRun();
 }
