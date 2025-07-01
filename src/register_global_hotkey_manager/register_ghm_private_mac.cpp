@@ -69,8 +69,7 @@ void _RegisterGHMPrivateMac::work()
         &_RegisterGHMPrivateMac::hotkeyEventHandler,
         2,
         eventTypeSpecs,
-        NULL,
-        NULL
+        NULL, NULL
     );
     if (status != noErr)
     {
@@ -141,10 +140,8 @@ void _RegisterGHMPrivateMac::runLoopSourceCallback(void* info)
 
 OSStatus _RegisterGHMPrivateMac::hotkeyEventHandler(EventHandlerCallRef handler, EventRef event, void* userData)
 {
-    printf("Event Class: %d, Kind: %d\n", GetEventClass(event), GetEventKind(event));
     if (GetEventClass(event) == kEventClassKeyboard)
     {
-        printf("Has Event");
         auto eventKind = GetEventKind(event);
         if (eventKind != kEventHotKeyPressed && eventKind != kEventHotKeyReleased)
             return noErr;
