@@ -19,7 +19,7 @@ enum EventType
 
 std::condition_variable _RegisterGHMPrivateMac::cvRegUnregRc;
 std::atomic<int> _RegisterGHMPrivateMac::regUnregRc(0);
-std::atomic<EventType> _RegisterGHMPrivateMac::eventType(0);
+std::atomic<int> _RegisterGHMPrivateMac::eventType(0);
 std::atomic<KeyCombination> _RegisterGHMPrivateMac::regUnregKc;
 std::unordered_map<KeyCombination, EventHotKeyRef> _RegisterGHMPrivateMac::kcToHotkeyRef;
 
