@@ -19,7 +19,7 @@ public:
     T take()
     {
         std::unique_lock<std::mutex> lock(mtx);
-        cvHas.wait(lock, [this]() { !queue.empty(); });
+        cvHas.wait(lock, [this]() { return !queue.empty(); });
         T item = queue.front();
         queue.pop();
         return item;
@@ -34,6 +34,6 @@ public:
 
 private:
     std::mutex mtx;
-    std::condition_variable cvHasE;
+    std::condition_variable cvHas;
     std::queue<T> queue;
 };

@@ -4,17 +4,11 @@
 
 enum EventType
 {
-    ADD_HOTKEY,
-    REMOVE_HOTKEY,
-    REPLACE_HOTKEY,
-    EASY_WORK,
-    HEAVY_WORK,
-    SET_HEAVY_WORK_TIME
-};
-
-struct Event
-{
-    EventType type;
-    int64_t data1;
-    void* data2;
+    ET_EXIT,
+    ET_ADD_HOTKEY,
+    ET_REMOVE_HOTKEY,
+    ET_REPLACE_HOTKEY,
+    ET_SIMPLE_WORK,
+    ET_HEAVY_WORK,
+    ET_SET_HEAVY_WORK_LEVEL
 };
