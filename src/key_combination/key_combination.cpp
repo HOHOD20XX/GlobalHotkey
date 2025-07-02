@@ -11,7 +11,7 @@ KeyCombination KeyCombination::fromString(const std::string& str, char connector
     if (pos == std::string::npos)
         return {};
     Modifiers mod = getModifiersFromString(str.substr(0, pos));
-    Key key = getKeyFromString(str.substr(pos));
+    Key key = getKeyFromString(str.substr(pos + 1));
     return {mod, key};
 }
 
