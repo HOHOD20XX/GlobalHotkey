@@ -257,14 +257,14 @@ static int getModifierFlagFromString(const std::string& str) noexcept
         return 0;
 
     if (isEqualStr(str, "win") || isEqualStr(str, "windows") ||
-        isEqualStr(str, "cmd") || isEqualStr(str, "command") || isEqualStr(str, "⌘") ||
+        isEqualStr(str, "cmd") || isEqualStr(str, "command") || isEqualStr(str, "\xE2\x8C\x98") ||
         isEqualStr(str, "super") || isEqualStr(str, "meta"))
         return META;
-    if (isEqualStr(str, "ctrl") || isEqualStr(str, "control") || isEqualStr(str, "⌃"))
+    if (isEqualStr(str, "ctrl") || isEqualStr(str, "control") || isEqualStr(str, "\xE2\x8C\x83"))
         return CTRL;
-    if (isEqualStr(str, "alt") || isEqualStr(str, "option") || isEqualStr(str, "⌥"))
+    if (isEqualStr(str, "alt") || isEqualStr(str, "option") || isEqualStr(str, "\xE2\x8C\xA5"))
         return ALT;
-    if (isEqualStr(str, "shift") || isEqualStr(str, "⇪"))
+    if (isEqualStr(str, "shift") || isEqualStr(str, "\xE2\x87\xAA"))
         return SHIFT;
 
     return 0;
