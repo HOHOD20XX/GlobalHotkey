@@ -1,4 +1,5 @@
-#pragma once
+#ifndef DEFS_HPP
+#define DEFS_HPP
 
 #include <global_hotkey/global_hotkey.hpp>
 
@@ -23,3 +24,5 @@ constexpr KeyCombination simpleWorkKc(ALT, 'S');
 constexpr KeyCombination heavyWorkKc(ALT, 'H');
 constexpr KeyCombination clearTerminalKc(ALT, 'C');
 constexpr KeyCombination setHeavyWorkLevelKc(CTRL | ALT, 'H');
+
+#endif // !DEFS_HPP

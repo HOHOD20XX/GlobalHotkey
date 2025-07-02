@@ -1,4 +1,5 @@
-#pragma once
+#ifndef EVENT_HPP
+#define EVENT_HPP
 
 #include <cstdint>
 
@@ -12,3 +13,5 @@ enum EventType
     ET_HEAVY_WORK,
     ET_SET_HEAVY_WORK_LEVEL
 };
+
+#endif // !EVENT_HPP

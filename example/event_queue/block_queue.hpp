@@ -1,4 +1,5 @@
-#pragma once
+#ifndef BLOCK_QUEUE_HPP
+#define BLOCK_QUEUE_HPP
 
 #include <condition_variable>
 #include <mutex>
@@ -37,3 +38,5 @@ private:
     std::condition_variable cvHas;
     std::queue<T> queue;
 };
+
+#endif // !BLOCK_QUEUE_HPP

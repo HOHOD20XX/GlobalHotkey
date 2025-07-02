@@ -1,4 +1,5 @@
-#pragma once
+#ifndef EVENT_WORK_HPP
+#define EVENT_WORK_HPP
 
 void exitWork();
 
@@ -15,3 +16,5 @@ void simpleWork();
 void heavyWork();
 
 void setHeavyWorkLevelWork();
+
+#endif // !EVENT_WORK_HPP
