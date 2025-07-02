@@ -33,8 +33,8 @@ Press [%s] to clear the terminal\n\
         KCSTR(listKc),
         KCSTR(simpleWorkKc),
         KCSTR(heavyWorkKc),
-        KCSTR(clearTerminalKc),
-        KCSTR(setHeavyWorkLevelKc)
+        KCSTR(setHeavyWorkLevelKc),
+        KCSTR(clearTerminalKc)
     );
 }
 
