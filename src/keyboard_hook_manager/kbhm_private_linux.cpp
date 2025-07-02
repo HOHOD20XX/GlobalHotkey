@@ -30,8 +30,8 @@ constexpr size_t BUF_ITEM_COUNT = 32;
 constexpr size_t INOTIFY_EV_BUF_SIZE = BUF_ITEM_COUNT * (sizeof(inotify_event) + NAME_MAX + 1);
 constexpr size_t INPUT_EV_BUF_SIZE = BUF_ITEM_COUNT * sizeof(input_event);
 
-static char INOTIFY_EV_BUF[INOTIFY_EV_BUF_SIZE] = {0};
-static char INPUT_EV_BUF[INPUT_EV_BUF_SIZE] = {0};
+static char inotifyEventBuf[INOTIFY_EV_BUF_SIZE] = {0};
+static char inputEventBuf[INPUT_EV_BUF_SIZE] = {0};
 
 /// @return Return true if the specified path is exists and it is a character device else return false.
 static bool isCharacterDevice(const std::string& filename)
@@ -132,12 +132,12 @@ void _KBHMPrivateLinux::work()
         // The input devices has changed.
         if (pollFds[1].revents & POLLIN)
         {
-            auto rdsize = read(notifyFd, INOTIFY_EV_BUF, INOTIFY_EV_BUF_SIZE);
+            auto rdsize = read(notifyFd, inotifyEventBuf, INOTIFY_EV_BUF_SIZE);
             if (rdsize <= 0)
                 continue;
 
-            char* p = INOTIFY_EV_BUF;
-            while (p < INOTIFY_EV_BUF + rdsize)
+            char* p = inotifyEventBuf;
+            while (p < inotifyEventBuf + rdsize)
             {
                 inotify_event* ev = (inotify_event*) p;
 
@@ -161,12 +161,12 @@ void _KBHMPrivateLinux::work()
         {
             if (pollFds[i].revents & POLLIN)
             {
-                auto rdsize = read(pollFds[i].fd, INPUT_EV_BUF, INPUT_EV_BUF_SIZE);
+                auto rdsize = read(pollFds[i].fd, inputEventBuf, INPUT_EV_BUF_SIZE);
                 if (rdsize <= 0)
                     continue;
 
-                char* p = INPUT_EV_BUF;
-                while (p < INPUT_EV_BUF + rdsize)
+                char* p = inputEventBuf;
+                while (p < inputEventBuf + rdsize)
                 {
                     input_event* ev = (input_event*) p;
                     if (ev->type == EV_KEY)
