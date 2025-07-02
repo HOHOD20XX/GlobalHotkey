@@ -1,22 +1,10 @@
 #include <sstream>  // stringstream
 #include <string>   // to_string
-#include <vector>   // vector
 
 #include <global_hotkey/key_combination.hpp>
 
 namespace gbhk
 {
-
-static std::vector<std::string> splitString(const std::string& str, char separator)
-{
-    std::stringstream ss;
-    ss << str;
-    std::vector<std::string> rslt;
-    std::string s;
-    while (std::getline(ss, s, separator))
-        rslt.emplace_back(s);
-    return rslt;
-}
 
 KeyCombination KeyCombination::fromString(const std::string& str, char connector) noexcept
 {
