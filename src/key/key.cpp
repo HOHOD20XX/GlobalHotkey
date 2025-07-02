@@ -30,7 +30,8 @@ isEqualStr(str, prefix "cmd") || isEqualStr(str, prefix "command") || isEqualStr
 isEqualStr(str, prefix "super") || isEqualStr(str, prefix "meta"))
 
 #define IS_CTRL(str, prefix) \
-(isEqualStr(str, prefix "ctrl") || isEqualStr(str, prefix "control") || isEqualStr(str, prefix "\xE2\x8C\x83"))
+(isEqualStr(str, prefix "ctrl") || isEqualStr(str, prefix "control") || \
+isEqualStr(str, prefix "^") || isEqualStr(str, prefix "\xE2\x8C\x83"))
 
 #define IS_ALT(str, prefix) \
 (isEqualStr(str, prefix "alt") || isEqualStr(str, prefix "option") || isEqualStr(str, prefix "\xE2\x8C\xA5"))
