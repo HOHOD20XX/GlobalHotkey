@@ -1,4 +1,3 @@
-#include <sstream>  // stringstream
 #include <string>   // to_string
 
 #include <global_hotkey/key_combination.hpp>
