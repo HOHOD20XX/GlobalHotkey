@@ -1,9 +1,9 @@
 current_dir=$(pwd)
 
 cd ../../
-cmake -B ./build/static -DCMAKE_BUILD_TYPE=Debug -DGBHK_BUILD_EXAMPLE=OFF
+cmake -B ./build/static -DCMAKE_BUILD_TYPE=Debug
 make -C ./build/static -j
-cmake -B ./build/static -DCMAKE_BUILD_TYPE=Release -DGBHK_BUILD_EXAMPLE=OFF
+cmake -B ./build/static -DCMAKE_BUILD_TYPE=Release
 make -C ./build/static -j
 
 cd $current_dir
