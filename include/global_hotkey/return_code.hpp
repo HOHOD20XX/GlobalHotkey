@@ -39,8 +39,7 @@ inline std::string returnCodeMessage(int rc) noexcept
             return "Add, remove, replace and other change for global hotkey in Global Hotkey Manager, " \
                    "but the caller is in the same thread as GHM's worker thread";
         default:
-            // Return values that depend on the platform or framework.
-            return "Unknown return code: " + std::to_string(rc);
+            return "A return value depends on the platform or framwork " + std::to_string(rc);
     }
 }
 
