@@ -208,6 +208,9 @@ public:
 
     constexpr inline bool has(ModifierFlag modifier) const noexcept { return (i & modifier) != 0; }
     constexpr inline bool has(Modifiers modifiers) const noexcept { return (i & modifiers.i) == modifiers.i; }
+    /// @brief Check whether contains least one modifier.
+    constexpr inline bool isValid() const noexcept
+    { return (i & META) || (i & CTRL) || (i & ALT) || (i & SHIFT); }
 
 #if _GLOBAL_HOTKEY_CPPVERS >= 201703L
     // In C++17, constexpr member functions are no longer implicitly const.
@@ -252,6 +255,9 @@ public:
 
     constexpr inline int32_t value() const noexcept { return i; }
     constexpr inline operator int32_t() const noexcept { return i; }
+
+    /// @brief Check whether the key value is not 0.
+    constexpr inline bool isValid() const noexcept { return i != 0; }
 
     friend constexpr inline bool operator==(Key lhs, Key rhs) noexcept { return lhs.i == rhs.i; }
     friend constexpr inline bool operator!=(Key lhs, Key rhs) noexcept { return lhs.i != rhs.i; }

@@ -28,6 +28,9 @@ public:
     { return KeyCombination((int32_t) (value >> 32), (int32_t) value); }
     constexpr inline int64_t getCombinedValue() const noexcept { return ((int64_t) mod << 32) | ((int64_t) ky << 0); }
 
+    /// @brief Check whether contains at least one modifier and a valid key value.
+    constexpr inline bool isValid() const noexcept { return mod.isValid() && ky.isValid(); }
+
 #if _GLOBAL_HOTKEY_CPPVERS >= 201703L
     // In C++17, constexpr member functions are no longer implicitly const.
     constexpr inline void setModifiers(const Modifiers& modifiers) noexcept { mod = modifiers; }
