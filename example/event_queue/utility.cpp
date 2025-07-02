@@ -39,6 +39,7 @@ Press [%s] to clear the terminal\n\
 void clearTerminal()
 {
     printf("\x1B[2J\x1B[1;1H");
+    printPrompt();
 }
 
 void listAllKeyCombination()
