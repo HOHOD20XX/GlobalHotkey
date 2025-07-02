@@ -1,6 +1,7 @@
 #include "utility.hpp"
 
 #include <cctype>   // isspace, isalnum, toupper
+#include <cstdlib>
 
 bool isUnchangedKeyCombination(const KeyCombination &kc) {
   return kc == exitKc || kc == addKc || kc == removeKc || kc == replaceKc ||
@@ -39,7 +40,11 @@ Press [%s] to clear the terminal\n\
 
 void clearTerminal()
 {
-    printf("\x1B[2J\x1B[1;1H");
+#ifdef _GLOBAL_HOTKEY_WIN
+    system("cls");
+#else
+    system("clear");
+#endif // _GLOBAL_HOTKEY_WIN
     printPrompt();
 }
 
