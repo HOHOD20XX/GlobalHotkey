@@ -37,7 +37,7 @@ static char inputEventBuf[INPUT_EV_BUF_SIZE] = {0};
 static bool isCharacterDevice(const std::string& filename)
 {
     struct stat st;
-    return (stat(filename.c_str(), &st) != -1 && S_ISCHR(st.st_mode));
+    return stat(filename.c_str(), &st) != -1 && S_ISCHR(st.st_mode);
 }
 
 /// @return Return true if the specified input device has `EV_KEY` event and has't `EV_REL` and `EV_ABS` event
