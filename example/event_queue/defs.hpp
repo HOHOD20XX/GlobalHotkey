@@ -19,10 +19,9 @@ constexpr KeyCombination addKc(CTRL, 'A');
 constexpr KeyCombination removeKc(CTRL, 'D');
 constexpr KeyCombination replaceKc(CTRL, 'R');
 constexpr KeyCombination listKc(CTRL, 'L');
-
-constexpr KeyCombination simpleWorkKc(ALT, 'S');
-constexpr KeyCombination heavyWorkKc(ALT, 'H');
-constexpr KeyCombination clearTerminalKc(ALT, 'C');
-constexpr KeyCombination setHeavyWorkLevelKc(CTRL | ALT, 'H');
+constexpr KeyCombination simpleWorkKc(CTRL, 'S');
+constexpr KeyCombination heavyWorkKc(CTRL, 'H');
+constexpr KeyCombination clearTerminalKc(CTRL, 'C');
+constexpr KeyCombination setHeavyWorkLevelKc(ALT, 'H');
 
 #endif // !DEFS_HPP
