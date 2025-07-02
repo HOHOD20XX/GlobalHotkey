@@ -256,7 +256,8 @@ static int getModifierFlagFromString(const std::string& str) noexcept
     if (str.empty())
         return 0;
 
-    if (isEqualStr(str, "win") || isEqualStr(str, "command") ||
+    if (isEqualStr(str, "win") || isEqualStr(str, "windows") ||
+        isEqualStr(str, "cmd") || isEqualStr(str, "command") ||
         isEqualStr(str, "super") || isEqualStr(str, "meta"))
         return META;
     if (isEqualStr(str, "ctrl") || isEqualStr(str, "control"))
