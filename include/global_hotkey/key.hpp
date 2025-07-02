@@ -275,11 +275,11 @@ private:
     int32_t i = 0;
 };
 
-GBHK_API std::string modifiersString(const Modifiers& modifiers, bool isPrettySpace = false) noexcept;
+GBHK_API std::string modifiersString(const Modifiers& modifiers, char connector = '+') noexcept;
 
 GBHK_API std::string keyString(const Key& key) noexcept;
 
-GBHK_API Modifiers getModifiersFromString(const std::string& str) noexcept;
+GBHK_API Modifiers getModifiersFromString(const std::string& str, char connector = '+') noexcept;
 
 GBHK_API Key getKeyFromString(const std::string& str) noexcept;
 

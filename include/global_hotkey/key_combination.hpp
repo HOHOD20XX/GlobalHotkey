@@ -18,8 +18,8 @@ public:
     constexpr inline explicit KeyCombination(int64_t combinedValue) noexcept :
         mod((int32_t) (combinedValue >> 32)), ky((int32_t) combinedValue) {}
 
-    static KeyCombination fromString(const std::string& str) noexcept;
-    std::string toString(bool isPrettySpace = false, bool showKeyValue = false) const noexcept;
+    static KeyCombination fromString(const std::string& str, char connector = '+') noexcept;
+    std::string toString(char connector = '+', bool showKeyValue = false) const noexcept;
 
     constexpr inline Modifiers modifiers() const noexcept { return mod; }
     constexpr inline Key key() const noexcept { return ky; }

@@ -18,9 +18,9 @@ static std::vector<std::string> splitString(const std::string& str, char separat
     return rslt;
 }
 
-KeyCombination KeyCombination::fromString(const std::string& str) noexcept
+KeyCombination KeyCombination::fromString(const std::string& str, char connector) noexcept
 {
-    size_t pos = str.rfind('+');
+    size_t pos = str.rfind(connector);
     if (pos == std::string::npos)
         return {};
     Modifiers mod = getModifiersFromString(str.substr(0, pos));
@@ -28,14 +28,14 @@ KeyCombination KeyCombination::fromString(const std::string& str) noexcept
     return {mod, key};
 }
 
-std::string KeyCombination::toString(bool isPrettySpace, bool showKeyValue) const noexcept
+std::string KeyCombination::toString(char connector, bool showKeyValue) const noexcept
 {
     std::string rslt;
-    std::string separator = isPrettySpace ? " + " : "+";
-    rslt += modifiersString(mod, isPrettySpace);
-    rslt += (!rslt.empty() ? separator : "") + keyString(ky);
+    std::string connectorStr(1, connector);
+    rslt += modifiersString(mod, connector);
+    rslt += (!rslt.empty() ? connectorStr : "") + keyString(ky);
     if (showKeyValue)
-        rslt += " (" + std::to_string(ky) + ")";
+        rslt += "(" + std::to_string(ky) + ")";
     return rslt;
 }
 

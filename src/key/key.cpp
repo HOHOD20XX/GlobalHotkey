@@ -42,19 +42,19 @@ static std::string modifierFlagString(ModifierFlag flag) noexcept
     }
 }
 
-GBHK_API std::string modifiersString(const Modifiers& modifiers, bool isPrettySpace) noexcept
+GBHK_API std::string modifiersString(const Modifiers& modifiers, char connector) noexcept
 {
     std::string rslt;
-    std::string separator = isPrettySpace ? " + " : "+";
+    std::string connectorStr(1, connector);
 
     if (modifiers.has(META))
         rslt += modifierFlagString(META);
     if (modifiers.has(CTRL))
-        rslt += (!rslt.empty() ? separator : "") + modifierFlagString(CTRL);
+        rslt += (!rslt.empty() ? connectorStr : "") + modifierFlagString(CTRL);
     if (modifiers.has(ALT))
-        rslt += (!rslt.empty() ? separator : "") + modifierFlagString(ALT);
+        rslt += (!rslt.empty() ? connectorStr : "") + modifierFlagString(ALT);
     if (modifiers.has(SHIFT))
-        rslt += (!rslt.empty() ? separator : "") + modifierFlagString(SHIFT);
+        rslt += (!rslt.empty() ? connectorStr : "") + modifierFlagString(SHIFT);
 
     return rslt;
 }
@@ -269,13 +269,13 @@ static int getModifierFlagFromString(const std::string& str) noexcept
     return 0;
 }
 
-GBHK_API Modifiers getModifiersFromString(const std::string& str) noexcept
+GBHK_API Modifiers getModifiersFromString(const std::string& str, char connector) noexcept
 {
     std::stringstream ss;
     ss << str;
     Modifiers rslt;
     std::string s;
-    while (std::getline(ss, s, '+'))
+    while (std::getline(ss, s, connector))
         rslt.add(getModifierFlagFromString(s));
     return rslt;
 }
