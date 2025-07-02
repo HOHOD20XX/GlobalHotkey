@@ -24,8 +24,19 @@
 #define CTRL_TEXT   "Ctrl"
 #define SHIFT_TEXT  "Shift"
 
-#define LEFT_TEXT   "Left"
-#define RIGHT_TEXT  "Right"
+#define IS_META(str, prefix) \
+(isEqualStr(str, prefix "win") || isEqualStr(str, prefix "windows") || \
+isEqualStr(str, prefix "cmd") || isEqualStr(str, prefix "command") || isEqualStr(str, prefix "\xE2\x8C\x98") || \
+isEqualStr(str, prefix "super") || isEqualStr(str, prefix "meta"))
+
+#define IS_CTRL(str, prefix) \
+(isEqualStr(str, prefix "ctrl") || isEqualStr(str, prefix "control") || isEqualStr(str, prefix "\xE2\x8C\x83"))
+
+#define IS_ALT(str, prefix) \
+(isEqualStr(str, prefix "alt") || isEqualStr(str, prefix "option") || isEqualStr(str, prefix "\xE2\x8C\xA5"))
+
+#define IS_SHIFT(str, prefix) \
+(isEqualStr(str, prefix "shift") || isEqualStr(str, prefix "\xE2\x87\xAA"))
 
 namespace gbhk
 {
@@ -211,17 +222,17 @@ GBHK_API std::string keyString(const Key& key) noexcept
 
         // Modifier keys.
         case Key_Mod_Meta:          return META_TEXT;
-        case Key_Mod_Meta_Left:     return (LEFT_TEXT " " META_TEXT);
-        case Key_Mod_Meta_Right:    return (RIGHT_TEXT " " META_TEXT);
+        case Key_Mod_Meta_Left:     return ("Left " META_TEXT);
+        case Key_Mod_Meta_Right:    return ("Right " META_TEXT);
         case Key_Mod_Ctrl:          return CTRL_TEXT;
-        case Key_Mod_Ctrl_Left:     return (LEFT_TEXT " " CTRL_TEXT);
-        case Key_Mod_Ctrl_Right:    return (RIGHT_TEXT " " CTRL_TEXT);
+        case Key_Mod_Ctrl_Left:     return ("Left " CTRL_TEXT);
+        case Key_Mod_Ctrl_Right:    return ("Right " CTRL_TEXT);
         case Key_Mod_Alt:           return ALT_TEXT;
-        case Key_Mod_Alt_Left:      return (LEFT_TEXT " " ALT_TEXT);
-        case Key_Mod_Alt_Right:     return (RIGHT_TEXT " " ALT_TEXT);
+        case Key_Mod_Alt_Left:      return ("Left " ALT_TEXT);
+        case Key_Mod_Alt_Right:     return ("Right " ALT_TEXT);
         case Key_Mod_Shift:         return SHIFT_TEXT;
-        case Key_Mod_Shift_Left:    return (LEFT_TEXT " " SHIFT_TEXT);
-        case Key_Mod_Shift_Right:   return (RIGHT_TEXT " " SHIFT_TEXT);
+        case Key_Mod_Shift_Left:    return ("Left " SHIFT_TEXT);
+        case Key_Mod_Shift_Right:   return ("Right " SHIFT_TEXT);
 
         default:                    return "";
     }
@@ -253,20 +264,11 @@ static bool isEqualStr(const std::string& str1, const std::string& str2) noexcep
 
 static int getModifierFlagFromString(const std::string& str) noexcept
 {
-    if (str.empty())
-        return 0;
-
-    if (isEqualStr(str, "win") || isEqualStr(str, "windows") ||
-        isEqualStr(str, "cmd") || isEqualStr(str, "command") || isEqualStr(str, "\xE2\x8C\x98") ||
-        isEqualStr(str, "super") || isEqualStr(str, "meta"))
-        return META;
-    if (isEqualStr(str, "ctrl") || isEqualStr(str, "control") || isEqualStr(str, "\xE2\x8C\x83"))
-        return CTRL;
-    if (isEqualStr(str, "alt") || isEqualStr(str, "option") || isEqualStr(str, "\xE2\x8C\xA5"))
-        return ALT;
-    if (isEqualStr(str, "shift") || isEqualStr(str, "\xE2\x87\xAA"))
-        return SHIFT;
-
+    if (str.empty())        return 0;
+    if (IS_META(str, ""))   return META;
+    if (IS_CTRL(str, ""))   return CTRL;
+    if (IS_ALT(str, ""))    return ALT;
+    if (IS_SHIFT(str, ""))  return SHIFT;
     return 0;
 }
 
@@ -290,14 +292,14 @@ GBHK_API Key getKeyFromString(const std::string& str) noexcept
         return Key(str[0]);
 
     // Whitespace keys.
-    if (isEqualStr(str, "tab"))                 return Key_Tab;
-    if (isEqualStr(str, "space"))               return Key_Space;
+    if (isEqualStr(str, "tab"))     return Key_Tab;
+    if (isEqualStr(str, "space"))   return Key_Space;
     if (isEqualStr(str, "enter") || isEqualStr(str, "return"))
         return Key_Enter;
 
     // Navigation keys.
-    if (isEqualStr(str, "home"))                return Key_Home;
-    if (isEqualStr(str, "end"))                 return Key_End;
+    if (isEqualStr(str, "home"))    return Key_Home;
+    if (isEqualStr(str, "end"))     return Key_End;
     if (isEqualStr(str, "page up") || isEqualStr(str, "pgup"))
         return Key_Page_Up;
     if (isEqualStr(str, "page down") || isEqualStr(str, "pgdn"))
@@ -318,33 +320,33 @@ GBHK_API Key getKeyFromString(const std::string& str) noexcept
         return Key_Insert;
     if (isEqualStr(str, "delete") || isEqualStr(str, "del"))
         return Key_Delete;
-    if (isEqualStr(str, "clear"))               return Key_Clear;
+    if (isEqualStr(str, "clear"))   return Key_Clear;
 
     // Function keys.
-    if (isEqualStr(str, "f1"))                  return Key_F1;
-    if (isEqualStr(str, "f2"))                  return Key_F2;
-    if (isEqualStr(str, "f3"))                  return Key_F3;
-    if (isEqualStr(str, "f4"))                  return Key_F4;
-    if (isEqualStr(str, "f5"))                  return Key_F5;
-    if (isEqualStr(str, "f6"))                  return Key_F6;
-    if (isEqualStr(str, "f7"))                  return Key_F7;
-    if (isEqualStr(str, "f8"))                  return Key_F8;
-    if (isEqualStr(str, "f9"))                  return Key_F9;
-    if (isEqualStr(str, "f10"))                 return Key_F10;
-    if (isEqualStr(str, "f11"))                 return Key_F11;
-    if (isEqualStr(str, "f12"))                 return Key_F12;
-    if (isEqualStr(str, "f13"))                 return Key_F13;
-    if (isEqualStr(str, "f14"))                 return Key_F14;
-    if (isEqualStr(str, "f15"))                 return Key_F15;
-    if (isEqualStr(str, "f16"))                 return Key_F16;
-    if (isEqualStr(str, "f17"))                 return Key_F17;
-    if (isEqualStr(str, "f18"))                 return Key_F18;
-    if (isEqualStr(str, "f19"))                 return Key_F19;
-    if (isEqualStr(str, "f20"))                 return Key_F20;
-    if (isEqualStr(str, "f21"))                 return Key_F21;
-    if (isEqualStr(str, "f22"))                 return Key_F22;
-    if (isEqualStr(str, "f23"))                 return Key_F23;
-    if (isEqualStr(str, "f24"))                 return Key_F24;
+    if (isEqualStr(str, "f1"))      return Key_F1;
+    if (isEqualStr(str, "f2"))      return Key_F2;
+    if (isEqualStr(str, "f3"))      return Key_F3;
+    if (isEqualStr(str, "f4"))      return Key_F4;
+    if (isEqualStr(str, "f5"))      return Key_F5;
+    if (isEqualStr(str, "f6"))      return Key_F6;
+    if (isEqualStr(str, "f7"))      return Key_F7;
+    if (isEqualStr(str, "f8"))      return Key_F8;
+    if (isEqualStr(str, "f9"))      return Key_F9;
+    if (isEqualStr(str, "f10"))     return Key_F10;
+    if (isEqualStr(str, "f11"))     return Key_F11;
+    if (isEqualStr(str, "f12"))     return Key_F12;
+    if (isEqualStr(str, "f13"))     return Key_F13;
+    if (isEqualStr(str, "f14"))     return Key_F14;
+    if (isEqualStr(str, "f15"))     return Key_F15;
+    if (isEqualStr(str, "f16"))     return Key_F16;
+    if (isEqualStr(str, "f17"))     return Key_F17;
+    if (isEqualStr(str, "f18"))     return Key_F18;
+    if (isEqualStr(str, "f19"))     return Key_F19;
+    if (isEqualStr(str, "f20"))     return Key_F20;
+    if (isEqualStr(str, "f21"))     return Key_F21;
+    if (isEqualStr(str, "f22"))     return Key_F22;
+    if (isEqualStr(str, "f23"))     return Key_F23;
+    if (isEqualStr(str, "f24"))     return Key_F24;
 
     // Numpad number keys.
     if (isEqualStr(str, "numpad 0") || isEqualStr(str, "keypad 0"))
@@ -385,8 +387,8 @@ GBHK_API Key getKeyFromString(const std::string& str) noexcept
     // Applications keys.
     if (isEqualStr(str, "esc") || isEqualStr(str, "escape"))
         return Key_Escape;
-    if (isEqualStr(str, "pause"))               return Key_Pause;
-    if (isEqualStr(str, "help"))                return Key_Help;
+    if (isEqualStr(str, "pause"))   return Key_Pause;
+    if (isEqualStr(str, "help"))    return Key_Help;
 
     // Media keys.
     if (isEqualStr(str, "media next") || isEqualStr(str, "media track next"))
@@ -396,7 +398,8 @@ GBHK_API Key getKeyFromString(const std::string& str) noexcept
         return Key_Media_Previous;
     if (isEqualStr(str, "media play/pause") || isEqualStr(str, "media play pause"))
         return Key_Media_Play_Pause;
-    if (isEqualStr(str, "media stop"))          return Key_Media_Stop;
+    if (isEqualStr(str, "media stop"))
+        return Key_Media_Stop;
 
     // Volume keys.
     if (isEqualStr(str, "volume up") || isEqualStr(str, "vol up"))
@@ -417,50 +420,36 @@ GBHK_API Key getKeyFromString(const std::string& str) noexcept
     // Misc keys.
     if (isEqualStr(str, "print screen") || isEqualStr(str, "prtsc") || isEqualStr(str, "print"))
         return Key_Print_Screen;
-    if (isEqualStr(str, "menu"))                return Key_Menu;
+    if (isEqualStr(str, "menu"))
+        return Key_Menu;
 
     // OEM keys.
-    if (isEqualStr(str, "`"))                   return Key_Left_Quote;
-    if (isEqualStr(str, "-"))                   return Key_Minus;
-    if (isEqualStr(str, "="))                   return Key_Equal;
-    if (isEqualStr(str, "["))                   return Key_Left_Bracket;
-    if (isEqualStr(str, "]"))                   return Key_Right_Bracket;
-    if (isEqualStr(str, ";"))                   return Key_Semicolon;
-    if (isEqualStr(str, "'"))                   return Key_Apostrophe;
-    if (isEqualStr(str, ","))                   return Key_Comma;
-    if (isEqualStr(str, "."))                   return Key_Period;
-    if (isEqualStr(str, "/"))                   return Key_Slash;
-    if (isEqualStr(str, "\\"))                  return Key_Backslash;
-    if (isEqualStr(str, "<>"))                  return Key_Angle_Bracket;
+    if (isEqualStr(str, "`"))       return Key_Left_Quote;
+    if (isEqualStr(str, "-"))       return Key_Minus;
+    if (isEqualStr(str, "="))       return Key_Equal;
+    if (isEqualStr(str, "["))       return Key_Left_Bracket;
+    if (isEqualStr(str, "]"))       return Key_Right_Bracket;
+    if (isEqualStr(str, ";"))       return Key_Semicolon;
+    if (isEqualStr(str, "'"))       return Key_Apostrophe;
+    if (isEqualStr(str, ","))       return Key_Comma;
+    if (isEqualStr(str, "."))       return Key_Period;
+    if (isEqualStr(str, "/"))       return Key_Slash;
+    if (isEqualStr(str, "\\"))      return Key_Backslash;
+    if (isEqualStr(str, "<>"))      return Key_Angle_Bracket;
 
     // Modifier keys.
-    if (isEqualStr(str, "win") || isEqualStr(str, "command") ||
-        isEqualStr(str, "super") || isEqualStr(str, "meta"))
-        return Key_Mod_Meta;
-    if (isEqualStr(str, "left win") || isEqualStr(str, "left command") ||
-        isEqualStr(str, "left super") || isEqualStr(str, "left meta"))
-        return Key_Mod_Meta_Left;
-    if (isEqualStr(str, "right win") || isEqualStr(str, "right command") ||
-        isEqualStr(str, "right super") || isEqualStr(str, "right meta"))
-        return Key_Mod_Meta_Right;
-    if (isEqualStr(str, "ctrl") || isEqualStr(str, "control"))
-        return Key_Mod_Ctrl;
-    if (isEqualStr(str, "left ctrl") || isEqualStr(str, "left control"))
-        return Key_Mod_Ctrl_Left;
-    if (isEqualStr(str, "right ctrl") || isEqualStr(str, "right control"))
-        return Key_Mod_Ctrl_Right;
-    if (isEqualStr(str, "alt") || isEqualStr(str, "option"))
-        return Key_Mod_Alt;
-    if (isEqualStr(str, "left alt") || isEqualStr(str, "left option"))
-        return Key_Mod_Alt_Left;
-    if (isEqualStr(str, "right alt") || isEqualStr(str, "right option"))
-        return Key_Mod_Alt_Right;
-    if (isEqualStr(str, "shift"))
-        return Key_Mod_Shift;
-    if (isEqualStr(str, "left shift"))
-        return Key_Mod_Shift_Left;
-    if (isEqualStr(str, "right shift"))
-        return Key_Mod_Shift_Right;
+    if (IS_META(str, ""))           return Key_Mod_Meta;
+    if (IS_META(str, "left"))       return Key_Mod_Meta_Left;
+    if (IS_META(str, "right"))      return Key_Mod_Meta_Right;
+    if (IS_CTRL(str, ""))           return Key_Mod_Ctrl;
+    if (IS_CTRL(str, "left"))       return Key_Mod_Ctrl_Left;
+    if (IS_CTRL(str, "right"))      return Key_Mod_Ctrl_Right;
+    if (IS_ALT(str, ""))            return Key_Mod_Alt;
+    if (IS_ALT(str, "left"))        return Key_Mod_Alt_Left;
+    if (IS_ALT(str, "right"))       return Key_Mod_Alt_Right;
+    if (IS_SHIFT(str, ""))          return Key_Mod_Shift;
+    if (IS_SHIFT(str, "left"))      return Key_Mod_Shift_Left;
+    if (IS_SHIFT(str, "right"))     return Key_Mod_Shift_Right;
 
     return Key();
 }
