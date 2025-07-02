@@ -4,6 +4,7 @@
 
 bool isUnchangedKeyCombination(const KeyCombination &kc) {
   return kc == exitKc || kc == addKc || kc == removeKc || kc == replaceKc ||
+         kc == listKc || kc == clearTerminalKc ||
          kc == simpleWorkKc || kc == heavyWorkKc || kc == setHeavyWorkLevelKc;
 }
 
@@ -49,8 +50,8 @@ void listAllKeyCombination()
     for (const auto& kc : kcs)
     {
         if (isUnchangedKeyCombination(kc))
-            continue;
-        printf("[%s\n]", KCSTR(kc));
+            printf("<Unchanged> ");
+        printf("[%s]\n", KCSTR(kc));
     }
     printf("====================\n");
 }

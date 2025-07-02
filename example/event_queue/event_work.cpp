@@ -38,7 +38,8 @@ void addHotkeyWork()
     printf("Please input the text it be print when the hotkey be triggered.\n");
     scanf("%s", buf);
 
-    int rc = GHM.add(kc, [=]() { printf("%s", std::string(buf).c_str()); });
+    std::string str(buf);
+    int rc = GHM.add(kc, [=]() { printf("%s\n", str.c_str()); });
     if (rc == RC_SUCCESS)
         printf("Success to add the hotkey [%s]!\n", KCSTR(kc));
     else
