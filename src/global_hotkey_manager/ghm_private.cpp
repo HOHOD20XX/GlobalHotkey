@@ -168,7 +168,7 @@ bool _GHMPrivate::isRunning() const
     return runningState == RS_RUNNING;
 }
 
-std::vector<KeyCombination> _GHMPrivate::getAllKeyCombination() const
+std::vector<KeyCombination> _GHMPrivate::getAllHotkeys() const
 {
     std::vector<KeyCombination> rslt;
     for (const auto& var : fns)

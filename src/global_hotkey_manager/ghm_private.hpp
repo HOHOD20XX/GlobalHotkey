@@ -30,7 +30,7 @@ public:
     bool has(const KeyCombination& kc) const;
     bool isAutoRepeat(const KeyCombination& kc) const;
     bool isRunning() const;
-    std::vector<KeyCombination> getAllKeyCombination() const;
+    std::vector<KeyCombination> getAllHotkeys() const;
 
 protected:
     /// @brief Get the pair of `autoRepeat` and `callback` values corresponding to the specified key combination.

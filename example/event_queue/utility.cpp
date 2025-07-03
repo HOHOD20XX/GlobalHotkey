@@ -50,7 +50,7 @@ void clearTerminal()
 
 void listAllKeyCombination()
 {
-    auto kcs = GHM.getAllKeyCombination();
+    auto kcs = GHM.getAllHotkeys();
     printf("====================\n");
     for (const auto& kc : kcs)
     {
