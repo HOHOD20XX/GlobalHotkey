@@ -144,17 +144,6 @@ int x11Keysym(const Key& key) noexcept
         case Key_Help:              return XK_Help;
         case Key_Menu:              return XK_Menu;
 
-        // Media keys.
-        case Key_Media_Next:        return 0;   // Not supported.
-        case Key_Media_Previous:    return 0;   // Not supported.
-        case Key_Media_Play_Pause:  return 0;   // Not supported.
-        case Key_Media_Stop:        return 0;   // Not supported.
-
-        // Volume keys.
-        case Key_Volume_Up:         return 0;   // Not supported.
-        case Key_Volume_Down:       return 0;   // Not supported.
-        case Key_Volume_Mute:       return 0;   // Not supported.
-
         // Lock keys.
         case Key_Caps_Lock:         return XK_Caps_Lock;
         case Key_Num_Lock:          return XK_Num_Lock;
@@ -331,12 +320,6 @@ Key getKeyFromX11Keysym(int x11Keysym) noexcept
         case XK_Play:               return Key_Play;
         case XK_Help:               return Key_Help;
         case XK_Menu:               return Key_Menu;
-
-        // Media keys.
-        // Not supported.
-
-        // Volume keys.
-        // Not supported.
 
         // Lock keys.
         case XK_Caps_Lock:          return Key_Caps_Lock;

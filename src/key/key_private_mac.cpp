@@ -144,11 +144,6 @@ int nativeKey(const Key& key) noexcept
 
         // Lock keys.
         case Key_Caps_Lock:         return kVK_CapsLock;
-        case Key_Num_Lock:          return 0;   // Not supported.
-        case Key_Scroll_Lock:       return 0;   // Not supported.
-
-        // Device keys.
-        // Not supported.
 
         // OEM (Original Equipment Manufacturer) keys.
         // The specific values of the following keys may vary on different devices.

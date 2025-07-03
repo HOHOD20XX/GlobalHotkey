@@ -198,7 +198,7 @@ enum KeyFlag : int32_t
     Key_Numpad_Minus        = Key_Numpad_Subtract,
     Key_Numpad_Return       = Key_Numpad_Enter,
     Key_Standby             = Key_Sleep,
-    Key_Grave               = Key_Left_Quote,   // '`~' on US standard keyboard.
+    Key_Grave               = Key_Left_Quote,
 
     Key_Mod_Option          = Key_Mod_Alt,
     Key_Mod_Option_Left     = Key_Mod_Alt_Left,
