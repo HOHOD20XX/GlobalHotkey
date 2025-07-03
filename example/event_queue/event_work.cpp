@@ -20,7 +20,7 @@ void exitWork()
 void addHotkeyWork()
 {
     printf("Please input the string of the hotkey you want to add. (e.g. Ctrl+C)\n");
-    scanf("%s", buf);
+    int ret = scanf("%s", buf);
     KeyCombination kc(buf);
 
     if (!kc.isValid())
@@ -36,7 +36,7 @@ void addHotkeyWork()
     }
 
     printf("Please input the text it be print when the hotkey be triggered.\n");
-    scanf("%s", buf);
+    ret = scanf("%s", buf);
 
     std::string str(buf);
     int rc = GHM.add(kc, [=]() { printf("%s\n", str.c_str()); });
@@ -49,7 +49,7 @@ void addHotkeyWork()
 void removeHotkeyWork()
 {
     printf("Please input the string of the hotkey you want to remove. (e.g. Ctrl+C)\n");
-    scanf("%s", buf);
+    int ret = scanf("%s", buf);
     KeyCombination kc(buf);
 
     if (!GHM.has(kc))
@@ -74,7 +74,7 @@ void removeHotkeyWork()
 void replaceHotkeyWork()
 {
     printf("Please input the string of the old hotkey you want to replace. (e.g. Ctrl+C)\n");
-    scanf("%s", buf);
+    int ret = scanf("%s", buf);
     KeyCombination oldKc(buf);
 
     if (!GHM.has(oldKc))
@@ -90,7 +90,7 @@ void replaceHotkeyWork()
     }
 
     printf("Please input the string of the new hotkey you want to add. (e.g. Ctrl+Shift+C)\n");
-    scanf("%s", buf);
+    ret = scanf("%s", buf);
     KeyCombination newKc(buf);
 
     if (!newKc.isValid())
@@ -116,7 +116,7 @@ void replaceHotkeyWork()
 void setHotkeyAutoRepeatWork()
 {
     printf("Please input the string of the hotkey you want to set is auto repeat. (e.g. Ctrl+C)\n");
-    scanf("%s", buf);
+    int ret = scanf("%s", buf);
     KeyCombination kc(buf);
 
     if (GHM.has(kc))
@@ -127,7 +127,7 @@ void setHotkeyAutoRepeatWork()
 
     bool autoRepeat = false;
     printf("Please input the \"Y/N (Yes/No)\" to set whether the hotkey is auto repeat.\n");
-    scanf("%s", buf);
+    ret = scanf("%s", buf);
     while (true)
     {
         if (isEqualStr(buf, "yes") || isEqualStr(buf, "y"))
@@ -143,7 +143,7 @@ void setHotkeyAutoRepeatWork()
         else
         {
             printf("Invalid input, please retry.\n");
-            scanf("%s", buf);
+            ret = scanf("%s", buf);
         }
     }
 
@@ -188,11 +188,11 @@ void setHeavyWorkLevelWork()
 {
     printf("Please input the level of the heavy work.\n");
     int level = 0;
-    scanf("%d", &level);
+    int ret = scanf("%d", &level);
     if (level < 1)
     {
         printf("Invalid input, please retry.\n");
-        scanf("%d", &level);
+        ret = scanf("%d", &level);
     }
     heavyWorkLevel = level;
 }
