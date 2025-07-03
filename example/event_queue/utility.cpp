@@ -43,7 +43,7 @@ void clearTerminal()
 #ifdef _GLOBAL_HOTKEY_WIN
     system("cls");
 #else
-    system("clear");
+    int ret = system("clear");
 #endif // _GLOBAL_HOTKEY_WIN
     printPrompt();
 }
