@@ -1,6 +1,6 @@
 # Global Hotkey
 
-**English | [Simplified Chinese](doc/README_CN.md)**
+**English | [Simplified Chinese](README_CN.md)**
 
 ## 🚀 Features
 

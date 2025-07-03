@@ -1,6 +1,6 @@
 # Global Hotkey
 
-**[English](../README.md) | 简体中文**
+**[English](README_EN.md) | 简体中文**
 
 ## 🚀 特点
 
