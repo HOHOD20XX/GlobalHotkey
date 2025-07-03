@@ -27,17 +27,14 @@ enum ReturnCode : int
 
 inline std::string returnCodeMessage(int rc) noexcept
 {
-    /// @todo A clearer explanation is needed.
     switch (rc)
     {
         case RC_SUCCESS:
             return "Success";
         case RC_BAD_TIMING:
-            return "Add, remove, replace and other change for global hotkey in Global Hotkey Manager, " \
-                   "but GHM is not running yet";
+            return "When GHM is not yet running, perform operations such as add and remove hotkeys";
         case RC_BAD_THREAD:
-            return "Add, remove, replace and other change for global hotkey in Global Hotkey Manager, " \
-                   "but the caller is in the same thread as GHM's worker thread";
+            return "Perform operations such as add and remove in the worker thread of GHM";
         default:
             return "A return value depends on the platform or framwork " + std::to_string(rc);
     }
