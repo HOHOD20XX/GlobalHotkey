@@ -140,7 +140,7 @@ int x11Keysym(const Key& key) noexcept
         // Application keys.
         case Key_Escape:            return XK_Escape;
         case Key_Pause:             return XK_Pause;
-        case Key_Play:              return XK_Play;
+        case Key_Play:              return 0;   // Not supported.
         case Key_Help:              return XK_Help;
         case Key_Menu:              return XK_Menu;
 
@@ -151,7 +151,7 @@ int x11Keysym(const Key& key) noexcept
 
         // Device keys.
         case Key_Print_Screen:      return XK_Print;
-        case Key_Sleep:             return XK_Sleep;
+        case Key_Sleep:             return 0;   // Not supported.
 
         // OEM (Original Equipment Manufacturer) keys.
         // The specific values of the following keys may vary on different devices.
@@ -317,7 +317,6 @@ Key getKeyFromX11Keysym(int x11Keysym) noexcept
         // Application keys.
         case XK_Escape:             return Key_Escape;
         case XK_Pause:              return Key_Pause;
-        case XK_Play:               return Key_Play;
         case XK_Help:               return Key_Help;
         case XK_Menu:               return Key_Menu;
 
@@ -328,7 +327,6 @@ Key getKeyFromX11Keysym(int x11Keysym) noexcept
 
         // Device keys.
         case XK_Print:              return Key_Print_Screen;
-        case XK_Sleep:              return Key_Sleep;
 
         // OEM (Original Equipment Manufacturer) keys.
         // The specific values of the following keys may vary on different devices.

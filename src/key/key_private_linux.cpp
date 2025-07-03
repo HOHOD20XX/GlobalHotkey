@@ -241,8 +241,7 @@ Key getKeyFromNativeKey(int nativeKey) noexcept
         // Whitespace keys.
         case KEY_TAB:               return Key_Tab;
         case KEY_SPACE:             return Key_Space;
-        case KEY_ENTER:             // Fallthrough.
-        case KEY_KPENTER:           return Key_Enter;
+        case KEY_ENTER:             return Key_Enter;
 
         // Navigation keys.
         case KEY_HOME:              return Key_Home;
