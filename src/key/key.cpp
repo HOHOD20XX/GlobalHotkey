@@ -174,18 +174,22 @@ GBHK_API std::string keyString(const Key& key) noexcept
         case Key_Numpad_8:          return "Numpad 8";
         case Key_Numpad_9:          return "Numpad 9";
 
-        // Numpad arithmetic keys.
+        // Numpad operator keys.
         case Key_Numpad_Add:        return "Numpad Add";
         case Key_Numpad_Subtract:   return "Numpad Subtract";
         case Key_Numpad_Multiply:   return "Numpad Multiply";
         case Key_Numpad_Divide:     return "Numpad Divide";
         case Key_Numpad_Decimal:    return "Numpad Decimal";
         case Key_Numpad_Separator:  return "Numpad Separator";
+        case Key_Numpad_Equal:      return "Numpad Equal";
+        case Key_Numpad_Enter:      return "Numpad Enter";
 
         // Applications keys.
         case Key_Escape:            return "Esc";
         case Key_Pause:             return "Pause";
+        case Key_Play:              return "Play";
         case Key_Help:              return "Help";
+        case Key_Menu:              return "Menu";
 
         // Media keys.
         case Key_Media_Next:        return "Media Next";
@@ -203,9 +207,9 @@ GBHK_API std::string keyString(const Key& key) noexcept
         case Key_Num_Lock:          return "NumLock";
         case Key_Scroll_Lock:       return "ScrollLock";
 
-        // Misc keys.
-        case Key_Print_Screen:      return "PrintScreen";
-        case Key_Menu:              return "Menu";
+        // Device keys.
+        case Key_Print_Screen:      return "Print Screen";
+        case Key_Sleep:             return "Sleep";
 
         // OEM (Original Equipment Manufacturer) keys.
         // The specific values of the following keys may vary on different devices.
@@ -373,7 +377,7 @@ GBHK_API Key getKeyFromString(const std::string& str) noexcept
     if (isEqualStr(str, "numpad 9") || isEqualStr(str, "keypad 9"))
         return Key_Numpad_9;
 
-    // Numpad arithmetic keys.
+    // Numpad operator keys.
     if (isEqualStr(str, "numpad add") || isEqualStr(str, "keypad add"))
         return Key_Numpad_Add;
     if (isEqualStr(str, "numpad subtract") || isEqualStr(str, "keypad subtract"))
@@ -386,12 +390,19 @@ GBHK_API Key getKeyFromString(const std::string& str) noexcept
         return Key_Numpad_Decimal;
     if (isEqualStr(str, "numpad separator") || isEqualStr(str, "keypad separator"))
         return Key_Numpad_Separator;
+    if (isEqualStr(str, "numpad equal") || isEqualStr(str, "keypad equal"))
+        return Key_Numpad_Equal;
+    if (isEqualStr(str, "numpad enter") || isEqualStr(str, "keypad enter") ||
+        isEqualStr(str, "numpad return") || isEqualStr(str, "keypad return"))
+        return Key_Numpad_Equal;
 
     // Applications keys.
     if (isEqualStr(str, "esc") || isEqualStr(str, "escape"))
         return Key_Escape;
     if (isEqualStr(str, "pause"))   return Key_Pause;
+    if (isEqualStr(str, "play"))    return Key_Play;
     if (isEqualStr(str, "help"))    return Key_Help;
+    if (isEqualStr(str, "menu"))    return Key_Menu;
 
     // Media keys.
     if (isEqualStr(str, "media next") || isEqualStr(str, "media track next"))
@@ -420,11 +431,11 @@ GBHK_API Key getKeyFromString(const std::string& str) noexcept
     if (isEqualStr(str, "scroll lock") || isEqualStr(str, "scroll lk"))
         return Key_Scroll_Lock;
 
-    // Misc keys.
+    // Device keys.
     if (isEqualStr(str, "print screen") || isEqualStr(str, "prtsc") || isEqualStr(str, "print"))
         return Key_Print_Screen;
-    if (isEqualStr(str, "menu"))
-        return Key_Menu;
+    if (isEqualStr(str, "sleep"))
+        return Key_Sleep;
 
     // OEM (Original Equipment Manufacturer) keys.
     // The specific values of the following keys may vary on different devices.

@@ -127,18 +127,22 @@ int x11Keysym(const Key& key) noexcept
         case Key_Numpad_8:          return XK_KP_8;
         case Key_Numpad_9:          return XK_KP_9;
 
-        // Numpad arithmetic keys.
+        // Numpad operator keys.
         case Key_Numpad_Add:        return XK_KP_Add;
         case Key_Numpad_Subtract:   return XK_KP_Subtract;
         case Key_Numpad_Multiply:   return XK_KP_Multiply;
         case Key_Numpad_Divide:     return XK_KP_Divide;
         case Key_Numpad_Decimal:    return XK_KP_Decimal;
         case Key_Numpad_Separator:  return XK_KP_Separator;
+        case Key_Numpad_Equal:      return XK_KP_Equal;
+        case Key_Numpad_Enter:      return XK_KP_Enter;
 
         // Application keys.
         case Key_Escape:            return XK_Escape;
         case Key_Pause:             return XK_Pause;
+        case Key_Play:              return XK_Play;
         case Key_Help:              return XK_Help;
+        case Key_Menu:              return XK_Menu;
 
         // Media keys.
         case Key_Media_Next:        return 0;   // Not supported.
@@ -156,9 +160,9 @@ int x11Keysym(const Key& key) noexcept
         case Key_Num_Lock:          return XK_Num_Lock;
         case Key_Scroll_Lock:       return XK_Scroll_Lock;
 
-        // Misc keys.
+        // Device keys.
         case Key_Print_Screen:      return XK_Print;
-        case Key_Menu:              return XK_Menu;
+        case Key_Sleep:             return XK_Sleep;
 
         // OEM (Original Equipment Manufacturer) keys.
         // The specific values of the following keys may vary on different devices.
@@ -311,18 +315,22 @@ Key getKeyFromX11Keysym(int x11Keysym) noexcept
         case XK_KP_8:               return Key_Numpad_8;
         case XK_KP_9:               return Key_Numpad_9;
 
-        // Numpad arithmetic keys.
+        // Numpad operator keys.
         case XK_KP_Add:             return Key_Numpad_Add;
         case XK_KP_Subtract:        return Key_Numpad_Subtract;
         case XK_KP_Multiply:        return Key_Numpad_Multiply;
         case XK_KP_Divide:          return Key_Numpad_Divide;
         case XK_KP_Decimal:         return Key_Numpad_Decimal;
         case XK_KP_Separator:       return Key_Numpad_Separator;
+        case XK_KP_Equal:           return Key_Numpad_Equal;
+        case XK_KP_Enter:           return Key_Numpad_Enter;
 
         // Application keys.
         case XK_Escape:             return Key_Escape;
         case XK_Pause:              return Key_Pause;
+        case XK_Play:               return Key_Play;
         case XK_Help:               return Key_Help;
+        case XK_Menu:               return Key_Menu;
 
         // Media keys.
         // Not supported.
@@ -335,9 +343,9 @@ Key getKeyFromX11Keysym(int x11Keysym) noexcept
         case XK_Num_Lock:           return Key_Num_Lock;
         case XK_Scroll_Lock:        return Key_Scroll_Lock;
 
-        // Misc keys.
+        // Device keys.
         case XK_Print:              return Key_Print_Screen;
-        case XK_Menu:               return Key_Menu;
+        case XK_Sleep:              return Key_Sleep;
 
         // OEM (Original Equipment Manufacturer) keys.
         // The specific values of the following keys may vary on different devices.

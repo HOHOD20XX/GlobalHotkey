@@ -87,18 +87,22 @@ int nativeKey(const Key& key) noexcept
         case Key_Numpad_8:          return VK_NUMPAD8;
         case Key_Numpad_9:          return VK_NUMPAD9;
 
-        // Numpad arithmetic keys.
+        // Numpad operator keys.
         case Key_Numpad_Add:        return VK_ADD;
         case Key_Numpad_Subtract:   return VK_SUBTRACT;
         case Key_Numpad_Multiply:   return VK_MULTIPLY;
         case Key_Numpad_Divide:     return VK_DIVIDE;
         case Key_Numpad_Decimal:    return VK_DECIMAL;
         case Key_Numpad_Separator:  return VK_SEPARATOR;
+        case Key_Numpad_Equal:      return VK_OEM_NEC_EQUAL;    // Need check.
+        case Key_Numpad_Enter:      return VK_RETURN;
 
         // Applications keys.
         case Key_Escape:            return VK_ESCAPE;
         case Key_Pause:             return VK_PAUSE;
+        case Key_Play:              return VK_PLAY;
         case Key_Help:              return VK_HELP;
+        case Key_Menu:              return VK_APPS;
 
         // Media keys.
         case Key_Media_Next:        return VK_MEDIA_NEXT_TRACK;
@@ -116,9 +120,9 @@ int nativeKey(const Key& key) noexcept
         case Key_Num_Lock:          return VK_NUMLOCK;
         case Key_Scroll_Lock:       return VK_SCROLL;
 
-        // Misc keys.
+        // Device keys.
         case Key_Print_Screen:      return VK_SNAPSHOT;
-        case Key_Menu:              return VK_APPS;
+        case Key_Sleep:             return VK_SLEEP;
 
         // OEM (Original Equipment Manufacturer) keys.
         // The specific values of the following keys may vary on different devices.
@@ -234,18 +238,21 @@ Key getKeyFromNativeKey(int nativeKey) noexcept
         case VK_NUMPAD8:            return Key_Numpad_8;
         case VK_NUMPAD9:            return Key_Numpad_9;
 
-        // Numpad arithmetic keys.
+        // Numpad operator keys.
         case VK_ADD:                return Key_Numpad_Add;
         case VK_SUBTRACT:           return Key_Numpad_Subtract;
         case VK_MULTIPLY:           return Key_Numpad_Multiply;
         case VK_DIVIDE:             return Key_Numpad_Divide;
         case VK_DECIMAL:            return Key_Numpad_Decimal;
         case VK_SEPARATOR:          return Key_Numpad_Separator;
+        case VK_OEM_NEC_EQUAL:      return Key_Numpad_Equal;
 
         // Applications keys.
         case VK_ESCAPE:             return Key_Escape;
         case VK_PAUSE:              return Key_Pause;
+        case VK_PLAY:               return Key_Play;
         case VK_HELP:               return Key_Help;
+        case VK_APPS:               return Key_Menu;
 
         // Media keys.
         case VK_MEDIA_NEXT_TRACK:   return Key_Media_Next;
@@ -263,9 +270,9 @@ Key getKeyFromNativeKey(int nativeKey) noexcept
         case VK_NUMLOCK:            return Key_Num_Lock;
         case VK_SCROLL:             return Key_Scroll_Lock;
 
-        // Misc keys.
+        // Device keys.
         case VK_SNAPSHOT:           return Key_Print_Screen;
-        case VK_APPS:               return Key_Menu;
+        case VK_SLEEP:              return Key_Sleep;
 
         // OEM (Original Equipment Manufacturer) keys.
         // The specific values of the following keys may vary on different devices.

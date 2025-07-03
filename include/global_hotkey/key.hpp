@@ -125,18 +125,22 @@ enum KeyFlag : int32_t
     Key_Numpad_8,
     Key_Numpad_9,
 
-    // Numpad arithmetic keys.
+    // Numpad operator keys.
     Key_Numpad_Add,         // '+' on numpad.
     Key_Numpad_Subtract,    // '-' on numpad.
     Key_Numpad_Multiply,    // '*' or '×' on numpad.
     Key_Numpad_Divide,      // '/' or '÷' on numpad.
     Key_Numpad_Decimal,     // '.' on numpad.
     Key_Numpad_Separator,   // ',' on numpad.
+    Key_Numpad_Equal,       // '=' on numpad.
+    Key_Numpad_Enter,       // Enter on numpad.
 
     // Applications keys.
     Key_Escape,
-    Key_Pause,              // Not is MEDIA_PLAY_PAUSE.
+    Key_Pause,              // Not is Key_Media_Play_Pause.
+    Key_Play,               // Not is Key_Media_Play_Pause.
     Key_Help,
+    Key_Menu,
 
     // Media keys.
     Key_Media_Next,
@@ -154,9 +158,9 @@ enum KeyFlag : int32_t
     Key_Num_Lock,
     Key_Scroll_Lock,
 
-    // Misc keys.
+    // Device keys.
     Key_Print_Screen,
-    Key_Menu,
+    Key_Sleep,
 
     // OEM (Original Equipment Manufacturer) keys.
     // The specific values of the following keys may vary on different devices.
@@ -189,6 +193,11 @@ enum KeyFlag : int32_t
     Key_Mod_Shift_Right,
 
     // Alias.
+    Key_Return              = Key_Enter,
+    Key_Numpad_Plus         = Key_Numpad_Add,
+    Key_Numpad_Minus        = Key_Numpad_Subtract,
+    Key_Numpad_Return       = Key_Numpad_Enter,
+    Key_Standby             = Key_Sleep,
     Key_Grave               = Key_Left_Quote,   // '`~' on US standard keyboard.
 
     Key_Mod_Option          = Key_Mod_Alt,

@@ -116,18 +116,22 @@ int nativeKey(const Key& key) noexcept
         case Key_Numpad_8:          return KEY_KP8;
         case Key_Numpad_9:          return KEY_KP9;
 
-        // Numpad arithmetic keys.
+        // Numpad operator keys.
         case Key_Numpad_Add:        return KEY_KPPLUS;
         case Key_Numpad_Subtract:   return KEY_KPMINUS;
         case Key_Numpad_Multiply:   return KEY_KPASTERISK;
         case Key_Numpad_Divide:     return KEY_KPSLASH;
         case Key_Numpad_Decimal:    return KEY_KPDOT;
         case Key_Numpad_Separator:  return KEY_KPCOMMA;
+        case Key_Numpad_Equal:      return KEY_KPEQUAL;
+        case Key_Numpad_Enter:      return KEY_KPENTER;
 
         // Application keys.
         case Key_Escape:            return KEY_ESC;
         case Key_Pause:             return KEY_PAUSE;
+        case Key_Play:              return KEY_PLAY;
         case Key_Help:              return KEY_HELP;
+        case Key_Menu:              return KEY_MENU;
 
         // Media keys.
         case Key_Media_Next:        return KEY_NEXTSONG;
@@ -145,9 +149,9 @@ int nativeKey(const Key& key) noexcept
         case Key_Num_Lock:          return KEY_NUMLOCK;
         case Key_Scroll_Lock:       return KEY_SCROLLLOCK;
 
-        // Misc keys.
+        // Device keys.
         case Key_Print_Screen:      return KEY_PRINT;    // Need to check.
-        case Key_Menu:              return KEY_MENU;
+        case Key_Sleep:             return KEY_SLEEP;
 
         // OEM (Original Equipment Manufacturer) keys.
         // The specific values of the following keys may vary on different devices.
@@ -294,18 +298,22 @@ Key getKeyFromNativeKey(int nativeKey) noexcept
         case KEY_KP8:               return Key_Numpad_8;
         case KEY_KP9:               return Key_Numpad_9;
 
-        // Numpad arithmetic keys.
+        // Numpad operator keys.
         case KEY_KPPLUS:            return Key_Numpad_Add;
         case KEY_KPMINUS:           return Key_Numpad_Subtract;
         case KEY_KPASTERISK:        return Key_Numpad_Multiply;
         case KEY_KPSLASH:           return Key_Numpad_Divide;
         case KEY_KPDOT:             return Key_Numpad_Decimal;
         case KEY_KPCOMMA:           return Key_Numpad_Separator;
+        case KEY_KPEQUAL:           return Key_Numpad_Equal;
+        case KEY_KPENTER:           return Key_Numpad_Enter;
 
         // Application keys.
         case KEY_ESC:               return Key_Escape;
         case KEY_PAUSE:             return Key_Pause;
+        case KEY_PLAY:              return Key_Play;
         case KEY_HELP:              return Key_Help;
+        case KEY_MENU:              return Key_Menu;
 
         // Media keys.
         case KEY_NEXTSONG:          return Key_Media_Next;
@@ -323,9 +331,9 @@ Key getKeyFromNativeKey(int nativeKey) noexcept
         case KEY_NUMLOCK:           return Key_Num_Lock;
         case KEY_SCROLLLOCK:        return Key_Scroll_Lock;
 
-        // Misc keys.
+        // Device keys.
         case KEY_PRINT:             return Key_Print_Screen;    // Need to check.
-        case KEY_MENU:              return Key_Menu;
+        case KEY_SLEEP:             return Key_Sleep;
 
         // OEM (Original Equipment Manufacturer) keys.
         // The specific values of the following keys may vary on different devices.

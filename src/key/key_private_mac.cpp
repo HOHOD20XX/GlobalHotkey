@@ -107,10 +107,6 @@ int nativeKey(const Key& key) noexcept
         case Key_F18:               return kVK_F18;
         case Key_F19:               return kVK_F19;
         case Key_F20:               return kVK_F20;
-        case Key_F21:               return 0;   // Not supported.
-        case Key_F22:               return 0;   // Not supported.
-        case Key_F23:               return 0;   // Not supported.
-        case Key_F24:               return 0;   // Not supported.
 
         // Numpad number keys.
         case Key_Numpad_0:          return kVK_ANSI_Keypad0;
@@ -124,17 +120,18 @@ int nativeKey(const Key& key) noexcept
         case Key_Numpad_8:          return kVK_ANSI_Keypad8;
         case Key_Numpad_9:          return kVK_ANSI_Keypad9;
 
-        // Numpad arithmetic keys.
+        // Numpad operator keys.
         case Key_Numpad_Add:        return kVK_ANSI_KeypadPlus;
         case Key_Numpad_Subtract:   return kVK_ANSI_KeypadMinus;
         case Key_Numpad_Multiply:   return kVK_ANSI_KeypadMultiply;
         case Key_Numpad_Divide:     return kVK_ANSI_KeypadDivide;
         case Key_Numpad_Decimal:    return kVK_ANSI_KeypadDecimal;
         case Key_Numpad_Separator:  return 0;   // Not supported.
+        case Key_Numpad_Equal:      return kVK_ANSI_KeypadEqual;
+        case Key_Numpad_Enter:      return kVK_ANSI_KeypadEnter;
 
         // Application keys.
         case Key_Escape:            return kVK_Escape;
-        case Key_Pause:             return 0;   // Not supported.
         case Key_Help:              return kVK_Help;
 
         // Media keys.
@@ -150,9 +147,8 @@ int nativeKey(const Key& key) noexcept
         case Key_Num_Lock:          return 0;   // Not supported.
         case Key_Scroll_Lock:       return 0;   // Not supported.
 
-        // Misc keys.
-        case Key_Print_Screen:      return 0;   // Not supported.
-        case Key_Menu:              return 0;   // Not supported.
+        // Device keys.
+        // Not supported.
 
         // OEM (Original Equipment Manufacturer) keys.
         // The specific values of the following keys may vary on different devices.
@@ -300,19 +296,18 @@ Key getKeyFromNativeKey(int nativeKey) noexcept
         case kVK_ANSI_Keypad8:          return Key_Numpad_8;
         case kVK_ANSI_Keypad9:          return Key_Numpad_9;
 
-        // Numpad arithmetic keys.
+        // Numpad operator keys.
         case kVK_ANSI_KeypadPlus:       return Key_Numpad_Add;
         case kVK_ANSI_KeypadMinus:      return Key_Numpad_Subtract;
         case kVK_ANSI_KeypadMultiply:   return Key_Numpad_Multiply;
         case kVK_ANSI_KeypadDivide:     return Key_Numpad_Divide;
         case kVK_ANSI_KeypadDecimal:    return Key_Numpad_Decimal;
+        case kVK_ANSI_KeypadEqual:      return Key_Numpad_Equal;
+        case kVK_ANSI_KeypadEnter:      return Key_Numpad_Enter;
 
         // Application keys.
         case kVK_Escape:                return Key_Escape;
         case kVK_Help:                  return Key_Help;
-
-        // Media keys.
-        // Not supported.
 
         // Volume keys.
         case kVK_VolumeUp:              return Key_Volume_Up;
