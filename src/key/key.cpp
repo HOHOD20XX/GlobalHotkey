@@ -207,7 +207,9 @@ GBHK_API std::string keyString(const Key& key) noexcept
         case Key_Print_Screen:      return "PrintScreen";
         case Key_Menu:              return "Menu";
 
-        // OEM keys.
+        // OEM (Original Equipment Manufacturer) keys.
+        // The specific values of the following keys may vary on different devices.
+        // All of the following uses the standard keyboard layout of the United States.
         case Key_Left_Quote:        return "`";
         case Key_Minus:             return "-";
         case Key_Equal:             return "=";
@@ -424,7 +426,9 @@ GBHK_API Key getKeyFromString(const std::string& str) noexcept
     if (isEqualStr(str, "menu"))
         return Key_Menu;
 
-    // OEM keys.
+    // OEM (Original Equipment Manufacturer) keys.
+    // The specific values of the following keys may vary on different devices.
+    // All of the following uses the standard keyboard layout of the United States.
     if (isEqualStr(str, "`"))       return Key_Left_Quote;
     if (isEqualStr(str, "-"))       return Key_Minus;
     if (isEqualStr(str, "="))       return Key_Equal;

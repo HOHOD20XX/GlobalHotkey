@@ -120,7 +120,9 @@ int nativeKey(const Key& key) noexcept
         case Key_Print_Screen:      return VK_SNAPSHOT;
         case Key_Menu:              return VK_APPS;
 
-        // OEM keys.
+        // OEM (Original Equipment Manufacturer) keys.
+        // The specific values of the following keys may vary on different devices.
+        // All of the following uses the standard keyboard layout of the United States.
         case Key_Left_Quote:        return VK_OEM_3;
         case Key_Minus:             return VK_OEM_MINUS;
         case Key_Equal:             return VK_OEM_PLUS;
@@ -265,7 +267,9 @@ Key getKeyFromNativeKey(int nativeKey) noexcept
         case VK_SNAPSHOT:           return Key_Print_Screen;
         case VK_APPS:               return Key_Menu;
 
-        // OEM keys.
+        // OEM (Original Equipment Manufacturer) keys.
+        // The specific values of the following keys may vary on different devices.
+        // All of the following uses the standard keyboard layout of the United States.
         case VK_OEM_3:              return Key_Left_Quote;
         case VK_OEM_MINUS:          return Key_Minus;
         case VK_OEM_PLUS:           return Key_Equal;

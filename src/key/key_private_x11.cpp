@@ -160,7 +160,9 @@ int x11Keysym(const Key& key) noexcept
         case Key_Print_Screen:      return XK_Print;
         case Key_Menu:              return XK_Menu;
 
-        // OEM keys.
+        // OEM (Original Equipment Manufacturer) keys.
+        // The specific values of the following keys may vary on different devices.
+        // All of the following uses the standard keyboard layout of the United States.
         case Key_Left_Quote:        return XK_grave;
         case Key_Minus:             return XK_minus;
         case Key_Equal:             return XK_equal;
@@ -337,7 +339,9 @@ Key getKeyFromX11Keysym(int x11Keysym) noexcept
         case XK_Print:              return Key_Print_Screen;
         case XK_Menu:               return Key_Menu;
 
-        // OEM keys.
+        // OEM (Original Equipment Manufacturer) keys.
+        // The specific values of the following keys may vary on different devices.
+        // All of the following uses the standard keyboard layout of the United States.
         case XK_grave:              return Key_Left_Quote;
         case XK_minus:              return Key_Minus;
         case XK_equal:              return Key_Equal;

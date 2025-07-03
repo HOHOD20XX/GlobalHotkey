@@ -158,7 +158,9 @@ enum KeyFlag : int32_t
     Key_Print_Screen,
     Key_Menu,
 
-    // OEM keys.
+    // OEM (Original Equipment Manufacturer) keys.
+    // The specific values of the following keys may vary on different devices.
+    // All of the following uses the standard keyboard layout of the United States.
     Key_Left_Quote,         // '`~' on US standard keyboard.
     Key_Minus,              // '-_' on US standard keyboard.
     Key_Equal,              // '=+' on US standard keyboard.

@@ -154,7 +154,9 @@ int nativeKey(const Key& key) noexcept
         case Key_Print_Screen:      return 0;   // Not supported.
         case Key_Menu:              return 0;   // Not supported.
 
-        // OEM keys.
+        // OEM (Original Equipment Manufacturer) keys.
+        // The specific values of the following keys may vary on different devices.
+        // All of the following uses the standard keyboard layout of the United States.
         case Key_Left_Quote:        return kVK_ANSI_Grave;
         case Key_Minus:             return kVK_ANSI_Minus;
         case Key_Equal:             return kVK_ANSI_Equal;
@@ -320,7 +322,9 @@ Key getKeyFromNativeKey(int nativeKey) noexcept
         // Lock keys.
         case kVK_CapsLock:              return Key_Caps_Lock;
 
-        // Misc keys.
+        // OEM (Original Equipment Manufacturer) keys.
+        // The specific values of the following keys may vary on different devices.
+        // All of the following uses the standard keyboard layout of the United States.
         case kVK_ANSI_Grave:            return Key_Left_Quote;
         case kVK_ANSI_Minus:            return Key_Minus;
         case kVK_ANSI_Equal:            return Key_Equal;
