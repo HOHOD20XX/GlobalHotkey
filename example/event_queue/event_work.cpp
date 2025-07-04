@@ -1,5 +1,6 @@
 #include "event_work.hpp"
 
+#include <cstddef>  // size_t
 #include <chrono>
 #include <thread>
 

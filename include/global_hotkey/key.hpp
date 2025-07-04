@@ -1,6 +1,7 @@
 #ifndef GLOBAL_HOTKEY_KEY_HPP
 #define GLOBAL_HOTKEY_KEY_HPP
 
+#include <cstdint>
 #include <initializer_list> // initializer_list
 #include <string>           // string
 

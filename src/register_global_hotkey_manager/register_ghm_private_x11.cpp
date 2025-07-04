@@ -4,6 +4,7 @@
 
 #ifdef _GLOBAL_HOTKEY_LINUX
 
+#include <cstdint>
 #include <poll.h>           // poll
 #include <sys/eventfd.h>    // eventfd
 #include <unistd.h>         // read, write, close

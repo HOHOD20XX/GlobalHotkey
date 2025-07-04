@@ -7,6 +7,7 @@
 
 #ifdef _GLOBAL_HOTKEY_LINUX
 
+#include <cstddef>  // size_t
 #include <poll.h>   // poll
 #include <vector>   // vector
 #include <string>   // string and the specialization of hash for string.

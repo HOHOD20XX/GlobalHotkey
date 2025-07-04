@@ -1,9 +1,6 @@
 #ifndef GLOBAL_HOTKEY_BASE_HPP
 #define GLOBAL_HOTKEY_BASE_HPP
 
-#include <cstddef>  // size_t
-#include <cstdint>
-
 #ifdef _MSVC_LANG
     #define _GLOBAL_HOTKEY_CPPVERS     _MSVC_LANG
 #else

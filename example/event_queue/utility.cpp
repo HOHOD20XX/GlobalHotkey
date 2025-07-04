@@ -1,6 +1,7 @@
 #include "utility.hpp"
 
 #include <cctype>   // isspace, isalnum, toupper
+#include <cstddef>  // size_t
 #include <cstdlib>
 
 bool isUnchangedKeyCombination(const KeyCombination &kc) {

@@ -5,6 +5,7 @@
 
 #include <atomic>               // atomic
 #include <condition_variable>   // condition_variable
+#include <functional>           // hash
 #include <mutex>                // mutex, lock_guard, unique_lock
 #include <thread>               // thread
 #include <unordered_map>        // unordered_map

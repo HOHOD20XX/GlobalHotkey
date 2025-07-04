@@ -4,6 +4,7 @@
 
 #ifdef _GLOBAL_HOTKEY_LINUX
 
+#include <cstdint>
 #include <dirent.h>         // dirent
 #include <fcntl.h>          // fcntl, open
 #include <linux/input.h>    // input_event
