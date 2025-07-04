@@ -1,6 +1,6 @@
 # Global Hotkey
 
-**English | [Simplified Chinese](doc/README_CN.md)**
+**English | [Simplified Chinese](README_CN.md)**
 
 ## 🚀 Features
 
@@ -101,6 +101,12 @@ ghm.end();      // End the Global Hotkey Manager.
 [Event Queue Example](example/event_queue/main.cpp)
 
 ## ❓ FAQ
+
+### What is the License?
+
+---
+
+This library is licensed under the MIT License, which means you can do whatever you want with it. Although not mandatory, giving attribution in your program is highly appreciated.
 
 ### What's the difference between `Register GHM` and `Hook GHM`?
 

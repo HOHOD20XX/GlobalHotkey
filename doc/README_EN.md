@@ -102,6 +102,12 @@ ghm.end();      // End the Global Hotkey Manager.
 
 ## ❓ FAQ
 
+### What is the License?
+
+---
+
+This library is licensed under the MIT License, which means you can do whatever you want with it. Although not mandatory, giving attribution in your program is highly appreciated.
+
 ### What's the difference between `Register GHM` and `Hook GHM`?
 
 ---
