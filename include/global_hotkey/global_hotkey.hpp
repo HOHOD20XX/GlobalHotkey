@@ -26,7 +26,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include "base.hpp"
 #include "hook_global_hotkey_manager.hpp"
 #include "register_global_hotkey_manager.hpp"
 #include "return_code.hpp"

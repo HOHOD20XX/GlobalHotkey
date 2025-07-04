@@ -3,7 +3,7 @@
 
 #include <string>   // string, to_string
 
-#include "base.hpp"
+#include "global_macros.hpp"
 
 namespace gbhk
 {

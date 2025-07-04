@@ -1,6 +1,5 @@
 #include "ghm_private.hpp"
 
-#include <global_hotkey/base.hpp>
 #include <global_hotkey/return_code.hpp>
 
 namespace gbhk

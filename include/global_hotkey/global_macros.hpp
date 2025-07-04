@@ -1,5 +1,5 @@
-#ifndef GLOBAL_HOTKEY_BASE_HPP
-#define GLOBAL_HOTKEY_BASE_HPP
+#ifndef GLOBAL_HOTKEY_GLOBAL_MACROS_HPP
+#define GLOBAL_HOTKEY_GLOBAL_MACROS_HPP
 
 #ifdef _MSVC_LANG
     #define _GLOBAL_HOTKEY_CPPVERS     _MSVC_LANG
@@ -38,4 +38,4 @@
     #define GBHK_API __attribute__((visibility("default")))
 #endif // _GLOBAL_HOTKEY_WIN
 
-#endif // !GLOBAL_HOTKEY_BASE_HPP
+#endif // !GLOBAL_HOTKEY_GLOBAL_MACROS_HPP

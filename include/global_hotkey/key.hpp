@@ -5,7 +5,7 @@
 #include <initializer_list> // initializer_list
 #include <string>           // string
 
-#include "base.hpp"
+#include "global_macros.hpp"
 
 namespace gbhk
 {

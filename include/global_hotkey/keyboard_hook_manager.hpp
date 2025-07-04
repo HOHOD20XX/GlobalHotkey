@@ -6,7 +6,7 @@
 #include <functional>   // function
 #include <memory>       // unique_ptr
 
-#include "base.hpp"
+#include "global_macros.hpp"
 
 namespace gbhk
 {
