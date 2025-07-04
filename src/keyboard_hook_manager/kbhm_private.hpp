@@ -96,7 +96,6 @@ private:
     std::condition_variable cvRunningState;
     std::atomic<RunningState> runningState;
     std::atomic<int> runningRc;
-    std::atomic<bool> shouldClose;
 
     std::thread workerThread;
 };

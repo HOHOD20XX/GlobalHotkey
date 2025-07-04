@@ -17,8 +17,7 @@ std::function<void (int)> _KBHMPrivate::keyReleasedCallback;
 
 _KBHMPrivate::_KBHMPrivate() :
     runningState(RS_FREE),
-    runningRc(0),
-    shouldClose(false)
+    runningRc(0)
 {}
 
 _KBHMPrivate::~_KBHMPrivate() = default;
@@ -61,7 +60,6 @@ int _KBHMPrivate::end()
     }
     int rc = doBeforeThreadEnd();
 
-    shouldClose = true;
     std::mutex dummyMtx;
     std::unique_lock<std::mutex> lock(dummyMtx);
     cvRunningState.wait(lock, [this]() { return runningState != RS_RUNNING; });
