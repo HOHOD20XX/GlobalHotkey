@@ -165,7 +165,7 @@ if(LINUX)
 endif()
 
 find_package(Threads REQUIRED)
-target_link_libraries(${TARGET_NAME} PRIVATE Threads::Threads)
+target_link_libraries(${TARGET_NAME} PUBLIC Threads::Threads)
 
 set_target_properties(${TARGET_NAME} PROPERTIES DEBUG_POSTFIX d)
 
