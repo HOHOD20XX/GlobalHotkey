@@ -195,6 +195,7 @@ enum KeyFlag : int32_t
 
     // Alias.
     Key_Return              = Key_Enter,
+    Key_Esc                 = Key_Escape,
     Key_Numpad_Plus         = Key_Numpad_Add,
     Key_Numpad_Minus        = Key_Numpad_Subtract,
     Key_Numpad_Return       = Key_Numpad_Enter,
