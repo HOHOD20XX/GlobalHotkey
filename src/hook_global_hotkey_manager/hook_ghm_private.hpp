@@ -3,7 +3,7 @@
 
 #ifndef GLOBAL_HOTKEY_DISABLE_HOOK
 
-#include <global_hotkey/keyboard_hook_manager.hpp>
+#include <kbdt/kbdt.h>
 
 #include "../global_hotkey_manager/ghm_private.hpp"
 
@@ -25,8 +25,6 @@ protected:
 
 private:
     void invoke(const KeyCombination& prevKc, const KeyCombination& currKc) const;
-
-    kbhook::KeyboardHookManager& kbhm;
 };
 
 } // namespace gbhk

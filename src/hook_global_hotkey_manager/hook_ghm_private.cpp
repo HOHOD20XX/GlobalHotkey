@@ -32,12 +32,9 @@ static std::queue<Event> eventQueue;
 static Event takeEvent();
 static void pushEvent(const Event& event);
 static void clearEventQueue();
-static void keyPressedCallback(int nativeKey);
-static void keyReleasedCallback(int nativeKey);
+static void kbdtEventHandler(keyboard_event* event);
 
-_HookGHMPrivate::_HookGHMPrivate() :
-    kbhm(kbhook::KeyboardHookManager::getInstance())
-{}
+_HookGHMPrivate::_HookGHMPrivate() = default;
 
 _HookGHMPrivate::~_HookGHMPrivate() { end(); }
 
@@ -45,18 +42,20 @@ int _HookGHMPrivate::doBeforeThreadRun()
 {
     clearEventQueue();
 
-    int rc = kbhm.run();
-    if (rc != RC_SUCCESS)
+    int rc = kbdt_run();
+    if (rc != KBDT_RC_SUCCESS)
         return rc;
-    kbhm.setKeyPressedCallback(&keyPressedCallback);
-    kbhm.setKeyReleasedCallback(&keyReleasedCallback);
-    return rc;
+    kbdt_set_event_handler(&kbdtEventHandler);
+    return RC_SUCCESS;
 }
 
 int _HookGHMPrivate::doBeforeThreadEnd()
 {
     pushEvent({ET_EXIT});
-    return kbhm.end();
+    int rc = kbdt_end();
+    if (rc != KBDT_RC_SUCCESS)
+        return rc;
+    return RC_SUCCESS;
 }
 
 void _HookGHMPrivate::work()
@@ -148,16 +147,11 @@ void clearEventQueue()
         eventQueue.pop();
 }
 
-void keyPressedCallback(int nativeKey)
+void kbdtEventHandler(keyboard_event* event)
 {
-    auto key = getKeyFromNativeKey(nativeKey);
-    pushEvent({ET_KEY_PRESSED, key});
-}
-
-void keyReleasedCallback(int nativeKey)
-{
-    auto key = getKeyFromNativeKey(nativeKey);
-    pushEvent({ET_KEY_RELEASED, key});
+    auto key = getKeyFromNativeKey(event->native_key);
+    auto et = (event->type == KBDET_PRESSED ? ET_KEY_PRESSED : ET_KEY_RELEASED);
+    pushEvent({ et, key });
 }
 
 } // namespace gbhk
