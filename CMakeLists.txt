@@ -25,28 +25,44 @@ endif()
 
 option(GBHK_BUILD_SHARED "Build shared library" OFF)
 if(GBHK_BUILD_SHARED)
-    message(STATUS "${GBHK_MSG_PREFIX} Shared library will be builded.")
+    message(STATUS "${GBHK_MSG_PREFIX} Shared library will be built.")
 else()
-    message(STATUS "${GBHK_MSG_PREFIX} Static library will be builded.")
-endif()
-
-option(GBHK_DISABLE_REGISTER "Disable register Global Hotkey Manager." OFF)
-if(GBHK_DISABLE_REGISTER)
-    message(STATUS "${GBHK_MSG_PREFIX} Register Global Hotkey Manager be disable.")
+    message(STATUS "${GBHK_MSG_PREFIX} Static library will be built.")
 endif()
 
 option(GBHK_DISABLE_HOOK "Disable hook Global Hotkey Manager" OFF)
 if(GBHK_DISABLE_HOOK)
     message(STATUS "${GBHK_MSG_PREFIX} Hook Global Hotkey Manager be disable.")
+else()
+    include_directories(keyboard_tool/include)
+    set(KBDT_BUILD_WITH_UTILITY OFF)
+    add_subdirectory(keyboard_tool)
+    file(GLOB_RECURSE SRC ${SRC} src/hook_global_hotkey_manager/*.cpp)
 endif()
 
-option(GBHK_BUILD_EXAMPLE "Build example" ${GBHK_MASTER_PROJECT})
+option(GBHK_DISABLE_REGISTER "Disable register Global Hotkey Manager." OFF)
+if(GBHK_DISABLE_REGISTER)
+    message(STATUS "${GBHK_MSG_PREFIX} Register Global Hotkey Manager be disable.")
+else()
+    set(SRC ${SRC}
+         src/register_global_hotkey_manager/register_global_hotkey_manager.cpp
+         src/register_global_hotkey_manager/register_ghm_private.cpp)
+    if(WIN32)
+        file(GLOB_RECURSE SRC ${SRC} src/register_global_hotkey_manager/*win*.cpp)
+    elseif(APPLE)
+        file(GLOB_RECURSE SRC ${SRC} src/register_global_hotkey_manager/*mac*.cpp)
+    elseif(LINUX)
+        file(GLOB_RECURSE SRC ${SRC} src/register_global_hotkey_manager/*x11*.cpp)
+     endif()
+endif()
 
 if(GBHK_DISABLE_HOOK AND GBHK_DISABLE_REGISTER)
     message(FATAL_ERROR "${GBHK_MSG_PREFIX} Cannot set both GBHK_DISABLE_REGISTER and GBHK_DISABLE_HOOK to ON.")
 endif()
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+option(GBHK_BUILD_EXAMPLE "Example will be built." ${GBHK_MASTER_PROJECT})
+
+include_directories(include)
 file(GLOB_RECURSE SRC
      src/global_hotkey_manager/*.cpp
      src/key/key.cpp
@@ -63,26 +79,6 @@ elseif(LINUX)
     if(NOT GBHK_DISABLE_HOOK)
         file(GLOB_RECURSE SRC ${SRC} src/key/*linux*.cpp)
     endif()
-endif()
-
-if(NOT GBHK_DISABLE_REGISTER)
-    set(SRC ${SRC}
-         src/register_global_hotkey_manager/register_global_hotkey_manager.cpp
-         src/register_global_hotkey_manager/register_ghm_private.cpp)
-    if(WIN32)
-        file(GLOB_RECURSE SRC ${SRC} src/register_global_hotkey_manager/*win*.cpp)
-    elseif(APPLE)
-        file(GLOB_RECURSE SRC ${SRC} src/register_global_hotkey_manager/*mac*.cpp)
-    elseif(LINUX)
-        file(GLOB_RECURSE SRC ${SRC} src/register_global_hotkey_manager/*x11*.cpp)
-     endif()
-endif()
-
-if(NOT GBHK_DISABLE_HOOK)
-    include_directories(keyboard_tool/include)
-    set(KBDT_BUILD_WITH_UTILITY OFF)
-    add_subdirectory(keyboard_tool)
-    file(GLOB_RECURSE SRC ${SRC} src/hook_global_hotkey_manager/*.cpp)
 endif()
 
 if(GBHK_BUILD_SHARED)
@@ -162,6 +158,5 @@ set_target_properties(global_hotkey PROPERTIES DEBUG_POSTFIX d)
 add_library(global_hotkey::global_hotkey ALIAS global_hotkey)
 
 if(GBHK_BUILD_EXAMPLE)
-    message(STATUS "${GBHK_MSG_PREFIX} Example will be builded.")
     add_subdirectory(example)
 endif()
