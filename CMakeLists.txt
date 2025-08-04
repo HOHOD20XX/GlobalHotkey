@@ -34,13 +34,14 @@ option(GBHK_DISABLE_HOOK "Disable hook Global Hotkey Manager" OFF)
 if(GBHK_DISABLE_HOOK)
     message(STATUS "${GBHK_MSG_PREFIX} Hook Global Hotkey Manager be disable.")
 else()
-    include_directories(keyboard_tool/include)
     set(KBDT_BUILD_WITH_UTILITY OFF)
     add_subdirectory(keyboard_tool)
+
+    include_directories(keyboard_tool/include)
     file(GLOB_RECURSE SRC ${SRC} src/hook_global_hotkey_manager/*.cpp)
 endif()
 
-option(GBHK_DISABLE_REGISTER "Disable register Global Hotkey Manager." OFF)
+option(GBHK_DISABLE_REGISTER "Disable register Global Hotkey Manager" OFF)
 if(GBHK_DISABLE_REGISTER)
     message(STATUS "${GBHK_MSG_PREFIX} Register Global Hotkey Manager be disable.")
 else()
@@ -60,7 +61,7 @@ if(GBHK_DISABLE_HOOK AND GBHK_DISABLE_REGISTER)
     message(FATAL_ERROR "${GBHK_MSG_PREFIX} Cannot set both GBHK_DISABLE_REGISTER and GBHK_DISABLE_HOOK to ON.")
 endif()
 
-option(GBHK_BUILD_EXAMPLE "Example will be built." ${GBHK_MASTER_PROJECT})
+option(GBHK_BUILD_EXAMPLE "Build example" ${GBHK_MASTER_PROJECT})
 
 include_directories(include)
 file(GLOB_RECURSE SRC ${SRC}
@@ -158,5 +159,6 @@ set_target_properties(global_hotkey PROPERTIES DEBUG_POSTFIX d)
 add_library(global_hotkey::global_hotkey ALIAS global_hotkey)
 
 if(GBHK_BUILD_EXAMPLE)
+    message("{GBHK_MSG_PREFIX} Example will be built.")
     add_subdirectory(example)
 endif()
