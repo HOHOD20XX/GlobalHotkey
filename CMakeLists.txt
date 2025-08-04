@@ -159,6 +159,6 @@ set_target_properties(global_hotkey PROPERTIES DEBUG_POSTFIX d)
 add_library(global_hotkey::global_hotkey ALIAS global_hotkey)
 
 if(GBHK_BUILD_EXAMPLE)
-    message("${GBHK_MSG_PREFIX} Example will be built.")
+    message(STATUS "${GBHK_MSG_PREFIX} Example will be built.")
     add_subdirectory(example)
 endif()
