@@ -63,7 +63,7 @@ endif()
 option(GBHK_BUILD_EXAMPLE "Example will be built." ${GBHK_MASTER_PROJECT})
 
 include_directories(include)
-file(GLOB_RECURSE SRC
+file(GLOB_RECURSE SRC ${SRC}
      src/global_hotkey_manager/*.cpp
      src/key/key.cpp
      src/key_combination/key_combination.cpp)
