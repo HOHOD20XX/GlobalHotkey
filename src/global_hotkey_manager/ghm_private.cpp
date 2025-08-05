@@ -32,7 +32,6 @@ int _GHMPrivate::run()
     std::mutex dummyMtx;
     std::unique_lock<std::mutex> lock(dummyMtx);
     cvRunningState.wait(lock, [this]() { return runningState != RS_FREE; });
-    lock.unlock();
 
     if (runningState == RS_TERMINATE)
     {
@@ -54,7 +53,6 @@ int _GHMPrivate::end()
     std::mutex dummyMtx;
     std::unique_lock<std::mutex> lock(dummyMtx);
     cvRunningState.wait(lock, [this]() { return runningState != RS_RUNNING; });
-    lock.unlock();
 
     return rc;
 }

@@ -100,7 +100,6 @@ int main()
     std::mutex dummyMtx;
     std::unique_lock<std::mutex> lock(dummyMtx);
     cv.wait(lock, [&]() { return shouldClose.load(); });
-    lock.unlock();
 
     printf("Ending...\n");
     rc = ghm.end();
