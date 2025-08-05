@@ -145,3 +145,5 @@ ghm.end();      // 结束热键管理器。
 - 在**Windows**平台下使用`Hook GHM`时，应保证回调函数的执行时间在限定范围内。
 
   *（详细信息参见 [Windows LowLevelKeyboard](https://learn.microsoft.com/zh-cn/windows/win32/winmsg/lowlevelkeyboardproc) ，其**Remarks**中提到**Timeout**时间为**1000毫秒**）*
+
+- 使用**MSVC编译器**且启用了`Hook GHM`时需要配置`pthread for Windows`，参见[pthreads-win32](https://sourceware.org/pthreads-win32/)。

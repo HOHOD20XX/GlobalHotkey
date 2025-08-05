@@ -145,3 +145,5 @@ No. `Register GHM` on **Linux** relies on **X11**.
 - When using `Hook GHM` on **Windows**, ensure the callback function's execution time stays within the specified limit.
 
   *(For details, refer to [Windows LowLevelKeyboard](https://learn.microsoft.com/en-us/windows/win32/winmsg/lowlevelkeyboardproc). The **Remarks** section mentions a **Timeout** of **1000 milliseconds**.)*
+
+- When use **MSVC Compiler** and the `Hook GHM` is enabled need to configure the `pthread for Windows`, see also [pthreads-win32](https://sourceware.org/pthreads-win32/).
