@@ -213,8 +213,8 @@ public:
     constexpr inline Modifiers() noexcept {}
     constexpr inline Modifiers(ModifierFlag modifier) noexcept : i(modifier) {}
     constexpr inline Modifiers(int32_t modifiers) noexcept : i(modifiers) {}
-    constexpr inline Modifiers(const std::initializer_list<ModifierFlag>& modifiers) noexcept :
-        i(initializerListHelper_(modifiers.begin(), modifiers.end())) {}
+    constexpr inline Modifiers(const std::initializer_list<ModifierFlag>& modifiers) noexcept
+        : i(initializerListHelper_(modifiers.begin(), modifiers.end())) {}
 
     constexpr inline int32_t value() const noexcept { return i; }
     constexpr inline operator int32_t() const noexcept { return i; }

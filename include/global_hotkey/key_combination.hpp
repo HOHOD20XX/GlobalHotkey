@@ -15,8 +15,8 @@ class GBHK_API KeyCombination
 public:
     constexpr inline KeyCombination() noexcept = default;
     constexpr inline KeyCombination(const Modifiers& modifiers, const Key& key) noexcept : mod(modifiers), ky(key) {}
-    constexpr inline explicit KeyCombination(int64_t getCombinedValue) noexcept :
-        mod((int32_t) (getCombinedValue >> 32)), ky((int32_t) getCombinedValue) {}
+    constexpr inline explicit KeyCombination(int64_t getCombinedValue) noexcept
+        : mod((int32_t) (getCombinedValue >> 32)), ky((int32_t) getCombinedValue) {}
     explicit KeyCombination(const std::string& str) { *this = fromString(str); }
 
     static KeyCombination fromString(const std::string& str, char connector = '+') noexcept;

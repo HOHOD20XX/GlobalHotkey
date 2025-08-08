@@ -39,8 +39,8 @@ enum EventType : int64_t
 
 static std::unordered_map<int, int> keycodeToKeysym;
 
-_RegisterGHMPrivateX11::_RegisterGHMPrivateX11() :
-    regUnregRc(0),
+_RegisterGHMPrivateX11::_RegisterGHMPrivateX11()
+    : regUnregRc(0),
     regUnregKc(KeyCombination())
 {}
 
