@@ -34,7 +34,6 @@ option(GBHK_DISABLE_HOOK "Disable hook Global Hotkey Manager" OFF)
 if(GBHK_DISABLE_HOOK)
     message(STATUS "${GBHK_MSG_PREFIX} Hook Global Hotkey Manager be disable.")
 else()
-    set(KBDT_BUILD_WITH_UTILITY OFF)
     add_subdirectory(keyboard_tool)
 
     include_directories(keyboard_tool/include)
