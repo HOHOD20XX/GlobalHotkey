@@ -22,7 +22,7 @@ enum ReturnCode : int
 {
     RC_SUCCESS              = 0x00 | _RC_MASK,
     RC_BAD_TIMING           = 0x10 | _RC_MASK,
-    RC_BAD_THREAD           = 0x11 | _RC_MASK,
+    RC_BAD_THREAD           = 0x11 | _RC_MASK
 };
 
 inline std::string returnCodeMessage(int rc) noexcept
