@@ -141,6 +141,7 @@ No. `Register GHM` on **Linux** relies on **X11**.
 ## 🔔 Notes
 
 - Operations like adding, deleting, or replacing hotkeys can only be performed after the corresponding `GHM` has started.
+- Avoid adding an invalid hotkey or removing an unadded hotkey, as this is undefined behavior and may lead to unexpected results. This library does not conduct security checks for such operations. These operations whether be perform should be decided by the user.
 - Hotkey callback functions should not execute heavy tasks to avoid thread blocking or other anomalies. A reasonable approach is to use asynchronous mechanisms or message queues (e.g., **Qt**'s signal-slot system).
 - When using `Hook GHM` on **Windows**, ensure the callback function's execution time stays within the specified limit.
 
