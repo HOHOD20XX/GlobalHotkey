@@ -1,6 +1,6 @@
 # Global Hotkey
 
-**English | [简体中文](doc/README_CN.md)**
+**English | [简体中文](doc/README_ZH.md)**
 
 ## 🚀 Features
 
