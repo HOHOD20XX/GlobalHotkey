@@ -28,6 +28,10 @@
 
   需要实现~~后台监听木马~~某些特殊的功能？
 
+## 依赖
+
+[Keyboard Tool](https://github/JaderoChan/keyboard_tool)
+
 ## 🔧 如何编译？
 
 项目使用`CMake`进行组织，仅需下面几行脚本即可编译使用！

@@ -28,6 +28,10 @@
 
   Need to implement ~~background monitoring trojan~~ some special features?
 
+## Dependence
+
+[Keyboard Tool](https://github/JaderoChan/keyboard_tool)
+
 ## 🔧 How to Build?
 
 The project uses `CMake` for organization. Just run these few scripts to build and use it!
