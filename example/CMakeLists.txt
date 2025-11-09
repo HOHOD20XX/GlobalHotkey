@@ -32,11 +32,11 @@ if(GBHK_EXAMPLE_USE_HOOK)
     endif()
 endif()
 
-option(GBHK_EXAMPLE_BUILD_BASE_EXAMPLE "Build base example" ON)
+option(GBHK_EXAMPLE_BUILD_SIMPLE "Build simple example" ON)
 option(GBHK_EXAMPLE_BUILD_EVENT_QUEUE "Build event queue example" ON)
 
-if(GBHK_EXAMPLE_BUILD_BASE_EXAMPLE)
-    add_subdirectory(base_example)
+if(GBHK_EXAMPLE_BUILD_SIMPLE)
+    add_subdirectory(simple)
 endif()
 
 if (GBHK_EXAMPLE_BUILD_EVENT_QUEUE)

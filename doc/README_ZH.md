@@ -58,7 +58,7 @@ make
 
 - `GBHK_EXAMPLE_USE_HOOK` 指定示例程序使用的热键类型，默认为`OFF`（即在示例程序中使用`Register GHM`）。
 
-- `GBHK_EXAMPLE_BUILD_BASE_EXAMPLE` 指定是否生成`base example`示例程序，默认`ON`。
+- `GBHK_EXAMPLE_BUILD_SIMPLE` 指定是否生成`simple`示例程序，默认`ON`。
 
 - `GBHK_EXAMPLE_BUILD_EVENT_QUEUE` 指定是否生成`event quque`实例程序，默认为`ON`。
 
@@ -100,7 +100,7 @@ ghm.end();      // 结束热键管理器。
 
 ## 💡 示例
 
-[基础示例](example/base_example/main.cpp)
+[简单示例](example/simple/main.cpp)
 
 [事件队列示例](example/event_queue/main.cpp)
 

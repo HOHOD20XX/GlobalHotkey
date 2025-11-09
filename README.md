@@ -58,7 +58,7 @@ make
 
 - `GBHK_EXAMPLE_USE_HOOK` Specifies the hotkey type used in the example program. Default is `OFF` (i.e., uses `Register GHM` in the example program).
 
-- `GBHK_EXAMPLE_BUILD_BASE_EXAMPLE` Specifies whether to build the `base example` example program. Default is `ON`.
+- `GBHK_EXAMPLE_BUILD_SIMPLE` Specifies whether to build the `simple` example program. Default is `ON`.
 
 - `GBHK_EXAMPLE_BUILD_EVENT_QUEUE` Specifies whether to build the `event queue` example program. Default is `ON`.
 
@@ -100,7 +100,7 @@ ghm.end();      // End the Global Hotkey Manager.
 
 ## 💡 Examples
 
-[Base Example](example/base_example/main.cpp)
+[Simple Example](example/simple/main.cpp)
 
 [Event Queue Example](example/event_queue/main.cpp)
 
