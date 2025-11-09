@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.25)
 
-project(GBHK_Example_EventQueue LANGUAGES CXX)
+project(event_queue LANGUAGES CXX)
 
-add_executable(event_queue
+add_executable(${PROJECT_NAME}
     event_work.cpp
     utility.cpp
     main.cpp

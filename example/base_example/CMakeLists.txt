@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.25)
 
-project(GBHK_Example_Base LANGUAGES CXX)
+project(base LANGUAGES CXX)
 
-add_executable(base_example main.cpp)
+add_executable(${PROJECT_NAME} main.cpp)

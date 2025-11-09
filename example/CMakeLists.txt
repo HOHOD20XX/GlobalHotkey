@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 3.25)
 
-project(GlobalHotkeyExample LANGUAGES CXX)
+project(global_hotkey_examples LANGUAGES CXX)
 
-if(NOT TARGET ${GBHK_BIN_NAME})
-    find_package(${GBHK_BIN_NAME} REQUIRED)
+if(NOT TARGET ${CMAKE_PROJECT_NAME})
+    find_package(${CMAKE_PROJECT_NAME} REQUIRED)
 endif()
 
 option(GBHK_EXAMPLE_USE_HOOK "Build example using hook Global Hotkey Manager" OFF)
@@ -17,7 +17,7 @@ elseif(GBHK_DISABLE_HOOK AND GBHK_EXAMPLE_USE_HOOK)
     message(FATAL_ERROR "${GBHK_MSG_PREFIX} Cannot build example using hook Global Hotkey Manager with GBHK_DISABLE_HOOK.")
 endif()
 
-link_libraries(${GBHK_BIN_NAME}::${GBHK_BIN_NAME})
+link_libraries(${CMAKE_PROJECT_NAME}::${CMAKE_PROJECT_NAME})
 if(GBHK_EXAMPLE_USE_HOOK)
     add_compile_definitions(GLOBAL_HOTKEY_EXAMPLE_USE_HOOK)
     if(APPLE)

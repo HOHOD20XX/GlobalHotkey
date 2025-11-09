@@ -37,9 +37,9 @@
 The project uses `CMake` for organization. Just run these few scripts to build and use it!
 
 ```shell
-git clone https://github.com/JaderoChan/GlobalHotkey.git
-cd GlobalHotkey
-cmake -Bbuild
+git clone https://github.com/JaderoChan/global_hotkey.git
+cd global_hotkey
+cmake -B build
 cd build
 make
 ```
