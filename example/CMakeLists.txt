@@ -39,6 +39,6 @@ if(GBHK_EXAMPLE_BUILD_SIMPLE)
     add_subdirectory(simple)
 endif()
 
-if (GBHK_EXAMPLE_BUILD_EVENT_QUEUE)
+if(GBHK_EXAMPLE_BUILD_EVENT_QUEUE)
     add_subdirectory(event_queue)
 endif()
