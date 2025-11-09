@@ -7,7 +7,7 @@
 #include <global_hotkey/global_hotkey.hpp>
 
 #ifdef GLOBAL_HOTKEY_EXAMPLE_USE_HOOK
-    #ifndef _GLOBAL_HOTKEY_WIN
+    #ifndef GLOBAL_HOTKEY_WIN
         #include <unistd.h> // getuid
 
         static bool isRootPermission()
@@ -16,14 +16,14 @@
         }
     #endif // !_GLOBAL_HOTKEY_WUIN
 
-    #ifdef _GLOBAL_HOTKEY_MAC
+    #ifdef GLOBAL_HOTKEY_MAC
         #include <ApplicationServices/ApplicationServices.h>
 
         static bool isAssistiveAccessible()
         {
             return AXIsProcessTrustedWithOptions(NULL);
         }
-    #endif // _GLOBAL_HOTKEY_MAC
+    #endif // GLOBAL_HOTKEY_MAC
 #endif // GLOBAL_HOTKEY_EXAMPLE_USE_HOOK
 
 #define THROW_RT_ERR(errmsg, code) (throw std::runtime_error((errmsg) + gbhk::returnCodeMessage(code)))
@@ -31,15 +31,15 @@
 static bool isPermissionAccessible()
 {
 #ifdef GLOBAL_HOTKEY_EXAMPLE_USE_HOOK
-    #ifdef _GLOBAL_HOTKEY_WIN
+    #ifdef GLOBAL_HOTKEY_WIN
         return true;
-    #elif defined(_GLOBAL_HOTKEY_MAC)
+    #elif defined(GLOBAL_HOTKEY_MAC)
         return isRootPermission() || isAssistiveAccessible();
-    #elif defined(_GLOBAL_HOTKEY_LINUX)
+    #elif defined(GLOBAL_HOTKEY_LINUX)
         return isRootPermission();
     #else
         return false;
-    #endif // _GLOBAL_HOTKEY_WIN
+    #endif // GLOBAL_HOTKEY_WIN
 #endif // GLOBAL_HOTKEY_EXAMPLE_USE_HOOK
     return true;
 }

@@ -1,6 +1,6 @@
 #include "key_private.hpp"
 
-#ifdef _GLOBAL_HOTKEY_WIN
+#ifdef GLOBAL_HOTKEY_WIN
 
 #include <windows.h>
 
@@ -309,4 +309,4 @@ Key getKeyFromNativeKey(int nativeKey) noexcept
 
 } // namespace gbhk
 
-#endif // _GLOBAL_HOTKEY_WIN
+#endif // GLOBAL_HOTKEY_WIN

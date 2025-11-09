@@ -2,7 +2,7 @@
 
 #include "key_private_x11.hpp"
 
-#ifdef _GLOBAL_HOTKEY_LINUX
+#ifdef GLOBAL_HOTKEY_LINUX
 
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
@@ -360,6 +360,6 @@ Key getKeyFromX11Keysym(int x11Keysym) noexcept
 
 } // namespace gbhk
 
-#endif  // _GLOBAL_HOTKEY_LINUX
+#endif  // GLOBAL_HOTKEY_LINUX
 
 #endif // !GLOBAL_HOTKEY_DISABLE_REGISTER

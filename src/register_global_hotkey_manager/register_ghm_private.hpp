@@ -8,11 +8,11 @@
 namespace gbhk
 {
 
-class _RegisterGHMPrivate : public _GHMPrivate
+class RegisterGHMPrivate : public GHMPrivate
 {
 public:
-    _RegisterGHMPrivate();
-    ~_RegisterGHMPrivate();
+    RegisterGHMPrivate();
+    ~RegisterGHMPrivate();
 };
 
 } // namespace gbhk

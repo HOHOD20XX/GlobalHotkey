@@ -5,7 +5,7 @@
 
 #include "register_ghm_private.hpp"
 
-#ifdef _GLOBAL_HOTKEY_MAC
+#ifdef GLOBAL_HOTKEY_MAC
 
 #include <Carbon/Carbon.h>
 #include <CoreFoundation/CoreFoundation.h>
@@ -20,11 +20,11 @@ enum EventType
     ET_UNREGISTER
 };
 
-class _RegisterGHMPrivateMac final : public _RegisterGHMPrivate
+class RegisterGHMPrivateMac final : public RegisterGHMPrivate
 {
 public:
-    _RegisterGHMPrivateMac();
-    ~_RegisterGHMPrivateMac();
+    RegisterGHMPrivateMac();
+    ~RegisterGHMPrivateMac();
 
 protected:
     int doBeforeThreadRun() override;
@@ -37,24 +37,25 @@ private:
     static void runLoopSourceCallback(void* info);
     static OSStatus hotkeyEventHandler(EventHandlerCallRef handler, EventRef event, void* userData);
 
-    void invoke() const;
     static int nativeRegisterHotkey();
     static int nativeUnregisterHotkey();
+    /// @todo
+    void invoke_() const;
 
-    static std::condition_variable cvRegUnregRc;
-    static std::atomic<int> regUnregRc;
-    static std::atomic<EventType> eventType;
-    static std::atomic<KeyCombination> regUnregKc;
-    static std::unordered_map<KeyCombination, EventHotKeyRef> kcToHotkeyRef;
+    static std::condition_variable cvRegUnregRc_;
+    static std::atomic<int> regUnregRc_;
+    static std::atomic<EventType> eventType_;
+    static std::atomic<KeyCombination> regUnregKc_;
+    static std::unordered_map<KeyCombination, EventHotKeyRef> kcToHotkeyRef_;
 
-    CFRunLoopSourceContext sourceContext = {0};
-    CFRunLoopSourceRef source = NULL;
-    CFRunLoopRef runLoop = NULL;
+    CFRunLoopSourceContext sourceContext_ = {0};
+    CFRunLoopSourceRef source_ = NULL;
+    CFRunLoopRef runLoop_ = NULL;
 };
 
 } // namespace gbhk
 
-#endif // _GLOBAL_HOTKEY_MAC
+#endif // GLOBAL_HOTKEY_MAC
 
 #endif // !GLOBAL_HOTKEY_DISABLE_REGISTER
 

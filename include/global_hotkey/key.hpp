@@ -211,43 +211,45 @@ class Modifiers
 {
 public:
     constexpr inline Modifiers() noexcept {}
-    constexpr inline Modifiers(ModifierFlag modifier) noexcept : i(modifier) {}
-    constexpr inline Modifiers(int32_t modifiers) noexcept : i(modifiers) {}
+    constexpr inline Modifiers(ModifierFlag modifier) noexcept : data_(modifier) {}
+    constexpr inline Modifiers(int32_t modifiers) noexcept : data_(modifiers) {}
     constexpr inline Modifiers(const std::initializer_list<ModifierFlag>& modifiers) noexcept
-        : i(initializerListHelper_(modifiers.begin(), modifiers.end())) {}
+        : data_(initializerListHelper_(modifiers.begin(), modifiers.end())) {}
 
-    constexpr inline int32_t value() const noexcept { return i; }
-    constexpr inline operator int32_t() const noexcept { return i; }
+    constexpr inline int32_t value() const noexcept { return data_; }
+    constexpr inline operator int32_t() const noexcept { return data_; }
 
-    constexpr inline bool has(ModifierFlag modifier) const noexcept { return (i & modifier) != 0; }
-    constexpr inline bool has(Modifiers modifiers) const noexcept { return (i & modifiers.i) == modifiers.i; }
+    constexpr inline bool has(ModifierFlag modifier) const noexcept
+    { return (data_ & modifier) != 0; }
+    constexpr inline bool has(Modifiers modifiers) const noexcept
+    { return (data_ & modifiers.data_) == modifiers.data_; }
     /// @brief Check whether contains least one modifier.
     constexpr inline bool isValid() const noexcept
-    { return (i & META) || (i & CTRL) || (i & ALT) || (i & SHIFT); }
+    { return (data_ & META) || (data_ & CTRL) || (data_ & ALT) || (data_ & SHIFT); }
 
-#if _GLOBAL_HOTKEY_CPPVERS >= 201703L
+#if GLOBAL_HOTKEY_CPPVERS >= 201703L
     // In C++17, constexpr member functions are no longer implicitly const.
-    constexpr inline Modifiers& add(ModifierFlag modifier) noexcept { i |= modifier; return *this; }
-    constexpr inline Modifiers& add(Modifiers modifiers) noexcept { i |= modifiers.i; return *this; }
-    constexpr inline Modifiers& remove(ModifierFlag modifier) noexcept { i &= ~modifier; return *this; }
-    constexpr inline Modifiers& remove(Modifiers modifiers) noexcept { i &= ~modifiers.i; return *this; }
+    constexpr inline Modifiers& add(ModifierFlag modifier) noexcept { data_ |= modifier; return *this; }
+    constexpr inline Modifiers& add(Modifiers modifiers) noexcept { darta |= modifiers.data_; return *this; }
+    constexpr inline Modifiers& remove(ModifierFlag modifier) noexcept { data_ &= ~modifier; return *this; }
+    constexpr inline Modifiers& remove(Modifiers modifiers) noexcept { data_ &= ~modifiers.data_; return *this; }
 #else
-    inline Modifiers& add(ModifierFlag modifier) noexcept { i |= modifier; return *this; }
-    inline Modifiers& add(Modifiers modifiers) noexcept { i |= modifiers.i; return *this; }
-    inline Modifiers& remove(ModifierFlag modifier) noexcept { i &= ~modifier; return *this; }
-    inline Modifiers& remove(Modifiers modifiers) noexcept { i &= ~modifiers.i; return *this; }
-#endif // _GLOBAL_HOTKEY_CPPVERS >= 201703L
+    inline Modifiers& add(ModifierFlag modifier) noexcept { data_ |= modifier; return *this; }
+    inline Modifiers& add(Modifiers modifiers) noexcept { data_ |= modifiers.data_; return *this; }
+    inline Modifiers& remove(ModifierFlag modifier) noexcept { data_ &= ~modifier; return *this; }
+    inline Modifiers& remove(Modifiers modifiers) noexcept { data_ &= ~modifiers.data_; return *this; }
+#endif // GLOBAL_HOTKEY_CPPVERS >= 201703L
 
-    friend constexpr inline bool operator==(Modifiers lhs, Modifiers rhs) noexcept { return lhs.i == rhs.i; }
-    friend constexpr inline bool operator!=(Modifiers lhs, Modifiers rhs) noexcept { return lhs.i != rhs.i; }
-    friend constexpr inline bool operator==(Modifiers lhs, ModifierFlag rhs) noexcept { return lhs.i == rhs; }
-    friend constexpr inline bool operator!=(Modifiers lhs, ModifierFlag rhs) noexcept { return lhs.i != rhs; }
-    friend constexpr inline bool operator==(ModifierFlag lhs, Modifiers rhs) noexcept { return lhs == rhs.i; }
-    friend constexpr inline bool operator!=(ModifierFlag lhs, Modifiers rhs) noexcept { return lhs != rhs.i; }
-    friend constexpr inline bool operator==(Modifiers lhs, int32_t rhs) noexcept { return lhs.i == rhs; }
-    friend constexpr inline bool operator!=(Modifiers lhs, int32_t rhs) noexcept { return lhs.i != rhs; }
-    friend constexpr inline bool operator==(int32_t lhs, Modifiers rhs) noexcept { return lhs == rhs.i; }
-    friend constexpr inline bool operator!=(int32_t lhs, Modifiers rhs) noexcept { return lhs != rhs.i; }
+    friend constexpr inline bool operator==(Modifiers lhs, Modifiers rhs) noexcept { return lhs.data_ == rhs.data_; }
+    friend constexpr inline bool operator!=(Modifiers lhs, Modifiers rhs) noexcept { return lhs.data_ != rhs.data_; }
+    friend constexpr inline bool operator==(Modifiers lhs, ModifierFlag rhs) noexcept { return lhs.data_ == rhs; }
+    friend constexpr inline bool operator!=(Modifiers lhs, ModifierFlag rhs) noexcept { return lhs.data_ != rhs; }
+    friend constexpr inline bool operator==(ModifierFlag lhs, Modifiers rhs) noexcept { return lhs == rhs.data_; }
+    friend constexpr inline bool operator!=(ModifierFlag lhs, Modifiers rhs) noexcept { return lhs != rhs.data_; }
+    friend constexpr inline bool operator==(Modifiers lhs, int32_t rhs) noexcept { return lhs.data_ == rhs; }
+    friend constexpr inline bool operator!=(Modifiers lhs, int32_t rhs) noexcept { return lhs.data_ != rhs; }
+    friend constexpr inline bool operator==(int32_t lhs, Modifiers rhs) noexcept { return lhs == rhs.data_; }
+    friend constexpr inline bool operator!=(int32_t lhs, Modifiers rhs) noexcept { return lhs != rhs.data_; }
 
 private:
     static constexpr inline int32_t initializerListHelper_(
@@ -255,43 +257,43 @@ private:
         std::initializer_list<ModifierFlag>::const_iterator end) noexcept
     { return (it == end ? 0 : (*it | initializerListHelper_(it + 1, end))); }
 
-    int32_t i = 0;
+    int32_t data_ = 0;
 };
 
 class Key
 {
 public:
     constexpr inline Key() noexcept {}
-    constexpr inline Key(KeyFlag key) noexcept : i(key) {}
-    constexpr inline Key(char key) noexcept : i(toUpper_(key)) {}
-    constexpr inline Key(int32_t key) noexcept : i(key) {}
+    constexpr inline Key(KeyFlag key) noexcept : data_(key) {}
+    constexpr inline Key(char key) noexcept : data_(toUpper_(key)) {}
+    constexpr inline Key(int32_t key) noexcept : data_(key) {}
 
-    constexpr inline int32_t value() const noexcept { return i; }
-    constexpr inline operator int32_t() const noexcept { return i; }
+    constexpr inline int32_t value() const noexcept { return data_; }
+    constexpr inline operator int32_t() const noexcept { return data_; }
 
     /// @brief Check whether the key value is not 0.
-    constexpr inline bool isValid() const noexcept { return i != 0; }
+    constexpr inline bool isValid() const noexcept { return data_ != 0; }
 
-    friend constexpr inline bool operator==(Key lhs, Key rhs) noexcept { return lhs.i == rhs.i; }
-    friend constexpr inline bool operator!=(Key lhs, Key rhs) noexcept { return lhs.i != rhs.i; }
-    friend constexpr inline bool operator==(Key lhs, KeyFlag rhs) noexcept { return lhs.i == rhs; }
-    friend constexpr inline bool operator!=(Key lhs, KeyFlag rhs) noexcept { return lhs.i != rhs; }
-    friend constexpr inline bool operator==(KeyFlag lhs, Key rhs) noexcept { return lhs == rhs.i; }
-    friend constexpr inline bool operator!=(KeyFlag lhs, Key rhs) noexcept { return lhs != rhs.i; }
-    friend constexpr inline bool operator==(Key lhs, char rhs) noexcept { return lhs.i == Key::toUpper_(rhs); }
-    friend constexpr inline bool operator!=(Key lhs, char rhs) noexcept { return lhs.i != Key::toUpper_(rhs); }
-    friend constexpr inline bool operator==(char lhs, Key rhs) noexcept { return Key::toUpper_(lhs) == rhs.i; }
-    friend constexpr inline bool operator!=(char lhs, Key rhs) noexcept { return Key::toUpper_(lhs) != rhs.i; }
-    friend constexpr inline bool operator==(Key lhs, int32_t rhs) noexcept { return lhs.i == rhs; }
-    friend constexpr inline bool operator!=(Key lhs, int32_t rhs) noexcept { return lhs.i != rhs; }
-    friend constexpr inline bool operator==(int32_t lhs, Key rhs) noexcept { return lhs == rhs.i; }
-    friend constexpr inline bool operator!=(int32_t lhs, Key rhs) noexcept { return lhs != rhs.i; }
+    friend constexpr inline bool operator==(Key lhs, Key rhs) noexcept { return lhs.data_ == rhs.data_; }
+    friend constexpr inline bool operator!=(Key lhs, Key rhs) noexcept { return lhs.data_ != rhs.data_; }
+    friend constexpr inline bool operator==(Key lhs, KeyFlag rhs) noexcept { return lhs.data_ == rhs; }
+    friend constexpr inline bool operator!=(Key lhs, KeyFlag rhs) noexcept { return lhs.data_ != rhs; }
+    friend constexpr inline bool operator==(KeyFlag lhs, Key rhs) noexcept { return lhs == rhs.data_; }
+    friend constexpr inline bool operator!=(KeyFlag lhs, Key rhs) noexcept { return lhs != rhs.data_; }
+    friend constexpr inline bool operator==(Key lhs, char rhs) noexcept { return lhs.data_ == Key::toUpper_(rhs); }
+    friend constexpr inline bool operator!=(Key lhs, char rhs) noexcept { return lhs.data_ != Key::toUpper_(rhs); }
+    friend constexpr inline bool operator==(char lhs, Key rhs) noexcept { return Key::toUpper_(lhs) == rhs.data_; }
+    friend constexpr inline bool operator!=(char lhs, Key rhs) noexcept { return Key::toUpper_(lhs) != rhs.data_; }
+    friend constexpr inline bool operator==(Key lhs, int32_t rhs) noexcept { return lhs.data_ == rhs; }
+    friend constexpr inline bool operator!=(Key lhs, int32_t rhs) noexcept { return lhs.data_ != rhs; }
+    friend constexpr inline bool operator==(int32_t lhs, Key rhs) noexcept { return lhs == rhs.data_; }
+    friend constexpr inline bool operator!=(int32_t lhs, Key rhs) noexcept { return lhs != rhs.data_; }
 
 private:
     static constexpr inline int32_t toUpper_(char key) noexcept
     { return ((key >= 'a' && key <= 'z') ? key - 'a' + 'A' : key); }
 
-    int32_t i = 0;
+    int32_t data_ = 0;
 };
 
 GBHK_API std::string modifiersString(const Modifiers& modifiers, char connector = '+') noexcept;

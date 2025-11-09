@@ -1,6 +1,6 @@
 #include "key_private.hpp"
 
-#ifdef _GLOBAL_HOTKEY_LINUX
+#ifdef GLOBAL_HOTKEY_LINUX
 
 #include <linux/input-event-codes.h>
 
@@ -366,4 +366,4 @@ Key getKeyFromNativeKey(int nativeKey) noexcept
 
 } // namespace gbhk
 
-#endif // _GLOBAL_HOTKEY_LINUX
+#endif // GLOBAL_HOTKEY_LINUX

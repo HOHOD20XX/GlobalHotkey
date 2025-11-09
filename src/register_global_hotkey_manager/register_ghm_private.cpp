@@ -5,9 +5,9 @@
 namespace gbhk
 {
 
-_RegisterGHMPrivate::_RegisterGHMPrivate() = default;
+RegisterGHMPrivate::RegisterGHMPrivate() = default;
 
-_RegisterGHMPrivate::~_RegisterGHMPrivate() = default;
+RegisterGHMPrivate::~RegisterGHMPrivate() = default;
 
 } // namespace gbhk
 

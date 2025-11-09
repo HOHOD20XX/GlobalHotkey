@@ -8,19 +8,19 @@
 #define IS_ALNUM(c) std::isalnum(static_cast<unsigned char>(c))
 #define TO_UPPER(c) std::toupper(static_cast<unsigned char>(c))
 
-#ifdef _GLOBAL_HOTKEY_WIN
+#ifdef GLOBAL_HOTKEY_WIN
     #define META_TEXT   "Win"
     #define ALT_TEXT    "Alt"
-#elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(GLOBAL_HOTKEY_MAC)
     #define META_TEXT   "Command"
     #define ALT_TEXT    "Option"
-#elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(GLOBAL_HOTKEY_LINUX)
     #define META_TEXT   "Super"
     #define ALT_TEXT    "Alt"
 #else
     #define META_TEXT   "Meta"
     #define ALT_TEXT    "Alt"
-#endif // _GLOBAL_HOTKEY_WIN
+#endif // GLOBAL_HOTKEY_WIN
 
 #define CTRL_TEXT   "Ctrl"
 #define SHIFT_TEXT  "Shift"

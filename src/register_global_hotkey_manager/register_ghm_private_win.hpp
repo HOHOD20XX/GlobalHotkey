@@ -5,18 +5,18 @@
 
 #include "register_ghm_private.hpp"
 
-#ifdef _GLOBAL_HOTKEY_WIN
+#ifdef GLOBAL_HOTKEY_WIN
 
 #include <windows.h>
 
 namespace gbhk
 {
 
-class _RegisterGHMPrivateWin final : public _RegisterGHMPrivate
+class RegisterGHMPrivateWin final : public RegisterGHMPrivate
 {
 public:
-    _RegisterGHMPrivateWin();
-    ~_RegisterGHMPrivateWin();
+    RegisterGHMPrivateWin();
+    ~RegisterGHMPrivateWin();
 
 protected:
     int doBeforeThreadEnd() override;
@@ -26,21 +26,21 @@ protected:
 
 private:
     // The follow functions only be performed in worker thread.
-    void invoke(WPARAM wParam, LPARAM lParam) const;
     int nativeRegisterHotkey(WPARAM wParam, LPARAM lParam);
     int nativeUnregisterHotkey(WPARAM wParam, LPARAM lParam);
+    void invoke_(WPARAM wParam, LPARAM lParam) const;
 
-    DWORD workerThreadId = 0;
-    std::condition_variable cvRegUnregRc;
-    std::atomic<int> regUnregRc;
-    std::atomic<int> hotkeyIndex;
-    std::unordered_map<int, KeyCombination> hotkeyIdToKc;
-    std::unordered_map<KeyCombination, int> kcToHotkeyId;
+    DWORD workerThreadId_ = 0;
+    std::condition_variable cvRegUnregRc_;
+    std::atomic<int> regUnregRc_;
+    std::atomic<int> hotkeyIndex_;
+    std::unordered_map<int, KeyCombination> hotkeyIdToKc_;
+    std::unordered_map<KeyCombination, int> kcToHotkeyId_;
 };
 
 } // namespace gbhk
 
-#endif // _GLOBAL_HOTKEY_WIN
+#endif // GLOBAL_HOTKEY_WIN
 
 #endif // !GLOBAL_HOTKEY_DISABLE_REGISTER
 

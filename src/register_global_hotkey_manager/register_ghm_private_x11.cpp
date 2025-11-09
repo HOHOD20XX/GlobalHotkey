@@ -2,7 +2,7 @@
 
 #include "register_ghm_private_x11.hpp"
 
-#ifdef _GLOBAL_HOTKEY_LINUX
+#ifdef GLOBAL_HOTKEY_LINUX
 
 #include <cstdint>
 #include <poll.h>           // poll
@@ -39,31 +39,31 @@ enum EventType : int64_t
 
 static std::unordered_map<int, int> keycodeToKeysym;
 
-_RegisterGHMPrivateX11::_RegisterGHMPrivateX11()
-    : regUnregRc(0),
-    regUnregKc(KeyCombination())
+RegisterGHMPrivateX11::RegisterGHMPrivateX11()
+    : regUnregRc_(0),
+    regUnregKc_(KeyCombination())
 {}
 
-_RegisterGHMPrivateX11::~_RegisterGHMPrivateX11() { end(); }
+RegisterGHMPrivateX11::~RegisterGHMPrivateX11() { end(); }
 
-int _RegisterGHMPrivateX11::doBeforeThreadRun()
+int RegisterGHMPrivateX11::doBeforeThreadRun()
 {
-    eventFd = eventfd(0, EFD_CLOEXEC | EFD_NONBLOCK);
-    if (eventFd == -1)
+    eventFd_ = eventfd(0, EFD_CLOEXEC | EFD_NONBLOCK);
+    if (eventFd_ == -1)
         return errno;
     return RC_SUCCESS;
 }
 
-int _RegisterGHMPrivateX11::doBeforeThreadEnd()
+int RegisterGHMPrivateX11::doBeforeThreadEnd()
 {
     EventType et = ET_EXIT;
-    auto wrsize = write(eventFd, &et, 8);
+    auto wrsize = write(eventFd_, &et, 8);
     if (wrsize != 8)
         return errno;
     return RC_SUCCESS;
 }
 
-void _RegisterGHMPrivateX11::work()
+void RegisterGHMPrivateX11::work()
 {
     Display* display = NULL;
     {
@@ -79,7 +79,7 @@ void _RegisterGHMPrivateX11::work()
     int x11Fd = ConnectionNumber(display);
     pollfd pollFds[2] = {0};
     pollFds[0] = pollfd{x11Fd, POLLIN};
-    pollFds[1] = pollfd{eventFd, POLLIN};
+    pollFds[1] = pollfd{eventFd_, POLLIN};
 
     setRunSuccess();
     KeyCombination prevKc;
@@ -110,7 +110,7 @@ void _RegisterGHMPrivateX11::work()
                     currKc = {};
                 }
             }
-            invoke(prevKc, currKc);
+            invoke_(prevKc, currKc);
             prevKc = currKc;
         }
 
@@ -118,7 +118,7 @@ void _RegisterGHMPrivateX11::work()
         if (pollFds[1].revents & POLLIN)
         {
             EventType et;
-            auto rdsize = read(eventFd, &et, 8);
+            auto rdsize = read(eventFd_, &et, 8);
             if (rdsize != 8)
                 continue;
 
@@ -128,52 +128,79 @@ void _RegisterGHMPrivateX11::work()
             }
             else if (et == ET_REGISTER)
             {
-                regUnregRc = nativeRegisterHotkey(display);
-                cvRegUnregRc.notify_one();
+                regUnregRc_ = nativeRegisterHotkey(display);
+                cvRegUnregRc_.notify_one();
             }
             else if (et == ET_UNREGISTER)
             {
-                regUnregRc = nativeUnregisterHotkey(display);
-                cvRegUnregRc.notify_one();
+                regUnregRc_ = nativeUnregisterHotkey(display);
+                cvRegUnregRc_.notify_one();
             }
         }
     }
 
     XCloseDisplay(display);
-    close(eventFd);
+    close(eventFd_);
 }
 
-int _RegisterGHMPrivateX11::registerHotkey(const KeyCombination& kc, bool autoRepeat)
+int RegisterGHMPrivateX11::registerHotkey(const KeyCombination& kc, bool autoRepeat)
 {
-    regUnregRc = -1;
-    regUnregKc = kc;
+    regUnregRc_ = -1;
+    regUnregKc_ = kc;
     EventType et = ET_REGISTER;
-    auto wrsize = write(eventFd, &et, 8);
+    auto wrsize = write(eventFd_, &et, 8);
     if (wrsize != 8)
         return errno;
 
     std::mutex dummyMtx;
     std::unique_lock<std::mutex> lock(dummyMtx);
-    cvRegUnregRc.wait(lock, [this]() { return regUnregRc != -1; });
-    return regUnregRc;
+    cvRegUnregRc_.wait(lock, [this]() { return regUnregRc_ != -1; });
+    return regUnregRc_;
 }
 
-int _RegisterGHMPrivateX11::unregisterHotkey(const KeyCombination& kc)
+int RegisterGHMPrivateX11::unregisterHotkey(const KeyCombination& kc)
 {
-    regUnregRc = -1;
-    regUnregKc = kc;
+    regUnregRc_ = -1;
+    regUnregKc_ = kc;
     EventType et = ET_UNREGISTER;
-    auto wrsize = write(eventFd, &et, 8);
+    auto wrsize = write(eventFd_, &et, 8);
     if (wrsize != 8)
         return errno;
 
     std::mutex dummyMtx;
     std::unique_lock<std::mutex> lock(dummyMtx);
-    cvRegUnregRc.wait(lock, [this]() { return regUnregRc != -1; });
-    return regUnregRc;
+    cvRegUnregRc_.wait(lock, [this]() { return regUnregRc_ != -1; });
+    return regUnregRc_;
 }
 
-void _RegisterGHMPrivateX11::invoke(const KeyCombination& prevKc, const KeyCombination& currKc) const
+int RegisterGHMPrivateX11::nativeRegisterHotkey(Display* display)
+{
+    ErrorHandler eh;
+
+    auto keysym = x11Keysym(regUnregKc_.load().key());
+    auto keycode = XKeysymToKeycode(display, keysym);
+    keycodeToKeysym[keycode] = keysym;
+    auto mod = x11Modifiers(regUnregKc_.load().modifiers());
+    XGrabKey(display, keycode, mod, DefaultRootWindow(display), True, GrabModeAsync, GrabModeAsync);
+    XSync(display, False);
+
+    return eh.ec;
+}
+
+int RegisterGHMPrivateX11::nativeUnregisterHotkey(Display* display)
+{
+    ErrorHandler eh;
+
+    auto keysym = x11Keysym(regUnregKc_.load().key());
+    auto keycode = XKeysymToKeycode(display, keysym);
+    auto mod = x11Modifiers(regUnregKc_.load().modifiers());
+    XUngrabKey(display, keycode, mod, DefaultRootWindow(display));
+    XSync(display, False);
+
+    return eh.ec;
+}
+
+void RegisterGHMPrivateX11::invoke_(const KeyCombination& prevKc, const KeyCombination& currKc) const
 {
     auto pair = getPairValue(currKc);
     auto& autoRepeat = pair.first;
@@ -181,33 +208,6 @@ void _RegisterGHMPrivateX11::invoke(const KeyCombination& prevKc, const KeyCombi
     bool shouldInvoke = fn && (currKc != prevKc || autoRepeat);
     if (shouldInvoke)
         fn();
-}
-
-int _RegisterGHMPrivateX11::nativeRegisterHotkey(Display* display)
-{
-    ErrorHandler eh;
-
-    auto keysym = x11Keysym(regUnregKc.load().key());
-    auto keycode = XKeysymToKeycode(display, keysym);
-    keycodeToKeysym[keycode] = keysym;
-    auto mod = x11Modifiers(regUnregKc.load().modifiers());
-    XGrabKey(display, keycode, mod, DefaultRootWindow(display), True, GrabModeAsync, GrabModeAsync);
-    XSync(display, False);
-
-    return eh.ec;
-}
-
-int _RegisterGHMPrivateX11::nativeUnregisterHotkey(Display* display)
-{
-    ErrorHandler eh;
-
-    auto keysym = x11Keysym(regUnregKc.load().key());
-    auto keycode = XKeysymToKeycode(display, keysym);
-    auto mod = x11Modifiers(regUnregKc.load().modifiers());
-    XUngrabKey(display, keycode, mod, DefaultRootWindow(display));
-    XSync(display, False);
-
-    return eh.ec;
 }
 
 int ErrorHandler::ec = RC_SUCCESS;
@@ -233,6 +233,6 @@ int ErrorHandler::handleError(Display* display, XErrorEvent* error)
 
 } // namespace gbhk
 
-#endif // _GLOBAL_HOTKEY_LINUX
+#endif // GLOBAL_HOTKEY_LINUX
 
 #endif // !GLOBAL_HOTKEY_DISABLE_REGISTER

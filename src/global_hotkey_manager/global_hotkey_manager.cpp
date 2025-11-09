@@ -5,41 +5,41 @@
 namespace gbhk
 {
 
-GlobalHotkeyManager::GlobalHotkeyManager(std::unique_ptr<_GHMPrivate> ptr) : ptr(std::move(ptr)) {}
+GlobalHotkeyManager::GlobalHotkeyManager(std::unique_ptr<GHMPrivate> ptr) : ptr_(std::move(ptr)) {}
 
 GlobalHotkeyManager::~GlobalHotkeyManager() = default;
 
 int GlobalHotkeyManager::run()
-{ return ptr->run(); }
+{ return ptr_->run(); }
 
 int GlobalHotkeyManager::end()
-{ return ptr->end(); }
+{ return ptr_->end(); }
 
 int GlobalHotkeyManager::add(const KeyCombination& kc, const std::function<void ()>& fn, bool autoRepeat)
-{ return ptr->add(kc, fn, autoRepeat); }
+{ return ptr_->add(kc, fn, autoRepeat); }
 
 int GlobalHotkeyManager::remove(const KeyCombination& kc)
-{ return ptr->remove(kc); }
+{ return ptr_->remove(kc); }
 
 int GlobalHotkeyManager::removeAll()
-{ return ptr->removeAll(); }
+{ return ptr_->removeAll(); }
 
 int GlobalHotkeyManager::replace(const KeyCombination& oldKc, const KeyCombination& newKc)
-{ return ptr->replace(oldKc, newKc); }
+{ return ptr_->replace(oldKc, newKc); }
 
 int GlobalHotkeyManager::setAutoRepeat(const KeyCombination& kc, bool autoRepeat)
-{ return ptr->setAutoRepeat(kc, autoRepeat); }
+{ return ptr_->setAutoRepeat(kc, autoRepeat); }
 
 bool GlobalHotkeyManager::has(const KeyCombination& kc) const
-{ return ptr->has(kc); }
+{ return ptr_->has(kc); }
 
 bool GlobalHotkeyManager::isAutoRepeat(const KeyCombination& kc) const
-{ return ptr->isAutoRepeat(kc); }
+{ return ptr_->isAutoRepeat(kc); }
 
 bool GlobalHotkeyManager::isRunning() const
-{ return ptr->isRunning(); }
+{ return ptr_->isRunning(); }
 
 std::vector<KeyCombination> GlobalHotkeyManager::getAllHotkeys() const
-{ return ptr->getAllHotkeys(); }
+{ return ptr_->getAllHotkeys(); }
 
 } // namespace gbhk

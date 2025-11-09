@@ -10,11 +10,11 @@
 namespace gbhk
 {
 
-class _HookGHMPrivate final : public _GHMPrivate
+class HookGHMPrivate final : public GHMPrivate
 {
 public:
-    _HookGHMPrivate();
-    ~_HookGHMPrivate();
+    HookGHMPrivate();
+    ~HookGHMPrivate();
 
 protected:
     int doBeforeThreadRun() override;
@@ -24,7 +24,7 @@ protected:
     int unregisterHotkey(const KeyCombination& kc) override;
 
 private:
-    void invoke(const KeyCombination& prevKc, const KeyCombination& currKc) const;
+    void invoke_(const KeyCombination& prevKc, const KeyCombination& currKc) const;
 };
 
 } // namespace gbhk

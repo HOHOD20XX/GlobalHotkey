@@ -5,7 +5,7 @@
 
 #include <global_hotkey/key.hpp>
 
-#ifdef _GLOBAL_HOTKEY_LINUX
+#ifdef GLOBAL_HOTKEY_LINUX
 
 namespace gbhk
 {
@@ -20,7 +20,7 @@ Key getKeyFromX11Keysym(int x11Keysym) noexcept;
 
 }
 
-#endif // _GLOBAL_HOTKEY_LINUX
+#endif // GLOBAL_HOTKEY_LINUX
 
 #endif // !GLOBAL_HOTKEY_DISABLE_REGISTER
 

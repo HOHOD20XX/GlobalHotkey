@@ -34,11 +34,11 @@ static void pushEvent(const Event& event);
 static void clearEventQueue();
 static void kbdtEventHandler(keyboard_event* event);
 
-_HookGHMPrivate::_HookGHMPrivate() = default;
+HookGHMPrivate::HookGHMPrivate() = default;
 
-_HookGHMPrivate::~_HookGHMPrivate() { end(); }
+HookGHMPrivate::~HookGHMPrivate() { end(); }
 
-int _HookGHMPrivate::doBeforeThreadRun()
+int HookGHMPrivate::doBeforeThreadRun()
 {
     clearEventQueue();
 
@@ -49,7 +49,7 @@ int _HookGHMPrivate::doBeforeThreadRun()
     return RC_SUCCESS;
 }
 
-int _HookGHMPrivate::doBeforeThreadEnd()
+int HookGHMPrivate::doBeforeThreadEnd()
 {
     pushEvent({ET_EXIT});
     int rc = kbdt_end();
@@ -58,7 +58,7 @@ int _HookGHMPrivate::doBeforeThreadEnd()
     return RC_SUCCESS;
 }
 
-void _HookGHMPrivate::work()
+void HookGHMPrivate::work()
 {
     setRunSuccess();
     KeyCombination prevKc;
@@ -101,18 +101,18 @@ void _HookGHMPrivate::work()
         }
 
         KeyCombination currKc(pressedMod, pressedKey);
-        invoke(prevKc, currKc);
+        invoke_(prevKc, currKc);
         prevKc = currKc;
     }
 }
 
-int _HookGHMPrivate::registerHotkey(const KeyCombination& kc, bool autoRepeat)
+int HookGHMPrivate::registerHotkey(const KeyCombination& kc, bool autoRepeat)
 { return RC_SUCCESS; }
 
-int _HookGHMPrivate::unregisterHotkey(const KeyCombination& kc)
+int HookGHMPrivate::unregisterHotkey(const KeyCombination& kc)
 { return RC_SUCCESS; }
 
-void _HookGHMPrivate::invoke(const KeyCombination& prevKc, const KeyCombination& currKc) const
+void HookGHMPrivate::invoke_(const KeyCombination& prevKc, const KeyCombination& currKc) const
 {
     auto pair = getPairValue(currKc);
     auto& autoRepeat = pair.first;

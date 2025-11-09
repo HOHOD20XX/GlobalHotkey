@@ -14,11 +14,11 @@
 namespace gbhk
 {
 
-class _GHMPrivate
+class GHMPrivate
 {
 public:
-    _GHMPrivate();
-    virtual ~_GHMPrivate();
+    GHMPrivate();
+    virtual ~GHMPrivate();
 
     int run();
     int end();
@@ -40,10 +40,10 @@ protected:
     std::pair<bool, std::function<void ()>> getPairValue(const KeyCombination& kc) const;
 
     /// @brief Indicates the worker thread running successfully.
-    /// @note The `runningRc` will be set to 'RC_SUCCESS`.
+    /// @note The `Running Return Code` will be set to '#RC_SUCCESS`.
     void setRunSuccess();
     /// @brief Indicates the worker thread running failed.
-    /// @note The `runningRc` will be set to 'errorCode`.
+    /// @note The `Running Return Code` will be set to 'errorCode`.
     void setRunFail(int errorCode);
 
     // Some interfaces for subclasses to specialize.
@@ -55,7 +55,7 @@ protected:
     /// the thread's end be changed to enable the thread to exit.
     virtual int doBeforeThreadEnd();
     /// @note The specific working logic of the worker thread.
-    /// @attention The `setRunSuccess` or `setRunFail` must be performed in the implementation
+    /// @attention The `#setRunSuccess()` or `#setRunFail()` must be performed in the implementation
     /// of this function to indicate whether the work running successfully.
     virtual void work() = 0;
     /// @note The specific logic of register hotkey.
@@ -71,17 +71,17 @@ private:
         RS_TERMINATE
     };
 
-    bool isInWorkerThread() const;
+    bool isInWorkerThread_() const;
 
-    std::condition_variable cvRunningState;
-    std::atomic<RunningState> runningState;
-    std::atomic<int> runningRc;
+    std::condition_variable cvRunningState_;
+    std::atomic<RunningState> runningState_;
+    std::atomic<int> runningRc_;
 
-    std::thread workerThread;
-    std::thread::id workerThreadId;
+    std::thread workerThread_;
+    std::thread::id workerThreadId_;
 
-    mutable std::mutex mtx;
-    std::unordered_map<KeyCombination, std::pair<bool, std::function<void ()>>> fns;
+    mutable std::mutex mtx_;
+    std::unordered_map<KeyCombination, std::pair<bool, std::function<void ()>>> fns_;
 };
 
 } // namespace gbhk

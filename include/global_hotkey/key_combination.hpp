@@ -14,42 +14,44 @@ class GBHK_API KeyCombination
 {
 public:
     constexpr inline KeyCombination() noexcept = default;
-    constexpr inline KeyCombination(const Modifiers& modifiers, const Key& key) noexcept : mod(modifiers), ky(key) {}
+    constexpr inline KeyCombination(const Modifiers& modifiers, const Key& key) noexcept
+        : mod_(modifiers), key_(key) {}
     constexpr inline explicit KeyCombination(int64_t getCombinedValue) noexcept
-        : mod((int32_t) (getCombinedValue >> 32)), ky((int32_t) getCombinedValue) {}
+        : mod_((int32_t) (getCombinedValue >> 32)), key_((int32_t) getCombinedValue) {}
     explicit KeyCombination(const std::string& str) { *this = fromString(str); }
 
     static KeyCombination fromString(const std::string& str, char connector = '+') noexcept;
     std::string toString(char connector = '+', bool showKeyValue = false) const noexcept;
 
-    constexpr inline Modifiers modifiers() const noexcept { return mod; }
-    constexpr inline Key key() const noexcept { return ky; }
+    constexpr inline Modifiers modifiers() const noexcept { return mod_; }
+    constexpr inline Key key() const noexcept { return key_; }
     static constexpr inline KeyCombination fromCombinedValue(int64_t value) noexcept
     { return KeyCombination((int32_t) (value >> 32), (int32_t) value); }
-    constexpr inline int64_t getCombinedValue() const noexcept { return ((int64_t) mod << 32) | ((int64_t) ky << 0); }
+    constexpr inline int64_t getCombinedValue() const noexcept
+    { return ((int64_t) mod_ << 32) | ((int64_t) key_ << 0); }
 
     /// @brief Check whether contains at least one modifier and a valid key value.
-    constexpr inline bool isValid() const noexcept { return mod.isValid() && ky.isValid(); }
+    constexpr inline bool isValid() const noexcept { return mod_.isValid() && key_.isValid(); }
 
-#if _GLOBAL_HOTKEY_CPPVERS >= 201703L
+#if GLOBAL_HOTKEY_CPPVERS >= 201703L
     // In C++17, constexpr member functions are no longer implicitly const.
-    constexpr inline void setModifiers(const Modifiers& modifiers) noexcept { mod = modifiers; }
-    constexpr inline void setKey(const Key& key) noexcept { ky = key; }
+    constexpr inline void setModifiers(const Modifiers& modifiers) noexcept { mod_ = modifiers; }
+    constexpr inline void setKey(const Key& key) noexcept { key_ = key; }
 #else
-    inline void setModifiers(const Modifiers& modifiers) noexcept { mod = modifiers; }
-    inline void setKey(const Key& key) noexcept { ky = key; }
-#endif // _GLOBAL_HOTKEY_CPPVERS >= 201703L
+    inline void setModifiers(const Modifiers& modifiers) noexcept { mod_ = modifiers; }
+    inline void setKey(const Key& key) noexcept { key_ = key; }
+#endif // GLOBAL_HOTKEY_CPPVERS >= 201703L
 
     friend constexpr inline bool operator==(const KeyCombination& lhs, const KeyCombination& rhs) noexcept
-    { return lhs.mod == rhs.mod && lhs.ky == rhs.ky; }
+    { return lhs.mod_ == rhs.mod_ && lhs.key_ == rhs.key_; }
     friend constexpr inline bool operator!=(const KeyCombination& lhs, const KeyCombination& rhs) noexcept
-    { return lhs.mod != rhs.mod || lhs.ky != rhs.ky; }
+    { return lhs.mod_ != rhs.mod_ || lhs.key_ != rhs.key_; }
 
 private:
     friend struct std::hash<KeyCombination>;
 
-    Modifiers mod   = 0;
-    Key ky          = 0;
+    Modifiers mod_ = 0;
+    Key key_        = 0;
 };
 
 } // namespace gbhk
@@ -62,8 +64,8 @@ struct hash<gbhk::KeyCombination>
 {
     size_t operator()(const gbhk::KeyCombination& obj) const noexcept
     {
-        size_t h1 = std::hash<int32_t>()(obj.mod);
-        size_t h2 = std::hash<int32_t>()(obj.ky);
+        size_t h1 = std::hash<int32_t>()(obj.mod_);
+        size_t h2 = std::hash<int32_t>()(obj.key_);
         return h1 ^ (h2 << 1);
     }
 };

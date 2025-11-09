@@ -2,13 +2,13 @@
 
 #include <global_hotkey/register_global_hotkey_manager.hpp>
 
-#ifdef _GLOBAL_HOTKEY_WIN
+#ifdef GLOBAL_HOTKEY_WIN
     #include "register_ghm_private_win.hpp"
-#elif defined(_GLOBAL_HOTKEY_MAC)
+#elif defined(GLOBAL_HOTKEY_MAC)
     #include "register_ghm_private_mac.hpp"
-#elif defined(_GLOBAL_HOTKEY_LINUX)
+#elif defined(GLOBAL_HOTKEY_LINUX)
     #include "register_ghm_private_x11.hpp"
-#endif // _GLOBAL_HOTKEY_WIN
+#endif // GLOBAL_HOTKEY_WIN
 
 namespace gbhk
 {
@@ -20,13 +20,13 @@ RegisterGlobalHotkeyManager& RegisterGlobalHotkeyManager::getInstance()
 }
 
 RegisterGlobalHotkeyManager::RegisterGlobalHotkeyManager() :
-#ifdef _GLOBAL_HOTKEY_WIN
-    GlobalHotkeyManager(std::unique_ptr<_GHMPrivate>(new _RegisterGHMPrivateWin()))
-#elif defined(_GLOBAL_HOTKEY_MAC)
-    GlobalHotkeyManager(std::unique_ptr<_GHMPrivate>(new _RegisterGHMPrivateMac()))
-#elif defined(_GLOBAL_HOTKEY_LINUX)
-    GlobalHotkeyManager(std::unique_ptr<_GHMPrivate>(new _RegisterGHMPrivateX11()))
-#endif // _GLOBAL_HOTKEY_WIN
+#ifdef GLOBAL_HOTKEY_WIN
+    GlobalHotkeyManager(std::unique_ptr<GHMPrivate>(new RegisterGHMPrivateWin()))
+#elif defined(GLOBAL_HOTKEY_MAC)
+    GlobalHotkeyManager(std::unique_ptr<GHMPrivate>(new RegisterGHMPrivateMac()))
+#elif defined(GLOBAL_HOTKEY_LINUX)
+    GlobalHotkeyManager(std::unique_ptr<GHMPrivate>(new RegisterGHMPrivateX11()))
+#endif // GLOBAL_HOTKEY_WIN
 {}
 
 RegisterGlobalHotkeyManager::~RegisterGlobalHotkeyManager() = default;

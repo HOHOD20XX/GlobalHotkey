@@ -11,32 +11,32 @@ class Queue
 public:
     void push(const T& item)
     {
-        std::lock_guard<std::mutex> lock(mtx);
-        queue.emplace(item);
-        if (queue.size() == 1)
-            cvHas.notify_all();
+        std::lock_guard<std::mutex> lock(mtx_);
+        queue_.emplace(item);
+        if (queue_.size() == 1)
+            cvHas_.notify_all();
     }
 
     T take()
     {
-        std::unique_lock<std::mutex> lock(mtx);
-        cvHas.wait(lock, [this]() { return !queue.empty(); });
-        T item = queue.front();
-        queue.pop();
+        std::unique_lock<std::mutex> lock(mtx_);
+        cvHas_.wait(lock, [this]() { return !queue_.empty(); });
+        T item = queue_.front();
+        queue_.pop();
         return item;
     }
 
     void clear()
     {
-        std::lock_guard<std::mutex> lock(mtx);
-        while (!queue.empty())
-            queue.pop();
+        std::lock_guard<std::mutex> lock(mtx_);
+        while (!queue_.empty())
+            queue_.pop();
     }
 
 private:
-    std::mutex mtx;
-    std::condition_variable cvHas;
-    std::queue<T> queue;
+    std::mutex mtx_;
+    std::condition_variable cvHas_;
+    std::queue<T> queue_;
 };
 
 #endif // !BLOCK_QUEUE_HPP

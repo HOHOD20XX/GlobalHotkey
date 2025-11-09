@@ -19,10 +19,10 @@ std::string KeyCombination::toString(char connector, bool showKeyValue) const no
 {
     std::string rslt;
     std::string connectorStr(1, connector);
-    rslt += modifiersString(mod, connector);
-    rslt += (!rslt.empty() ? connectorStr : "") + keyString(ky);
+    rslt += modifiersString(mod_, connector);
+    rslt += (!rslt.empty() ? connectorStr : "") + keyString(key_);
     if (showKeyValue)
-        rslt += "(" + std::to_string(ky) + ")";
+        rslt += "(" + std::to_string(key_) + ")";
     return rslt;
 }
 

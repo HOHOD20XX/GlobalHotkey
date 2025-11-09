@@ -41,11 +41,11 @@ Press [%s] to clear the terminal\n\
 
 void clearTerminal()
 {
-#ifdef _GLOBAL_HOTKEY_WIN
+#ifdef GLOBAL_HOTKEY_WIN
     system("cls");
 #else
     int ret = system("clear");
-#endif // _GLOBAL_HOTKEY_WIN
+#endif // GLOBAL_HOTKEY_WIN
     printPrompt();
 }
 

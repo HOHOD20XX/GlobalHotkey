@@ -10,7 +10,7 @@
 namespace gbhk
 {
 
-class _GHMPrivate;
+class GHMPrivate;
 
 class GBHK_API GlobalHotkeyManager
 {
@@ -50,12 +50,12 @@ public:
     std::vector<KeyCombination> getAllHotkeys() const;
 
 protected:
-    explicit GlobalHotkeyManager(std::unique_ptr<_GHMPrivate> ptr);
+    explicit GlobalHotkeyManager(std::unique_ptr<GHMPrivate> ptr);
     virtual ~GlobalHotkeyManager();
     GlobalHotkeyManager(const GlobalHotkeyManager&) = delete;
     GlobalHotkeyManager& operator=(const GlobalHotkeyManager&) = delete;
 
-    std::unique_ptr<_GHMPrivate> ptr;
+    std::unique_ptr<GHMPrivate> ptr_;
 };
 
 } // namespace gbhk

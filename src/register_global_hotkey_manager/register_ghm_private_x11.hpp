@@ -5,18 +5,18 @@
 
 #include "register_ghm_private.hpp"
 
-#ifdef _GLOBAL_HOTKEY_LINUX
+#ifdef GLOBAL_HOTKEY_LINUX
 
 #include <X11/Xlib.h>
 
 namespace gbhk
 {
 
-class _RegisterGHMPrivateX11 final : public _RegisterGHMPrivate
+class RegisterGHMPrivateX11 final : public RegisterGHMPrivate
 {
 public:
-    _RegisterGHMPrivateX11();
-    ~_RegisterGHMPrivateX11();
+    RegisterGHMPrivateX11();
+    ~RegisterGHMPrivateX11();
 
 protected:
     int doBeforeThreadRun() override;
@@ -27,19 +27,19 @@ protected:
 
 private:
     // The follow functions only be performed in worker thread.
-    void invoke(const KeyCombination& prevKc, const KeyCombination& currKc) const;
     int nativeRegisterHotkey(Display* display);
     int nativeUnregisterHotkey(Display* display);
+    void invoke_(const KeyCombination& prevKc, const KeyCombination& currKc) const;
 
-    std::condition_variable cvRegUnregRc;
-    std::atomic<int> regUnregRc;
-    std::atomic<KeyCombination> regUnregKc;
-    int eventFd = 0;
+    std::condition_variable cvRegUnregRc_;
+    std::atomic<int> regUnregRc_;
+    std::atomic<KeyCombination> regUnregKc_;
+    int eventFd_ = 0;
 };
 
 } // namespace gbhk
 
-#endif // _GLOBAL_HOTKEY_LINUX
+#endif // GLOBAL_HOTKEY_LINUX
 
 #endif // !GLOBAL_HOTKEY_DISABLE_REGISTER
 

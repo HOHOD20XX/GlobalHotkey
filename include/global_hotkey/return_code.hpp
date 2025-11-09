@@ -8,21 +8,21 @@
 namespace gbhk
 {
 
-#ifdef _GLOBAL_HOTKEY_WIN
-    constexpr int _RC_MASK = 1 << 29;
-#elif defined(_GLOBAL_HOTKEY_MAC)
-    constexpr int _RC_MASK = 0;
-#elif defined(_GLOBAL_HOTKEY_LINUX)
-    constexpr int _RC_MASK = 0;
+#ifdef GLOBAL_HOTKEY_WIN
+    constexpr int RC_MASK = 1 << 29;
+#elif defined(GLOBAL_HOTKEY_MAC)
+    constexpr int RC_MASK = 0;
+#elif defined(GLOBAL_HOTKEY_LINUX)
+    constexpr int RC_MASK = 0;
 #else
-    constexpr int _RC_MASK = 0;
-#endif // _GLOBAL_HOTKEY_WIN
+    constexpr int RC_MASK = 0;
+#endif // GLOBAL_HOTKEY_WIN
 
 enum ReturnCode : int
 {
-    RC_SUCCESS              = 0x00 | _RC_MASK,
-    RC_BAD_TIMING           = 0x10 | _RC_MASK,
-    RC_BAD_THREAD           = 0x11 | _RC_MASK
+    RC_SUCCESS              = 0x00 | RC_MASK,
+    RC_BAD_TIMING           = 0x10 | RC_MASK,
+    RC_BAD_THREAD           = 0x11 | RC_MASK
 };
 
 inline std::string returnCodeMessage(int rc) noexcept
