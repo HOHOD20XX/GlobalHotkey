@@ -24,7 +24,7 @@ enum ModifierFlag : int32_t
     OPTION      = ALT   // The Alt key on MacOS.
 };
 
-// To avoid conflicts with macro definitions, the `KeyFlag` naming style different from other enums in this library.
+// For avoid conflicts with macro definitions, the `KeyFlag` naming style different from other enums in this library.
 enum KeyFlag : int32_t
 {
     // Number keys.

@@ -43,7 +43,7 @@ protected:
     /// @note The `Running Return Code` will be set to '#RC_SUCCESS`.
     void setRunSuccess();
     /// @brief Indicates the worker thread running failed.
-    /// @note The `Running Return Code` will be set to 'errorCode`.
+    /// @note The `Running Return Code` will be set to errorCode.
     void setRunFail(int errorCode);
 
     // Some interfaces for subclasses to specialize.

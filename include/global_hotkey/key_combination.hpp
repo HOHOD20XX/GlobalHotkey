@@ -51,7 +51,7 @@ private:
     friend struct std::hash<KeyCombination>;
 
     Modifiers mod_ = 0;
-    Key key_        = 0;
+    Key key_       = 0;
 };
 
 } // namespace gbhk
