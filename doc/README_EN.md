@@ -144,6 +144,7 @@ No. `Register GHM` on **Linux** relies on **X11**.
 
 ## 🔔 Notes
 
+- 'Register GHM' under the MacOS system is not supported for the time being.
 - Operations like adding, deleting, or replacing hotkeys can only be performed after the corresponding `GHM` has started.
 - Avoid adding an invalid hotkey or removing an unadded hotkey, as this is undefined behavior and may lead to unexpected results. This library does not conduct security checks for such operations. These operations whether be perform should be decided by the user.
 - When a hotkey is triggered, its callback function will run in the worker thread of `GHM`. Therefore, the callback function of the hotkey should not perform heavy tasks to avoid blocking the worker thread. A reasonable approach is to correctly use threads, asynchronous mechanisms, or message queues (e.g. **Qt**'s signal-slot system).
