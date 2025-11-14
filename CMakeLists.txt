@@ -35,20 +35,23 @@ if(GBHK_DISABLE_HOOK)
     message(STATUS "${GBHK_MSG_PREFIX} Hook Global Hotkey Manager be disable.")
 endif()
 
+set(SRC)
 option(GBHK_DISABLE_REGISTER "Disable register Global Hotkey Manager" OFF)
 if(GBHK_DISABLE_REGISTER)
     message(STATUS "${GBHK_MSG_PREFIX} Register Global Hotkey Manager be disable.")
 else()
-    set(SRC ${SRC}
-         src/register_global_hotkey_manager/register_global_hotkey_manager.cpp
-         src/register_global_hotkey_manager/register_ghm_private.cpp)
+    set(
+        SRC ${SRC}
+        src/register_global_hotkey_manager/register_global_hotkey_manager.cpp
+        src/register_global_hotkey_manager/register_ghm_private.cpp
+    )
     if(WIN32)
         file(GLOB_RECURSE SRC ${SRC} src/register_global_hotkey_manager/*win*.cpp)
     elseif(APPLE)
         file(GLOB_RECURSE SRC ${SRC} src/register_global_hotkey_manager/*mac*.cpp)
     elseif(LINUX)
         file(GLOB_RECURSE SRC ${SRC} src/register_global_hotkey_manager/*x11*.cpp)
-     endif()
+    endif()
 endif()
 
 if(GBHK_DISABLE_HOOK AND GBHK_DISABLE_REGISTER)
@@ -57,11 +60,11 @@ endif()
 
 option(GBHK_BUILD_EXAMPLE "Build example" ${GBHK_MASTER_PROJECT})
 
-include_directories(include)
-file(GLOB_RECURSE SRC ${SRC}
-     src/global_hotkey_manager/*.cpp
-     src/key/key.cpp
-     src/key_combination/key_combination.cpp
+file(
+    GLOB_RECURSE SRC ${SRC}
+    src/global_hotkey_manager/*.cpp
+    src/key/key.cpp
+    src/key_combination/key_combination.cpp
 )
 if(NOT GBHK_DISABLE_HOOK)
     file(GLOB_RECURSE SRC ${SRC} src/hook_global_hotkey_manager/*.cpp)
@@ -87,6 +90,11 @@ else()
     add_library(${PROJECT_NAME} STATIC ${SRC})
 endif()
 
+target_include_directories(${PROJECT_NAME} PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:${PROJECT_NAME}/include>
+)
+
 if(GBHK_DISABLE_REGISTER)
     target_compile_definitions(${PROJECT_NAME} PUBLIC GLOBAL_HOTKEY_DISABLE_REGISTER)
 endif()
@@ -101,7 +109,7 @@ else()
         GIT_TAG main
     )
     FetchContent_MakeAvailable(kbdt)
-    include_directories(${PROJECT_NAME} PRIVATE ${kbdt_SOURCE_DIR}/include)
+    target_include_directories(${PROJECT_NAME} PRIVATE ${kbdt_SOURCE_DIR}/include)
 endif()
 
 if(WIN32)
@@ -156,14 +164,47 @@ if(LINUX)
 endif()
 
 find_package(Threads REQUIRED)
-target_link_libraries(${PROJECT_NAME} PUBLIC Threads::Threads)
+target_link_libraries(${PROJECT_NAME} PRIVATE Threads::Threads)
 if(NOT GBHK_DISABLE_HOOK)
-    target_link_libraries(${PROJECT_NAME} PUBLIC kbdt::kbdt)
+    target_link_libraries(${PROJECT_NAME} PRIVATE kbdt::kbdt)
 endif()
 
 set_target_properties(${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX d)
 
 add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
+
+install(
+    TARGETS ${PROJECT_NAME}
+    EXPORT ${PROJECT_NAME}
+    RUNTIME DESTINATION ${PROJECT_NAME}/bin
+    LIBRARY DESTINATION ${PROJECT_NAME}/bin
+    ARCHIVE DESTINATION ${PROJECT_NAME}/lib
+)
+
+install(DIRECTORY include/ DESTINATION ${PROJECT_NAME}/include)
+
+install(
+    EXPORT ${PROJECT_NAME}
+    FILE ${PROJECT_NAME}Targets.cmake
+    NAMESPACE ${PROJECT_NAME}::
+    DESTINATION ${PROJECT_NAME}/lib/cmake
+)
+
+set(INCLUDE_DIRS ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}/include)
+set(LIB_DIR ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}/lib)
+
+include(CMakePackageConfigHelpers)
+configure_package_config_file(
+    ${PROJECT_NAME}Config.cmake.in
+    ${PROJECT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
+    PATH_VARS INCLUDE_DIRS LIB_DIR
+    INSTALL_DESTINATION ${PROJECT_NAME}/lib/cmake
+)
+
+install(
+    FILES ${PROJECT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
+    DESTINATION ${PROJECT_NAME}/lib/cmake
+)
 
 if(GBHK_BUILD_EXAMPLE)
     message(STATUS "${GBHK_MSG_PREFIX} Example will be built.")

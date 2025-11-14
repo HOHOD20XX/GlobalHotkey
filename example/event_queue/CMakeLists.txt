@@ -2,8 +2,23 @@ cmake_minimum_required(VERSION 3.25)
 
 project(event_queue LANGUAGES CXX)
 
+if(NOT TARGET global_hotkey)
+    find_package(global_hotkey REQUIRED)
+endif()
+
 add_executable(${PROJECT_NAME}
     event_work.cpp
     utility.cpp
     main.cpp
+)
+
+if(GBHK_EXAMPLE_USE_HOOK)
+    target_compile_definitions(${PROJECT_NAME} PRIVATE GLOBAL_HOTKEY_EXAMPLE_USE_HOOK)
+endif()
+
+target_link_libraries(${PROJECT_NAME} PRIVATE global_hotkey::global_hotkey)
+
+install(
+    TARGETS ${PROJECT_NAME}
+    RUNTIME DESTINATION example
 )
