@@ -6,27 +6,27 @@
 
 - Independent!
 
-  No dependencies on other libraries or frameworks!
+    No dependencies on other libraries or frameworks!
 
 - Works with any program!
 
-  Even console applications!
+    Even console applications!
 
 - Cross-platform!
 
-  Supports **Windows**, **MacOS**, and **Linux** (*Ubuntu* and *Debian* tested) with ease!
+    Supports **Windows**, **MacOS**, and **Linux** (*Ubuntu* and *Debian* tested) with ease!
 
 - Broad compatibility!
 
-  **Qt**? **MFC**? No problem!
+    **Qt**? **MFC**? No problem!
 
 - Easy to use!
 
-  See example code.
+    See example code.
 
 - `Hook-style Global Hotkey (Hook GHM)`!
 
-  Need to implement ~~background monitoring trojan~~ some special features?
+    Need to implement ~~background monitoring trojan~~ some special features?
 
 ## Dependence
 
@@ -34,15 +34,16 @@
 
 ## 🔧 How to Build?
 
-The project uses `CMake` for organization. Just run these few scripts to build and use it!
+1. Just run the `install` script directly in the root directory to install it with one click.
+2. The project uses `CMake` for organization. Just run these few scripts to build and use it!
 
-```shell
-git clone https://github.com/JaderoChan/global_hotkey.git
-cd global_hotkey
-cmake -B build
-cd build
-make
-```
+    ```shell
+    git clone https://github.com/JaderoChan/global_hotkey.git
+    cd global_hotkey
+    cmake -B build
+    cd build
+    make
+    ```
 
 ### ⚙️ Build Options
 
@@ -66,7 +67,7 @@ make
 
 1. Obtain a `Global Hotkey Manager (GHM)` object via the `getInstance` interface.
 
-2. Start the `GHM` via the `start` interface.
+2. Start the `GHM` via the `run` interface.
 
 3. Add, remove, or replace hotkeys using the corresponding interfaces.
 
@@ -80,7 +81,7 @@ Below is example code demonstrating the basic workflow:
 
 ```cpp
 GlobalHotkeyManager& ghm = RegisterGlobalHotkeyManager::getInstance();  // Get an instance of the `Register GHM`.
-ghm.start();    // Start the Global Hotkey Manager.
+ghm.run();    // Run the Global Hotkey Manager.
 
 KeyCombination hotkey1(CTRL, 'G');
 KeyCombination hotkey2(CTRL, 'H');
@@ -150,6 +151,6 @@ No. `Register GHM` on **Linux** relies on **X11**.
 - When a hotkey is triggered, its callback function will run in the worker thread of `GHM`. Therefore, the callback function of the hotkey should not perform heavy tasks to avoid blocking the worker thread. A reasonable approach is to correctly use threads, asynchronous mechanisms, or message queues (e.g. **Qt**'s signal-slot system).
 - When using `Hook GHM` on **Windows**, ensure the callback function's execution time stays within the specified limit.
 
-  *(For details, refer to [Windows LowLevelKeyboard](https://learn.microsoft.com/en-us/windows/win32/winmsg/lowlevelkeyboardproc). The **Remarks** section mentions a **Timeout** of **1000 milliseconds**.)*
+    *(For details, refer to [Windows LowLevelKeyboard](https://learn.microsoft.com/en-us/windows/win32/winmsg/lowlevelkeyboardproc). The **Remarks** section mentions a **Timeout** of **1000 milliseconds**.)*
 
 - When use **MSVC Compiler** and the `Hook GHM` is enabled need to configure the `pthread for Windows`, see also [pthreads-win32](https://sourceware.org/pthreads-win32/).

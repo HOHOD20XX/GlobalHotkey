@@ -6,27 +6,27 @@
 
 - 独立！
 
-  不依赖其他库与框架！
+    不依赖其他库与框架！
 
 - 用于任意程序！
 
-  甚至是控制台程序！
+    甚至是控制台程序！
 
 - 跨平台！
 
-  **Windows**、**MacOS**、**Linux**（*Ubuntu*与*Debian*已测试）不在话下！
+    **Windows**、**MacOS**、**Linux**（*Ubuntu*与*Debian*已测试）不在话下！
 
 - 广泛兼容！
 
-  **Qt**？**MFC**？没问题！
+    **Qt**？**MFC**？没问题！
 
 - 易于使用！
 
-  参见示例代码。
+    参见示例代码。
 
 - `监听式热键 (Hook GHM)`！
 
-  需要实现~~后台监听木马~~某些特殊的功能？
+    需要实现~~后台监听木马~~某些特殊的功能？
 
 ## 依赖
 
@@ -34,15 +34,16 @@
 
 ## 🔧 如何编译？
 
-项目使用`CMake`进行组织，仅需下面几行脚本即可编译使用！
+1. 直接运行根目录下的`install`脚本即可一键安装。
+2. 项目使用`CMake`进行组织，仅需下面几行脚本即可编译使用！
 
-```shell
-git clone https://github.com/JaderoChan/global_hotkey.git
-cd global_hotkey
-cmake -B build
-cd build
-make
-```
+    ```shell
+    git clone https://github.com/JaderoChan/global_hotkey.git
+    cd global_hotkey
+    cmake -B build
+    cd build
+    make
+    ```
 
 ### ⚙️ 编译选项
 
@@ -66,7 +67,7 @@ make
 
 1. 通过`getInstance`接口获取一个`热键管理器 (GHM)`对象。
 
-2. 通过`start`接口启动`GHM`。
+2. 通过`run`接口启动`GHM`。
 
 3. 通过相应的接口增加、移除或替换热键。
 
@@ -80,7 +81,7 @@ make
 
 ```cpp
 GlobalHotkeyManager& ghm = RegisterGlobalHotkeyManager::getInstance();  // 获取`注册式热键管理器`实例对象。
-ghm.start();    // 启动热键管理器。
+ghm.run();    // 启动热键管理器。
 
 KeyCombination hotkey1(CTRL, 'G');
 KeyCombination hotkey2(CTRL, 'H');
@@ -150,6 +151,6 @@ ghm.end();      // 结束热键管理器。
 - 热键被触发时，其回调函数将会在`GHM`的工作线程中运行，所以热键的回调函数不应执行繁重的任务，以免出现工作线程阻塞，合理的做法是正确使用线程、异步机制或消息队列（例如**Qt**中的信号槽）。
 - 在**Windows**平台下使用`Hook GHM`时，应保证回调函数的执行时间在限定范围内。
 
-  *（详细信息参见 [Windows LowLevelKeyboard](https://learn.microsoft.com/zh-cn/windows/win32/winmsg/lowlevelkeyboardproc) ，其**Remarks**中提到**Timeout**时间为**1000毫秒**）*
+    *（详细信息参见 [Windows LowLevelKeyboard](https://learn.microsoft.com/zh-cn/windows/win32/winmsg/lowlevelkeyboardproc) ，其**Remarks**中提到**Timeout**时间为**1000毫秒**）*
 
 - 使用**MSVC编译器**且启用了`Hook GHM`时需要配置`pthread for Windows`，参见[pthreads-win32](https://sourceware.org/pthreads-win32/)。
