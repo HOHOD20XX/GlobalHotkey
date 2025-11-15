@@ -2,7 +2,7 @@
 #define GLOBAL_HOTKEY_GLOBAL_HOTKEY_HPP
 
 // Author: 頔珞JaderoChan
-// Repositories URL : https://github.com/JaderoChan/GlobalHotkey
+// Repositories URL : https://github.com/JaderoChan/global_hotkey
 
 // MIT License
 //
