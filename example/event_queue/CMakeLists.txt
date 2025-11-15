@@ -12,7 +12,7 @@ add_executable(${PROJECT_NAME}
     main.cpp
 )
 
-if(GBHK_EXAMPLE_USE_HOOK)
+if(GLOBAL_HOTKEY_EXAMPLE_USE_HOOK)
     target_compile_definitions(${PROJECT_NAME} PRIVATE GLOBAL_HOTKEY_EXAMPLE_USE_HOOK)
 endif()
 

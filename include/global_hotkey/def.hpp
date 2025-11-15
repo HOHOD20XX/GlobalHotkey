@@ -28,14 +28,14 @@
 
 #ifdef GLOBAL_HOTKEY_WIN
     #ifdef GLOBAL_HOTKEY_BUILD_SHARED
-        #define GBHK_API __declspec(dllexport)
+        #define GLOBAL_HOTKEY_API __declspec(dllexport)
     #elif defined(GLOBAL_HOTKEY_SHARED)
-        #define GBHK_API __declspec(dllimport)
+        #define GLOBAL_HOTKEY_API __declspec(dllimport)
     #else
-        #define GBHK_API
+        #define GLOBAL_HOTKEY_API
     #endif // GLOBAL_HOTKEY_BUILD_SHARED
 #else
-    #define GBHK_API __attribute__((visibility("default")))
+    #define GLOBAL_HOTKEY_API __attribute__((visibility("default")))
 #endif // GLOBAL_HOTKEY_WIN
 
 #endif // !GLOBAL_HOTKEY_DEF_HPP

@@ -10,7 +10,7 @@
 namespace gbhk
 {
 
-class GBHK_API KeyCombination
+class GLOBAL_HOTKEY_API KeyCombination
 {
 public:
     constexpr inline KeyCombination() noexcept = default;

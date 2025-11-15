@@ -55,7 +55,7 @@ static std::string modifierFlagString(ModifierFlag flag) noexcept
     }
 }
 
-GBHK_API std::string modifiersString(const Modifiers& modifiers, char connector) noexcept
+GLOBAL_HOTKEY_API std::string modifiersString(const Modifiers& modifiers, char connector) noexcept
 {
     std::string rslt;
     std::string connectorStr(1, connector);
@@ -72,7 +72,7 @@ GBHK_API std::string modifiersString(const Modifiers& modifiers, char connector)
     return rslt;
 }
 
-GBHK_API std::string keyString(const Key& key) noexcept
+GLOBAL_HOTKEY_API std::string keyString(const Key& key) noexcept
 {
     switch (key)
     {
@@ -280,7 +280,7 @@ static int getModifierFlagFromString(const std::string& str) noexcept
     return 0;
 }
 
-GBHK_API Modifiers getModifiersFromString(const std::string& str, char connector) noexcept
+GLOBAL_HOTKEY_API Modifiers getModifiersFromString(const std::string& str, char connector) noexcept
 {
     std::stringstream ss;
     ss << str;
@@ -291,7 +291,7 @@ GBHK_API Modifiers getModifiersFromString(const std::string& str, char connector
     return rslt;
 }
 
-GBHK_API Key getKeyFromString(const std::string& str) noexcept
+GLOBAL_HOTKEY_API Key getKeyFromString(const std::string& str) noexcept
 {
     if (str.empty())
         return Key();

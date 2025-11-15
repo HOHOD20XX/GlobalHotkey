@@ -48,19 +48,19 @@ make
 
 ---
 
-- `GBHK_BUILD_SHARED` 指定是否生成动态库，默认为`OFF`。若启用，在项目中使用动态库时定义`GLOBAL_HOTKEY_SHARED`宏以获得更好的性能（仅**Windows**）。
+- `GLOBAL_HOTKEY_BUILD_SHARED` 指定是否生成动态库，默认为`OFF`。若启用，在项目中使用动态库时定义`GLOBAL_HOTKEY_SHARED`宏以获得更好的性能（仅**Windows**）。
 
-- `GBHK_DISABLE_REGISTER` 指定是否禁用`注册式热键 (Register GHM)`，默认为`OFF`。
+- `GLOBAL_HOTKEY_DISABLE_REGISTER` 指定是否禁用`注册式热键 (Register GHM)`，默认为`OFF`。
 
-- `GBHK_DISABLE_HOOK` 指定是否禁用`监听式热键 (Hook GHM)`），默认为`OFF`。
+- `GLOBAL_HOTKEY_DISABLE_HOOK` 指定是否禁用`监听式热键 (Hook GHM)`），默认为`OFF`。
 
-- `GBHK_BUILD_EXAMPLE` 是否生成示例程序，默认值取决于项目是否为主项目。
+- `GLOBAL_HOTKEY_BUILD_EXAMPLE` 是否生成示例程序，默认值取决于项目是否为主项目。
 
-- `GBHK_EXAMPLE_USE_HOOK` 指定示例程序使用的热键类型，默认为`OFF`（即在示例程序中使用`Register GHM`）。
+- `GLOBAL_HOTKEY_EXAMPLE_USE_HOOK` 指定示例程序使用的热键类型，默认为`OFF`（即在示例程序中使用`Register GHM`）。
 
-- `GBHK_EXAMPLE_BUILD_SIMPLE` 指定是否生成`simple`示例程序，默认`ON`。
+- `GLOBAL_HOTKEY_EXAMPLE_BUILD_SIMPLE` 指定是否生成`simple`示例程序，默认`ON`。
 
-- `GBHK_EXAMPLE_BUILD_EVENT_QUEUE` 指定是否生成`event quque`实例程序，默认为`ON`。
+- `GLOBAL_HOTKEY_EXAMPLE_BUILD_EVENT_QUEUE` 指定是否生成`event quque`实例程序，默认为`ON`。
 
 ## 🚩 如何使用？
 

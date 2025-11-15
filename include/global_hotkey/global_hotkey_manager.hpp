@@ -12,7 +12,7 @@ namespace gbhk
 
 class GHMPrivate;
 
-class GBHK_API GlobalHotkeyManager
+class GLOBAL_HOTKEY_API GlobalHotkeyManager
 {
 public:
     /// @brief Run the `Global Hotkey Manager`.

@@ -8,7 +8,7 @@
 namespace gbhk
 {
 
-class GBHK_API RegisterGlobalHotkeyManager final : public GlobalHotkeyManager
+class GLOBAL_HOTKEY_API RegisterGlobalHotkeyManager final : public GlobalHotkeyManager
 {
 public:
     static RegisterGlobalHotkeyManager& getInstance();

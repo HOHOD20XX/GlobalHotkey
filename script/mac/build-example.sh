@@ -1,9 +1,9 @@
 current_dir=$(pwd)
 
 cd ../../
-cmake -B ./build/example_use_register -DCMAKE_BUILD_TYPE=Release -DGBHK_DISABLE_HOOK=ON -DGBHK_BUILD_EXAMPLE=ON
+cmake -B ./build/example_use_register -DCMAKE_BUILD_TYPE=Release -DGLOBAL_HOTKEY_DISABLE_HOOK=ON -DGLOBAL_HOTKEY_BUILD_EXAMPLE=ON
 make -C ./build/example_use_register -j
-cmake -B ./build/example_use_hook -DCMAKE_BUILD_TYPE=Release -DGBHK_DISABLE_REGISTER=ON -DGBHK_BUILD_EXAMPLE=ON -DGBHK_EXAMPLE_USE_HOOK=ON
+cmake -B ./build/example_use_hook -DCMAKE_BUILD_TYPE=Release -DGLOBAL_HOTKEY_DISABLE_REGISTER=ON -DGLOBAL_HOTKEY_BUILD_EXAMPLE=ON -DGLOBAL_HOTKEY_EXAMPLE_USE_HOOK=ON
 make -C ./build/example_use_hook -j
 
 cd $current_dir

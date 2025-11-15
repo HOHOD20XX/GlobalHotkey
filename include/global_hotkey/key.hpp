@@ -296,13 +296,13 @@ private:
     int32_t data_ = 0;
 };
 
-GBHK_API std::string modifiersString(const Modifiers& modifiers, char connector = '+') noexcept;
+GLOBAL_HOTKEY_API std::string modifiersString(const Modifiers& modifiers, char connector = '+') noexcept;
 
-GBHK_API std::string keyString(const Key& key) noexcept;
+GLOBAL_HOTKEY_API std::string keyString(const Key& key) noexcept;
 
-GBHK_API Modifiers getModifiersFromString(const std::string& str, char connector = '+') noexcept;
+GLOBAL_HOTKEY_API Modifiers getModifiersFromString(const std::string& str, char connector = '+') noexcept;
 
-GBHK_API Key getKeyFromString(const std::string& str) noexcept;
+GLOBAL_HOTKEY_API Key getKeyFromString(const std::string& str) noexcept;
 
 }
 

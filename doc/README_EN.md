@@ -48,19 +48,19 @@ make
 
 ---
 
-- `GBHK_BUILD_SHARED` Specifies whether to build a dynamic library. Default is `OFF`. If enabled, define the `GLOBAL_HOTKEY_SHARED` macro when using the dynamic library in your project for better performance (only on **Windows**).
+- `GLOBAL_HOTKEY_BUILD_SHARED` Specifies whether to build a dynamic library. Default is `OFF`. If enabled, define the `GLOBAL_HOTKEY_SHARED` macro when using the dynamic library in your project for better performance (only on **Windows**).
 
-- `GBHK_DISABLE_REGISTER` Specifies whether to disable `Register-style Global Hotkey (Register GHM)`. Default is `OFF`.
+- `GLOBAL_HOTKEY_DISABLE_REGISTER` Specifies whether to disable `Register-style Global Hotkey (Register GHM)`. Default is `OFF`.
 
-- `GBHK_DISABLE_HOOK` Specifies whether to disable `Hook-style Global Hotkey (Hook GHM)`. Default is `OFF`.
+- `GLOBAL_HOTKEY_DISABLE_HOOK` Specifies whether to disable `Hook-style Global Hotkey (Hook GHM)`. Default is `OFF`.
 
-- `GBHK_BUILD_EXAMPLE` Whether to build example programs. Default depends on whether the project is the main project.
+- `GLOBAL_HOTKEY_BUILD_EXAMPLE` Whether to build example programs. Default depends on whether the project is the main project.
 
-- `GBHK_EXAMPLE_USE_HOOK` Specifies the hotkey type used in the example program. Default is `OFF` (i.e., uses `Register GHM` in the example program).
+- `GLOBAL_HOTKEY_EXAMPLE_USE_HOOK` Specifies the hotkey type used in the example program. Default is `OFF` (i.e., uses `Register GHM` in the example program).
 
-- `GBHK_EXAMPLE_BUILD_SIMPLE` Specifies whether to build the `simple` example program. Default is `ON`.
+- `GLOBAL_HOTKEY_EXAMPLE_BUILD_SIMPLE` Specifies whether to build the `simple` example program. Default is `ON`.
 
-- `GBHK_EXAMPLE_BUILD_EVENT_QUEUE` Specifies whether to build the `event queue` example program. Default is `ON`.
+- `GLOBAL_HOTKEY_EXAMPLE_BUILD_EVENT_QUEUE` Specifies whether to build the `event queue` example program. Default is `ON`.
 
 ## 🚩 How to Use?
 
