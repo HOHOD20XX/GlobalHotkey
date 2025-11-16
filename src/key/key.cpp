@@ -22,8 +22,8 @@
     #define ALT_TEXT    "Alt"
 #endif // GLOBAL_HOTKEY_WIN
 
-#define CTRL_TEXT   "Ctrl"
-#define SHIFT_TEXT  "Shift"
+#define CTRL_TEXT       "Ctrl"
+#define SHIFT_TEXT      "Shift"
 
 #define IS_META(str, prefix) \
 (isEqualStr(str, prefix "win") || isEqualStr(str, prefix "windows") || \
