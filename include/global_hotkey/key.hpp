@@ -230,7 +230,7 @@ public:
 #if GLOBAL_HOTKEY_CPPVERS >= 201703L
     // In C++17, constexpr member functions are no longer implicitly const.
     constexpr inline Modifiers& add(ModifierFlag modifier) noexcept { data_ |= modifier; return *this; }
-    constexpr inline Modifiers& add(Modifiers modifiers) noexcept { darta |= modifiers.data_; return *this; }
+    constexpr inline Modifiers& add(Modifiers modifiers) noexcept { data |= modifiers.data_; return *this; }
     constexpr inline Modifiers& remove(ModifierFlag modifier) noexcept { data_ &= ~modifier; return *this; }
     constexpr inline Modifiers& remove(Modifiers modifiers) noexcept { data_ &= ~modifiers.data_; return *this; }
 #else
