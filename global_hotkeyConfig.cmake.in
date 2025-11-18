@@ -2,7 +2,7 @@
 
 include(CMakeFindDependencyMacro)
 find_dependency(Threads REQUIRED)
-if(NOT @GLOBAL_HOTKEY_DISABLE_HOOK@)
+if(NOT @GLOBAL_HOTKEY_DISABLE_HOOK@ AND @GLOBAL_HOTKEY_BUILD_SHARED@)
     find_dependency(kbdt REQUIRED)
 endif()
 if(APPLE)
