@@ -92,7 +92,7 @@ endif()
 
 target_include_directories(${PROJECT_NAME} PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-    $<INSTALL_INTERFACE:${PROJECT_NAME}/include>
+    $<INSTALL_INTERFACE:include>
 )
 
 if(GLOBAL_HOTKEY_DISABLE_REGISTER)
@@ -193,8 +193,8 @@ install(
     DESTINATION lib/cmake/${PROJECT_NAME}
 )
 
-set(INCLUDE_DIRS ${CMAKE_INSTALL_PREFIX}/include)
-set(LIB_DIR ${CMAKE_INSTALL_PREFIX}/lib)
+set(INCLUDE_DIRS ${CMAKE_INSTALL_INCLUDEDIR})
+set(LIB_DIR ${CMAKE_INSTALL_LIBDIR})
 
 include(CMakePackageConfigHelpers)
 write_basic_package_version_file(
@@ -207,14 +207,14 @@ configure_package_config_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/cmake/${PROJECT_NAME}Config.cmake.in
     ${PROJECT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
     PATH_VARS INCLUDE_DIRS LIB_DIR
-    INSTALL_DESTINATION lib/cmake/${PROJECT_NAME}
+    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
 )
 
 install(
     FILES
     ${PROJECT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
     ${PROJECT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
-    DESTINATION lib/cmake/${PROJECT_NAME}
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
 )
 
 if(GLOBAL_HOTKEY_BUILD_EXAMPLE)
