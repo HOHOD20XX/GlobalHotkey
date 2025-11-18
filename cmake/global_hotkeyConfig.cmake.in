@@ -12,7 +12,7 @@ if(NOT @GLOBAL_HOTKEY_DISABLE_REGISTER@ AND @LINUX@)
     find_dependency(X11)
 endif()
 
-include(@PACKAGE_LIB_DIR@/cmake/@PROJECT_NAME@Targets.cmake)
+include(@PACKAGE_LIB_DIR@/cmake/@PROJECT_NAME@/@PROJECT_NAME@Targets.cmake)
 
 set_and_check(@PROJECT_NAME@_INCLUDE_DIRS @PACKAGE_INCLUDE_DIRS@)
 set_and_check(@PROJECT_NAME@_LIBRARY_DIRS @PACKAGE_LIB_DIR@)
