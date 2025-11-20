@@ -76,7 +76,7 @@ GLOBAL_HOTKEY_API std::string keyString(const Key& key) noexcept
 {
     switch (key)
     {
-        // Number keys.
+        // Number keys
         case Key_0:                 return "0";
         case Key_1:                 return "1";
         case Key_2:                 return "2";
@@ -88,7 +88,7 @@ GLOBAL_HOTKEY_API std::string keyString(const Key& key) noexcept
         case Key_8:                 return "8";
         case Key_9:                 return "9";
 
-        // ASCII letter keys.
+        // ASCII letter keys
         case Key_A:                 return "A";
         case Key_B:                 return "B";
         case Key_C:                 return "C";
@@ -116,12 +116,12 @@ GLOBAL_HOTKEY_API std::string keyString(const Key& key) noexcept
         case Key_Y:                 return "Y";
         case Key_Z:                 return "Z";
 
-        // Whitespace keys.
+        // Whitespace keys
         case Key_Tab:               return "Tab";
         case Key_Space:             return "Space";
         case Key_Enter:             return "Enter";
 
-        // Navigation keys.
+        // Navigation keys
         case Key_Home:              return "Home";
         case Key_End:               return "End";
         case Key_Page_Up:           return "Page Up";
@@ -131,13 +131,13 @@ GLOBAL_HOTKEY_API std::string keyString(const Key& key) noexcept
         case Key_Right:             return "Right";
         case Key_Down:              return "Down";
 
-        // Editing keys.
+        // Editing keys
         case Key_Backspace:         return "Backspace";
         case Key_Insert:            return "Insert";
         case Key_Delete:            return "Delete";
         case Key_Clear:             return "Clear";
 
-        // Function keys.
+        // Function keys
         case Key_F1:                return "F1";
         case Key_F2:                return "F2";
         case Key_F3:                return "F3";
@@ -163,7 +163,7 @@ GLOBAL_HOTKEY_API std::string keyString(const Key& key) noexcept
         case Key_F23:               return "F23";
         case Key_F24:               return "F24";
 
-        // Numpad number keys.
+        // Numpad number keys
         case Key_Numpad_0:          return "Numpad 0";
         case Key_Numpad_1:          return "Numpad 1";
         case Key_Numpad_2:          return "Numpad 2";
@@ -175,7 +175,7 @@ GLOBAL_HOTKEY_API std::string keyString(const Key& key) noexcept
         case Key_Numpad_8:          return "Numpad 8";
         case Key_Numpad_9:          return "Numpad 9";
 
-        // Numpad operator keys.
+        // Numpad operator keys
         case Key_Numpad_Add:        return "Numpad Add";
         case Key_Numpad_Subtract:   return "Numpad Subtract";
         case Key_Numpad_Multiply:   return "Numpad Multiply";
@@ -185,34 +185,34 @@ GLOBAL_HOTKEY_API std::string keyString(const Key& key) noexcept
         case Key_Numpad_Equal:      return "Numpad Equal";
         case Key_Numpad_Enter:      return "Numpad Enter";
 
-        // Applications keys.
+        // Applications keys
         case Key_Escape:            return "Esc";
         case Key_Pause:             return "Pause";
         case Key_Play:              return "Play";
         case Key_Help:              return "Help";
         case Key_Menu:              return "Menu";
 
-        // Media keys.
+        // Media keys
         case Key_Media_Next:        return "Media Next";
         case Key_Media_Previous:    return "Media Previous";
         case Key_Media_Play_Pause:  return "Media Play/Pause";
         case Key_Media_Stop:        return "Media Stop";
 
-        // Volume keys.
+        // Volume keys
         case Key_Volume_Up:         return "Volume Up";
         case Key_Volume_Down:       return "Volume Down";
         case Key_Volume_Mute:       return "Volume Mute";
 
-        // Lock keys.
+        // Lock keys
         case Key_Caps_Lock:         return "CapsLock";
         case Key_Num_Lock:          return "NumLock";
         case Key_Scroll_Lock:       return "ScrollLock";
 
-        // Device keys.
+        // Device keys
         case Key_Print_Screen:      return "Print Screen";
         case Key_Sleep:             return "Sleep";
 
-        // OEM (Original Equipment Manufacturer) keys.
+        // OEM (Original Equipment Manufacturer) keys
         // The specific values of the following keys may vary on different devices.
         // All of the following uses the standard keyboard layout of the United States.
         case Key_Left_Quote:        return "`";
@@ -228,7 +228,7 @@ GLOBAL_HOTKEY_API std::string keyString(const Key& key) noexcept
         case Key_Backslash:         return "\\";
         case Key_Angle_Bracket:     return "<>";
 
-        // Modifier keys.
+        // Modifier keys
         case Key_Mod_Meta:          return META_TEXT;
         case Key_Mod_Meta_Left:     return ("Left " META_TEXT);
         case Key_Mod_Meta_Right:    return ("Right " META_TEXT);
@@ -299,13 +299,13 @@ GLOBAL_HOTKEY_API Key getKeyFromString(const std::string& str) noexcept
     if (str.size() == 1 && IS_ALNUM(str[0]))
         return Key(str[0]);
 
-    // Whitespace keys.
+    // Whitespace keys
     if (isEqualStr(str, "tab"))     return Key_Tab;
     if (isEqualStr(str, "space"))   return Key_Space;
     if (isEqualStr(str, "enter") || isEqualStr(str, "return"))
         return Key_Enter;
 
-    // Navigation keys.
+    // Navigation keys
     if (isEqualStr(str, "home"))    return Key_Home;
     if (isEqualStr(str, "end"))     return Key_End;
     if (isEqualStr(str, "page up") || isEqualStr(str, "pgup"))
@@ -321,7 +321,7 @@ GLOBAL_HOTKEY_API Key getKeyFromString(const std::string& str) noexcept
     if (isEqualStr(str, "down") || isEqualStr(str, "arrow down"))
         return Key_Down;
 
-    // Editing keys.
+    // Editing keys
     if (isEqualStr(str, "backspace") || isEqualStr(str, "back"))
         return Key_Backspace;
     if (isEqualStr(str, "insert") || isEqualStr(str, "ins"))
@@ -330,7 +330,7 @@ GLOBAL_HOTKEY_API Key getKeyFromString(const std::string& str) noexcept
         return Key_Delete;
     if (isEqualStr(str, "clear"))   return Key_Clear;
 
-    // Function keys.
+    // Function keys
     if (isEqualStr(str, "f1"))      return Key_F1;
     if (isEqualStr(str, "f2"))      return Key_F2;
     if (isEqualStr(str, "f3"))      return Key_F3;
@@ -356,7 +356,7 @@ GLOBAL_HOTKEY_API Key getKeyFromString(const std::string& str) noexcept
     if (isEqualStr(str, "f23"))     return Key_F23;
     if (isEqualStr(str, "f24"))     return Key_F24;
 
-    // Numpad number keys.
+    // Numpad number keys
     if (isEqualStr(str, "numpad 0") || isEqualStr(str, "keypad 0"))
         return Key_Numpad_0;
     if (isEqualStr(str, "numpad 1") || isEqualStr(str, "keypad 1"))
@@ -378,7 +378,7 @@ GLOBAL_HOTKEY_API Key getKeyFromString(const std::string& str) noexcept
     if (isEqualStr(str, "numpad 9") || isEqualStr(str, "keypad 9"))
         return Key_Numpad_9;
 
-    // Numpad operator keys.
+    // Numpad operator keys
     if (isEqualStr(str, "numpad add") || isEqualStr(str, "keypad add"))
         return Key_Numpad_Add;
     if (isEqualStr(str, "numpad subtract") || isEqualStr(str, "keypad subtract"))
@@ -397,7 +397,7 @@ GLOBAL_HOTKEY_API Key getKeyFromString(const std::string& str) noexcept
         isEqualStr(str, "numpad return") || isEqualStr(str, "keypad return"))
         return Key_Numpad_Equal;
 
-    // Applications keys.
+    // Applications keys
     if (isEqualStr(str, "esc") || isEqualStr(str, "escape"))
         return Key_Escape;
     if (isEqualStr(str, "pause"))   return Key_Pause;
@@ -405,7 +405,7 @@ GLOBAL_HOTKEY_API Key getKeyFromString(const std::string& str) noexcept
     if (isEqualStr(str, "help"))    return Key_Help;
     if (isEqualStr(str, "menu"))    return Key_Menu;
 
-    // Media keys.
+    // Media keys
     if (isEqualStr(str, "media next") || isEqualStr(str, "media track next"))
         return Key_Media_Next;
     if (isEqualStr(str, "media previous") || isEqualStr(str, "media prev") ||
@@ -416,7 +416,7 @@ GLOBAL_HOTKEY_API Key getKeyFromString(const std::string& str) noexcept
     if (isEqualStr(str, "media stop"))
         return Key_Media_Stop;
 
-    // Volume keys.
+    // Volume keys
     if (isEqualStr(str, "volume up") || isEqualStr(str, "vol up"))
         return Key_Volume_Up;
     if (isEqualStr(str, "volume down") || isEqualStr(str, "vol down"))
@@ -424,7 +424,7 @@ GLOBAL_HOTKEY_API Key getKeyFromString(const std::string& str) noexcept
     if (isEqualStr(str, "volume mute") || isEqualStr(str, "vol mute"))
         return Key_Volume_Mute;
 
-    // Lock keys.
+    // Lock keys
     if (isEqualStr(str, "caps lock") || isEqualStr(str, "caps lk"))
         return Key_Caps_Lock;
     if (isEqualStr(str, "num lock") || isEqualStr(str, "num lk"))
@@ -432,13 +432,13 @@ GLOBAL_HOTKEY_API Key getKeyFromString(const std::string& str) noexcept
     if (isEqualStr(str, "scroll lock") || isEqualStr(str, "scroll lk"))
         return Key_Scroll_Lock;
 
-    // Device keys.
+    // Device keys
     if (isEqualStr(str, "print screen") || isEqualStr(str, "prtsc") || isEqualStr(str, "print"))
         return Key_Print_Screen;
     if (isEqualStr(str, "sleep"))
         return Key_Sleep;
 
-    // OEM (Original Equipment Manufacturer) keys.
+    // OEM (Original Equipment Manufacturer) keys
     // The specific values of the following keys may vary on different devices.
     // All of the following uses the standard keyboard layout of the United States.
     if (isEqualStr(str, "`"))       return Key_Left_Quote;
@@ -454,7 +454,7 @@ GLOBAL_HOTKEY_API Key getKeyFromString(const std::string& str) noexcept
     if (isEqualStr(str, "\\"))      return Key_Backslash;
     if (isEqualStr(str, "<>"))      return Key_Angle_Bracket;
 
-    // Modifier keys.
+    // Modifier keys
     if (IS_META(str, ""))           return Key_Mod_Meta;
     if (IS_META(str, "left"))       return Key_Mod_Meta_Left;
     if (IS_META(str, "right"))      return Key_Mod_Meta_Right;

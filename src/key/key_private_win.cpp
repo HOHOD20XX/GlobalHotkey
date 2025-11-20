@@ -28,12 +28,12 @@ int nativeKey(const Key& key) noexcept
 
     switch (key)
     {
-        // Whitespace keys.
+        // Whitespace keys
         case Key_Tab:               return VK_TAB;
         case Key_Space:             return VK_SPACE;
         case Key_Enter:             return VK_RETURN;
 
-        // Navigation keys.
+        // Navigation keys
         case Key_Home:              return VK_HOME;
         case Key_End:               return VK_END;
         case Key_Page_Up:           return VK_PRIOR;
@@ -43,13 +43,13 @@ int nativeKey(const Key& key) noexcept
         case Key_Right:             return VK_RIGHT;
         case Key_Down:              return VK_DOWN;
 
-        // Editing keys.
+        // Editing keys
         case Key_Backspace:         return VK_BACK;
         case Key_Insert:            return VK_INSERT;
         case Key_Delete:            return VK_DELETE;
         case Key_Clear:             return VK_CLEAR;
 
-        // Function keys.
+        // Function keys
         case Key_F1:                return VK_F1;
         case Key_F2:                return VK_F2;
         case Key_F3:                return VK_F3;
@@ -75,7 +75,7 @@ int nativeKey(const Key& key) noexcept
         case Key_F23:               return VK_F23;
         case Key_F24:               return VK_F24;
 
-        // Numpad number keys.
+        // Numpad number keys
         case Key_Numpad_0:          return VK_NUMPAD0;
         case Key_Numpad_1:          return VK_NUMPAD1;
         case Key_Numpad_2:          return VK_NUMPAD2;
@@ -87,44 +87,44 @@ int nativeKey(const Key& key) noexcept
         case Key_Numpad_8:          return VK_NUMPAD8;
         case Key_Numpad_9:          return VK_NUMPAD9;
 
-        // Numpad operator keys.
+        // Numpad operator keys
         case Key_Numpad_Add:        return VK_ADD;
         case Key_Numpad_Subtract:   return VK_SUBTRACT;
         case Key_Numpad_Multiply:   return VK_MULTIPLY;
         case Key_Numpad_Divide:     return VK_DIVIDE;
         case Key_Numpad_Decimal:    return VK_DECIMAL;
         case Key_Numpad_Separator:  return VK_SEPARATOR;
-        case Key_Numpad_Equal:      return VK_OEM_NEC_EQUAL;    // Need check.
+        case Key_Numpad_Equal:      return VK_OEM_NEC_EQUAL;    // Need check
         case Key_Numpad_Enter:      return VK_RETURN;
 
-        // Applications keys.
+        // Applications keys
         case Key_Escape:            return VK_ESCAPE;
         case Key_Pause:             return VK_PAUSE;
         case Key_Play:              return VK_PLAY;
         case Key_Help:              return VK_HELP;
         case Key_Menu:              return VK_APPS;
 
-        // Media keys.
+        // Media keys
         case Key_Media_Next:        return VK_MEDIA_NEXT_TRACK;
         case Key_Media_Previous:    return VK_MEDIA_PREV_TRACK;
         case Key_Media_Play_Pause:  return VK_MEDIA_PLAY_PAUSE;
         case Key_Media_Stop:        return VK_MEDIA_STOP;
 
-        // Volume keys.
+        // Volume keys
         case Key_Volume_Up:         return VK_VOLUME_UP;
         case Key_Volume_Down:       return VK_VOLUME_DOWN;
         case Key_Volume_Mute:       return VK_VOLUME_MUTE;
 
-        // Lock keys.
+        // Lock keys
         case Key_Caps_Lock:         return VK_CAPITAL;
         case Key_Num_Lock:          return VK_NUMLOCK;
         case Key_Scroll_Lock:       return VK_SCROLL;
 
-        // Device keys.
+        // Device keys
         case Key_Print_Screen:      return VK_SNAPSHOT;
         case Key_Sleep:             return VK_SLEEP;
 
-        // OEM (Original Equipment Manufacturer) keys.
+        // OEM (Original Equipment Manufacturer) keys
         // The specific values of the following keys may vary on different devices.
         // All of the following uses the standard keyboard layout of the United States.
         case Key_Left_Quote:        return VK_OEM_3;
@@ -140,8 +140,8 @@ int nativeKey(const Key& key) noexcept
         case Key_Backslash:         return VK_OEM_5;
         case Key_Angle_Bracket:     return VK_OEM_102;
 
-        // Modifier keys.
-        case Key_Mod_Meta:          return 0;   // Not supported.
+        // Modifier keys
+        case Key_Mod_Meta:          return 0;   // Not supported
         case Key_Mod_Meta_Left:     return VK_LWIN;
         case Key_Mod_Meta_Right:    return VK_RWIN;
         case Key_Mod_Ctrl:          return VK_CONTROL;
@@ -179,12 +179,12 @@ Key getKeyFromNativeKey(int nativeKey) noexcept
 
     switch (nativeKey)
     {
-        // Whitespace keys.
+        // Whitespace keys
         case VK_TAB:                return Key_Tab;
         case VK_SPACE:              return Key_Space;
         case VK_RETURN:             return Key_Enter;
 
-        // Navigation keys.
+        // Navigation keys
         case VK_HOME:               return Key_Home;
         case VK_END:                return Key_End;
         case VK_PRIOR:              return Key_Page_Up;
@@ -194,13 +194,13 @@ Key getKeyFromNativeKey(int nativeKey) noexcept
         case VK_RIGHT:              return Key_Right;
         case VK_DOWN:               return Key_Down;
 
-        // Editing keys.
+        // Editing keys
         case VK_BACK:               return Key_Backspace;
         case VK_INSERT:             return Key_Insert;
         case VK_DELETE:             return Key_Delete;
         case VK_CLEAR:              return Key_Clear;
 
-        // Function keys.
+        // Function keys
         case VK_F1:                 return Key_F1;
         case VK_F2:                 return Key_F2;
         case VK_F3:                 return Key_F3;
@@ -226,7 +226,7 @@ Key getKeyFromNativeKey(int nativeKey) noexcept
         case VK_F23:                return Key_F23;
         case VK_F24:                return Key_F24;
 
-        // Numpad number keys.
+        // Numpad number keys
         case VK_NUMPAD0:            return Key_Numpad_0;
         case VK_NUMPAD1:            return Key_Numpad_1;
         case VK_NUMPAD2:            return Key_Numpad_2;
@@ -238,7 +238,7 @@ Key getKeyFromNativeKey(int nativeKey) noexcept
         case VK_NUMPAD8:            return Key_Numpad_8;
         case VK_NUMPAD9:            return Key_Numpad_9;
 
-        // Numpad operator keys.
+        // Numpad operator keys
         case VK_ADD:                return Key_Numpad_Add;
         case VK_SUBTRACT:           return Key_Numpad_Subtract;
         case VK_MULTIPLY:           return Key_Numpad_Multiply;
@@ -247,34 +247,34 @@ Key getKeyFromNativeKey(int nativeKey) noexcept
         case VK_SEPARATOR:          return Key_Numpad_Separator;
         case VK_OEM_NEC_EQUAL:      return Key_Numpad_Equal;
 
-        // Applications keys.
+        // Applications keys
         case VK_ESCAPE:             return Key_Escape;
         case VK_PAUSE:              return Key_Pause;
         case VK_PLAY:               return Key_Play;
         case VK_HELP:               return Key_Help;
         case VK_APPS:               return Key_Menu;
 
-        // Media keys.
+        // Media keys
         case VK_MEDIA_NEXT_TRACK:   return Key_Media_Next;
         case VK_MEDIA_PREV_TRACK:   return Key_Media_Previous;
         case VK_MEDIA_PLAY_PAUSE:   return Key_Media_Play_Pause;
         case VK_MEDIA_STOP:         return Key_Media_Stop;
 
-        // Volume keys.
+        // Volume keys
         case VK_VOLUME_UP:          return Key_Volume_Up;
         case VK_VOLUME_DOWN:        return Key_Volume_Down;
         case VK_VOLUME_MUTE:        return Key_Volume_Mute;
 
-        // Lock keys.
+        // Lock keys
         case VK_CAPITAL:            return Key_Caps_Lock;
         case VK_NUMLOCK:            return Key_Num_Lock;
         case VK_SCROLL:             return Key_Scroll_Lock;
 
-        // Device keys.
+        // Device keys
         case VK_SNAPSHOT:           return Key_Print_Screen;
         case VK_SLEEP:              return Key_Sleep;
 
-        // OEM (Original Equipment Manufacturer) keys.
+        // OEM (Original Equipment Manufacturer) keys
         // The specific values of the following keys may vary on different devices.
         // All of the following uses the standard keyboard layout of the United States.
         case VK_OEM_3:              return Key_Left_Quote;
@@ -290,7 +290,7 @@ Key getKeyFromNativeKey(int nativeKey) noexcept
         case VK_OEM_5:              return Key_Backslash;
         case VK_OEM_102:            return Key_Angle_Bracket;
 
-        // Modifier keys.
+        // Modifier keys
         case VK_LWIN:               return Key_Mod_Meta_Left;
         case VK_RWIN:               return Key_Mod_Meta_Right;
         case VK_CONTROL:            return Key_Mod_Ctrl;

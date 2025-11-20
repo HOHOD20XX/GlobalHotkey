@@ -12,22 +12,22 @@ namespace gbhk
 
 enum ModifierFlag : int32_t
 {
-    META        = 0X01, // Win or Command or Super.
+    META        = 0X01, // Win or Command or Super
     CTRL        = 0X02,
     ALT         = 0X04,
     SHIFT       = 0X08,
 
-    // Alias.
+    // Alias
     WIN         = META,
     COMMAND     = META,
     SUPER       = META,
-    OPTION      = ALT   // The Alt key on MacOS.
+    OPTION      = ALT   // The Alt key on MacOS
 };
 
 // For avoid conflicts with macro definitions, the `KeyFlag` naming style different from other enums in this library.
 enum KeyFlag : int32_t
 {
-    // Number keys.
+    // Number keys
     Key_0       = 0x0030,
     Key_1       = 0x0031,
     Key_2       = 0x0032,
@@ -39,7 +39,7 @@ enum KeyFlag : int32_t
     Key_8       = 0x0038,
     Key_9       = 0x0039,
 
-    // ASCII letter keys.
+    // ASCII letter keys
     Key_A       = 0x0041,
     Key_B       = 0x0042,
     Key_C       = 0x0043,
@@ -67,12 +67,12 @@ enum KeyFlag : int32_t
     Key_Y       = 0x0059,
     Key_Z       = 0x005a,
 
-    // Whitespace keys.
+    // Whitespace keys
     Key_Tab     = 0x8000,
     Key_Space,
     Key_Enter,
 
-    // Navigation keys.
+    // Navigation keys
     Key_Home,
     Key_End,
     Key_Page_Up,
@@ -82,13 +82,13 @@ enum KeyFlag : int32_t
     Key_Right,
     Key_Down,
 
-    // Editing keys.
+    // Editing keys
     Key_Backspace,
     Key_Insert,
     Key_Delete,
     Key_Clear,
 
-    // Function keys.
+    // Function keys
     Key_F1,
     Key_F2,
     Key_F3,
@@ -114,7 +114,7 @@ enum KeyFlag : int32_t
     Key_F23,
     Key_F24,
 
-    // Numpad number keys.
+    // Numpad number keys
     Key_Numpad_0,
     Key_Numpad_1,
     Key_Numpad_2,
@@ -126,60 +126,60 @@ enum KeyFlag : int32_t
     Key_Numpad_8,
     Key_Numpad_9,
 
-    // Numpad operator keys.
-    Key_Numpad_Add,         // '+' on numpad.
-    Key_Numpad_Subtract,    // '-' on numpad.
-    Key_Numpad_Multiply,    // '*' or '×' on numpad.
-    Key_Numpad_Divide,      // '/' or '÷' on numpad.
-    Key_Numpad_Decimal,     // '.' on numpad.
-    Key_Numpad_Separator,   // ',' on numpad.
-    Key_Numpad_Equal,       // '=' on numpad.
-    Key_Numpad_Enter,       // Enter on numpad.
+    // Numpad operator keys
+    Key_Numpad_Add,         // '+' on numpad
+    Key_Numpad_Subtract,    // '-' on numpad
+    Key_Numpad_Multiply,    // '*' or '×' on numpad
+    Key_Numpad_Divide,      // '/' or '÷' on numpad
+    Key_Numpad_Decimal,     // '.' on numpad
+    Key_Numpad_Separator,   // ',' on numpad
+    Key_Numpad_Equal,       // '=' on numpad
+    Key_Numpad_Enter,       // Enter on numpad
 
-    // Applications keys.
+    // Applications keys
     Key_Escape,
-    Key_Pause,              // Not is Key_Media_Play_Pause.
-    Key_Play,               // Not is Key_Media_Play_Pause.
+    Key_Pause,              // Not is Key_Media_Play_Pause
+    Key_Play,               // Not is Key_Media_Play_Pause
     Key_Help,
     Key_Menu,
 
-    // Media keys.
+    // Media keys
     Key_Media_Next,
     Key_Media_Previous,
     Key_Media_Play_Pause,
     Key_Media_Stop,
 
-    // Volume keys.
+    // Volume keys
     Key_Volume_Up,
     Key_Volume_Down,
     Key_Volume_Mute,
 
-    // Lock keys.
+    // Lock keys
     Key_Caps_Lock,
     Key_Num_Lock,
     Key_Scroll_Lock,
 
-    // Device keys.
+    // Device keys
     Key_Print_Screen,
     Key_Sleep,
 
-    // OEM (Original Equipment Manufacturer) keys.
+    // OEM (Original Equipment Manufacturer) keys
     // The specific values of the following keys may vary on different devices.
     // All of the following uses the standard keyboard layout of the United States.
-    Key_Left_Quote,         // '`~' on US standard keyboard.
-    Key_Minus,              // '-_' on US standard keyboard.
-    Key_Equal,              // '=+' on US standard keyboard.
-    Key_Left_Bracket,       // '[{' on US standard keyboard.
-    Key_Right_Bracket,      // ']}' on US standard keyboard.
-    Key_Semicolon,          // ';:' on US standard keyboard.
-    Key_Apostrophe,         // ''"' on US standard keyboard.
-    Key_Comma,              // ',<' on US standard keyboard.
-    Key_Period,             // '.>' on US standard keyboard.
-    Key_Slash,              // '/?' on US standard keyboard.
-    Key_Backslash,          // '\|' on US standard keyboard.
-    Key_Angle_Bracket,      // '<>' or '\|' on RT 102-key keyboard.
+    Key_Left_Quote,         // '`~' on US standard keyboard
+    Key_Minus,              // '-_' on US standard keyboard
+    Key_Equal,              // '=+' on US standard keyboard
+    Key_Left_Bracket,       // '[{' on US standard keyboard
+    Key_Right_Bracket,      // ']}' on US standard keyboard
+    Key_Semicolon,          // ';:' on US standard keyboard
+    Key_Apostrophe,         // ''"' on US standard keyboard
+    Key_Comma,              // ',<' on US standard keyboard
+    Key_Period,             // '.>' on US standard keyboard
+    Key_Slash,              // '/?' on US standard keyboard
+    Key_Backslash,          // '\|' on US standard keyboard
+    Key_Angle_Bracket,      // '<>' or '\|' on RT 102-key keyboard
 
-    // Modifier keys.
+    // Modifier keys
     Key_Mod_Meta,
     Key_Mod_Meta_Left,
     Key_Mod_Meta_Right,
@@ -193,7 +193,7 @@ enum KeyFlag : int32_t
     Key_Mod_Shift_Left,
     Key_Mod_Shift_Right,
 
-    // Alias.
+    // Alias
     Key_Return              = Key_Enter,
     Key_Esc                 = Key_Escape,
     Key_Numpad_Plus         = Key_Numpad_Add,

@@ -28,7 +28,7 @@ int x11Keysym(const Key& key) noexcept
 {
     switch (key)
     {
-        // Number keys.
+        // Number keys
         case Key_0:                 return XK_0;
         case Key_1:                 return XK_1;
         case Key_2:                 return XK_2;
@@ -40,7 +40,7 @@ int x11Keysym(const Key& key) noexcept
         case Key_8:                 return XK_8;
         case Key_9:                 return XK_9;
 
-        // ASCII letter keys.
+        // ASCII letter keys
         case Key_A:                 return XK_A;
         case Key_B:                 return XK_B;
         case Key_C:                 return XK_C;
@@ -68,12 +68,12 @@ int x11Keysym(const Key& key) noexcept
         case Key_Y:                 return XK_Y;
         case Key_Z:                 return XK_Z;
 
-        // Whitespace keys.
+        // Whitespace keys
         case Key_Tab:               return XK_Tab;
         case Key_Space:             return XK_space;
         case Key_Enter:             return XK_Return;
 
-        // Navigation keys.
+        // Navigation keys
         case Key_Home:              return XK_Home;
         case Key_End:               return XK_End;
         case Key_Page_Up:           return XK_Page_Up;
@@ -83,13 +83,13 @@ int x11Keysym(const Key& key) noexcept
         case Key_Right:             return XK_Right;
         case Key_Down:              return XK_Down;
 
-        // Editing keys.
+        // Editing keys
         case Key_Backspace:         return XK_BackSpace;
         case Key_Insert:            return XK_Insert;
         case Key_Delete:            return XK_Delete;
         case Key_Clear:             return XK_Clear;
 
-        // Function keys.
+        // Function keys
         case Key_F1:                return XK_F1;
         case Key_F2:                return XK_F2;
         case Key_F3:                return XK_F3;
@@ -115,7 +115,7 @@ int x11Keysym(const Key& key) noexcept
         case Key_F23:               return XK_F23;
         case Key_F24:               return XK_F24;
 
-        // Numpad number keys.
+        // Numpad number keys
         case Key_Numpad_0:          return XK_KP_0;
         case Key_Numpad_1:          return XK_KP_1;
         case Key_Numpad_2:          return XK_KP_2;
@@ -127,7 +127,7 @@ int x11Keysym(const Key& key) noexcept
         case Key_Numpad_8:          return XK_KP_8;
         case Key_Numpad_9:          return XK_KP_9;
 
-        // Numpad operator keys.
+        // Numpad operator keys
         case Key_Numpad_Add:        return XK_KP_Add;
         case Key_Numpad_Subtract:   return XK_KP_Subtract;
         case Key_Numpad_Multiply:   return XK_KP_Multiply;
@@ -137,23 +137,23 @@ int x11Keysym(const Key& key) noexcept
         case Key_Numpad_Equal:      return XK_KP_Equal;
         case Key_Numpad_Enter:      return XK_KP_Enter;
 
-        // Application keys.
+        // Application keys
         case Key_Escape:            return XK_Escape;
         case Key_Pause:             return XK_Pause;
-        case Key_Play:              return 0;   // Not supported.
+        case Key_Play:              return 0;   // Not supported
         case Key_Help:              return XK_Help;
         case Key_Menu:              return XK_Menu;
 
-        // Lock keys.
+        // Lock keys
         case Key_Caps_Lock:         return XK_Caps_Lock;
         case Key_Num_Lock:          return XK_Num_Lock;
         case Key_Scroll_Lock:       return XK_Scroll_Lock;
 
-        // Device keys.
+        // Device keys
         case Key_Print_Screen:      return XK_Print;
-        case Key_Sleep:             return 0;   // Not supported.
+        case Key_Sleep:             return 0;   // Not supported
 
-        // OEM (Original Equipment Manufacturer) keys.
+        // OEM (Original Equipment Manufacturer) keys
         // The specific values of the following keys may vary on different devices.
         // All of the following uses the standard keyboard layout of the United States.
         case Key_Left_Quote:        return XK_grave;
@@ -167,19 +167,19 @@ int x11Keysym(const Key& key) noexcept
         case Key_Period:            return XK_period;
         case Key_Slash:             return XK_slash;
         case Key_Backslash:         return XK_backslash;
-        case Key_Angle_Bracket:     return XK_less; // Need to check.
+        case Key_Angle_Bracket:     return XK_less; // Need to check
 
-        // Modifier keys.
-        case Key_Mod_Meta:          return 0;   // Not supported.
+        // Modifier keys
+        case Key_Mod_Meta:          return 0;   // Not supported
         case Key_Mod_Meta_Left:     return XK_Meta_L;
         case Key_Mod_Meta_Right:    return XK_Meta_R;
-        case Key_Mod_Ctrl:          return 0;   // Not supported.
+        case Key_Mod_Ctrl:          return 0;   // Not supported
         case Key_Mod_Ctrl_Left:     return XK_Control_L;
         case Key_Mod_Ctrl_Right:    return XK_Control_R;
-        case Key_Mod_Alt:           return 0;   // Not supported.
+        case Key_Mod_Alt:           return 0;   // Not supported
         case Key_Mod_Alt_Left:      return XK_Alt_L;
         case Key_Mod_Alt_Right:     return XK_Alt_R;
-        case Key_Mod_Shift:         return 0;   // Not supported.
+        case Key_Mod_Shift:         return 0;   // Not supported
         case Key_Mod_Shift_Left:    return XK_Shift_L;
         case Key_Mod_Shift_Right:   return XK_Shift_R;
 
@@ -205,7 +205,7 @@ Key getKeyFromX11Keysym(int x11Keysym) noexcept
 {
     switch (x11Keysym)
     {
-        // Number keys.
+        // Number keys
         case XK_0:                  return Key_0;
         case XK_1:                  return Key_1;
         case XK_2:                  return Key_2;
@@ -217,7 +217,7 @@ Key getKeyFromX11Keysym(int x11Keysym) noexcept
         case XK_8:                  return Key_8;
         case XK_9:                  return Key_9;
 
-        // ASCII letter keys.
+        // ASCII letter keys
         case XK_A:                  return Key_A;
         case XK_B:                  return Key_B;
         case XK_C:                  return Key_C;
@@ -245,12 +245,12 @@ Key getKeyFromX11Keysym(int x11Keysym) noexcept
         case XK_Y:                  return Key_Y;
         case XK_Z:                  return Key_Z;
 
-        // Whitespace keys.
+        // Whitespace keys
         case XK_Tab:                return Key_Tab;
         case XK_space:              return Key_Space;
         case XK_Return:             return Key_Enter;
 
-        // Navigation keys.
+        // Navigation keys
         case XK_Home:               return Key_Home;
         case XK_End:                return Key_End;
         case XK_Page_Up:            return Key_Page_Up;
@@ -260,13 +260,13 @@ Key getKeyFromX11Keysym(int x11Keysym) noexcept
         case XK_Right:              return Key_Right;
         case XK_Down:               return Key_Down;
 
-        // Editing keys.
+        // Editing keys
         case XK_BackSpace:          return Key_Backspace;
         case XK_Insert:             return Key_Insert;
         case XK_Delete:             return Key_Delete;
         case XK_Clear:              return Key_Clear;
 
-        // Function keys.
+        // Function keys
         case XK_F1:                 return Key_F1;
         case XK_F2:                 return Key_F2;
         case XK_F3:                 return Key_F3;
@@ -292,7 +292,7 @@ Key getKeyFromX11Keysym(int x11Keysym) noexcept
         case XK_F23:                return Key_F23;
         case XK_F24:                return Key_F24;
 
-        // Numpad number keys.
+        // Numpad number keys
         case XK_KP_0:               return Key_Numpad_0;
         case XK_KP_1:               return Key_Numpad_1;
         case XK_KP_2:               return Key_Numpad_2;
@@ -304,7 +304,7 @@ Key getKeyFromX11Keysym(int x11Keysym) noexcept
         case XK_KP_8:               return Key_Numpad_8;
         case XK_KP_9:               return Key_Numpad_9;
 
-        // Numpad operator keys.
+        // Numpad operator keys
         case XK_KP_Add:             return Key_Numpad_Add;
         case XK_KP_Subtract:        return Key_Numpad_Subtract;
         case XK_KP_Multiply:        return Key_Numpad_Multiply;
@@ -314,21 +314,21 @@ Key getKeyFromX11Keysym(int x11Keysym) noexcept
         case XK_KP_Equal:           return Key_Numpad_Equal;
         case XK_KP_Enter:           return Key_Numpad_Enter;
 
-        // Application keys.
+        // Application keys
         case XK_Escape:             return Key_Escape;
         case XK_Pause:              return Key_Pause;
         case XK_Help:               return Key_Help;
         case XK_Menu:               return Key_Menu;
 
-        // Lock keys.
+        // Lock keys
         case XK_Caps_Lock:          return Key_Caps_Lock;
         case XK_Num_Lock:           return Key_Num_Lock;
         case XK_Scroll_Lock:        return Key_Scroll_Lock;
 
-        // Device keys.
+        // Device keys
         case XK_Print:              return Key_Print_Screen;
 
-        // OEM (Original Equipment Manufacturer) keys.
+        // OEM (Original Equipment Manufacturer) keys
         // The specific values of the following keys may vary on different devices.
         // All of the following uses the standard keyboard layout of the United States.
         case XK_grave:              return Key_Left_Quote;
@@ -342,9 +342,9 @@ Key getKeyFromX11Keysym(int x11Keysym) noexcept
         case XK_period:             return Key_Period;
         case XK_slash:              return Key_Slash;
         case XK_backslash:          return Key_Backslash;
-        case XK_less:               return Key_Angle_Bracket; // Need to check.
+        case XK_less:               return Key_Angle_Bracket; // Need to check
 
-        // Modifier keys.
+        // Modifier keys
         case XK_Meta_L:             return Key_Mod_Meta_Left;
         case XK_Meta_R:             return Key_Mod_Meta_Right;
         case XK_Control_L:          return Key_Mod_Ctrl_Left;
