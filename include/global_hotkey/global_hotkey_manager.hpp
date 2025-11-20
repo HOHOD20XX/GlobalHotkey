@@ -33,6 +33,7 @@ public:
     /// @brief Replace a old hotkey with a new hotkey.
     /// @param oldKc The old hotkey.
     /// @param newKc The new hotkey.
+    /// @attention If the newKc is failed to add, the oldKc still will be remove.
     int replace(const KeyCombination& oldKc, const KeyCombination& newKc);
     /// @brief Set whether the hotkey is auto repeat.
     /// @sa #add() #isAutoRepeat()
