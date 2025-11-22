@@ -42,7 +42,7 @@ int HookGHMPrivate::doBeforeThreadRun()
 {
     clearEventQueue();
 
-    int rc = kbdt_run();
+    int rc = kbdt_start();
     if (rc != KBDT_RC_SUCCESS)
         return rc;
     kbdt_set_event_handler(&kbdtEventHandler);
@@ -52,7 +52,7 @@ int HookGHMPrivate::doBeforeThreadRun()
 int HookGHMPrivate::doBeforeThreadEnd()
 {
     pushEvent({ET_EXIT});
-    int rc = kbdt_end();
+    int rc = kbdt_stop();
     if (rc != KBDT_RC_SUCCESS)
         return rc;
     return RC_SUCCESS;
