@@ -14,9 +14,9 @@ int x11Modifiers(const Modifiers& modifiers) noexcept;
 
 int x11Keysym(const Key& key) noexcept;
 
-Modifiers getModifiersFromX11Modifiers(int x11Modifiers) noexcept;
+Modifiers modifiersFromX11Modifiers(int x11Modifiers) noexcept;
 
-Key getKeyFromX11Keysym(int x11Keysym) noexcept;
+Key keyFromX11Keysym(int x11Keysym) noexcept;
 
 }
 

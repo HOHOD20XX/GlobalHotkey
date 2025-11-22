@@ -44,7 +44,7 @@ RegisterGHMPrivateX11::RegisterGHMPrivateX11()
     regUnregKc_(KeyCombination())
 {}
 
-RegisterGHMPrivateX11::~RegisterGHMPrivateX11() { end(); }
+RegisterGHMPrivateX11::~RegisterGHMPrivateX11() { stop(); }
 
 int RegisterGHMPrivateX11::doBeforeThreadRun()
 {
@@ -99,9 +99,9 @@ void RegisterGHMPrivateX11::work()
                 XNextEvent(display, &event);
                 if (event.type == KeyPress)
                 {
-                    auto mod = getModifiersFromX11Modifiers(event.xkey.state);
+                    auto mod = modifiersFromX11Modifiers(event.xkey.state);
                     auto keysym = keycodeToKeysym[event.xkey.keycode];
-                    auto key = getKeyFromX11Keysym(keysym);
+                    auto key = keyFromX11Keysym(keysym);
                     currKc = {mod, key};
                 }
                 // event.type == KeyRelease

@@ -36,7 +36,7 @@ static void kbdtEventHandler(keyboard_event* event);
 
 HookGHMPrivate::HookGHMPrivate() = default;
 
-HookGHMPrivate::~HookGHMPrivate() { end(); }
+HookGHMPrivate::~HookGHMPrivate() { stop(); }
 
 int HookGHMPrivate::doBeforeThreadRun()
 {
@@ -149,7 +149,7 @@ void clearEventQueue()
 
 void kbdtEventHandler(keyboard_event* event)
 {
-    auto key = getKeyFromNativeKey(event->native_key);
+    auto key = keyFromNativeKey(event->native_key);
     auto et = (event->type == KBDET_PRESSED ? ET_KEY_PRESSED : ET_KEY_RELEASED);
     pushEvent({ et, key });
 }

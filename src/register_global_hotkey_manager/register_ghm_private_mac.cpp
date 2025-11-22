@@ -19,7 +19,7 @@ std::unordered_map<KeyCombination, EventHotKeyRef> RegisterGHMPrivateMac::kcToHo
 
 RegisterGHMPrivateMac::RegisterGHMPrivateMac() = default;
 
-RegisterGHMPrivateMac::~RegisterGHMPrivateMac() { end(); }
+RegisterGHMPrivateMac::~RegisterGHMPrivateMac() { stop(); }
 
 int RegisterGHMPrivateMac::doBeforeThreadRun()
 {

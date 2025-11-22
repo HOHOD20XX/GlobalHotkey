@@ -16,8 +16,8 @@ public:
     constexpr inline KeyCombination() noexcept = default;
     constexpr inline KeyCombination(const Modifiers& modifiers, const Key& key) noexcept
         : mod_(modifiers), key_(key) {}
-    constexpr inline explicit KeyCombination(int64_t getCombinedValue) noexcept
-        : mod_((int32_t) (getCombinedValue >> 32)), key_((int32_t) getCombinedValue) {}
+    constexpr inline explicit KeyCombination(int64_t toCombinedValue) noexcept
+        : mod_((int32_t) (toCombinedValue >> 32)), key_((int32_t) toCombinedValue) {}
     explicit KeyCombination(const std::string& str) { *this = fromString(str); }
 
     static KeyCombination fromString(const std::string& str, char connector = '+') noexcept;
@@ -27,7 +27,7 @@ public:
     constexpr inline Key key() const noexcept { return key_; }
     static constexpr inline KeyCombination fromCombinedValue(int64_t value) noexcept
     { return KeyCombination((int32_t) (value >> 32), (int32_t) value); }
-    constexpr inline int64_t getCombinedValue() const noexcept
+    constexpr inline int64_t toCombinedValue() const noexcept
     { return ((int64_t) mod_ << 32) | ((int64_t) key_ << 0); }
 
     /// @brief Check whether contains at least one modifier and a valid key value.

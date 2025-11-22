@@ -20,8 +20,8 @@ public:
     GHMPrivate();
     virtual ~GHMPrivate();
 
-    int run();
-    int end();
+    int start();
+    int stop();
     int add(const KeyCombination& kc, const std::function<void ()>& fn, bool autoRepeat);
     int remove(const KeyCombination& kc);
     int removeAll();
@@ -30,7 +30,7 @@ public:
     bool has(const KeyCombination& kc) const;
     bool isAutoRepeat(const KeyCombination& kc) const;
     bool isRunning() const;
-    std::vector<KeyCombination> getAllHotkeys() const;
+    std::vector<KeyCombination> getAll() const;
 
 protected:
     /// @brief Get the pair of `autoRepeat` and `callback` values corresponding to the specified key combination.

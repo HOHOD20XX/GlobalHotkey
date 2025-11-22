@@ -10,7 +10,7 @@ static Queue<EventType> eventQueue;
 
 int main()
 {
-    GHM.run();
+    GHM.start();
 
     GHM.add(exitKc, [&]() { eventQueue.push(ET_EXIT); });
     GHM.add(addKc, [&]() { eventQueue.push(ET_ADD_HOTKEY); });
@@ -54,7 +54,7 @@ int main()
         }
     }
 
-    GHM.end();
+    GHM.stop();
 
     return 0;
 }

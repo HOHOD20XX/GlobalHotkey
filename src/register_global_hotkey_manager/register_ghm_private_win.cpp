@@ -19,7 +19,7 @@ RegisterGHMPrivateWin::RegisterGHMPrivateWin()
     hotkeyIndex_(0)
 {}
 
-RegisterGHMPrivateWin::~RegisterGHMPrivateWin() { end(); }
+RegisterGHMPrivateWin::~RegisterGHMPrivateWin() { stop(); }
 
 int RegisterGHMPrivateWin::doBeforeThreadEnd()
 {
@@ -105,8 +105,8 @@ int RegisterGHMPrivateWin::unregisterHotkey(const KeyCombination& kc)
 
 int RegisterGHMPrivateWin::nativeRegisterHotkey(WPARAM wParam, LPARAM lParam)
 {
-    Modifiers mod = getModifiersFromNativeModifiers(wParam);
-    Key key = getKeyFromNativeKey(lParam);
+    Modifiers mod = modifiersFromNativeModifiers(wParam);
+    Key key = keyFromNativeKey(lParam);
     KeyCombination kc(mod, key);
 
     if (RegisterHotKey(NULL, hotkeyIndex_, wParam, lParam) != 0)
@@ -121,8 +121,8 @@ int RegisterGHMPrivateWin::nativeRegisterHotkey(WPARAM wParam, LPARAM lParam)
 
 int RegisterGHMPrivateWin::nativeUnregisterHotkey(WPARAM wParam, LPARAM lParam)
 {
-    Modifiers mod = getModifiersFromNativeModifiers(wParam);
-    Key key = getKeyFromNativeKey(lParam);
+    Modifiers mod = modifiersFromNativeModifiers(wParam);
+    Key key = keyFromNativeKey(lParam);
     KeyCombination kc(mod, key);
 
     int hotkeyId = kcToHotkeyId_[kc];

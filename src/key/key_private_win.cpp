@@ -158,7 +158,7 @@ int nativeKey(const Key& key) noexcept
     }
 }
 
-Modifiers getModifiersFromNativeModifiers(int nativeModifiers) noexcept
+Modifiers modifiersFromNativeModifiers(int nativeModifiers) noexcept
 {
     Modifiers rslt;
     if (nativeModifiers & MOD_WIN)
@@ -172,7 +172,7 @@ Modifiers getModifiersFromNativeModifiers(int nativeModifiers) noexcept
     return rslt;
 }
 
-Key getKeyFromNativeKey(int nativeKey) noexcept
+Key keyFromNativeKey(int nativeKey) noexcept
 {
     if ((nativeKey >= '0' && nativeKey <= '9') || (nativeKey >= 'A' && nativeKey <= 'Z'))
         return Key(nativeKey);

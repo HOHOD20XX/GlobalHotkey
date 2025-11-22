@@ -15,10 +15,10 @@ class GHMPrivate;
 class GLOBAL_HOTKEY_API GlobalHotkeyManager
 {
 public:
-    /// @brief Run the `Global Hotkey Manager`.
-    int run();
-    /// @brief End the `Global Hotkey Manager`.
-    int end();
+    /// @brief Start the `Global Hotkey Manager`.
+    int start();
+    /// @brief Stop the `Global Hotkey Manager`.
+    int stop();
     /// @brief Add a hotkey to the `Global Hotkey Manager`.
     /// @param kc The hotkey you will add.
     /// @param fn The callback function triggered when hotkey is actived.
@@ -48,7 +48,7 @@ public:
     /// @brief Whether the `Global Hotkey Manager` is running.
     bool isRunning() const;
     /// @brief Fetch all hotkey in the `Global Hotkey Manager`.
-    std::vector<KeyCombination> getAllHotkeys() const;
+    std::vector<KeyCombination> getAll() const;
 
 protected:
     explicit GlobalHotkeyManager(std::unique_ptr<GHMPrivate> ptr);

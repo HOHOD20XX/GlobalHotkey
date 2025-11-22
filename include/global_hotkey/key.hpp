@@ -300,9 +300,9 @@ GLOBAL_HOTKEY_API std::string modifiersString(const Modifiers& modifiers, char c
 
 GLOBAL_HOTKEY_API std::string keyString(const Key& key) noexcept;
 
-GLOBAL_HOTKEY_API Modifiers getModifiersFromString(const std::string& str, char connector = '+') noexcept;
+GLOBAL_HOTKEY_API Modifiers modifiersFromString(const std::string& str, char connector = '+') noexcept;
 
-GLOBAL_HOTKEY_API Key getKeyFromString(const std::string& str) noexcept;
+GLOBAL_HOTKEY_API Key keyFromString(const std::string& str) noexcept;
 
 }
 

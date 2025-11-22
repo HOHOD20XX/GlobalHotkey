@@ -187,7 +187,7 @@ int x11Keysym(const Key& key) noexcept
     }
 }
 
-Modifiers getModifiersFromX11Modifiers(int x11Modifiers) noexcept
+Modifiers modifiersFromX11Modifiers(int x11Modifiers) noexcept
 {
     Modifiers rslt;
     if (x11Modifiers & Mod4Mask)
@@ -201,7 +201,7 @@ Modifiers getModifiersFromX11Modifiers(int x11Modifiers) noexcept
     return rslt;
 }
 
-Key getKeyFromX11Keysym(int x11Keysym) noexcept
+Key keyFromX11Keysym(int x11Keysym) noexcept
 {
     switch (x11Keysym)
     {

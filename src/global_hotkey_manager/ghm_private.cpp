@@ -13,7 +13,7 @@ GHMPrivate::GHMPrivate()
 
 GHMPrivate::~GHMPrivate() = default;
 
-int GHMPrivate::run()
+int GHMPrivate::start()
 {
     if (isRunning())            return RC_SUCCESS;
 
@@ -42,7 +42,7 @@ int GHMPrivate::run()
     return runningRc_;
 }
 
-int GHMPrivate::end()
+int GHMPrivate::stop()
 {
     if (!isRunning())           return RC_SUCCESS;
     if (isInWorkerThread_())    return RC_BAD_THREAD;
@@ -165,7 +165,7 @@ bool GHMPrivate::isRunning() const
     return runningState_ == RS_RUNNING;
 }
 
-std::vector<KeyCombination> GHMPrivate::getAllHotkeys() const
+std::vector<KeyCombination> GHMPrivate::getAll() const
 {
     std::vector<KeyCombination> rslt;
     for (const auto& var : fns_)

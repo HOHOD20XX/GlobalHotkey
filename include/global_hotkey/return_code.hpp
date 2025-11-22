@@ -25,7 +25,7 @@ enum ReturnCode : int
     RC_BAD_THREAD           = 0x11 | RC_MASK
 };
 
-inline std::string returnCodeMessage(int rc) noexcept
+inline std::string getReturnCodeMsg(int rc) noexcept
 {
     switch (rc)
     {

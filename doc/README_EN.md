@@ -67,13 +67,13 @@
 
 1. Obtain a `Global Hotkey Manager (GHM)` object via the `getInstance` interface.
 
-2. Start the `GHM` via the `run` interface.
+2. Start the `GHM` via the `start` interface.
 
 3. Add, remove, or replace hotkeys using the corresponding interfaces.
 
 4. When a hotkey is triggered, the corresponding callback function will be executed.
 
-5. End the `GHM` via the `end` interface.
+5. End the `GHM` via the `stop` interface.
 
 ---
 
@@ -81,7 +81,7 @@ Below is example code demonstrating the basic workflow:
 
 ```cpp
 GlobalHotkeyManager& ghm = RegisterGlobalHotkeyManager::getInstance();  // Get an instance of the `Register GHM`.
-ghm.run();    // Run the Global Hotkey Manager.
+ghm.start();    // Start the Global Hotkey Manager.
 
 KeyCombination hotkey1(CTRL, 'G');
 KeyCombination hotkey2(CTRL, 'H');
@@ -96,7 +96,7 @@ while (!shouldClose)
     // Do Something.
 }
 
-ghm.end();      // End the Global Hotkey Manager.
+ghm.stop();      // End the Global Hotkey Manager.
 ```
 
 ## 💡 Examples

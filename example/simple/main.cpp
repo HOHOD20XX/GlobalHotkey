@@ -26,7 +26,7 @@
     #endif // GLOBAL_HOTKEY_MAC
 #endif // GLOBAL_HOTKEY_EXAMPLE_USE_HOOK
 
-#define THROW_RT_ERR(errmsg, code) (throw std::runtime_error((errmsg) + gbhk::returnCodeMessage(code)))
+#define THROW_RT_ERR(errmsg, code) (throw std::runtime_error((errmsg) + gbhk::getReturnCodeMsg(code)))
 
 static bool isPermissionAccessible()
 {
@@ -68,10 +68,10 @@ int main()
     gbhk::KeyCombination hotkey2(gbhk::CTRL | gbhk::SHIFT, 'J');
     gbhk::KeyCombination hotkey3(gbhk::CTRL | gbhk::SHIFT, gbhk::Key_Backspace);
 
-    int rc = ghm.run();
+    int rc = ghm.start();
     if (rc != gbhk::RC_SUCCESS)
-        THROW_RT_ERR("Failed to run the Global Hotkey Manager: ", rc);
-    printf("Success to run the GHM\n");
+        THROW_RT_ERR("Failed to start the Global Hotkey Manager: ", rc);
+    printf("Success to start the GHM\n");
 
     rc = ghm.add(hotkey1, &hotkeyTriggered1);
     if (rc != gbhk::RC_SUCCESS)
@@ -102,9 +102,9 @@ int main()
     cv.wait(lock, [&]() { return shouldClose.load(); });
 
     printf("Ending...\n");
-    rc = ghm.end();
+    rc = ghm.stop();
     if (rc != gbhk::RC_SUCCESS)
-        THROW_RT_ERR("Failed to end the Global Hotkey Manager: ", rc);
+        THROW_RT_ERR("Failed to stop the Global Hotkey Manager: ", rc);
     printf("The Global Hotkey Manager is ended\n");
 
     return 0;

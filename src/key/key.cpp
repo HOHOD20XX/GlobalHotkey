@@ -270,7 +270,7 @@ static bool isEqualStr(const std::string& str1, const std::string& str2) noexcep
     return true;
 }
 
-static int getModifierFlagFromString(const std::string& str) noexcept
+static int modifierFlagFromString(const std::string& str) noexcept
 {
     if (str.empty())        return 0;
     if (IS_META(str, ""))   return META;
@@ -280,18 +280,18 @@ static int getModifierFlagFromString(const std::string& str) noexcept
     return 0;
 }
 
-GLOBAL_HOTKEY_API Modifiers getModifiersFromString(const std::string& str, char connector) noexcept
+GLOBAL_HOTKEY_API Modifiers modifiersFromString(const std::string& str, char connector) noexcept
 {
     std::stringstream ss;
     ss << str;
     Modifiers rslt;
     std::string s;
     while (std::getline(ss, s, connector))
-        rslt.add(getModifierFlagFromString(s));
+        rslt.add(modifierFlagFromString(s));
     return rslt;
 }
 
-GLOBAL_HOTKEY_API Key getKeyFromString(const std::string& str) noexcept
+GLOBAL_HOTKEY_API Key keyFromString(const std::string& str) noexcept
 {
     if (str.empty())
         return Key();

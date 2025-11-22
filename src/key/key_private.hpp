@@ -10,9 +10,9 @@ int nativeModifiers(const Modifiers& modifiers) noexcept;
 
 int nativeKey(const Key& key) noexcept;
 
-Modifiers getModifiersFromNativeModifiers(int nativeModifiers) noexcept;
+Modifiers modifiersFromNativeModifiers(int nativeModifiers) noexcept;
 
-Key getKeyFromNativeKey(int nativeKey) noexcept;
+Key keyFromNativeKey(int nativeKey) noexcept;
 
 } // namespace gbhk
 

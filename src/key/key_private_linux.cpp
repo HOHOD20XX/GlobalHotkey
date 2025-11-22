@@ -187,14 +187,14 @@ int nativeKey(const Key& key) noexcept
     }
 }
 
-Modifiers getModifiersFromNativeModifiers(int nativeModifiers) noexcept
+Modifiers modifiersFromNativeModifiers(int nativeModifiers) noexcept
 {
     // Not supported for native Linux.
     return Modifiers();
 }
 
 /// @ref https://github.com/torvalds/linux/blob/master/include/uapi/linux/input-event-codes.h
-Key getKeyFromNativeKey(int nativeKey) noexcept
+Key keyFromNativeKey(int nativeKey) noexcept
 {
     switch (nativeKey)
     {

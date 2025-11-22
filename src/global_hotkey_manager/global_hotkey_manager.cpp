@@ -9,11 +9,11 @@ GlobalHotkeyManager::GlobalHotkeyManager(std::unique_ptr<GHMPrivate> ptr) : ptr_
 
 GlobalHotkeyManager::~GlobalHotkeyManager() = default;
 
-int GlobalHotkeyManager::run()
-{ return ptr_->run(); }
+int GlobalHotkeyManager::start()
+{ return ptr_->start(); }
 
-int GlobalHotkeyManager::end()
-{ return ptr_->end(); }
+int GlobalHotkeyManager::stop()
+{ return ptr_->stop(); }
 
 int GlobalHotkeyManager::add(const KeyCombination& kc, const std::function<void ()>& fn, bool autoRepeat)
 { return ptr_->add(kc, fn, autoRepeat); }
@@ -39,7 +39,7 @@ bool GlobalHotkeyManager::isAutoRepeat(const KeyCombination& kc) const
 bool GlobalHotkeyManager::isRunning() const
 { return ptr_->isRunning(); }
 
-std::vector<KeyCombination> GlobalHotkeyManager::getAllHotkeys() const
-{ return ptr_->getAllHotkeys(); }
+std::vector<KeyCombination> GlobalHotkeyManager::getAll() const
+{ return ptr_->getAll(); }
 
 } // namespace gbhk

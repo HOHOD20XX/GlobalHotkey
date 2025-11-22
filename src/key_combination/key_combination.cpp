@@ -10,8 +10,8 @@ KeyCombination KeyCombination::fromString(const std::string& str, char connector
     size_t pos = str.rfind(connector);
     if (pos == std::string::npos)
         return {};
-    Modifiers mod = getModifiersFromString(str.substr(0, pos));
-    Key key = getKeyFromString(str.substr(pos + 1));
+    Modifiers mod = modifiersFromString(str.substr(0, pos));
+    Key key = keyFromString(str.substr(pos + 1));
     return {mod, key};
 }
 

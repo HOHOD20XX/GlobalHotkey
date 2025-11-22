@@ -179,7 +179,7 @@ int nativeKey(const Key& key) noexcept
     }
 }
 
-Modifiers getModifiersFromNativeModifiers(int nativeModifiers) noexcept
+Modifiers modifiersFromNativeModifiers(int nativeModifiers) noexcept
 {
     Modifiers rslt;
     if (nativeModifiers & cmdKey)
@@ -193,7 +193,7 @@ Modifiers getModifiersFromNativeModifiers(int nativeModifiers) noexcept
     return rslt;
 }
 
-Key getKeyFromNativeKey(int nativeKey) noexcept
+Key keyFromNativeKey(int nativeKey) noexcept
 {
     switch (nativeKey)
     {
