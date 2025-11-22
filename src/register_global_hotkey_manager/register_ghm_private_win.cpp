@@ -69,10 +69,10 @@ void RegisterGHMPrivateWin::work()
 int RegisterGHMPrivateWin::registerHotkey(const KeyCombination& kc, bool autoRepeat)
 {
     // wParam store the value of native modifiers.
-    WPARAM wParam = nativeModifiers(kc.modifiers());
+    WPARAM wParam = modifiersToNativeModifiers(kc.modifiers());
     wParam |= (!autoRepeat ? MOD_NOREPEAT : 0);
     // lParam store the value of native key code.
-    LPARAM lParam = nativeKey(kc.key());
+    LPARAM lParam = keyToNativeKey(kc.key());
 
     regUnregRc_ = -1;
     if (PostThreadMessageA(workerThreadId_, WM_REGISTER_HOTKEY, wParam, lParam) != 0)
@@ -88,9 +88,9 @@ int RegisterGHMPrivateWin::registerHotkey(const KeyCombination& kc, bool autoRep
 int RegisterGHMPrivateWin::unregisterHotkey(const KeyCombination& kc)
 {
     // wParam store the value of native modifiers.
-    WPARAM wParam = nativeModifiers(kc.modifiers());
+    WPARAM wParam = modifiersToNativeModifiers(kc.modifiers());
     // lParam store the value of native key code.
-    LPARAM lParam = nativeKey(kc.key());
+    LPARAM lParam = keyToNativeKey(kc.key());
 
     regUnregRc_ = -1;
     if (PostThreadMessageA(workerThreadId_, WM_UNREGISTER_HOTKEY, wParam, lParam) != 0)

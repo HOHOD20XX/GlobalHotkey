@@ -6,9 +6,9 @@
 namespace gbhk
 {
 
-int nativeModifiers(const Modifiers& modifiers) noexcept;
+int modifiersToNativeModifiers(const Modifiers& modifiers) noexcept;
 
-int nativeKey(const Key& key) noexcept;
+int keyToNativeKey(const Key& key) noexcept;
 
 Modifiers modifiersFromNativeModifiers(int nativeModifiers) noexcept;
 

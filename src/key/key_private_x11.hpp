@@ -10,9 +10,9 @@
 namespace gbhk
 {
 
-int x11Modifiers(const Modifiers& modifiers) noexcept;
+int modifiersToX11Modifiers(const Modifiers& modifiers) noexcept;
 
-int x11Keysym(const Key& key) noexcept;
+int keyToX11Keysym(const Key& key) noexcept;
 
 Modifiers modifiersFromX11Modifiers(int x11Modifiers) noexcept;
 

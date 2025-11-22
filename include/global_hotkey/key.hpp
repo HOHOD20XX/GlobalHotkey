@@ -299,9 +299,9 @@ private:
 // To preserve the constexpr properties of Modifiers and Key classes,
 // the following functions are implemented as global functions.
 
-GLOBAL_HOTKEY_API std::string modifiersString(const Modifiers& modifiers, char connector = '+') noexcept;
+GLOBAL_HOTKEY_API std::string modifiersToString(const Modifiers& modifiers, char connector = '+') noexcept;
 
-GLOBAL_HOTKEY_API std::string keyString(const Key& key) noexcept;
+GLOBAL_HOTKEY_API std::string keyToString(const Key& key) noexcept;
 
 GLOBAL_HOTKEY_API Modifiers modifiersFromString(const std::string& str, char connector = '+') noexcept;
 

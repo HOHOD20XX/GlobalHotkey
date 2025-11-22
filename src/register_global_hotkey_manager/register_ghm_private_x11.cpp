@@ -177,10 +177,10 @@ int RegisterGHMPrivateX11::nativeRegisterHotkey(Display* display)
 {
     ErrorHandler eh;
 
-    auto keysym = x11Keysym(regUnregKc_.load().key());
+    auto keysym = keyToX11Keysym(regUnregKc_.load().key());
     auto keycode = XKeysymToKeycode(display, keysym);
     keycodeToKeysym[keycode] = keysym;
-    auto mod = x11Modifiers(regUnregKc_.load().modifiers());
+    auto mod = modifiersTox11Modifiers(regUnregKc_.load().modifiers());
     XGrabKey(display, keycode, mod, DefaultRootWindow(display), True, GrabModeAsync, GrabModeAsync);
     XSync(display, False);
 
@@ -191,9 +191,9 @@ int RegisterGHMPrivateX11::nativeUnregisterHotkey(Display* display)
 {
     ErrorHandler eh;
 
-    auto keysym = x11Keysym(regUnregKc_.load().key());
+    auto keysym = keyToX11Keysym(regUnregKc_.load().key());
     auto keycode = XKeysymToKeycode(display, keysym);
-    auto mod = x11Modifiers(regUnregKc_.load().modifiers());
+    auto mod = modifiersTox11Modifiers(regUnregKc_.load().modifiers());
     XUngrabKey(display, keycode, mod, DefaultRootWindow(display));
     XSync(display, False);
 

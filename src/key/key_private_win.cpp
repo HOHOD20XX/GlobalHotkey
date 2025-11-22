@@ -7,7 +7,7 @@
 namespace gbhk
 {
 
-int nativeModifiers(const Modifiers& modifiers) noexcept
+int modifiersToNativeModifiers(const Modifiers& modifiers) noexcept
 {
     int rslt = 0;
     if (modifiers.has(META))
@@ -21,7 +21,7 @@ int nativeModifiers(const Modifiers& modifiers) noexcept
     return rslt;
 }
 
-int nativeKey(const Key& key) noexcept
+int keyToNativeKey(const Key& key) noexcept
 {
     if ((key >= Key_0 && key <= Key_9) || (key >= Key_A && key <= Key_Z))
         return key;

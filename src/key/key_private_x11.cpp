@@ -10,7 +10,7 @@
 namespace gbhk
 {
 
-int x11Modifiers(const Modifiers& modifiers) noexcept
+int modifiersToX11Modifiers(const Modifiers& modifiers) noexcept
 {
     int rslt = 0;
     if (modifiers.has(META))
@@ -24,7 +24,7 @@ int x11Modifiers(const Modifiers& modifiers) noexcept
     return rslt;
 }
 
-int x11Keysym(const Key& key) noexcept
+int keyToX11Keysym(const Key& key) noexcept
 {
     switch (key)
     {

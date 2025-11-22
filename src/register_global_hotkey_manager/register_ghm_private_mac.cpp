@@ -172,8 +172,8 @@ OSStatus RegisterGHMPrivateMac::hotkeyEventHandler(EventHandlerCallRef handler, 
 int RegisterGHMPrivateMac::nativeRegisterHotkey()
 {
     KeyCombination kc = regUnregKc_;
-    UInt32 mod = (UInt32) nativeModifiers(kc.modifiers());
-    UInt32 key = (UInt32) nativeKey(kc.key());
+    UInt32 mod = (UInt32) modifiersToNativeModifiers(kc.modifiers());
+    UInt32 key = (UInt32) keyToNativeKey(kc.key());
 
     EventHotKeyID hotkeyId = {(OSType) mod, key};
     EventHotKeyRef ref = 0;

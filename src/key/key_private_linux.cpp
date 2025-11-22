@@ -7,13 +7,13 @@
 namespace gbhk
 {
 
-int nativeModifiers(const Modifiers& modifiers) noexcept
+int modifiersToNativeModifiers(const Modifiers& modifiers) noexcept
 {
     // Not supported for native Linux.
     return 0;
 }
 
-int nativeKey(const Key& key) noexcept
+int keyToNativeKey(const Key& key) noexcept
 {
     switch (key)
     {

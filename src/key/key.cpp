@@ -55,7 +55,7 @@ static std::string modifierFlagString(ModifierFlag flag) noexcept
     }
 }
 
-GLOBAL_HOTKEY_API std::string modifiersString(const Modifiers& modifiers, char connector) noexcept
+GLOBAL_HOTKEY_API std::string modifiersToString(const Modifiers& modifiers, char connector) noexcept
 {
     std::string rslt;
     std::string connectorStr(1, connector);
@@ -72,7 +72,7 @@ GLOBAL_HOTKEY_API std::string modifiersString(const Modifiers& modifiers, char c
     return rslt;
 }
 
-GLOBAL_HOTKEY_API std::string keyString(const Key& key) noexcept
+GLOBAL_HOTKEY_API std::string keyToString(const Key& key) noexcept
 {
     switch (key)
     {

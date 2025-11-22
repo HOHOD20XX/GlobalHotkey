@@ -19,8 +19,8 @@ std::string KeyCombination::toString(char connector, bool showKeyValue) const no
 {
     std::string rslt;
     std::string connectorStr(1, connector);
-    rslt += modifiersString(mod_, connector);
-    rslt += (!rslt.empty() ? connectorStr : "") + keyString(key_);
+    rslt += modifiersToString(mod_, connector);
+    rslt += (!rslt.empty() ? connectorStr : "") + keyToString(key_);
     if (showKeyValue)
         rslt += "(" + std::to_string(key_) + ")";
     return rslt;
