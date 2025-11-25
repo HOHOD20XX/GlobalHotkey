@@ -46,12 +46,12 @@ static bool isPermissionAccessible()
 
 static void hotkeyTriggered1()
 {
-    printf("Hotkey 1 be triggered\n");
+    printf("Hotkey 1 be triggered!\n");
 }
 
 static void hotkeyTriggered2()
 {
-    printf("Hotkey 2 be triggered\n");
+    printf("Hotkey 2 be triggered!\n");
 }
 
 int main()
@@ -59,7 +59,7 @@ int main()
 #ifdef GLOBAL_HOTKEY_EXAMPLE_USE_HOOK
     gbhk::GlobalHotkeyManager& ghm = gbhk::HookGlobalHotkeyManager::getInstance();
     if (!isPermissionAccessible())
-        throw std::runtime_error("Permission Denied");
+        throw std::runtime_error("Permission Denied!");
 #else
     gbhk::GlobalHotkeyManager& ghm = gbhk::RegisterGlobalHotkeyManager::getInstance();
 #endif // GLOBAL_HOTKEY_EXAMPLE_USE_HOOK
@@ -71,30 +71,30 @@ int main()
     int rc = ghm.start();
     if (rc != gbhk::RC_SUCCESS)
         THROW_RT_ERR("Failed to start the Global Hotkey Manager: ", rc);
-    printf("Success to start the GHM\n");
+    printf("Success to start the GHM!\n");
 
     rc = ghm.add(hotkey1, &hotkeyTriggered1);
     if (rc != gbhk::RC_SUCCESS)
         THROW_RT_ERR("Failed to add the hotkey 1: ", rc);
-    printf("Success to add the hotkey: [%s]\n", hotkey1.toString().c_str());
+    printf("Success to add the hotkey: [%s].\n", hotkey1.toString().c_str());
 
     // The hotkey 2 is auto repeat.
     rc = ghm.add(hotkey2, &hotkeyTriggered2, true);
     if (rc != gbhk::RC_SUCCESS)
         THROW_RT_ERR("Failed to add the hotkey 2: ", rc);
-    printf("Success to add the hotkey: [%s] (auto repeat)\n", hotkey2.toString().c_str());
+    printf("Success to add the hotkey: [%s] (auto repeat).\n", hotkey2.toString().c_str());
 
     std::atomic<bool> shouldClose(false);
     std::condition_variable cv;
     rc = ghm.add(hotkey3, [&]()
     {
-        printf("Hotkey 3 be triggered\n");
+        printf("Hotkey 3 be triggered!\n");
         shouldClose = true;
         cv.notify_one();
     });
     if (rc != gbhk::RC_SUCCESS)
         THROW_RT_ERR("Failed to add the hotkey: ", rc);
-    printf("Success to add the hotkey: [%s]\n", hotkey3.toString().c_str());
+    printf("Success to add the hotkey: [%s].\n", hotkey3.toString().c_str());
     printf("Press the [%s] to exit!\n\n", hotkey3.toString().c_str());
 
     std::mutex dummyMtx;
@@ -105,7 +105,7 @@ int main()
     rc = ghm.stop();
     if (rc != gbhk::RC_SUCCESS)
         THROW_RT_ERR("Failed to stop the Global Hotkey Manager: ", rc);
-    printf("The Global Hotkey Manager is ended\n");
+    printf("The Global Hotkey Manager is ended!\n");
 
     return 0;
 }
