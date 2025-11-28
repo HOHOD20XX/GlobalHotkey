@@ -3,9 +3,9 @@
 
 #ifndef GLOBAL_HOTKEY_DISABLE_HOOK
 
-#include <kbdt/kbdt.h>
-
 #include "../global_hotkey_manager/ghm_private.hpp"
+
+#include <kbdt/kbdt.h>
 
 namespace gbhk
 {
